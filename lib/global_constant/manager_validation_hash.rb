@@ -44,6 +44,10 @@ module GlobalConstant
         30.minutes
       end
 
+      def invite_in_expiry_interval
+        15.days
+      end
+
       def double_opt_in_expiry_interval
         15.days
       end

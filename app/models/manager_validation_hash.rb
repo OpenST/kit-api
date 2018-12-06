@@ -1,4 +1,4 @@
-class ManagerValidationHash < EstablishCompanyManagerDbConnection
+class ManagerValidationHash < EstablishCompanyClientDbConnection
 
   enum kind: {
       GlobalConstant::ManagerValidationHash.reset_password_kind => 1,
@@ -20,8 +20,12 @@ class ManagerValidationHash < EstablishCompanyManagerDbConnection
     case self.kind
     when GlobalConstant::ManagerValidationHash.double_optin
       GlobalConstant::ManagerValidationHash.double_opt_in_expiry_interval
-    else
+    when GlobalConstant::ManagerValidationHash.manager_invite_kind
+      GlobalConstant::ManagerValidationHash.invite_in_expiry_interval
+    when GlobalConstant::ManagerValidationHash.reset_password_kind
       GlobalConstant::ManagerValidationHash.reset_token_expiry_interval
+    else
+      fail "no expiry found for : #{self.kind}"
     end
   end
 

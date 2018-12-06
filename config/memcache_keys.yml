@@ -2,3 +2,22 @@ manager:
   details:
     key_template: 'm_d_%{id}'
     expiry_in_seconds: 86400
+  secure_details:
+    key_template: 'm_sd_%{id}'
+    expiry_in_seconds: 86400
+
+client:
+  secure_details:
+    key_template: 'c_sd_%{id}'
+    expiry_in_seconds: 86400
+  whitelisted_emails:
+    key_template: 'c_whtie_emls'
+    expiry_in_seconds: 86400
+  whitelisted_domains:
+    key_template: 'c_whtie_dmns'
+    expiry_in_seconds: 86400
+
+client_manager:
+  details:
+    key_template: 'c_md_%{client_id}_%{manager_id}'
+    expiry_in_seconds: 86400

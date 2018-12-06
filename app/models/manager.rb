@@ -1,4 +1,4 @@
-class Manager < EstablishCompanyManagerDbConnection
+class Manager < EstablishCompanyClientDbConnection
 
   enum status: {
       GlobalConstant::Manager.incomplete_status => 1,
@@ -35,7 +35,7 @@ class Manager < EstablishCompanyManagerDbConnection
         id: id,
         email: email,
         status: status,
-        default_client_id: defaultClientId,
+        current_client_id: current_client_id,
         properties: properties.present? ? Manager.get_bits_set_for_properties(properties) : []
     }
   end
@@ -49,7 +49,7 @@ class Manager < EstablishCompanyManagerDbConnection
   # @return [Hash]
   #
   def formated_secure_cache_data
-    {id: id, password: password}
+    {id: id, password: password, mfa_token: mfa_token}
   end
 
   # Can this user rest password ?
