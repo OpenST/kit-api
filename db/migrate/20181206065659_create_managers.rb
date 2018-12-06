@@ -14,6 +14,7 @@ class CreateManagers < DbMigrationConnection
         t.column :status, :tinyint, limit: 1, null: false
         t.timestamps
       end
+      execute ("ALTER TABLE managers AUTO_INCREMENT = 2500")
     end
   end
 

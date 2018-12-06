@@ -9,6 +9,7 @@ class CreateClients < DbMigrationConnection
         t.column :properties, :tinyint, limit: 1, null: false
         t.timestamps
       end
+      execute ("ALTER TABLE clients AUTO_INCREMENT = 10000")
     end
   end
 

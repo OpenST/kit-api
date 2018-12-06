@@ -11,6 +11,7 @@ class CreateManagerValidationHashes < DbMigrationConnection
         t.column :status, :tinyint, limit: 1, null: false
         t.timestamps
       end
+      execute ("ALTER TABLE manager_validation_hashes AUTO_INCREMENT = 5000")
     end
   end
 

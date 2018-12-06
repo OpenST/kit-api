@@ -11,6 +11,7 @@ class CreateClientManagers < DbMigrationConnection
         t.timestamps
       end
       add_index :client_managers, [:clientId, :managerId], name: 'uk_1', unique: true
+      execute ("ALTER TABLE manager_validation_hashes AUTO_INCREMENT = 6000")
     end
   end
 
