@@ -1,0 +1,54 @@
+constants:
+  sub_env: <%= ENV['KA_SUB_ENV']%>
+  env_identifier: <%= ENV['ENV_IDENTIFIER'] %>
+
+  basic_auth:
+    admin_username: <%= ENV['KA_ADMIN_BASIC_AUTH_USERNAME'] %>
+    admin_password: <%= ENV['KA_ADMIN_BASIC_AUTH_PASSWORD'] %>
+
+  aws:
+    region: <%= ENV['KA_DEFAULT_AWS_REGION']%>
+    user:
+      access_key: <%= ENV['KA_USER_AWS_ACCESS_KEY']%>
+      secret_key: <%= ENV['KA_USER_AWS_SECRET_KEY']%>
+
+  kms:
+    login:
+      arn: <%= ENV['KA_LOGIN_KMS_ARN']%>
+      id: <%= ENV['KA_LOGIN_KMS_ID']%>
+    api_key:
+      arn: <%= ENV['KA_API_KEY_KMS_ARN']%>
+      id: <%= ENV['KA_API_KEY_KMS_ID']%>
+
+  secret_encryptor:
+    cookie_secret_key: <%= ENV['KA_COOKIE_SECRET_KEY'] %>
+    email_tokens_decriptor_key: <%= ENV['KA_EMAIL_TOKENS_DECRIPTOR_KEY'] %>
+    generic_sha_key: <%= ENV['KA_GENERIC_SHA_KEY'] %>
+    cache_data_sha_key: <%= ENV['KA_KACHE_DATA_SHA_KEY'] %>
+
+  reKAptcha:
+    site_key: <%= ENV['KA_REKAPTCHA_SITE_KEY'] %>
+    secret_key: <%= ENV['KA_REKAPTCHA_SECRET'] %>
+
+  memcached:
+    instances: <%= ENV['KA_MEMKACHED_INSTANCES'] %>
+
+  pepo_campaigns:
+    api:
+      key: <%= ENV['KA_KAMPAIGN_CLIENT_KEY']%>
+      secret: <%= ENV['KA_KAMPAIGN_CLIENT_SECRET']%>
+      base_url: <%= ENV['KA_KAMPAIGN_BASE_URL']%>
+      version: 'v2'
+    list_ids:
+      master_list: <%= ENV['KA_KAMPAIGN_MASTER_LIST']%>
+
+  saas_api:
+    endpoint: '<%= ENV['KA_SAAS_API_ENDPOINT'] %>/'
+    secret_key: <%= ENV['KA_SAAS_API_SECRET_KEY'] %>
+
+  company_web:
+    domain: <%= ENV['KA_CW_DOMAIN'] %>
+
+  ost_explorer:
+    base_url: <%= ENV['KA_EXPLORER_BASE_URL']%>
+    secret: <%= ENV['KA_EXPLORER_SECRET_KEY']%>

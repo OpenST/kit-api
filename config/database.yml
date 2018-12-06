@@ -1,0 +1,48 @@
+default: &default
+  adapter: mysql2
+  pool: 5
+  timeout: 5000
+  encoding: utf8
+  collation: utf8_unicode_ci
+  reconnect: true
+
+default_db_identifier: &default_db
+  <<: *default
+  host: <%= ENV['KA_DEFAULT_DB_HOST']%>
+  username: <%= ENV['KA_DEFAULT_DB_USER']%>
+  password: <%= ENV['KA_DEFAULT_DB_PASSWORD']%>
+
+sub_env_shared_db_identifier: &sub_env_shared_db
+  <<: *default
+  host: <%= ENV['KA_SUB_ENV_SHARED_DB_HOST']%>
+  username: <%= ENV['KA_SUB_ENV_SHARED_DB_USER']%>
+  password: <%= ENV['KA_SUB_ENV_SHARED_DB_PASSWORD']%>
+
+saas_and_api_shared_db_identifier: &saas_and_api_shared_db
+  <<: *default
+  host: <%= ENV['KA_SAAS_SHARED_DB_HOST']%>
+  username: <%= ENV['KA_SAAS_SHARED_DB_USER']%>
+  password: <%= ENV['KA_SAAS_SHARED_DB_PASSWORD']%>
+
+# NOTE: Sub env specific databases
+<%= Rails.env%>:
+  <<: *default_db
+  database: kit_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+kit_async_hooks_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *default_db
+  database: kit_async_hooks_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+# NOTE: Databases shared between sub environments
+kit_client_<%= Rails.env%>:
+  <<: *sub_env_shared_db
+  database: kit_client_<%= Rails.env%>
+
+kit_manager_<%= Rails.env%>:
+  <<: *sub_env_shared_db
+  database: kit_manager_<%= Rails.env%>
+
+# NOTE: Database shared between saas and kit api
+kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *saas_and_api_shared_db
+  database: kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>

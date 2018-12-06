@@ -1,0 +1,13 @@
+Admin Notification Email
+========================
+
+<%= @mail_body %>
+
+
+<% if @mail_data.present? %>
+    Data:
+
+    <%= PP.pp(@mail_data, "") %>
+<% end %>
+
+Notification email sent at <%= Time.current %>

@@ -1,0 +1,64 @@
+invalid_api_params:
+  http_code: 422
+  code: "INVALID_REQUEST"
+  message: "At least one parameter is invalid or missing. See err.error_data for more details."
+
+unauthorized_api_request:
+  http_code: 422
+  code: "UNAUTHORIZED"
+  message: "Unauthorized"
+
+unauthorized_for_other_client:
+  http_code: 422
+  code: "UNAUTHORIZED"
+  message: "Unauthorized for another client."
+
+api_under_maintenance:
+  http_code: 502
+  code: "SERVICE_UNAVAILABLE"
+  message: "Service Temporarily Unavailable"
+
+resource_not_found:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "The requested resource could not be located."
+
+something_went_wrong:
+  http_code: 422
+  code: "INTERNAL_SERVER_ERROR"
+  message: "Something went wrong."
+
+pending_grant_requests:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Pending Grant request exists. Please Try Again later."
+
+grant_limit_breached:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Cannot be given before 24 hours from last given."
+
+already_associated:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "already associated."
+
+user_not_verified:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "user not verified."
+
+token_setup_not_complete:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "token is not setup completely."
+
+token_setup_complete:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "token is setup completely."
+
+invalid_authenticity_token:
+  http_code: 422
+  code: "UNAUTHORIZED"
+  message: "Session has expired. Please refresh your page."

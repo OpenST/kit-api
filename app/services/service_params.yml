@@ -1,0 +1,4 @@
+'ManagerManagement::Create':
+  :mandatory:
+    - :email
+  :optional:

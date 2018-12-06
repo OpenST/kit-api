@@ -1,0 +1,5 @@
+# Rails timezone for different environments
+rails_time_zones:
+  development: 'Asia/Kolkata'
+  staging: 'Eastern Time (US & Canada)'
+  production: 'Eastern Time (US & Canada)'
