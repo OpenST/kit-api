@@ -33,7 +33,7 @@ class CreateEmailServiceApiCallHooks < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishCompanyAsyncHooksDbConnection) do
+    run_migration_for_db(EstablishKitAsyncHooksDbConnection) do
       drop_table :email_service_api_call_hooks
     end
   end
