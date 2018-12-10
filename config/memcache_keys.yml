@@ -7,6 +7,9 @@ manager:
     expiry_in_seconds: 86400
 
 client:
+  details:
+    key_template: 'c_d_%{id}'
+    expiry_in_seconds: 86400
   secure_details:
     key_template: 'c_sd_%{id}'
     expiry_in_seconds: 86400
