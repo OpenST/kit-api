@@ -176,7 +176,7 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def invalid_url_error(code)
-        fail validation_error(
+        fail OstCustomError.new validation_error(
                  code,
                  'invalid_api_params',
                  ['invalid_r_t'],
@@ -308,6 +308,25 @@ module ManagerManagement
         )
 
         success
+
+      end
+
+      # Enqueue Job
+      #
+      # * Author: Puneet
+      # * Date: 08/12/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def enqueue_job
+
+        BackgroundJob.enqueue(
+            SignUpViaInviteJob,
+            {
+                manager_id: @manager_id
+            }
+        )
 
       end
 

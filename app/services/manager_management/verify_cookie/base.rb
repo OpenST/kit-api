@@ -106,7 +106,7 @@ module ManagerManagement
         evaluated_token = Manager.get_cookie_token(
             manager_id: @manager_id,
             current_client_id: @manager[:current_client_id],
-            password: @manager_s[:password],
+            token_s: token_s,
             browser_user_agent: @browser_user_agent,
             last_session_updated_at: @manager_s[:last_session_updated_at],
             cookie_creation_time: @created_ts,
@@ -116,6 +116,7 @@ module ManagerManagement
         fail OstCustomError.new unauthorized_access_response('am_vc_6') unless (evaluated_token == @token)
 
         success
+
       end
 
       # Set Extended Cookie Value
@@ -130,7 +131,7 @@ module ManagerManagement
         @extended_cookie_value = Manager.get_cookie_value(
             manager_id: @manager_id,
             current_client_id: @manager[:current_client_id],
-            password: @manager_s[:password],
+            token_s: token_s,
             browser_user_agent: @browser_user_agent,
             last_session_updated_at: @manager_s[:last_session_updated_at],
             auth_level: auth_level
@@ -154,6 +155,18 @@ module ManagerManagement
                                     'unauthorized_access_response',
                                     GlobalConstant::ErrorAction.default
                                 )
+      end
+
+      # Secure Token
+      #
+      # * Author: Puneet
+      # * Date: 10/10/2017
+      # * Reviewed By:
+      #
+      # @return [String]
+      #
+      def token_s
+        fail 'sub-class to implement'
       end
 
       # Auth level

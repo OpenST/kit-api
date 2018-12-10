@@ -15,6 +15,7 @@ gem 'aws-sdk-kms', '1.13.0'
 
 gem 'http', '4.0.0'
 
+gem 'rotp', '3.3.0' # required for MFA
 gem 'jwt', '2.1.0'
 
 gem 'sidekiq', '5.0.5'

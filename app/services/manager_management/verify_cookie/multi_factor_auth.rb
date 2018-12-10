@@ -2,7 +2,7 @@ module ManagerManagement
 
   module VerifyCookie
 
-    class PasswordAuth < ManagerManagement::VerifyCookie::Base
+    class MultiFactorAuth < ManagerManagement::VerifyCookie::Base
 
       # Initialize
       #
@@ -13,7 +13,7 @@ module ManagerManagement
       # @params [String] cookie_value (mandatory) - this is the admin cookie value
       # @params [String] browser_user_agent (mandatory) - browser user agent
       #
-      # @return [ManagerManagement::VerifyCookie::PasswordAuth]
+      # @return [ManagerManagement::VerifyCookie::MultiFactorAuth]
       #
       def initialize(params)
         super
@@ -42,7 +42,7 @@ module ManagerManagement
       # @return [String]
       #
       def token_s
-        @manager_s[:password]
+        @manager_s[:mfa_token]
       end
 
       # Auth level
@@ -54,7 +54,7 @@ module ManagerManagement
       # @return [String]
       #
       def auth_level
-        GlobalConstant::Cookie.password_auth_prefix
+        GlobalConstant::Cookie.mfa_auth_prefix
       end
 
       # Valid upto
@@ -66,7 +66,7 @@ module ManagerManagement
       # @return [Time]
       #
       def valid_upto
-        GlobalConstant::Cookie.password_auth_expiry
+        GlobalConstant::Cookie.mfa_auth_expiry
       end
 
     end

@@ -183,7 +183,7 @@ module ManagerManagement
         cookie_value = Manager.get_cookie_value(
             manager_id: @manager.id,
             current_client_id: @manager.current_client_id,
-            password: @manager.password,
+            token_s: @manager.password,
             browser_user_agent: @browser_user_agent,
             last_session_updated_at: @manager.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
