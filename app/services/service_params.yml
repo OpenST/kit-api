@@ -43,6 +43,11 @@
     - :password
     - :browser_user_agent
   :optional:
+'ManagerManagement::Logout':
+  :mandatory:
+    - :cookie_value
+    - :browser_user_agent
+  :optional:
 'ManagerManagement::SendDoubleOptInLink':
   :mandatory:
     - :manager_id
