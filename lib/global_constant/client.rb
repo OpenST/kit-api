@@ -7,12 +7,20 @@ module GlobalConstant
 
       ### Status Start ###
 
-      def active_status
-        'active'
+      def sandbox_active_status
+        'sandbox_active'
       end
 
-      def inactive_status
-        'inactive'
+      def sandbox_inactive_status
+        'sandbox_inactive'
+      end
+
+      def mainnet_active_status
+        'mainnet_active'
+      end
+
+      def mainnet_inactive_status
+        'mainnet_inactive'
       end
 
       ### Status End ###

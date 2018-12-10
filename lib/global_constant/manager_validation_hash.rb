@@ -11,8 +11,8 @@ module GlobalConstant
         'active'
       end
 
-      def blocked_status
-        'blocked'
+      def inactive_status
+        'inactive'
       end
 
       def used_status

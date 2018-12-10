@@ -9,8 +9,20 @@ module GlobalConstant
         'ost_kit_ca'
       end
 
-      def user_expiry
-        300.minutes
+      def password_auth_prefix
+        'p'
+      end
+
+      def mfa_auth_prefix
+        'm'
+      end
+
+      def mfa_auth_expiry
+        1.hour
+      end
+
+      def password_auth_expiry
+        15.minute
       end
 
     end

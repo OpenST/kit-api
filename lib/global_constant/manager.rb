@@ -11,8 +11,8 @@ module GlobalConstant
         'active'
       end
 
-      def incomplete_status
-        'incomplete'
+      def invited_status
+        'invited'
       end
 
       # when user is auto blocked by system in case of multiple failed login events
