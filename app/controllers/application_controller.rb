@@ -73,7 +73,7 @@ class ApplicationController < ActionController::API
 
   # Render API response
   #
-  # * Author: Kedar
+  # * Author: Puneet
   # * Date: 24/01/2018
   # * Reviewed By: Aman
   #
@@ -119,7 +119,7 @@ class ApplicationController < ActionController::API
 
   # Handle exceptions gracefully
   #
-  # * Author: Kedar
+  # * Author: Puneet
   # * Date: 24/01/2018
   # * Reviewed By: Aman
   #
