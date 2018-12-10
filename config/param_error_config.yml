@@ -58,6 +58,11 @@ already_registered_email:
   code: 'invalid'
   message: 'This email address is already in use. Please try logging in.'
 
+already_verified_email:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'This email address is already verified.'
+
 password_incorrect:
   parameter: 'password'
   code: 'invalid'
