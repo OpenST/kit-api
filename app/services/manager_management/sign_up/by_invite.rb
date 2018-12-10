@@ -261,6 +261,7 @@ module ManagerManagement
 
         @manager.password = Manager.get_encrypted_password(@password, @login_salt_d)
         @manager.current_client_id = @client_id
+        @manager.status = GlobalConstant::Manager.active_status
         @manager.last_session_updated_at = current_timestamp
         @manager.save
 

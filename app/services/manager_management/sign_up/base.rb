@@ -89,18 +89,6 @@ module ManagerManagement
         CacheManagement::ClientManager.new([@manager.id], {client_id: @client_id}).clear
       end
 
-      # Enqueue Job
-      #
-      # * Author: Pankaj
-      # * Date: 14/02/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def enqueue_job
-
-      end
-
     end
 
   end
