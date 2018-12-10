@@ -26,12 +26,15 @@ constants:
     generic_sha_key: <%= ENV['KA_GENERIC_SHA_KEY'] %>
     cache_data_sha_key: <%= ENV['KA_KACHE_DATA_SHA_KEY'] %>
 
-  reKAptcha:
+  recaptcha:
     site_key: <%= ENV['KA_REKAPTCHA_SITE_KEY'] %>
     secret_key: <%= ENV['KA_REKAPTCHA_SECRET'] %>
 
   memcached:
     instances: <%= ENV['KA_MEMKACHED_INSTANCES'] %>
+
+  redis:
+    url: <%= ENV['KA_REDIS_ENDPOINT'] %>
 
   pepo_campaigns:
     api:
