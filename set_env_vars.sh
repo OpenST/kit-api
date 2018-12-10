@@ -26,6 +26,9 @@ export ENV_IDENTIFIER='internal'
 export KA_ADMIN_BASIC_AUTH_USERNAME='ostAdmin'
 export KA_ADMIN_BASIC_AUTH_PASSWORD='dAss$14nflkn!'
 
+# Redis Details
+export KA_REDIS_ENDPOINT='redis://ca:st123@127.0.0.1:6379'
+
 # AWS Details
 export KA_DEFAULT_AWS_REGION="us-east-1"
 export KA_USER_AWS_ACCESS_KEY="AKIAJUDRALNURKAVS5IQ"
