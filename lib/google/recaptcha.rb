@@ -8,7 +8,7 @@ module Google
 
     def initialize(params)
       Rails.logger.info("--- Recaptcha::Recaptcha params: #{params}")
-      @params = params.merge!(:secret => GlobalConstant::Base.recaptcha['secret_key'])
+      @params = params.merge!(:secret => GlobalConstant::Recaptcha.secret_key)
     end
 
     def perform

@@ -43,7 +43,7 @@ module GlobalConstant
       @secret_encryptor_key ||= fetch_config.fetch('secret_encryptor', {}).with_indifferent_access
     end
 
-    def self.recaptcha
+    def self.recaptcha_config
       @recaptcha ||= fetch_config.fetch('recaptcha', {}).with_indifferent_access
     end
 
