@@ -50,8 +50,6 @@ module ManagerManagement
 
           set_cookie_value
 
-          clear_cache
-
           enqueue_job
 
           success_with_data(

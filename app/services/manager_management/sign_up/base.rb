@@ -74,21 +74,6 @@ module ManagerManagement
         success
       end
 
-      # Clear cache
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def clear_cache
-        CacheManagement::Manager.new([@manager.id]).clear
-        CacheManagement::ManagerSecure.new([@manager.id]).clear
-        CacheManagement::Client.new([@client_id]).clear
-        CacheManagement::ClientManager.new([@manager.id], {client_id: @client_id}).clear
-      end
-
     end
 
   end

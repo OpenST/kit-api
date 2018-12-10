@@ -31,6 +31,8 @@ class Client < EstablishCompanyClientDbConnection
   # Note : always include this after declaring bit_wise_columns_config method
   include BitWiseConcern
 
+  after_commit :flush_cache
+
   # Format data to a format which goes into cache
   #
   # * Author: Puneet
@@ -46,6 +48,16 @@ class Client < EstablishCompanyClientDbConnection
         mainnet_statuses: mainnet_statuses.present? ? Client.get_bits_set_for_mainnet_statuses(mainnet_statuses) : [],
         sandbox_statuses: sandbox_statuses.present? ? Client.get_bits_set_for_sandbox_statuses(sandbox_statuses) : []
     }
+  end
+
+  # Flush caches
+  #
+  # * Author: Puneet
+  # * Date: 01/02/2018
+  # * Reviewed By:
+  #
+  def flush_cache
+    CacheManagement::Client.new([id]).clear
   end
 
 end

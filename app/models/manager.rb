@@ -6,6 +6,8 @@ class Manager < EstablishCompanyClientDbConnection
       GlobalConstant::Manager.auto_blocked_status => 3
   }
 
+  after_commit :flush_cache
+
   def self.properties_config
     @m_props ||= {
         GlobalConstant::Manager.has_verified_email_property => 1,
@@ -70,6 +72,17 @@ class Manager < EstablishCompanyClientDbConnection
         GlobalConstant::Manager.active_status,
         GlobalConstant::Manager.auto_blocked_status
     ].include?(status)
+  end
+
+  # Flush caches
+  #
+  # * Author: Puneet
+  # * Date: 01/02/2018
+  # * Reviewed By:
+  #
+  def flush_cache
+    CacheManagement::Manager.new([id]).clear
+    CacheManagement::ManagerSecure.new([id]).clear
   end
 
   # Generate encrypted password

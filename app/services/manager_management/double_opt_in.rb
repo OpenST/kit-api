@@ -187,7 +187,6 @@ module ManagerManagement
     def mark_user_verified
       @manager.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
       @manager.save!
-      clear_cache
     end
 
     # Update Manager Validation hash used for double opt in and make all others inactive.
@@ -242,17 +241,6 @@ module ManagerManagement
         ['invalid_r_t'],
         GlobalConstant::ErrorAction.default
       )
-    end
-
-    #
-    # * Author: Puneet
-    # * Date: 11/01/2018
-    # * Reviewed By
-    #
-    # @return [Result::Base]
-    #
-    def clear_cache
-      CacheManagement::Manager.new([@manager_id]).clear
     end
 
   end

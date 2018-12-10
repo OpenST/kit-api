@@ -59,8 +59,6 @@ module ManagerManagement
 
         update_user_validation_hashes_status
 
-        clear_cache
-
         success
 
       end
@@ -255,19 +253,6 @@ module ManagerManagement
       )
       success
 
-    end
-
-    # Clear cache
-    #
-    # * Author: Puneet
-    # * Date: 11/01/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def clear_cache
-      CacheManagement::Manager.new([@manager.id]).clear
-      CacheManagement::ManagerSecure.new([@manager.id]).clear
     end
 
     # Invalid Request Response

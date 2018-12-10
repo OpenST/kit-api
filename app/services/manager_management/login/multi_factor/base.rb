@@ -71,7 +71,6 @@ module ManagerManagement
         def fetch_manager
           @manager = Manager.where(id: @manager_id).first
           fail OstCustomError.new unauthorized_access_response('am_l_ma_b_2') unless @manager.present?
-
           success
         end
 

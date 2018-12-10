@@ -42,13 +42,13 @@ module ManagerManagement
 
             fetch_manager
 
+            fail OstCustomError.new unauthorized_access_response('am_l_ma_b_3') if @manager.mfa_token.blank?
+
             decrypt_authentication_salt
 
             decrypt_ga_secret
 
             validate_otp
-
-            clear_cache
 
             set_double_auth_cookie_value
 
@@ -89,19 +89,6 @@ module ManagerManagement
 
           success
 
-        end
-
-        # Clear Cache
-        #
-        # * Author: Puneet
-        # * Date: 08/12/2018
-        # * Reviewed By:
-
-        # @return [Result::Base]
-        #
-        def clear_cache
-          CacheManagement::Manager.new([@manager_id]).clear
-          CacheManagement::ManagerSecure.new([@manager_id]).clear
         end
 
         # Set Double auth cookie

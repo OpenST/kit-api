@@ -38,8 +38,6 @@ module ManagerManagement
 
         logout_manager
 
-        clear_cache
-
         success
 
       end
@@ -89,16 +87,6 @@ module ManagerManagement
 
       success
 
-    end
-
-    # clear cache
-    #
-    # * Author: Aniket
-    # * Date: 21/09/2018
-    # * Reviewed By:
-    #
-    def clear_cache
-      CacheManagement::ManagerSecure.new([@manager_id]).clear
     end
 
   end
