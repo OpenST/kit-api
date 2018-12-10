@@ -7,7 +7,6 @@ class CreateManagerValidationHashes < DbMigrationConnection
         t.column :client_id, :integer, null: true
         t.column :validation_hash, :text, null: false
         t.column :kind, :tinyint, limit: 1, null: false
-        t.column :failed_usage_attempts, :integer, null: true
         t.column :status, :tinyint, limit: 1, null: false
         t.timestamps
       end

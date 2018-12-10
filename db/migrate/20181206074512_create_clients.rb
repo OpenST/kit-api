@@ -4,9 +4,9 @@ class CreateClients < DbMigrationConnection
     run_migration_for_db(EstablishCompanyClientDbConnection) do
       create_table :clients do |t|
         t.column :name, :string, null: true
-        t.column :mainnet_statuses, :tinyint, limit: 1, null: false
-        t.column :sandbox_statuses, :tinyint, limit: 1, null: false
-        t.column :properties, :tinyint, limit: 1, null: false
+        t.column :mainnet_statuses, :tinyint, limit: 1, null: true
+        t.column :sandbox_statuses, :tinyint, limit: 1, null: true
+        t.column :properties, :tinyint, limit: 1, null: true
         t.timestamps
       end
       execute ("ALTER TABLE clients AUTO_INCREMENT = 10000")
