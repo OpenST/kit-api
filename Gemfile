@@ -17,6 +17,9 @@ gem 'http', '4.0.0'
 
 gem 'jwt', '2.1.0'
 
+gem 'sidekiq', '5.0.5'
+gem 'redis-namespace', '1.6.0'
+
 # required by rails dependencies
 gem 'listen', '3.1.5'
 
