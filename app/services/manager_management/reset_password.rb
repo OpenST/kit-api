@@ -147,7 +147,7 @@ module ManagerManagement
 
       invalid_url_error('um_rp_7') if @manager_validation_hash_obj.is_expired?
 
-      invalid_url_error('um_rp_8') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.reset_password
+      invalid_url_error('um_rp_8') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.reset_password_kind
 
       success
 
@@ -247,7 +247,7 @@ module ManagerManagement
       @manager_validation_hash_obj.save!
 
       ManagerValidationHash.where(
-          user_id: @manager.id,
+          manager_id: @manager.id,
           kind: GlobalConstant::ManagerValidationHash.reset_password_kind,
           status: GlobalConstant::ManagerValidationHash.active_status
       ).update_all(

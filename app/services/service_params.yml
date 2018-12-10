@@ -27,3 +27,22 @@
     - :password
     - :browser_user_agent
   :optional:
+'ManagerManagement::SendDoubleOptInLink':
+  :mandatory:
+    - :manager_id
+  :optional:
+'ManagerManagement::DoubleOptIn':
+  :mandatory:
+    - :manager_id
+    - :r_t
+  :optional:
+'ManagerManagement::SendResetPasswordLink':
+  :mandatory:
+    - :email
+  :optional:
+'ManagerManagement::ResetPassword':
+  :mandatory:
+    - :password
+    - :confirm_password
+    - :r_t
+  :optional:

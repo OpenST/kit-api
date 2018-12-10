@@ -119,9 +119,9 @@ missing_confirm_password:
   message: 'missing confirm_password'
 
 missing_user_id:
-  parameter: 'user_id'
+  parameter: 'manager_id'
   code: 'missing'
-  message: 'missing user_id'
+  message: 'missing manager_id'
 
 missing_client_id:
   parameter: 'client_id'

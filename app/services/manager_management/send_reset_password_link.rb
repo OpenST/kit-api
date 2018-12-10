@@ -124,14 +124,15 @@ module ManagerManagement
     # * Reviewed By:
     #
     def send_forgot_password_mail
-      # Email::HookCreator::SendTransactionalMail.new(
-      #     email: @manager.email,
-      #     template_name: GlobalConstant::PepoCampaigns.forgot_password_template,
-      #     template_vars: {
-      #         reset_password_token: CGI.escape(@reset_password_token),
-      #         company_web_domain: GlobalConstant::CompanyWeb.domain
-      #     }
-      # ).perform
+      puts "@reset_password_token: #{@reset_password_token}"
+      Email::HookCreator::SendTransactionalMail.new(
+          email: @manager.email,
+          template_name: GlobalConstant::PepoCampaigns.forgot_password_template,
+          template_vars: {
+              reset_password_token: CGI.escape(@reset_password_token),
+              company_web_domain: GlobalConstant::CompanyWeb.domain
+          }
+      ).perform
     end
 
   end
