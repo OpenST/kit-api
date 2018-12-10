@@ -84,7 +84,7 @@ module ManagerManagement
 
           # Update last_otp_at
           @manager.last_session_updated_at = r.data[:verified_at_timestamp]
-          @manager.send("send_#{GlobalConstant::Manager.has_setup_mfa_property}")
+          @manager.send("set_#{GlobalConstant::Manager.has_setup_mfa_property}")
           @manager.save!
 
           success
