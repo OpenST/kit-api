@@ -63,6 +63,10 @@ module GlobalConstant
       @company_web_config ||= fetch_config.fetch('company_web', {}).with_indifferent_access
     end
 
+    def self.redis_config
+      @redis_config ||= fetch_config.fetch('redis', {})
+    end
+
     private
 
     def self.fetch_config
