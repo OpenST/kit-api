@@ -21,7 +21,7 @@ class WebController < ApplicationController
 
   # Set cookie
   #
-  # * Author: Kedar
+  # * Author: Puneet
   # * Date: 24/01/2018
   # * Reviewed By: Aman
   #
@@ -42,7 +42,7 @@ class WebController < ApplicationController
 
   # Delete cookie
   #
-  # * Author: Kedar
+  # * Author: Puneet
   # * Date: 24/01/2018
   # * Reviewed By: Aman
   #
@@ -56,13 +56,13 @@ class WebController < ApplicationController
 
   # Authenticate request - verifies cookie
   #
-  # * Author: Kedar
+  # * Author: Puneet
   # * Date: 24/01/2018
   # * Reviewed By: Aman
   #
   def authenticate_request
 
-    service_response = UserManagement::VerifyCookie.new(
+    service_response = ManagerManagement::VerifyCookie.new(
       cookie_value: cookies[GlobalConstant::Cookie.user_cookie_name.to_sym],
       browser_user_agent: http_user_agent
     ).perform
@@ -76,7 +76,7 @@ class WebController < ApplicationController
         GlobalConstant::Cookie.user_expiry.from_now
       ) if extended_cookie_value.present?
 
-      params[:user_id] = service_response.data[:user_id]
+      params[:manager_id] = service_response.data[:manager_id]
       params[:client_id] = service_response.data[:client_id]
       params[:client_token_id] = service_response.data[:client_token_id]
 
