@@ -201,7 +201,7 @@ module ManagerManagement
       @manager_validation_hash_obj.save!
 
       ManagerValidationHash.where(
-        user_id: @manager_id,
+        manager_id: @manager_id,
         kind: GlobalConstant::ManagerValidationHash.double_optin_kind,
         status: GlobalConstant::ManagerValidationHash.active_status
       ).update_all(
