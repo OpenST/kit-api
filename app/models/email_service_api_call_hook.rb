@@ -1,4 +1,4 @@
-class EmailServiceApiCallHook < EstablishCompanyAsyncHooksDbConnection
+class EmailServiceApiCallHook < EstablishKitAsyncHooksDbConnection
 
   enum event_type: {
       GlobalConstant::EmailServiceApiCallHook.add_contact_event_type => 1,
