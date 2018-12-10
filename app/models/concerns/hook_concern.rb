@@ -65,7 +65,7 @@ module HookConcern
     #
     # * Author: Puneet
     # * Date: 11/10/2017
-    # * Reviewed By: Sunil
+    # * Reviewed By:
     #
     # @param [Hash] sucess_log - log to be written in success response column
     #
@@ -82,7 +82,7 @@ module HookConcern
     #
     # * Author: Puneet
     # * Date: 11/10/2017
-    # * Reviewed By: Sunil
+    # * Reviewed By:
     #
     # @param [Hash] failed_log - log to be written in failed response column
     #
@@ -100,7 +100,7 @@ module HookConcern
     #
     # * Author: Puneet
     # * Date: 11/10/2017
-    # * Reviewed By: Sunil
+    # * Reviewed By:
     #
     # @param [Hash] failed_log - log to be written in failed response column
     #

@@ -8,9 +8,13 @@ class ManagerValidationHash < EstablishCompanyClientDbConnection
 
   enum status: {
       GlobalConstant::ManagerValidationHash.active_status => 1,
-      GlobalConstant::ManagerValidationHash.blocked_status => 2,
+      GlobalConstant::ManagerValidationHash.inactive_status => 2,
       GlobalConstant::ManagerValidationHash.used_status => 3
   }
+
+  def self.token_delimitter
+    return ':'
+  end
 
   def is_expired?
     (self.created_at.to_i + expiry_interval.to_i) < Time.now.to_i
@@ -18,7 +22,7 @@ class ManagerValidationHash < EstablishCompanyClientDbConnection
 
   def expiry_interval
     case self.kind
-    when GlobalConstant::ManagerValidationHash.double_optin
+    when GlobalConstant::ManagerValidationHash.double_optin_kind
       GlobalConstant::ManagerValidationHash.double_opt_in_expiry_interval
     when GlobalConstant::ManagerValidationHash.manager_invite_kind
       GlobalConstant::ManagerValidationHash.invite_in_expiry_interval

@@ -1,16 +1,23 @@
 class ClientManager < EstablishCompanyClientDbConnection
 
-  def self.privilages_config
-    @cm_privilages ||= {
-        GlobalConstant::ClientManager.is_admin_privilage => 1,
-        GlobalConstant::ClientManager.is_owner_privilage => 2
+  def self.mainnet_privilages_config
+    @c_m_privilages ||= {
+        GlobalConstant::ClientManager.is_mainnet_owner_privilage => 1,
+        GlobalConstant::ClientManager.is_mainnet_admin_privilage => 2
+    }
+  end
+
+  def self.sandbox_privilages_config
+    @c_s_privilages ||= {
+        GlobalConstant::ClientManager.is_sandbox_owner_privilage => 1,
+        GlobalConstant::ClientManager.is_sandbox_admin_privilage => 2
     }
   end
 
   def self.bit_wise_columns_config
     @b_w_c_c ||= {
-        mainnet_privilages: privilages_config,
-        sandbox_privilages: privilages_config
+        mainnet_privilages: mainnet_privilages_config,
+        sandbox_privilages: sandbox_privilages_config
     }
   end
 

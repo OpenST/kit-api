@@ -1,7 +1,7 @@
 class Manager < EstablishCompanyClientDbConnection
 
   enum status: {
-      GlobalConstant::Manager.incomplete_status => 1,
+      GlobalConstant::Manager.invited_status => 1,
       GlobalConstant::Manager.active_status => 2,
       GlobalConstant::Manager.auto_blocked_status => 3
   }
@@ -49,7 +49,12 @@ class Manager < EstablishCompanyClientDbConnection
   # @return [Hash]
   #
   def formated_secure_cache_data
-    {id: id, password: password, mfa_token: mfa_token}
+    {
+      id: id,
+      password: password,
+      last_session_updated_at: last_session_updated_at,
+      mfa_token: mfa_token
+    }
   end
 
   # Can this user rest password ?
@@ -71,7 +76,7 @@ class Manager < EstablishCompanyClientDbConnection
   #
   # * Author: Puneet
   # * Date: 01/02/2018
-  # * Reviewed By: Sunil
+  # * Reviewed By:
   #
   # @return [String]
   #
@@ -91,28 +96,30 @@ class Manager < EstablishCompanyClientDbConnection
   #
   # * Author: Puneet
   # * Date: 01/02/2018
-  # * Reviewed By: Sunil
+  # * Reviewed By:
   #
   # @return [String]
   #
-  def self.get_cookie_value(user_id, default_client_id, password, browser_user_agent)
-    current_ts = Time.now.to_i
-    token_e = get_cookie_token(user_id, default_client_id, password, browser_user_agent, current_ts)
-    "#{user_id}:#{default_client_id}:#{current_ts}:#{token_e}"
+  def self.get_cookie_value(params)
+    cookie_creation_time = Time.now.to_i
+    params[:cookie_creation_time] = cookie_creation_time
+    token_e = self.get_cookie_token(params)
+    return "#{params[:manager_id]}:#{cookie_creation_time}:#{params[:auth_level]}:#{token_e}"
   end
 
-  # generate login cookie token
+  # generate login cookie
   #
   # * Author: Puneet
   # * Date: 01/02/2018
-  # * Reviewed By: Sunil
+  # * Reviewed By:
   #
   # @return [String]
   #
-  def self.get_cookie_token(user_id, client_id, password, browser_user_agent, current_ts)
-    string_to_sign = "#{user_id}:#{password}:#{browser_user_agent}:#{current_ts}"
-    key="#{user_id}:#{current_ts}:#{browser_user_agent}:#{password[-12..-1]}:#{GlobalConstant::SecretEncryptor.cookie_key}"
+  def self.get_cookie_token(params)
+    puts "get_cookie_token_params: #{params}"
+    string_to_sign = "#{params[:manager_id]}:#{params[:password]}:#{params[:last_session_updated_at]}:#{params[:browser_user_agent]}:#{params[:cookie_creation_time]}:#{params[:auth_level]}"
+    key="#{params[:manager_id]}:#{params[:cookie_creation_time]}:#{params[:last_session_updated_at]}:#{params[:browser_user_agent]}:#{params[:password][-12..-1]}:#{GlobalConstant::SecretEncryptor.cookie_key}"
     OpenSSL::HMAC.hexdigest("SHA256", key, string_to_sign)
   end
-  
+
 end

@@ -6,18 +6,25 @@ class Client < EstablishCompanyClientDbConnection
     }
   end
 
-  def self.statuses_config
-    @c_statuses ||= {
-        GlobalConstant::Client.active_status => 1,
-        GlobalConstant::Client.inactive_status => 2
+  def self.mainnet_statuses_config
+    @c_m_statuses ||= {
+        GlobalConstant::Client.mainnet_active_status => 1,
+        GlobalConstant::Client.mainnet_inactive_status => 2
+    }
+  end
+
+  def self.sandox_statuses_config
+    @c_s_statuses ||= {
+        GlobalConstant::Client.sandbox_active_status => 1,
+        GlobalConstant::Client.sandbox_inactive_status => 2
     }
   end
 
   def self.bit_wise_columns_config
     @b_w_c_c ||= {
         properties: properties_config,
-        mainnet_statuses: statuses_config,
-        sandbox_statuses: statuses_config
+        mainnet_statuses: mainnet_statuses_config,
+        sandbox_statuses: sandox_statuses_config
     }
   end
 
