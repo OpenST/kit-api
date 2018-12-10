@@ -1,4 +1,29 @@
-'ManagerManagement::Create':
+'ManagerManagement::SignUp::WithoutInvite':
   :mandatory:
     - :email
+    - :password
+    - :browser_user_agent
+  :optional:
+'ManagerManagement::Invite':
+  :mandatory:
+    - :email
+    - :client_id
+    - :manager_id
+  :optional:
+'ManagerManagement::SignUp::ByInvite':
+  :mandatory:
+    - :i_t
+    - :password
+    - :browser_user_agent
+  :optional:
+'ManagerManagement::VerifyCookie::PasswordAuth':
+  :mandatory:
+    - :cookie_value
+    - :browser_user_agent
+  :optional:
+'ManagerManagement::Login::PasswordAuth':
+  :mandatory:
+    - :email
+    - :password
+    - :browser_user_agent
   :optional:

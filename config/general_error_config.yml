@@ -28,16 +28,6 @@ something_went_wrong:
   code: "INTERNAL_SERVER_ERROR"
   message: "Something went wrong."
 
-pending_grant_requests:
-  http_code: 422
-  code: "UNPROCESSABLE_ENTITY"
-  message: "Pending Grant request exists. Please Try Again later."
-
-grant_limit_breached:
-  http_code: 422
-  code: "UNPROCESSABLE_ENTITY"
-  message: "Cannot be given before 24 hours from last given."
-
 already_associated:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
@@ -47,16 +37,6 @@ user_not_verified:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
   message: "user not verified."
-
-token_setup_not_complete:
-  http_code: 422
-  code: "UNPROCESSABLE_ENTITY"
-  message: "token is not setup completely."
-
-token_setup_complete:
-  http_code: 422
-  code: "UNPROCESSABLE_ENTITY"
-  message: "token is setup completely."
 
 invalid_authenticity_token:
   http_code: 422

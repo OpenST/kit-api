@@ -3,45 +3,15 @@ invalid_client_id:
   code: 'invalid'
   message: 'Invalid client id'
 
-invalid_critical_chain_interaction_log_id:
-  parameter: 'critical_chain_interaction_log_id'
-  code: 'invalid'
-  message: 'Invalid critical_chain_interaction_log_id'
-
-invalid_client_token_id:
-  parameter: 'client_token_id'
-  code: 'invalid'
-  message: 'Invalid client_token_id'
-
-invalid_conversion_factor:
-  parameter: 'conversion_factor'
-  code: 'invalid'
-  message: 'Invalid conversion_factor'
-
-invalid_eth_address:
-  parameter: 'eth_address'
-  code: 'invalid'
-  message: 'Invalid eth_address'
-
-invalid_initial_number_of_users:
-  parameter: 'initial_number_of_users'
-  code: 'invalid'
-  message: 'Invalid initial_number_of_users'
-
-invalid_airdrop_bt_per_user:
-  parameter: 'airdrop_bt_per_user'
-  code: 'invalid'
-  message: 'Invalid airdrop_bt_per_user'
-
 invalid_r_t:
   parameter: 'r_t'
   code: 'invalid'
   message: 'The reset password link has expired. Please use Forgot Password to generate a new one.'
 
-invalid_amount:
-  parameter: 'amount'
-  code: 'invalid'
-  message: 'Invalid amount'
+missing_password_auth_cookie_value:
+  parameter: 'r_t'
+  code: 'missing'
+  message: 'Your session has expired. please refresh your page.'
 
 email_not_allowed_for_dev_program:
   parameter: 'email'
@@ -67,16 +37,6 @@ missing_email:
   parameter: 'email'
   code: 'missing'
   message: 'email missing'
-
-missing_name:
-  parameter: 'name'
-  code: 'missing'
-  message: 'name missing'
-
-missing_kind:
-  parameter: 'kind'
-  code: 'missing'
-  message: 'kind missing'
 
 invalid_email_domain:
   parameter: 'domain'
@@ -118,46 +78,6 @@ confirm_password_invalid:
   code: 'invalid'
   message: 'Passwords do not match.'
 
-invalid_token_worth_in_usd:
-  parameter: 'token_worth_in_usd'
-  code: 'invalid'
-  message: 'Value entered is out of range. (Min 0.01$, Max 10$)'
-
-invalid_agreed_terms_of_service:
-  parameter: 'agreed_terms_of_service'
-  code: 'invalid'
-  message: 'Please read the Term & Conditions  and Polic of Use before registration.'
-
-invalid_token_icon:
-  parameter: 'token_icon'
-  code: 'invalid'
-  message: 'Please select an icon from the list.'
-
-invalid_token_symbol:
-  parameter: 'token_symbol'
-  code: 'invalid'
-  message: 'Please enter from 3 to 4 letters or numbers. No special characters allowed.'
-
-invalid_token_name:
-  parameter: 'token_name'
-  code: 'invalid'
-  message: 'Come on, the token name you entered is inappropriate. Please choose a nicer word.'
-
-inappropriate_token_symbol:
-  parameter: 'token_symbol'
-  code: 'invalid'
-  message: 'Come on, the token symbol you entered is inappropriate. Please choose a nicer word.'
-
-duplicate_token_name:
-  parameter: 'token_name'
-  code: 'invalid'
-  message: 'This token name is already in use. Please try a different one.'
-
-duplicate_token_symbol:
-  parameter: 'token_symbol'
-  code: 'invalid'
-  message: 'This token symbol is already in use. Please try a different one.'
-
 missing_email:
   parameter: 'email'
   code: 'missing'
@@ -173,36 +93,6 @@ missing_browser_user_agent:
   code: 'missing'
   message: 'missing browser_user_agent'
 
-missing_is_client_manager:
-  parameter: 'is_client_manager'
-  code: 'missing'
-  message: 'missing is_client_manager'
-
-missing_browser_user_agent:
-  parameter: 'client_creation_needed'
-  code: 'missing'
-  message: 'missing client_creation_needed'
-
-missing_token_name:
-  parameter: 'token_name'
-  code: 'missing'
-  message: 'missing token_name'
-
-missing_token_symbol:
-  parameter: 'token_symbol'
-  code: 'missing'
-  message: 'missing token_symbol'
-
-missing_agreed_terms_of_service:
-  parameter: 'agreed_terms_of_service'
-  code: 'missing'
-  message: 'missing agreed_terms_of_service'
-
-missing_token_icon:
-  parameter: 'token_icon'
-  code: 'missing'
-  message: 'missing token_icon'
-
 missing_cookie_value:
   parameter: 'cookie_value'
   code: 'missing'
@@ -212,6 +102,11 @@ missing_r_t:
   parameter: 'r_t'
   code: 'missing'
   message: 'missing r_t'
+
+missing_i_t:
+  parameter: 'i_t'
+  code: 'missing'
+  message: 'missing Invite Token'
 
 missing_confirm_password:
   parameter: 'confirm_password'
@@ -227,103 +122,3 @@ missing_client_id:
   parameter: 'client_id'
   code: 'missing'
   message: 'missing client_id'
-
-missing_eth_address:
-  parameter: 'eth_address'
-  code: 'missing'
-  message: 'missing eth_address'
-
-missing_client_token_id:
-  parameter: 'client_token_id'
-  code: 'missing'
-  message: 'missing client_token_id'
-
-missing_token_worth_in_usd:
-  parameter: 'token_worth_in_usd'
-  code: 'missing'
-  message: 'missing token_worth_in_usd'
-
-missing_initial_number_of_users:
-  parameter: 'initial_number_of_users'
-  code: 'missing'
-  message: 'missing initial_number_of_users'
-
-missing_conversion_factor:
-  parameter: 'conversion_factor'
-  code: 'missing'
-  message: 'missing conversion_factor'
-
-missing_airdrop_bt_per_user:
-  parameter: 'airdrop_bt_per_user'
-  code: 'missing'
-  message: 'missing airdrop_bt_per_user'
-
-missing_critical_chain_interaction_log_id:
-  parameter: 'critical_chain_interaction_log_id'
-  code: 'missing'
-  message: 'missing critical_chain_interaction_log_id'
-
-missing_bt_to_mint:
-  parameter: 'bt_to_mint'
-  code: 'missing'
-  message: 'missing bt_to_mint'
-
-missing_st_prime_to_mint:
-  parameter: 'st_prime_to_mint'
-  code: 'missing'
-  message: 'missing st_prime_to_mint'
-
-missing_st_prime_to_mint:
-  parameter: 'st_prime_to_mint'
-  code: 'missing'
-  message: 'missing st_prime_to_mint'
-
-missing_st_prime_to_mint:
-  parameter: 'st_prime_to_mint'
-  code: 'missing'
-  message: 'missing st_prime_to_mint'
-
-missing_transaction_hash:
-  parameter: 'transaction_hash'
-  code: 'missing'
-  message: 'missing transaction_hash'
-
-missing_transaction_kinds:
-  parameter: 'transaction_kinds'
-  code: 'missing'
-  message: 'missing transaction_kinds'
-
-missing_is_xhr:
-  parameter: 'is_xhr'
-  code: 'missing'
-  message: 'missing is_xhr'
-
-missing_client_user_id:
-  parameter: 'client_user_id'
-  code: 'missing'
-  message: 'missing client_user_id'
-
-missing_amount:
-  parameter: 'amount'
-  code: 'missing'
-  message: 'missing amount'
-
-missing_id:
-  parameter: 'id'
-  code: 'missing'
-  message: 'missing id'
-
-missing_arbitrary_amount:
-  parameter: 'arbitrary_amount'
-  code: 'missing'
-  message: 'missing arbitrary_amount'
-
-missing_currency:
-  parameter: 'currency'
-  code: 'missing'
-  message: 'missing currency'
-
-missing_arbitrary_commission:
-  parameter: 'arbitrary_commission'
-  code: 'missing'
-  message: 'missing arbitrary_commission'
