@@ -6,9 +6,9 @@ module Util
 
     # Success
     #
-    # * Author: Kedar
+    # * Author: Puneet
     # * Date: 09/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @return [Result::Base]
     #
@@ -18,9 +18,9 @@ module Util
 
     # Success with data
     #
-    # * Author: Kedar
+    # * Author: Puneet
     # * Date: 09/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @param [Hash] data (mandatory) - data to be sent in the response
     #
@@ -51,9 +51,9 @@ module Util
 
     # Error with Action
     #
-    # * Author: Kedar
+    # * Author: Puneet
     # * Date: 09/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @param [String] internal_id (mandatory) - internal_id
     # @param [String] general_error_identifier (mandatory) - key which is used to look up error config file
@@ -75,9 +75,9 @@ module Util
 
     # Error with Formatted Error Data
     #
-    # * Author: Kedar
+    # * Author: Puneet
     # * Date: 09/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @param [String] internal_id (mandatory) - internal_id
     # @param [String] error_message (mandatory) - message string
@@ -120,9 +120,9 @@ module Util
 
     # Exception with action and data
     #
-    # * Author: Kedar
+    # * Author: Puneet
     # * Date: 09/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @param [Exception] e (mandatory) - Exception object
     # @param [String] internal_id (mandatory) - internal_id
@@ -165,9 +165,9 @@ module Util
 
     # Current Time
     #
-    # * Author: Sunil Khedar
+    # * Author:
     # * Date: 19/10/2017
-    # * Reviewed By: Kedar
+    # * Reviewed By: Puneet
     #
     def current_time
       @c_t ||= Time.now
@@ -175,9 +175,9 @@ module Util
 
     # Current Time Stamp
     #
-    # * Author: Sunil Khedar
+    # * Author:
     # * Date: 19/10/2017
-    # * Reviewed By: Kedar
+    # * Reviewed By: Puneet
     #
     def current_timestamp
       @c_tstmp ||= current_time.to_i
