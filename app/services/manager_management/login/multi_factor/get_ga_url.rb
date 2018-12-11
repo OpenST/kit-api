@@ -43,8 +43,13 @@ module ManagerManagement
             decrypt_authentication_salt
 
             if @manager.mfa_token.present?
-              # If manager already has a MFA token decrypt
-              decrypt_ga_secret
+              if @manager.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+                # If manager already setup MFA fail
+                fail OstCustomError.new unauthorized_access_response('mm_l_mf_gau_1')
+              else
+                # case when QR Code URL was once generated but manager never submitted valid OTP against it to setup MFA
+                decrypt_ga_secret
+              end
             else
               # Set up a new one
               setup_ga_secret
