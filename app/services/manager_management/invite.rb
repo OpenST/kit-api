@@ -42,6 +42,8 @@ module ManagerManagement
 
         validate_and_sanitize
 
+        fetch_and_validate_inviter_manager
+
         create_manager_for_invitee
 
         create_invite_token
@@ -81,6 +83,44 @@ module ManagerManagement
 
       # NOTE: To be on safe side, check for generic errors as well
       validate
+
+    end
+
+    # Validate inviter manager
+    #
+    # * Author: Puneet
+    # * Date: 06/12/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_and_validate_inviter_manager
+
+      client_manager = CacheManagement::ClientManager.new(
+          [@inviter_manager_id],
+          {client_id: @client_id}).fetch[@inviter_manager_id]
+
+      fail OstCustomError.new error_with_data(
+          'um_su_5',
+          'unauthorized_access_response',
+          GlobalConstant::ErrorAction.default
+      ) if client_manager.blank?
+
+      if Util::CommonValidator.is_mainnet_env?
+        privilages = client_manager[:mainnet_privilages]
+        super_admin_privilage = GlobalConstant::ClientManager.is_mainnet_super_admin_privilage
+      else
+        privilages = client_manager[:sandbox_privilages]
+        super_admin_privilage = GlobalConstant::ClientManager.is_sandbox_super_admin_privilage
+      end
+
+      fail OstCustomError.new error_with_data(
+                                  'um_su_5',
+                                  'unauthorized_access_response',
+                                  GlobalConstant::ErrorAction.default
+                              ) if privilages.exclude?(super_admin_privilage)
+
+      success
 
     end
 

@@ -172,11 +172,11 @@ module ManagerManagement
 
         if Util::CommonValidator.is_mainnet_env?
           privilages = @client_manager[:mainnet_privilages]
-          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_mainnet_owner_privilage) ||
+          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_mainnet_super_admin_privilage) ||
               privilages.include?(GlobalConstant::ClientManager.is_mainnet_admin_privilage)
         else
           privilages = @client_manager[:sandbox_privilages]
-          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_sandbox_owner_privilage) ||
+          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_sandbox_super_admin_privilage) ||
               privilages.include?(GlobalConstant::ClientManager.is_sandbox_admin_privilage)
         end
 

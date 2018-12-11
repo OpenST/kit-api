@@ -155,11 +155,8 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def add_privilages_to_client_manager
-        if Util::CommonValidator.is_mainnet_env?
-          @client_manager.send("set_#{GlobalConstant::ClientManager.is_mainnet_admin_privilage}")
-        else
-          @client_manager.send("set_#{GlobalConstant::ClientManager.is_sandbox_admin_privilage}")
-        end
+        @client_manager.send("set_#{GlobalConstant::ClientManager.is_mainnet_admin_privilage}")
+        @client_manager.send("set_#{GlobalConstant::ClientManager.is_sandbox_admin_privilage}")
         success
       end
 

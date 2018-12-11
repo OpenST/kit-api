@@ -11,7 +11,7 @@ module GlobalConstant
         'is_sandbox_admin'
       end
 
-      def is_sandbox_owner_privilage
+      def is_sandbox_super_admin_privilage
         'is_sandbox_owner'
       end
 
@@ -19,7 +19,7 @@ module GlobalConstant
         'is_mainnet_admin'
       end
 
-      def is_mainnet_owner_privilage
+      def is_mainnet_super_admin_privilage
         'is_mainnet_owner'
       end
 
