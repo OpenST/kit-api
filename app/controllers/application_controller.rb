@@ -75,7 +75,7 @@ class ApplicationController < ActionController::API
   #
   # * Author: Puneet
   # * Date: 24/01/2018
-  # * Reviewed By: Aman
+  # * Reviewed By: Puneet
   #
   def render_api_response(service_response)
 
@@ -121,7 +121,7 @@ class ApplicationController < ActionController::API
   #
   # * Author: Puneet
   # * Date: 24/01/2018
-  # * Reviewed By: Aman
+  # * Reviewed By: Puneet
   #
   def handle_exceptions_gracefully
 

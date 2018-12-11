@@ -21,7 +21,7 @@ class WebController < ApplicationController
   #
   # * Author: Puneet
   # * Date: 24/01/2018
-  # * Reviewed By: Aman
+  # * Reviewed By: Puneet
   #
   # @params [String] cookie_name (mandatory)
   # @params [String] value (mandatory)
@@ -42,7 +42,7 @@ class WebController < ApplicationController
   #
   # * Author: Puneet
   # * Date: 24/01/2018
-  # * Reviewed By: Aman
+  # * Reviewed By: Puneet
   #
   # @params [String] cookie_name (mandatory)
   #
@@ -168,7 +168,7 @@ class WebController < ApplicationController
   #
   # * Author: Puneet
   # * Date: 12/02/2018
-  # * Reviewed By: Aman
+  # * Reviewed By: Puneet
   #
   def append_csrf_token_in_params
     params[:authenticity_token] ||= request.headers.env['HTTP_X_CSRF_TOKEN']

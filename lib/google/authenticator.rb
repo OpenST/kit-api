@@ -8,9 +8,9 @@ module Google
 
     # Initialize
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 10/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @return [Google::Authenticator]
     #
@@ -20,9 +20,9 @@ module Google
 
     # Verify the OTP
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 10/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @param [String] otp - Current OTP
     # @param [TimeStamp] last_otp_at - last otp generation timestamp. All opts generated <= last_otp_at will invalidate
@@ -57,9 +57,9 @@ module Google
 
     # Get provisioning url
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 10/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @param [String] name - Display Name
     #
@@ -85,9 +85,9 @@ module Google
 
     # Setup client for ROTP
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 10/10/2017
-    # * Reviewed By: Sunil Khedar
+    # * Reviewed By:
     #
     # @return [Object] ROTP
     #

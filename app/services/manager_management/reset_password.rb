@@ -197,7 +197,7 @@ module ManagerManagement
 
     # Validate if new password is not equal to prev password
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 03/03/2018
     # * Reviewed By:
     #

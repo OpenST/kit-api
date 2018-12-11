@@ -16,9 +16,9 @@ class Admin::WhitelistController < Admin::BaseController
 
   # Whitelist domain
   #
-  # * Author: Dhananjay
+  # * Author: Shlok
   # * Date: 14/09/2018
-  # * Reviewed By: Sunil Khedar
+  # * Reviewed By:
   #
   def whitelist_domain
     service_response = AdminManagement::Whitelist::Domain.new(params).perform
@@ -27,9 +27,9 @@ class Admin::WhitelistController < Admin::BaseController
 
   # Whitelist email
   #
-  # * Author: Dhananjay
+  # * Author: Shlok
   # * Date: 14/09/2018
-  # * Reviewed By: Sunil Khedar
+  # * Reviewed By:
   #
   def whitelist_email
     service_response = AdminManagement::Whitelist::Email.new(params).perform

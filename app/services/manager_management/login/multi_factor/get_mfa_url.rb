@@ -8,7 +8,7 @@ module ManagerManagement
 
         # Initialize
         #
-        # * Author: Aman
+        # * Author: Puneet
         # * Date: 09/01/2018
         # * Reviewed By:
         #
@@ -23,7 +23,7 @@ module ManagerManagement
 
         # Perform
         #
-        # * Author: Aman
+        # * Author: Puneet
         # * Date: 09/01/2018
         # * Reviewed By:
         #
@@ -89,7 +89,7 @@ module ManagerManagement
 
         # Set Ga Secret Auth
         #
-        # * Author: Aman
+        # * Author: Puneet
         # * Date: 09/01/2018
         # * Reviewed By:
         #
@@ -109,7 +109,7 @@ module ManagerManagement
 
         # Set Ga Secret Auth
         #
-        # * Author: Aman
+        # * Author: Puneet
         # * Date: 09/01/2018
         # * Reviewed By:
         #

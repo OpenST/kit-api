@@ -92,7 +92,7 @@ module Util
 
     # Is the Email Domain valid
     #
-    # * Author: Dhananjay
+    # * Author: Shlok
     # * Date: 14/09/2018
     # * Reviewed By:
     #
@@ -169,7 +169,7 @@ module Util
 
     # Is alpha numeric string
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 20/10/2017
     # * Reviewed By:
     #

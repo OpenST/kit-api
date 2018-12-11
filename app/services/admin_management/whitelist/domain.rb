@@ -6,9 +6,9 @@ module AdminManagement
     
       # Initialize
       #
-      # * Author: Dhananjay
+      # * Author: Shlok
       # * Date: 14/09/2018
-      # * Reviewed By: Sunil Khedar
+      # * Reviewed By:
       #
       # @param [String] email_domain (mandatory) - Email domain to be whitelisted
       #
@@ -24,9 +24,9 @@ module AdminManagement
     
       # Perform
       #
-      # * Author: Dhananjay
+      # * Author: Shlok
       # * Date: 14/09/2018
-      # * Reviewed By: Sunil Khedar
+      # * Reviewed By:
       #
       # @return [Result::Base]
       #
@@ -48,9 +48,9 @@ module AdminManagement
       
       # Validate and sanitize
       #
-      # * Author: Dhananjay
+      # * Author: Shlok
       # * Date: 14/09/2018
-      # * Reviewed By: Sunil Khedar
+      # * Reviewed By:
       #
       # @return [Result::Base]
       #
@@ -78,9 +78,9 @@ module AdminManagement
 
       # Find or create Whitelisted Domain
       #
-      # * Author: Dhananjay
+      # * Author: Shlok
       # * Date: 14/09/2018
-      # * Reviewed By: Sunil Khedar
+      # * Reviewed By:
       #
       # @return [Result::Base]
       #

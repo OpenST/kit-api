@@ -4,7 +4,7 @@ module AdminManagement
 
     # Initialize
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 03/05/2018
     # * Reviewed By:
     #
@@ -19,7 +19,7 @@ module AdminManagement
 
     # Perform
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 03/05/2018
     # * Reviewed By:
     #
@@ -86,7 +86,7 @@ module AdminManagement
 
     # Resets MFA token of admin
     #
-    # * Author: Aman
+    # * Author: Puneet
     # * Date: 03/05/2018
     # * Reviewed By:
     #
