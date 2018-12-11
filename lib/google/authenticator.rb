@@ -43,7 +43,7 @@ module Google
                                       {}
                                   )
         end
-      rescue => e
+      rescue StandardError => e
         fail OstCustomError.new exception_with_data(
                                     e,
                                     'r_t_2',

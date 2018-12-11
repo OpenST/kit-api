@@ -50,7 +50,7 @@ class Manager < EstablishCompanyClientDbConnection
   #
   # @return [Hash]
   #
-  def formated_secure_cache_data
+  def formatted_secure_cache_data
     {
       id: id,
       password: password,
@@ -67,7 +67,7 @@ class Manager < EstablishCompanyClientDbConnection
   #
   # @return [Boolean]
   #
-  def is_eligible_for_reset_passowrd?
+  def is_eligible_for_reset_password?
     [
         GlobalConstant::Manager.active_status,
         GlobalConstant::Manager.auto_blocked_status

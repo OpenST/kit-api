@@ -68,7 +68,7 @@ module ManagerManagement
       error_key = ''
       if @manager.blank?
         error_key = 'unrecognized_email'
-      elsif !@manager.is_eligible_for_reset_passowrd?
+      elsif !@manager.is_eligible_for_reset_password?
         error_key = 'email_inactive'
       end
 

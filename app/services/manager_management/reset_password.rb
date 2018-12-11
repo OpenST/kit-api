@@ -100,15 +100,15 @@ module ManagerManagement
       r = decryptor_obj.decrypt(@r_t)
       fail OstCustomError.new r unless r.success?
 
-      decripted_t = r.data[:plaintext]
+      decrypted_t = r.data[:plaintext]
 
-      splited_reset_token = decripted_t.split(':')
+      splitted_reset_token = decrypted_t.split(':')
 
-      invalid_url_error('um_rp_3') if splited_reset_token.length != 2
+      invalid_url_error('um_rp_3') if splitted_reset_token.length != 2
 
-      @reset_token = splited_reset_token[1].to_s
+      @reset_token = splitted_reset_token[1].to_s
 
-      @manager_validation_hash_id = splited_reset_token[0].to_i
+      @manager_validation_hash_id = splitted_reset_token[0].to_i
 
       success
     end
@@ -170,7 +170,7 @@ module ManagerManagement
           'invalid_api_params',
           ['invalid_r_t'],
           GlobalConstant::ErrorAction.default
-      ) if @manager.blank? || !@manager.is_eligible_for_reset_passowrd?
+      ) if @manager.blank? || !@manager.is_eligible_for_reset_password?
 
       success
 

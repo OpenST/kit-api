@@ -14,7 +14,7 @@ module CacheManagement
     #
     def fetch_from_db(cache_miss_ids)
       data_to_cache = ::Manager.where(id: cache_miss_ids).inject({}) do |managers_data, manager|
-        managers_data[manager.id] = manager.formated_secure_cache_data
+        managers_data[manager.id] = manager.formatted_secure_cache_data
         managers_data
       end
       success_with_data(data_to_cache)
