@@ -9,7 +9,7 @@ module ManagerManagement
         # Initialize
         #
         # * Author: Puneet
-        # * Date: 09/01/2018
+        # * Date: 08/12/2018
         # * Reviewed By:
         #
         # @params [String] manager_id (mandatory) - manager_id
@@ -24,7 +24,7 @@ module ManagerManagement
         # Perform
         #
         # * Author: Puneet
-        # * Date: 09/01/2018
+        # * Date: 08/12/2018
         # * Reviewed By:
         #
         # @return [Result::Base]
@@ -65,7 +65,7 @@ module ManagerManagement
         # Set up Ga Secret Auth
         #
         # * Author: Puneet
-        # * Date: 09/12/2018
+        # * Date: 08/12/2018
         # * Reviewed By:
         #
         # Sets @ga_secret_d
@@ -90,14 +90,14 @@ module ManagerManagement
         # Set Ga Secret Auth
         #
         # * Author: Puneet
-        # * Date: 09/01/2018
+        # * Date: 08/12/2018
         # * Reviewed By:
         #
         #
         def set_ga_secret_auth
 
           rotp_client = Google::Authenticator.new(@ga_secret_d)
-          r = rotp_client.provisioning_uri("#{identifier_suffix}:#{@manager.id}")
+          r = rotp_client.provisioning_uri("#{identifier_suffix}:#{@manager.email}")
           fail OstCustomError.new r unless r.success?
 
           otpauth = r.data[:otpauth]

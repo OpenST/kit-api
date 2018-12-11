@@ -36,6 +36,7 @@
     - :manager_id
     - :browser_user_agent
     - :otp
+    - :client
   :optional:
 'ManagerManagement::Login::MultiFactor::GetMfaUrl':
   :mandatory:

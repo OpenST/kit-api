@@ -9,26 +9,32 @@ module ManagerManagement
         # Initialize
         #
         # * Author: Puneet
-        # * Date: 10/10/2017
+        # * Date: 08/12/2018
         # * Reviewed By: 
         #
         # @params [String] manager_id (mandatory) - manager_id
+        # @params [Hash] client (mandatory) - client of logged in manager
         # @params [String] otp (mandatory) - this is the Otp entered
         # @params [String] browser_user_agent (mandatory) - browser user agent
         #
         # @return [ManagerManagement::Login::MultiFactor::Authenticate]
         #
         def initialize(params)
+
           super
+
+          @client = @params[:client]
           @browser_user_agent = @params[:browser_user_agent]
           @otp = @params[:otp].to_s
+
           @double_auth_cookie_value = nil
+
         end
 
         # Perform
         #
         # * Author: Puneet
-        # * Date: 10/10/2017
+        # * Date: 08/12/2018
         # * Reviewed By: 
         #
         # @return [Result::Base]
@@ -41,9 +47,7 @@ module ManagerManagement
 
             fetch_manager
 
-            fetch_client
-
-            fail OstCustomError.new unauthorized_access_response('am_l_ma_b_3') if @manager.mfa_token.blank?
+            fail OstCustomError.new unauthorized_access_response('am_l_ma_b_3') if @manager_obj.mfa_token.blank?
 
             decrypt_authentication_salt
 
@@ -64,25 +68,10 @@ module ManagerManagement
 
         private
 
-        # Fetch client
-        #
-        # * Author: Alpesh
-        # * Date: 15/01/2018
-        # * Reviewed By:
-        #
-        # Sets @client
-        #
-        # @return [Result::Base]
-        #
-        def fetch_client
-          @client = CacheManagement::Client.new([@manager.current_client_id]).fetch[@manager.current_client_id]
-          success
-        end
-
         # Validate otp
         #
         # * Author: Puneet
-        # * Date: 10/10/2017
+        # * Date: 08/12/2018
         # * Reviewed By: 
         #
         # @return [Result::Base]
@@ -90,7 +79,7 @@ module ManagerManagement
         def validate_otp
 
           rotp_obj = Google::Authenticator.new(@ga_secret_d)
-          r = rotp_obj.verify_with_drift_and_prior(@otp, @manager.last_session_updated_at)
+          r = rotp_obj.verify_with_drift_and_prior(@otp, @manager_obj.last_session_updated_at)
 
           fail OstCustomError.new error_with_data(
                                       'am_l_ma_7',
@@ -100,9 +89,9 @@ module ManagerManagement
                                   ) unless r.success?
 
           # Update last_otp_at
-          @manager.last_session_updated_at = r.data[:verified_at_timestamp]
-          @manager.send("set_#{GlobalConstant::Manager.has_setup_mfa_property}")
-          @manager.save!
+          @manager_obj.last_session_updated_at = r.data[:verified_at_timestamp]
+          @manager_obj.send("set_#{GlobalConstant::Manager.has_setup_mfa_property}")
+          @manager_obj.save!
 
           success
 
@@ -111,7 +100,7 @@ module ManagerManagement
         # Set Double auth cookie
         #
         # * Author: Puneet
-        # * Date: 10/10/2017
+        # * Date: 08/12/2018
         # * Reviewed By: 
         #
         # Sets @double_auth_cookie_value
@@ -120,11 +109,11 @@ module ManagerManagement
         #
         def set_double_auth_cookie_value
           @double_auth_cookie_value = Manager.get_cookie_value(
-              manager_id: @manager.id,
-              current_client_id: @manager.current_client_id,
-              token_s: @manager.mfa_token,
+              manager_id: @manager_obj.id,
+              current_client_id: @manager_obj.current_client_id,
+              token_s: @manager_obj.mfa_token,
               browser_user_agent: @browser_user_agent,
-              last_session_updated_at: @manager.last_session_updated_at,
+              last_session_updated_at: @manager_obj.last_session_updated_at,
               auth_level: GlobalConstant::Cookie.mfa_auth_prefix
           )
 
@@ -140,7 +129,7 @@ module ManagerManagement
         # @return [Hash]
         #
         def fetch_go_to
-          if @manager.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+          if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
             GlobalConstant::GoTo.authenticate_mfa
           elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
             GlobalConstant::GoTo.setup_mfa

@@ -9,7 +9,7 @@ module ManagerManagement
         # Initialize
         #
         # * Author: Puneet
-        # * Date: 10/10/2017
+        # * Date: 08/12/2018
         # * Reviewed By: 
         #
         # @params [String] password_auth_cookie_value (mandatory) - single auth cookie value
@@ -22,7 +22,7 @@ module ManagerManagement
 
           @manager_id = @params[:manager_id]
 
-          @manager = nil
+          @manager_obj = nil
           @authentication_salt_d = nil
           @ga_secret_d = nil
 
@@ -32,25 +32,25 @@ module ManagerManagement
 
         # Fetch admin
         #
-        # * Author: 
-        # * Date: 10/10/2017
-        # * Reviewed By: Sunil
+        # * Author: Puneet
+        # * Date: 08/12/2018
+        # * Reviewed By:
         #
-        # Sets @manager
+        # Sets @manager_obj
         #
         # @return [Result::Base]
         #
         def fetch_manager
-          @manager = Manager.where(id: @manager_id).first
-          fail OstCustomError.new unauthorized_access_response('am_l_ma_b_2') unless @manager.present?
+          @manager_obj = Manager.where(id: @manager_id).first
+          fail OstCustomError.new unauthorized_access_response('am_l_ma_b_2') unless @manager_obj.present?
           success
         end
 
         # Decrypt login salt
         #
-        # * Author: 
-        # * Date: 10/10/2017
-        # * Reviewed By: Sunil
+        # * Author: Puneet
+        # * Date: 08/12/2018
+        # * Reviewed By:
         #
         # Sets @authentication_salt_d
         #
@@ -58,7 +58,7 @@ module ManagerManagement
         #
         def decrypt_authentication_salt
 
-          authentication_salt_e = @manager.authentication_salt
+          authentication_salt_e = @manager_obj.authentication_salt
           fail OstCustomError.new unauthorized_access_response('am_l_ma_b_4') unless authentication_salt_e.present?
 
           r = Aws::Kms.new('login', 'user').decrypt(authentication_salt_e)
@@ -72,8 +72,8 @@ module ManagerManagement
         # Decrypt ga secret
         #
         # * Author: Puneet
-        # * Date: 10/10/2017
-        # * Reviewed By: Sunil
+        # * Date: 08/12/2018
+        # * Reviewed By:
         #
         # Sets @ga_secret_d
         #
@@ -83,7 +83,7 @@ module ManagerManagement
 
           decryptor_obj = LocalCipher.new(@authentication_salt_d)
 
-          resp = decryptor_obj.decrypt(@manager.mfa_token)
+          resp = decryptor_obj.decrypt(@manager_obj.mfa_token)
           fail OstCustomError.new unauthorized_access_response('am_l_ma_b_6') unless resp.success?
 
           @ga_secret_d = resp.data[:plaintext]
@@ -93,12 +93,11 @@ module ManagerManagement
 
         # Unauthorized access response
         #
-        # * Author: Alpesh
-        # * Date: 15/01/2018
+        # * Author: Puneet
+        # * Date: 08/12/2018
         # * Reviewed By:
         #
         # @param [String] err (mandatory) - err code
-        # @param [String] display_text (optional) - display text
         #
         # @return [Result::Base]
         #
