@@ -4,7 +4,7 @@ module ManagerManagement
 
     module MultiFactor
 
-      class GetGaUrl < ManagerManagement::Login::MultiFactor::Base
+      class GetMfaUrl < ManagerManagement::Login::MultiFactor::Base
 
         # Initialize
         #
@@ -15,7 +15,7 @@ module ManagerManagement
         # @params [String] single_auth_cookie_value (mandatory) - single auth cookie value
         # @params [String] browser_user_agent (mandatory) - browser user agent
         #
-        # @return [ManagerManagement::Login::MultiFactor::GetGaUrl]
+        # @return [ManagerManagement::Login::MultiFactor::GetMfaUrl]
         #
         def initialize(params)
           super

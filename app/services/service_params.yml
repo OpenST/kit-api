@@ -36,7 +36,7 @@
     - :browser_user_agent
     - :otp
   :optional:
-'ManagerManagement::Login::MultiFactor::GetGaUrl':
+'ManagerManagement::Login::MultiFactor::GetMfaUrl':
   :mandatory:
     - :password_auth_cookie_value
     - :browser_user_agent
