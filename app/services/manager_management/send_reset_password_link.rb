@@ -4,7 +4,7 @@ module ManagerManagement
 
     # Initialize
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -25,7 +25,7 @@ module ManagerManagement
 
     # Perform
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -53,7 +53,7 @@ module ManagerManagement
 
     # Fetch user
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -85,7 +85,7 @@ module ManagerManagement
 
     # Create Reset Password Token
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -119,7 +119,7 @@ module ManagerManagement
 
     # Send forgot password_mail
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #

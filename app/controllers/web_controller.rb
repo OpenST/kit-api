@@ -20,8 +20,8 @@ class WebController < ApplicationController
   # Set cookie
   #
   # * Author: Puneet
-  # * Date: 24/01/2018
-  # * Reviewed By: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By:
   #
   # @params [String] cookie_name (mandatory)
   # @params [String] value (mandatory)
@@ -41,8 +41,8 @@ class WebController < ApplicationController
   # Delete cookie
   #
   # * Author: Puneet
-  # * Date: 24/01/2018
-  # * Reviewed By: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By:
   #
   # @params [String] cookie_name (mandatory)
   #
@@ -55,7 +55,7 @@ class WebController < ApplicationController
   # Authenticate request - verifies Password Auth cookie
   #
   # * Author: Puneet
-  # * Date: 08/12/2018
+  # * Date: 07/12/2018
   # * Reviewed By:
   #
   def verify_password_cookie
@@ -167,8 +167,8 @@ class WebController < ApplicationController
   # Try to assign authenticity_token from headers, if not sent in params
   #
   # * Author: Puneet
-  # * Date: 12/02/2018
-  # * Reviewed By: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By:
   #
   def append_csrf_token_in_params
     params[:authenticity_token] ||= request.headers.env['HTTP_X_CSRF_TOKEN']

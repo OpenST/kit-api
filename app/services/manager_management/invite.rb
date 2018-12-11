@@ -225,7 +225,7 @@ module ManagerManagement
 
     # Enqueue Job
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 14/02/2018
     # * Reviewed By:
     #

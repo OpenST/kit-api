@@ -4,7 +4,7 @@ module ManagerManagement
 
     # Initialize
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -28,7 +28,7 @@ module ManagerManagement
 
     # Perform
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -64,7 +64,7 @@ module ManagerManagement
 
     # Validate and sanitize
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -124,7 +124,7 @@ module ManagerManagement
 
     # Fetch Manager validation record from token
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -136,7 +136,7 @@ module ManagerManagement
 
     # Validate Manager Validation hash
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -162,7 +162,7 @@ module ManagerManagement
 
     # Create update contact email hook
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -180,7 +180,7 @@ module ManagerManagement
 
     # Mark user as verified.
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -191,7 +191,7 @@ module ManagerManagement
 
     # Update Manager Validation hash used for double opt in and make all others inactive.
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -211,7 +211,7 @@ module ManagerManagement
 
     # Invalid Manager access response
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #
@@ -228,7 +228,7 @@ module ManagerManagement
 
     # Invalid Request Response
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 16/01/2018
     # * Reviewed By:
     #

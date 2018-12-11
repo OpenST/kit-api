@@ -8,7 +8,7 @@ module Email
 
       # Initialize
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -22,7 +22,7 @@ module Email
 
       # Perform
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -41,7 +41,7 @@ module Email
 
       # sub classes to implement logic of validating here
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -53,7 +53,7 @@ module Email
 
       # sub classes to implement logic of processing hook here
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -65,7 +65,7 @@ module Email
 
       # builds params which go into API call to Email Service
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -82,7 +82,7 @@ module Email
 
       # Build attributes for email service
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -94,7 +94,7 @@ module Email
 
       # Build user settings for email service
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #

@@ -96,7 +96,7 @@ module ManagerManagement
 
       # Invalid Request Response
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 11/01/2018
       # * Reviewed By:
       #

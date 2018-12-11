@@ -137,7 +137,7 @@ module GlobalConstant
 
       # is this template related to double opt in email
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -151,7 +151,7 @@ module GlobalConstant
 
       # Is this template of forgot password
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #

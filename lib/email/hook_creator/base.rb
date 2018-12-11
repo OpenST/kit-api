@@ -8,7 +8,7 @@ module Email
 
       # Initialize
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -22,7 +22,7 @@ module Email
 
       # Perform
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -41,7 +41,7 @@ module Email
 
       # Validate
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -53,7 +53,7 @@ module Email
 
       # Event type
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -65,7 +65,7 @@ module Email
 
       # sub classes to implement logic of handling an event here
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -77,7 +77,7 @@ module Email
 
       # Validate email
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -100,7 +100,7 @@ module Email
 
       # Validate Custom Attributes
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -124,7 +124,7 @@ module Email
 
       # Create new hook
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #

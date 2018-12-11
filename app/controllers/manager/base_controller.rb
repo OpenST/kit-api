@@ -2,6 +2,12 @@ class Manager::BaseController < WebController
 
   private
 
+  # Verify Recaptcha
+  #
+  # * Author: Puneet
+  # * Date: 11/12/2018
+  # * Reviewed By:
+  #
   def verify_recaptcha
 
     service_response = Google::Recaptcha.new({

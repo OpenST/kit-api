@@ -8,6 +8,12 @@ class Admin::BaseController < WebController
 
   private
 
+  # Check if Admin is authenticated to perform actions
+  #
+  # * Author: Puneet
+  # * Date: 11/12/2018
+  # * Reviewed By:
+  #
   def validate_admin
     admins = {
       GlobalConstant::AdminBasicAuth.username => GlobalConstant::AdminBasicAuth.password

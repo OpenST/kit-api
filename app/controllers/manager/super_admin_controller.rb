@@ -8,9 +8,14 @@ class Manager::SuperAdminController < Manager::BaseController
 
   private
 
+  # Check if Super Admin role
+  #
+  # * Author: Puneet
+  # * Date: 11/12/2018
+  # * Reviewed By:
+  #
   def verify_super_admin_role
     # implement validation
   end
-
 
 end

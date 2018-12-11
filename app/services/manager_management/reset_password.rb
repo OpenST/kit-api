@@ -4,7 +4,7 @@ module ManagerManagement
 
     # Initialize
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -31,7 +31,7 @@ module ManagerManagement
 
     # Perform
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -69,7 +69,7 @@ module ManagerManagement
 
     # Validate and sanitize
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -115,7 +115,7 @@ module ManagerManagement
 
     # Fetch Manager validation record from token
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -129,7 +129,7 @@ module ManagerManagement
 
     # Validate Manager Validation hash
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -153,7 +153,7 @@ module ManagerManagement
 
     # Fetch user
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -178,7 +178,7 @@ module ManagerManagement
 
     # Decrypt login salt
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -218,7 +218,7 @@ module ManagerManagement
 
     # Update password
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -235,7 +235,7 @@ module ManagerManagement
 
     # Update Manager Validation hash used in resetting password and make all others inactive.
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #
@@ -257,7 +257,7 @@ module ManagerManagement
 
     # Invalid Request Response
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 11/01/2018
     # * Reviewed By:
     #

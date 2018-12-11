@@ -156,7 +156,7 @@ module Util
 
     # Does password contains allowed characters and size
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 14/02/2018
     # * Reviewed By:
     #

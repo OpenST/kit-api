@@ -4,7 +4,7 @@ module ManagerManagement
 
     # Initialize
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 15/01/2018
     # * Reviewed By:
     #
@@ -24,7 +24,7 @@ module ManagerManagement
 
     # Perform
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 15/01/2018
     # * Reviewed By:
     #
@@ -52,7 +52,7 @@ module ManagerManagement
 
     # Fetch user
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 15/01/2018
     # * Reviewed By:
     #
@@ -84,7 +84,7 @@ module ManagerManagement
 
     # Create Double Opt In Token
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 15/01/2018
     # * Reviewed By:
     #
@@ -117,7 +117,7 @@ module ManagerManagement
 
     # Send Double OptIn mail
     #
-    # * Author: Pankaj
+    # * Author: Puneet
     # * Date: 15/01/2018
     # * Reviewed By:
     #

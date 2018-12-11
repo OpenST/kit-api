@@ -6,7 +6,7 @@ module Email
 
       # Initialize
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -20,7 +20,7 @@ module Email
 
       # Perform
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -34,7 +34,7 @@ module Email
 
       # validate
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -48,7 +48,7 @@ module Email
 
       # Start processing hook
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -75,7 +75,7 @@ module Email
 
       # Build attributes for email service
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -87,7 +87,7 @@ module Email
 
       # Build user settings for email service
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #

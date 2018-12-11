@@ -139,7 +139,7 @@ class Manager::LoginController < Manager::BaseController
 
   # Send Reset Password link
   #
-  # * Author: Pankaj
+  # * Author: Puneet
   # * Date: 15/01/2018
   # * Reviewed By:
   #
@@ -150,7 +150,7 @@ class Manager::LoginController < Manager::BaseController
 
   # Reset Password
   #
-  # * Author: Pankaj
+  # * Author: Puneet
   # * Date: 15/01/2018
   # * Reviewed By:
   #
@@ -161,7 +161,7 @@ class Manager::LoginController < Manager::BaseController
 
   # Email verification of user
   #
-  # * Author: Pankaj
+  # * Author: Puneet
   # * Date: 15/01/2018
   # * Reviewed By:
   #

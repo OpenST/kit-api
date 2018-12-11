@@ -8,7 +8,7 @@ module Email
 
       # Initialize
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -23,7 +23,7 @@ module Email
 
       # Perform
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -37,7 +37,7 @@ module Email
 
       # Validate
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -58,7 +58,7 @@ module Email
 
       # Event type
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -70,7 +70,7 @@ module Email
 
       # create a hook to add contact
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #

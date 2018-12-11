@@ -6,7 +6,7 @@ module Email
 
       # Initialize
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -26,7 +26,7 @@ module Email
 
       # Perform
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -40,7 +40,7 @@ module Email
 
       # Validate
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -57,7 +57,7 @@ module Email
 
       # Event type
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -69,7 +69,7 @@ module Email
 
       # check if this template is supported currently
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -86,7 +86,7 @@ module Email
 
       # depending on template name validate mandatory template vars
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #
@@ -124,7 +124,7 @@ module Email
 
       # create a hook to send transactional email
       #
-      # * Author: Pankaj
+      # * Author: Puneet
       # * Date: 12/01/2018
       # * Reviewed By:
       #

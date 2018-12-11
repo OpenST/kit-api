@@ -13,6 +13,12 @@ class ApplicationController < ActionController::API
 
   after_action :set_response_headers
 
+  # Not found action
+  #
+  # * Author: Puneet
+  # * Date: 11/12/2018
+  # * Reviewed By:
+  #
   def not_found
 
     r = Result::Base.error(
@@ -39,17 +45,19 @@ class ApplicationController < ActionController::API
   #
   def check_service_statuses
 
-    r = CacheManagement::SystemServiceStatuses.new().fetch
-
-    if r.success? && r.data.present? && (r.data[:saas_api_available] != 1 || r.data[:company_api_available] != 1)
-      r = Result::Base.error(
-        internal_id: 'ac_2',
-        general_error_identifier: 'api_under_maintenance',
-        http_code: GlobalConstant::ErrorCode.under_maintenance,
-        go_to: GlobalConstant::GoTo.service_unavailable
-      )
-      render_api_response(r)
-    end
+    #TODO: Implement later
+    #
+    # r = CacheManagement::SystemServiceStatuses.new().fetch
+    #
+    # if r.success? && r.data.present? && (r.data[:saas_api_available] != 1 || r.data[:company_api_available] != 1)
+    #   r = Result::Base.error(
+    #     internal_id: 'ac_2',
+    #     general_error_identifier: 'api_under_maintenance',
+    #     http_code: GlobalConstant::ErrorCode.under_maintenance,
+    #     go_to: GlobalConstant::GoTo.service_unavailable
+    #   )
+    #   render_api_response(r)
+    # end
 
   end
 
@@ -74,8 +82,8 @@ class ApplicationController < ActionController::API
   # Render API response
   #
   # * Author: Puneet
-  # * Date: 24/01/2018
-  # * Reviewed By: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By:
   #
   def render_api_response(service_response)
 
@@ -120,8 +128,8 @@ class ApplicationController < ActionController::API
   # Handle exceptions gracefully
   #
   # * Author: Puneet
-  # * Date: 24/01/2018
-  # * Reviewed By: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By:
   #
   def handle_exceptions_gracefully
 
