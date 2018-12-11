@@ -180,7 +180,18 @@ class Manager::LoginController < Manager::BaseController
     service_response = ManagerManagement::SendDoubleOptInLink.new(params).perform
     render_api_response(service_response)
   end
-  
+
+  # List Admins
+  #
+  # * Author: Puneet
+  # * Date: 15/02/2018
+  # * Reviewed By:
+  #
+  def list_admins
+    service_response = ManagerManagement::ListAdmins.new(params).perform
+    render_api_response(service_response)
+  end
+
   def append_user_agent_to_params
     params[:browser_user_agent] = http_user_agent
   end

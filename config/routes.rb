@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     match 'send-reset-password-link' => :send_reset_password_link, via: :POST
     match 'verify-email' => :verify_email, via: :GET
     match 'send-verify-email-link' => :send_verify_email_link, via: :POST
+    match 'list-admins' => :list_admins, via: :GET
   end
 
   scope 'api/manager/super_admin', controller: 'manager/super_admin' do
