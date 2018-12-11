@@ -1,7 +1,7 @@
 class CreateManagerValidationHashes < DbMigrationConnection
 
   def up
-    run_migration_for_db(EstablishCompanyClientDbConnection) do
+    run_migration_for_db(EstablishKitClientDbConnection) do
       create_table :manager_validation_hashes do |t|
         t.column :manager_id, :integer, null: false
         t.column :client_id, :integer, null: true
@@ -15,8 +15,8 @@ class CreateManagerValidationHashes < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishCompanyClientDbConnection) do
-      drop_table :manager_validation_hashes if EstablishCompanyClientDbConnection.connection.table_exists? :manager_validation_hashes
+    run_migration_for_db(EstablishKitClientDbConnection) do
+      drop_table :manager_validation_hashes if EstablishKitClientDbConnection.connection.table_exists? :manager_validation_hashes
     end
   end
 

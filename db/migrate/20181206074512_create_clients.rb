@@ -1,7 +1,7 @@
 class CreateClients < DbMigrationConnection
 
   def up
-    run_migration_for_db(EstablishCompanyClientDbConnection) do
+    run_migration_for_db(EstablishKitClientDbConnection) do
       create_table :clients do |t|
         t.column :name, :string, null: true
         t.column :mainnet_statuses, :tinyint, limit: 1, null: true
@@ -14,8 +14,8 @@ class CreateClients < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishCompanyClientDbConnection) do
-      drop_table :clients if EstablishCompanyClientDbConnection.connection.table_exists? :clients
+    run_migration_for_db(EstablishKitClientDbConnection) do
+      drop_table :clients if EstablishKitClientDbConnection.connection.table_exists? :clients
     end
   end
   

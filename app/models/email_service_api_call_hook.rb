@@ -15,7 +15,7 @@ class EmailServiceApiCallHook < EstablishKitAsyncHooksDbConnection
     # limit for number of records to be processed in one iteration of continuis cron
     #
     # * Author: Puneet
-    # * Date: 12/10/2017
+    # * Date: 06/12/2018
     # * Reviewed By:
     #
     # @return [Integer]
@@ -27,7 +27,7 @@ class EmailServiceApiCallHook < EstablishKitAsyncHooksDbConnection
     # retry count
     #
     # * Author: Puneet
-    # * Date: 12/10/2017
+    # * Date: 06/12/2018
     # * Reviewed By:
     #
     # @return [Integer]

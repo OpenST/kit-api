@@ -1,4 +1,4 @@
-class ClientManager < EstablishCompanyClientDbConnection
+class ClientManager < EstablishKitClientDbConnection
 
   def self.mainnet_privilages_config
     @c_m_privilages ||= {

@@ -1,4 +1,4 @@
-class Manager < EstablishCompanyClientDbConnection
+class Manager < EstablishKitClientDbConnection
 
   enum status: {
       GlobalConstant::Manager.invited_status => 1,
