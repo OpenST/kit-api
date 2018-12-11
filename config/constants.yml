@@ -2,9 +2,9 @@ constants:
   sub_env: <%= ENV['KA_SUB_ENV']%>
   env_identifier: <%= ENV['ENV_IDENTIFIER'] %>
 
-  basic_auth:
-    admin_username: <%= ENV['KA_ADMIN_BASIC_AUTH_USERNAME'] %>
-    admin_password: <%= ENV['KA_ADMIN_BASIC_AUTH_PASSWORD'] %>
+  admin_basic_auth:
+    username: <%= ENV['KA_ADMIN_BASIC_AUTH_USERNAME'] %>
+    password: <%= ENV['KA_ADMIN_BASIC_AUTH_PASSWORD'] %>
 
   aws:
     region: <%= ENV['KA_DEFAULT_AWS_REGION']%>
