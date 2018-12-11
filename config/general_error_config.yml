@@ -3,15 +3,10 @@ invalid_api_params:
   code: "INVALID_REQUEST"
   message: "At least one parameter is invalid or missing. See err.error_data for more details."
 
-unauthorized_api_request:
+unauthorized_access_response:
   http_code: 422
   code: "UNAUTHORIZED"
   message: "Unauthorized"
-
-unauthorized_for_other_client:
-  http_code: 422
-  code: "UNAUTHORIZED"
-  message: "Unauthorized for another client."
 
 api_under_maintenance:
   http_code: 502
