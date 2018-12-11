@@ -60,7 +60,8 @@ module ManagerManagement
             manager_id: @manager_id,
             manager: @manager,
             client_id: @manager[:current_client_id],
-            client: @client
+            client: @client,
+            client_manager: @client_manager
           )
 
         end

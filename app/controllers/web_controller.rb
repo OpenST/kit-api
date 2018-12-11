@@ -76,7 +76,10 @@ class WebController < ApplicationController
       ) if extended_cookie_value.present?
 
       params[:manager_id] = password_cookie_verify_rsp.data[:manager_id]
+      params[:manager] = password_cookie_verify_rsp.data[:manager]
       params[:client_id] = password_cookie_verify_rsp.data[:client_id]
+      params[:client] = password_cookie_verify_rsp.data[:client]
+      params[:client_manager] = password_cookie_verify_rsp.data[:client_manager]
 
       # Remove sensitive data
       password_cookie_verify_rsp.data = {}
@@ -117,7 +120,10 @@ class WebController < ApplicationController
       ) if extended_cookie_value.present?
 
       params[:manager_id] = mfa_cookie_verify_rsp.data[:manager_id]
+      params[:manager] = mfa_cookie_verify_rsp.data[:manager]
       params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
+      params[:client] = mfa_cookie_verify_rsp.data[:client]
+      params[:client_manager] = mfa_cookie_verify_rsp.data[:client_manager]
 
       # Remove sensitive data
       mfa_cookie_verify_rsp.data = {}
@@ -137,7 +143,7 @@ class WebController < ApplicationController
         if client_properties.present? &&
             Client.get_bits_set_for_properties(client_properties).include?(GlobalConstant::Client.has_enforced_mfa_property)
 
-          redirect_to :mfa_get and return
+          redirect_to :mfa and return
 
         end
 
