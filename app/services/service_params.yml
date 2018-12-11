@@ -75,3 +75,11 @@
   :mandatory:
     - :email
   :optional:
+'AdminManagement::Whitelist::Email':
+  :mandatory:
+    - :email
+  :optional:
+'AdminManagement::Whitelist::Domain':
+  :mandatory:
+    - :email_domain
+  :optional:
