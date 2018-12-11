@@ -96,12 +96,22 @@ module ManagerManagement
 
       @invitee_manager = Manager.where(email: @email).first
 
-      fail OstCustomError.new validation_error(
-                                  'um_su_4',
-                                  'invalid_api_params',
-                                  ['already_registered_email'],
-                                  GlobalConstant::ErrorAction.default
-                              ) if @invitee_manager.present?
+      if @invitee_manager.present?
+
+        if @invitee_manager.status != GlobalConstant::Manager.invited_status
+
+          fail OstCustomError.new validation_error(
+                                      'um_su_4',
+                                      'invalid_api_params',
+                                      ['already_registered_email'],
+                                      GlobalConstant::ErrorAction.default
+                                  )
+
+        else
+          return success
+        end
+
+      end
 
       generate_login_salt
 
