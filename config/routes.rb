@@ -18,6 +18,11 @@ Rails.application.routes.draw do
     match 'send-verify-email-link' => :send_verify_email_link, via: :POST
   end
 
+  scope 'api/manager/super_admin', controller: 'manager/super_admin' do
+    match 'reset-mfa' => :reset_mfa, via: :POST
+    match 'invite-manager' => :invite_manager, via: :POST
+  end
+
   # Handle any other routes
   match '*permalink', to: 'application#not_found', via: :all
 

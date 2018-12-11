@@ -129,7 +129,6 @@ class Manager < EstablishCompanyClientDbConnection
   # @return [String]
   #
   def self.get_cookie_token(params)
-    puts "get_cookie_token_params: #{params}"
     string_to_sign = "#{params[:manager_id]}:#{params[:token_s]}:#{params[:last_session_updated_at]}:#{params[:browser_user_agent]}:#{params[:cookie_creation_time]}:#{params[:auth_level]}"
     key="#{params[:manager_id]}:#{params[:cookie_creation_time]}:#{params[:last_session_updated_at]}:#{params[:browser_user_agent]}:#{params[:token_s][-12..-1]}:#{GlobalConstant::SecretEncryptor.cookie_key}"
     OpenSSL::HMAC.hexdigest("SHA256", key, string_to_sign)
