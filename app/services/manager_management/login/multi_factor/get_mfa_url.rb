@@ -12,8 +12,7 @@ module ManagerManagement
         # * Date: 09/01/2018
         # * Reviewed By:
         #
-        # @params [String] single_auth_cookie_value (mandatory) - single auth cookie value
-        # @params [String] browser_user_agent (mandatory) - browser user agent
+        # @params [String] manager_id (mandatory) - manager_id
         #
         # @return [ManagerManagement::Login::MultiFactor::GetMfaUrl]
         #
@@ -36,22 +35,20 @@ module ManagerManagement
 
             validate
 
-            validate_password_auth_cookie
-
             fetch_manager
-
-            decrypt_authentication_salt
 
             if @manager.mfa_token.present?
               if @manager.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
                 # If manager already setup MFA fail
-                fail OstCustomError.new unauthorized_access_response('mm_l_mf_gau_1')
+                return success_with_data(qr_code_url: @qr_code_url)
               else
                 # case when QR Code URL was once generated but manager never submitted valid OTP against it to setup MFA
+                decrypt_authentication_salt
                 decrypt_ga_secret
               end
             else
               # Set up a new one
+              decrypt_authentication_salt
               setup_ga_secret
             end
 

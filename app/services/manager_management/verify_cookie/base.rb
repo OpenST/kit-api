@@ -21,9 +21,12 @@ module ManagerManagement
         @cookie_value = @params[:cookie_value]
         @browser_user_agent = @params[:browser_user_agent]
 
+        @client = nil
         @manager = nil
+        @manager_s = nil
         @manager_id = nil
         @created_ts = nil
+        @client_manager = nil
         @extended_cookie_value = nil
 
       end
@@ -46,12 +49,18 @@ module ManagerManagement
 
           validate_token
 
+          validate_client
+
+          validate_client_manager
+
           set_extended_cookie_value
 
           success_with_data(
             extended_cookie_value: @extended_cookie_value,
             manager_id: @manager_id,
-            client_id: @manager[:current_client_id]
+            manager: @manager,
+            client_id: @manager[:current_client_id],
+            client: @client
           )
 
         end
@@ -114,6 +123,64 @@ module ManagerManagement
         )
 
         fail OstCustomError.new unauthorized_access_response('am_vc_6') unless (evaluated_token == @token)
+
+        success
+
+      end
+
+      # Validate client
+      #
+      # * Author: Puneet
+      # * Date: 10/10/2017
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def validate_client
+
+        @client = CacheManagement::Client.new([@manager[:current_client_id]]).fetch[@manager[:current_client_id]]
+
+        fail OstCustomError.new unauthorized_access_response('am_vc_7') if @client.blank?
+
+        if Util::CommonValidator.is_mainnet_env?
+          is_client_inactive = @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_inactive_status)
+        else
+          is_client_inactive = @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_inactive_status)
+        end
+
+        fail OstCustomError.new unauthorized_access_response('am_vc_8') if is_client_inactive
+
+        success
+
+      end
+
+      # Validate client manager
+      #
+      # * Author: Puneet
+      # * Date: 10/10/2017
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def validate_client_manager
+
+        puts "#{@manager_id}"
+        puts "#{@manager[:current_client_id]}"
+
+        @client_manager = CacheManagement::ClientManager.new([@manager_id], {client_id: @manager[:current_client_id]}).fetch[@manager_id]
+        fail OstCustomError.new unauthorized_access_response('am_vc_9') if @client_manager.blank?
+
+        if Util::CommonValidator.is_mainnet_env?
+          privilages = @client_manager[:mainnet_privilages]
+          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_mainnet_owner_privilage) ||
+              privilages.include?(GlobalConstant::ClientManager.is_mainnet_admin_privilage)
+        else
+          privilages = @client_manager[:sandbox_privilages]
+          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_sandbox_owner_privilage) ||
+              privilages.include?(GlobalConstant::ClientManager.is_sandbox_admin_privilage)
+        end
+
+        fail OstCustomError.new unauthorized_access_response('am_vc_10') unless is_client_manager_active
 
         success
 

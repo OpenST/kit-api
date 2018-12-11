@@ -32,14 +32,13 @@
   :optional:
 'ManagerManagement::Login::MultiFactor::Authenticate':
   :mandatory:
-    - :password_auth_cookie_value
+    - :manager_id
     - :browser_user_agent
     - :otp
   :optional:
 'ManagerManagement::Login::MultiFactor::GetMfaUrl':
   :mandatory:
-    - :password_auth_cookie_value
-    - :browser_user_agent
+    - :manager_id
   :optional:
 'ManagerManagement::Login::PasswordAuth':
   :mandatory:

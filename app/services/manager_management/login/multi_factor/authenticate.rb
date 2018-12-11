@@ -12,7 +12,7 @@ module ManagerManagement
         # * Date: 10/10/2017
         # * Reviewed By: 
         #
-        # @params [String] password_auth_cookie_value (mandatory) - single auth cookie value
+        # @params [String] manager_id (mandatory) - manager_id
         # @params [String] otp (mandatory) - this is the Otp entered
         # @params [String] browser_user_agent (mandatory) - browser user agent
         #
@@ -20,6 +20,7 @@ module ManagerManagement
         #
         def initialize(params)
           super
+          @browser_user_agent = @params[:browser_user_agent]
           @otp = @params[:otp].to_s
           @double_auth_cookie_value = nil
         end
@@ -37,8 +38,6 @@ module ManagerManagement
           handle_errors_and_exceptions do
 
             validate
-
-            validate_password_auth_cookie
 
             fetch_manager
 

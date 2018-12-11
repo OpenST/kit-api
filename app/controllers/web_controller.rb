@@ -11,13 +11,11 @@ class WebController < ApplicationController
   before_action :append_csrf_token_in_params
 
   # Check CSRF. Disable it for local postman testing.
-  unless GlobalConstant::Base.postman_testing?
-    include ActionController::RequestForgeryProtection
-    protect_from_forgery with: :exception
-    include CsrfTokenConcern
-  end
+  include ActionController::RequestForgeryProtection
+  protect_from_forgery with: :exception
+  include CsrfTokenConcern
 
-  before_action :authenticate_request
+  before_action :verify_mfa_cookie
 
   # Set cookie
   #
@@ -54,41 +52,110 @@ class WebController < ApplicationController
 
   private
 
-  # Authenticate request - verifies cookie
+  # Authenticate request - verifies Password Auth cookie
   #
   # * Author: Puneet
-  # * Date: 24/01/2018
-  # * Reviewed By: Aman
+  # * Date: 08/12/2018
+  # * Reviewed By:
   #
-  def authenticate_request
+  def verify_password_cookie
 
-    service_response = ManagerManagement::VerifyCookie.new(
+    password_cookie_verify_rsp = ManagerManagement::VerifyCookie::PasswordAuth.new(
+        cookie_value: cookies[GlobalConstant::Cookie.user_cookie_name.to_sym],
+        browser_user_agent: http_user_agent
+    ).perform
+
+    if password_cookie_verify_rsp.success?
+
+      # Update Cookie, if required
+      extended_cookie_value = password_cookie_verify_rsp.data[:extended_cookie_value]
+      set_cookie(
+          GlobalConstant::Cookie.user_cookie_name,
+          extended_cookie_value,
+          GlobalConstant::Cookie.mfa_auth_expiry.from_now
+      ) if extended_cookie_value.present?
+
+      params[:manager_id] = password_cookie_verify_rsp.data[:manager_id]
+      params[:client_id] = password_cookie_verify_rsp.data[:client_id]
+
+      # Remove sensitive data
+      password_cookie_verify_rsp.data = {}
+
+    else
+
+      # Clear cookie
+      delete_cookie(GlobalConstant::Cookie.user_cookie_name)
+      # Set 401 header
+      password_cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
+      render_api_response(password_cookie_verify_rsp)
+
+    end
+
+  end
+
+  # Authenticate request - verifies MFA cookie
+  #
+  # * Author: Puneet
+  # * Date: 08/12/2018
+  # * Reviewed By:
+  #
+  def verify_mfa_cookie
+
+    mfa_cookie_verify_rsp = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
       cookie_value: cookies[GlobalConstant::Cookie.user_cookie_name.to_sym],
       browser_user_agent: http_user_agent
     ).perform
 
-    if service_response.success?
+    if mfa_cookie_verify_rsp.success?
+
       # Update Cookie, if required
-      extended_cookie_value = service_response.data[:extended_cookie_value]
+      extended_cookie_value = mfa_cookie_verify_rsp.data[:extended_cookie_value]
       set_cookie(
         GlobalConstant::Cookie.user_cookie_name,
         extended_cookie_value,
-        GlobalConstant::Cookie.user_expiry.from_now
+        GlobalConstant::Cookie.mfa_auth_expiry.from_now
       ) if extended_cookie_value.present?
 
-      params[:manager_id] = service_response.data[:manager_id]
-      params[:client_id] = service_response.data[:client_id]
-      params[:client_token_id] = service_response.data[:client_token_id]
+      params[:manager_id] = mfa_cookie_verify_rsp.data[:manager_id]
+      params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
 
       # Remove sensitive data
-      service_response.data = {}
+      mfa_cookie_verify_rsp.data = {}
+
     else
-      # Clear cookie
-      delete_cookie(GlobalConstant::Cookie.user_cookie_name)
-      # Set 401 header
-      service_response.http_code = GlobalConstant::ErrorCode.unauthorized_access
-      render_api_response(service_response)
+
+      password_cookie_verify_rsp = ManagerManagement::VerifyCookie::PasswordAuth.new(
+          cookie_value: cookies[GlobalConstant::Cookie.user_cookie_name.to_sym],
+          browser_user_agent: http_user_agent
+      ).perform
+
+      if password_cookie_verify_rsp.success?
+
+        client_properties = password_cookie_verify_rsp.data[:client][:properties]
+
+        # if client had enforced mfa and user is accessing something which requires mfa auth, redirect to mfa auth screen
+        if client_properties.present? &&
+            Client.get_bits_set_for_properties(client_properties).include?(GlobalConstant::Client.has_enforced_mfa_property)
+
+          redirect_to :mfa_get and return
+
+        end
+
+        # Remove sensitive data
+        password_cookie_verify_rsp.data = {}
+
+      else
+
+        # Clear cookie
+        delete_cookie(GlobalConstant::Cookie.user_cookie_name)
+        # Set 401 header
+        mfa_cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
+        render_api_response(mfa_cookie_verify_rsp)
+
+      end
+
     end
+
   end
 
   # Try to assign authenticity_token from headers, if not sent in params

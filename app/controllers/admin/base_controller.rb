@@ -2,7 +2,7 @@ class Admin::BaseController < WebController
   
   include ActionController::HttpAuthentication::Basic::ControllerMethods
   
-  skip_before_action :authenticate_request
+  skip_before_action :verify_mfa_cookie
 
   before_action :validate_admin
 

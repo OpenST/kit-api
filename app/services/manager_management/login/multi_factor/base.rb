@@ -13,7 +13,6 @@ module ManagerManagement
         # * Reviewed By: 
         #
         # @params [String] password_auth_cookie_value (mandatory) - single auth cookie value
-        # @params [String] browser_user_agent (mandatory) - browser user agent
         #
         # @return [ManagerManagement::Login::MultiFactor::Base]
         #
@@ -21,10 +20,8 @@ module ManagerManagement
 
           super
 
-          @password_auth_cookie_value = @params[:password_auth_cookie_value].to_s
-          @browser_user_agent = @params[:browser_user_agent]
+          @manager_id = @params[:manager_id]
 
-          @manager_id = nil
           @manager = nil
           @authentication_salt_d = nil
           @ga_secret_d = nil
@@ -32,31 +29,6 @@ module ManagerManagement
         end
 
         private
-
-        # Parse and validate single auth cookie
-        #
-        # * Author: Puneet
-        # * Date: 10/10/2017
-        # * Reviewed By: 
-        #
-        # Sets @manager_id
-        #
-        # @return [Result::Base]
-        #
-        def validate_password_auth_cookie
-
-          service_response = ManagerManagement::VerifyCookie::PasswordAuth.new(
-              cookie_value: @password_auth_cookie_value,
-              browser_user_agent: @browser_user_agent
-          ).perform
-
-          fail OstCustomError.new unauthorized_access_response('am_l_ma_b_1') unless service_response.success?
-
-          @manager_id = service_response.data[:manager_id]
-
-          success
-
-        end
 
         # Fetch admin
         #

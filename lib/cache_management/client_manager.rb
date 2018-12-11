@@ -16,8 +16,8 @@ module CacheManagement
       data_to_cache = ::ClientManager.where(
           manager_id: manager_ids,
           client_id: @options[:client_id]).inject({}
-      ) do |client_managers_data, client|
-        client_managers_data[client.id] = client.formated_cache_data
+      ) do |client_managers_data, client_manager|
+        client_managers_data[client_manager.manager_id] = client_manager.formated_cache_data
         client_managers_data
       end
       success_with_data(data_to_cache)

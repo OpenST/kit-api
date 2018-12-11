@@ -38,8 +38,8 @@ class ClientManager < EstablishCompanyClientDbConnection
     {
         client_id: client_id,
         manager_id: manager_id,
-        mainnet_privilages: mainnet_privilages.present? ? Client.get_bits_set_for_mainnet_privilages(mainnet_privilages) : [],
-        sandbox_privilages: sandbox_privilages.present? ? Client.get_bits_set_for_sandbox_privilages(sandbox_privilages) : []
+        mainnet_privilages: mainnet_privilages.present? ? ClientManager.get_bits_set_for_mainnet_privilages(mainnet_privilages) : [],
+        sandbox_privilages: sandbox_privilages.present? ? ClientManager.get_bits_set_for_sandbox_privilages(sandbox_privilages) : []
     }
   end
 
