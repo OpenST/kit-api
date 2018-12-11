@@ -34,7 +34,7 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        authenticate_request
+        verify_mfa_cookie
 
         logout_manager
 
@@ -52,7 +52,7 @@ module ManagerManagement
     # * Date: 21/09/2018
     # * Reviewed By:
     #
-    def authenticate_request
+    def verify_mfa_cookie
 
       r = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
           cookie_value: @cookie_value,
