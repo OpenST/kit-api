@@ -48,7 +48,7 @@ module ManagerManagement
 
           validate_invite_token
 
-          fetch_and_validate_manager
+          fetch_and_validate_invited_manager
 
           fetch_and_validate_client
 
@@ -103,126 +103,6 @@ module ManagerManagement
 
         # NOTE: To be on safe side, check for generic errors as well
         validate
-
-      end
-
-      # Decode Invite Token
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      # Sets @decrypted_invite_token
-      #
-      def decrypt_invite_token
-        decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
-        r = decryptor_obj.decrypt(@invite_token)
-        return r unless r.success?
-        @decrypted_invite_token = r.data[:plaintext]
-        success
-      end
-
-      # Validate Invite Token
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      # Sets @manager_validation_hash
-      #
-      def validate_invite_token
-
-        splited_reset_token = @decrypted_invite_token.split(ManagerValidationHash.token_delimitter)
-        invalid_url_error('um_rp_1') if splited_reset_token.length != 2
-
-        validation_hash = splited_reset_token[1]
-        manager_validation_hash_id = splited_reset_token[0]
-
-        invalid_url_error('um_rp_3') unless Util::CommonValidator.is_numeric?(manager_validation_hash_id)
-
-        invalid_url_error('um_rp_4') unless Util::CommonValidator.is_alphanumeric?(validation_hash)
-
-        @manager_validation_hash = ManagerValidationHash.where(id: manager_validation_hash_id.to_i).first
-
-        invalid_url_error('um_rp_4') if @manager_validation_hash.blank?
-
-        invalid_url_error('um_rp_5') if @manager_validation_hash.validation_hash != validation_hash
-
-        invalid_url_error('um_rp_6') if @manager_validation_hash.status != GlobalConstant::ManagerValidationHash.active_status
-
-        invalid_url_error('um_rp_7') if @manager_validation_hash.is_expired?
-
-        invalid_url_error('um_rp_8') if @manager_validation_hash.kind != GlobalConstant::ManagerValidationHash.manager_invite_kind
-
-        @client_id = @manager_validation_hash.client_id
-        @manager_id = @manager_validation_hash.manager_id
-
-        success
-
-      end
-
-      # Invalid Request Response
-      #
-      # * Author: Pankaj
-      # * Date: 11/01/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def invalid_url_error(code)
-        fail OstCustomError.new validation_error(
-                 code,
-                 'invalid_api_params',
-                 ['invalid_r_t'],
-                 GlobalConstant::ErrorAction.default
-             )
-      end
-
-      # Find & validate manager
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_and_validate_manager
-
-        @manager = Manager.where(id: @manager_id).first
-
-        invalid_url_error('um_rp_9') if @manager.blank?
-
-        invalid_url_error('um_rp_10') if @manager.status != GlobalConstant::Manager.invited_status
-
-        success
-
-      end
-
-      # Find & validate client
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_and_validate_client
-
-        @client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
-
-        invalid_url_error('um_rp_11') if @client.blank?
-
-        if Util::CommonValidator.is_mainnet_env?
-          invalid_url_error('um_rp_12') if @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_active_status)
-        else
-          invalid_url_error('um_rp_13') if @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_inactive_status)
-        end
-
-        success
 
       end
 

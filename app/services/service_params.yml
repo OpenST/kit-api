@@ -16,6 +16,10 @@
     - :password
     - :browser_user_agent
   :optional:
+'ManagerManagement::SignUp::GetDetails':
+  :mandatory:
+  :optional:
+    - :i_t
 'ManagerManagement::VerifyCookie::PasswordAuth':
   :mandatory:
     - :cookie_value
