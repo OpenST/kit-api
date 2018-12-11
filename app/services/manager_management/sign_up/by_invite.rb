@@ -65,7 +65,8 @@ module ManagerManagement
           enqueue_job
 
           success_with_data(
-              cookie_value: @cookie_value
+          {cookie_value: @cookie_value},
+            fetch_go_to
           )
 
         end

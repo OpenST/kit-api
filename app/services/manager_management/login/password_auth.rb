@@ -44,6 +44,8 @@ module ManagerManagement
 
           fetch_manager
 
+          fetch_client
+
           decrypt_login_salt
 
           validate_password
@@ -102,6 +104,21 @@ module ManagerManagement
 
         success
 
+      end
+
+      # Fetch client
+      #
+      # * Author: Alpesh
+      # * Date: 15/01/2018
+      # * Reviewed By:
+      #
+      # Sets @client
+      #
+      # @return [Result::Base]
+      #
+      def fetch_client
+        @client = CacheManagement::Client.new([@manager.current_client_id]).fetch[@manager.current_client_id]
+        success
       end
 
       # Decrypt login salt
@@ -189,10 +206,27 @@ module ManagerManagement
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )
 
-        success_with_data(cookie_value: cookie_value)
+        success_with_data({cookie_value: cookie_value}, go_to: fetch_go_to)
 
       end
-      
+
+      # Get goto for next page
+      #
+      # * Author: Puneet
+      # * Date: 08/12/2018
+      # * Reviewed By:
+      #
+      # @return [Hash]
+      #
+      def fetch_go_to
+        if @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property) ||
+            @manager.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+          GlobalConstant::GoTo.mfa
+        else
+          GlobalConstant::GoTo.economy_planner_step_one
+        end
+      end
+
     end
 
   end

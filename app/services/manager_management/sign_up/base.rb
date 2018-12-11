@@ -196,6 +196,22 @@ module ManagerManagement
         success
       end
 
+      # Get goto for next page
+      #
+      # * Author: Puneet
+      # * Date: 08/12/2018
+      # * Reviewed By:
+      #
+      # @return [Hash]
+      #
+      def fetch_go_to
+        if @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
+          GlobalConstant::GoTo.mfa
+        else
+          GlobalConstant::GoTo.economy_planner_step_one
+        end
+      end
+
     end
 
   end

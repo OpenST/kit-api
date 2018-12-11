@@ -41,6 +41,8 @@ module ManagerManagement
 
             fetch_manager
 
+            fetch_client
+
             fail OstCustomError.new unauthorized_access_response('am_l_ma_b_3') if @manager.mfa_token.blank?
 
             decrypt_authentication_salt
@@ -52,7 +54,8 @@ module ManagerManagement
             set_double_auth_cookie_value
 
             success_with_data(
-                double_auth_cookie_value: @double_auth_cookie_value
+                {double_auth_cookie_value: @double_auth_cookie_value},
+                go_to: fetch_go_to
             )
 
           end
@@ -60,6 +63,21 @@ module ManagerManagement
         end
 
         private
+
+        # Fetch client
+        #
+        # * Author: Alpesh
+        # * Date: 15/01/2018
+        # * Reviewed By:
+        #
+        # Sets @client
+        #
+        # @return [Result::Base]
+        #
+        def fetch_client
+          @client = CacheManagement::Client.new([@manager.current_client_id]).fetch[@manager.current_client_id]
+          success
+        end
 
         # Validate otp
         #
@@ -111,6 +129,23 @@ module ManagerManagement
           )
 
           success
+        end
+
+        # Get goto for next page
+        #
+        # * Author: Puneet
+        # * Date: 08/12/2018
+        # * Reviewed By:
+        #
+        # @return [Hash]
+        #
+        def fetch_go_to
+          if @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property) ||
+              @manager.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+            GlobalConstant::GoTo.mfa
+          else
+            GlobalConstant::GoTo.economy_planner_step_one
+          end
         end
 
       end

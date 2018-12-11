@@ -26,27 +26,16 @@ module Util
     #
     # @return [Result::Base]
     #
-    def success_with_data(data)
+    def success_with_data(data, go_to = {})
+
       # Allow only Hash data to pass ahead
       data = {} unless Util::CommonValidator.is_a_hash?(data)
+      go_to = {} unless Util::CommonValidator.is_a_hash?(data)
 
       Result::Base.success({
-                               data: data
+                               data: data,
+                               go_to: go_to
                            })
-    end
-
-    # Success with Go TO
-    #
-    # * Author: Puneet
-    # * Date: 19/02/2018
-    # * Reviewed By:
-    #
-    # @param [Hash] data (mandatory) - data to be sent in the response
-    #
-    # @return [Result::Base]
-    #
-    def success_with_go_to(go_to)
-      Result::Base.success(go_to: go_to)
     end
 
     # Error with Action
