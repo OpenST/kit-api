@@ -165,6 +165,8 @@ module ManagerManagement
 
         @client_id = client.id
 
+        @client = client.formated_cache_data
+
       end
 
       # modify invited manager object
