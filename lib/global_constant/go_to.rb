@@ -5,9 +5,15 @@ module GlobalConstant
 
     class << self
 
-      def mfa
+      def setup_mfa
         {
-          by_screen_name: :mfa
+            by_screen_name: :setup_mfa
+        }
+      end
+
+      def authenticate_mfa
+        {
+          by_screen_name: :authenticate_mfa
         }
       end
 

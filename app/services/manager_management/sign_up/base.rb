@@ -206,7 +206,7 @@ module ManagerManagement
       #
       def fetch_go_to
         if @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
-          GlobalConstant::GoTo.mfa
+          GlobalConstant::GoTo.setup_mfa
         else
           GlobalConstant::GoTo.economy_planner_step_one
         end
