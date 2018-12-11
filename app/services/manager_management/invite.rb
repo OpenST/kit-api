@@ -115,7 +115,7 @@ module ManagerManagement
       end
 
       fail OstCustomError.new error_with_data(
-                                  'um_su_5',
+                                  'um_su_6',
                                   'unauthorized_access_response',
                                   GlobalConstant::ErrorAction.default
                               ) if privilages.exclude?(super_admin_privilage)
