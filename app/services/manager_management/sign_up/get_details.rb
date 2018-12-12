@@ -47,10 +47,15 @@ module ManagerManagement
 
           fetch_and_validate_client
 
+          fetch_and_validate_inviter_manager
+
           success_with_data(
             client: @client,
+            inviter_manager: {
+              email: Util::CommonSanitizer.secure_email(@inviter_manager[:email])
+            },
             invited_manager: {
-              email: @manager_obj.email.gsub(/.{0,4}@/, '####@')
+              email: Util::CommonSanitizer.secure_email(@manager_obj.email)
             }
           )
 

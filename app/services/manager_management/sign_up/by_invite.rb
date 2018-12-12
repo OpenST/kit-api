@@ -52,6 +52,8 @@ module ManagerManagement
 
           fetch_and_validate_client
 
+          fetch_and_validate_inviter_manager
+
           decrypt_login_salt
 
           update_manager

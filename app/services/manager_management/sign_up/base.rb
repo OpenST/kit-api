@@ -89,6 +89,7 @@ module ManagerManagement
 
         @client_id = @manager_validation_hash.client_id
         @manager_id = @manager_validation_hash.manager_id
+        @inviter_manager_id = @manager_validation_hash.extra_data[:inviter_manager_id]
 
         success
 
@@ -153,6 +154,22 @@ module ManagerManagement
 
         success
 
+      end
+
+      # Find & validate inviter manager
+      #
+      # * Author: Puneet
+      # * Date: 06/12/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_and_validate_inviter_manager
+        @inviter_manager = CacheManagement::Manager.new([@inviter_manager_id]).fetch[@inviter_manager_id]
+        invalid_url_error('um_rp_14') if @inviter_manager.status != GlobalConstant::Manager.active_status
+        client_manager = CacheManagement::ClientManager.new([@inviter_manager_id], {client_id: @client_id}).fetch[@inviter_manager_id]
+        invalid_url_error('um_rp_15') if client_manager[:privilages].exclude?(GlobalConstant::ClientManager.is_super_admin_privilage)
+        success
       end
 
       # Set cookie value
