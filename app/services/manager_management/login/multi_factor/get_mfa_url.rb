@@ -37,8 +37,8 @@ module ManagerManagement
 
             fetch_manager
 
-            if @manager.mfa_token.present?
-              if @manager.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+            if @manager_obj.mfa_token.present?
+              if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
                 # If manager already setup MFA fail
                 return success_with_data(qr_code_url: @qr_code_url)
               else
@@ -80,8 +80,8 @@ module ManagerManagement
           r = encryptor_obj.encrypt(@ga_secret_d)
           fail OstCustomError.new r unless r.success?
 
-          @manager.mfa_token = r.data[:ciphertext_blob]
-          @manager.save
+          @manager_obj.mfa_token = r.data[:ciphertext_blob]
+          @manager_obj.save
 
           success
 
@@ -97,7 +97,7 @@ module ManagerManagement
         def set_ga_secret_auth
 
           rotp_client = Google::Authenticator.new(@ga_secret_d)
-          r = rotp_client.provisioning_uri("#{identifier_suffix}:#{@manager.email}")
+          r = rotp_client.provisioning_uri("#{identifier_suffix}:#{@manager_obj.email}")
           fail OstCustomError.new r unless r.success?
 
           otpauth = r.data[:otpauth]
