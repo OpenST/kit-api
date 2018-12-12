@@ -116,6 +116,14 @@ module Email
               GlobalConstant::ErrorAction.default
           ) if @template_vars[:reset_password_token].blank?
 
+        elsif GlobalConstant::PepoCampaigns.is_manager_invite_template?(@template_name)
+
+          return error_with_data(
+              'e_hc_stm_6',
+              'something_went_wrong',
+              GlobalConstant::ErrorAction.default
+          ) if @template_vars[:invite_token].blank?
+
         end
 
         success

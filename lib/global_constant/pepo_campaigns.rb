@@ -136,7 +136,8 @@ module GlobalConstant
       def supported_templates
         [
           double_opt_in_template,
-          forgot_password_template
+          forgot_password_template,
+          invite_manager_template
         ]
       end
 
@@ -165,6 +166,20 @@ module GlobalConstant
       def is_forgot_password_template?(template_name)
         [
             GlobalConstant::PepoCampaigns.forgot_password_template
+        ].include?(template_name)
+      end
+
+      # Is this template of manager invite
+      #
+      # * Author: Puneet
+      # * Date: 12/01/2018
+      # * Reviewed By:
+      #
+      # @return [Boolean]
+      #
+      def is_manager_invite_template?(template_name)
+        [
+            GlobalConstant::PepoCampaigns.invite_manager_template
         ].include?(template_name)
       end
 
