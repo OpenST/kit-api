@@ -56,7 +56,7 @@ module ManagerManagement
 
           update_manager
 
-          create_client_manager
+          update_client_manager
 
           update_invite_token
 
@@ -146,20 +146,6 @@ module ManagerManagement
 
       end
 
-      # set privilages
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def add_privilages_to_client_manager
-        @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_invited_privilage}")
-        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilage}")
-        success
-      end
-
       # Update Invite Token
       #
       # * Author: Puneet
@@ -184,6 +170,28 @@ module ManagerManagement
         )
 
         success
+
+      end
+
+      # Create client manager
+      #
+      # * Author: Puneet
+      # * Date: 06/12/2018
+      # * Reviewed By:
+      #
+      # Sets @client_manager_obj
+      #
+      def update_client_manager
+
+        @client_manager_obj = ClientManager.where(
+            client_id: @client_id,
+            manager_id: @manager_obj.id
+        ).first
+
+        @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_invited_privilage}")
+        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilage}")
+
+        @client_manager_obj.save!
 
       end
 

@@ -155,27 +155,6 @@ module ManagerManagement
 
       end
 
-      # Create client manager
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # Sets @client_manager_obj
-      #
-      def create_client_manager
-
-        @client_manager_obj = ClientManager.new(
-            client_id: @client_id,
-            manager_id: @manager_obj.id
-        )
-
-        add_privilages_to_client_manager
-
-        @client_manager_obj.save!
-
-      end
-
       # Set cookie value
       #
       # * Author: Puneet
