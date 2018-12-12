@@ -4,7 +4,7 @@ invalid_api_params:
   message: "At least one parameter is invalid or missing. See err.error_data for more details."
 
 unauthorized_access_response:
-  http_code: 422
+  http_code: 401
   code: "UNAUTHORIZED"
   message: "Unauthorized"
 
@@ -17,6 +17,21 @@ resource_not_found:
   http_code: 404
   code: "NOT_FOUND"
   message: "The requested resource could not be located."
+
+no_client_associated:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "No client is associated with this account. Please contact support."
+
+client_inactive:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Client isn't active. Please contact support."
+
+client_manager_inactive:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Client manager isn't active. Please contact support."
 
 something_went_wrong:
   http_code: 422
