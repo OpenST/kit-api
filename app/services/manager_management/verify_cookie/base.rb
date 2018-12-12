@@ -200,7 +200,7 @@ module ManagerManagement
 
       # Unauthorized access response
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #

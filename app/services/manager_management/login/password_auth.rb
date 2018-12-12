@@ -6,7 +6,7 @@ module ManagerManagement
       
       # Initialize
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #
@@ -22,8 +22,8 @@ module ManagerManagement
         @email = @params[:email]
         @password = @params[:password]
         @browser_user_agent = @params[:browser_user_agent]
-        @client = @params[:client]
 
+        @client = nil
         @manager_obj = nil
         @authentication_salt_d = nil
         
@@ -31,7 +31,7 @@ module ManagerManagement
 
       # Perform
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #
@@ -44,6 +44,8 @@ module ManagerManagement
           validate
 
           fetch_manager
+
+          fetch_client
 
           decrypt_login_salt
 
@@ -61,7 +63,7 @@ module ManagerManagement
 
       # Fetch user
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #
@@ -105,9 +107,23 @@ module ManagerManagement
 
       end
 
+      # Fetch client
+      #
+      # * Author: Puneet
+      # * Date: 15/01/2018
+      # * Reviewed By:
+      #
+      # Sets @client
+      #
+      # @return [Result::Base]
+      #
+      def fetch_client
+        @client = CacheManagement::Client.new([@manager_obj.current_client_id]).fetch[@manager_obj.current_client_id]
+      end
+
       # Decrypt login salt
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #
@@ -126,7 +142,7 @@ module ManagerManagement
 
       # Validate password
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #
@@ -156,7 +172,7 @@ module ManagerManagement
 
       # Update last_session_updated_at
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #
@@ -174,7 +190,7 @@ module ManagerManagement
 
       # Set cookie value
       #
-      # * Author: Alpesh
+      # * Author: Puneet
       # * Date: 15/01/2018
       # * Reviewed By:
       #
