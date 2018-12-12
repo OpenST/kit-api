@@ -19,6 +19,10 @@ module GlobalConstant
         'is_invited'
       end
 
+      def has_rejected_invite_privilage
+        'has_rejected_invite'
+      end
+
       ### Privilages stop ###
 
     end
