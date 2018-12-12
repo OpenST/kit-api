@@ -139,23 +139,7 @@ module ManagerManagement
       #
       def validate_client
 
-        no_client_associated_response('am_vc_8') if @manager[:current_client_id].blank?
-
-        @client = CacheManagement::Client.new([@manager[:current_client_id]]).fetch[@manager[:current_client_id]]
-
-        no_client_associated_response('am_vc_9') if @client.blank?
-
-        if Util::CommonValidator.is_mainnet_env?
-          is_client_inactive = @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_inactive_status)
-        else
-          is_client_inactive = @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_inactive_status)
-        end
-
-        fail OstCustomError.new error_with_data(
-                                    'am_vc_10',
-                                    'client_inactive',
-                                    GlobalConstant::ErrorAction.default
-                                ) if is_client_inactive
+        @client = Util::EntityHelper.fetch_and_validate_client(@manager[:current_client_id], 'am_vc_')
 
         success
 
