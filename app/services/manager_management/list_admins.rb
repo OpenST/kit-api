@@ -110,14 +110,21 @@ module ManagerManagement
       # Fetch all client info.
       client_info = client_managers_data.to_a
 
+      # Format the managers info
+      client_managers_info = []
+      client_info.each do |client_manager|
+        client_manager = client_manager.formated_cache_data
+        client_managers_info.push(client_manager)
+      end
+
       # If more entries are still available, populate nextPagePayload in response.
       if @client_ids.length > @page_size
         @api_response_data[:meta][:nextPagePayload][:page_size] = @page_size
         @api_response_data[:meta][:nextPagePayload][:page_no] = @page_no + 1
-        client_info = client_info.first(@page_size)
+        client_managers_info = client_managers_info.first(@page_size)
       end
 
-      @api_response_data[:client_admins] = client_info
+      @api_response_data[:client_admins] = client_managers_info
 
     end
 
