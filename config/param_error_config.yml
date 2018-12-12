@@ -132,3 +132,8 @@ missing_client_id:
   parameter: 'client_id'
   code: 'missing'
   message: 'missing client_id'
+
+invalid_page_no:
+  parameter: 'page_no'
+  code: 'invalid'
+  message: 'invalid page_no'
