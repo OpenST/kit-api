@@ -136,8 +136,8 @@ module ManagerManagement
       #
       def fetch_client_manager
 
-        @client_manager = CacheManagement::ClientManager.new([@manager_id],
-       {client_id: @manager[:current_client_id]}).fetch[@manager_id]
+        @client_manager = CacheManagement::ClientManager.new([@manager_obj.id],
+       {client_id: @manager_obj.current_client_id}).fetch[@manager_obj.id]
 
         client_manager_not_associated_response('mm_l_pa_3') if @client_manager.blank?
 

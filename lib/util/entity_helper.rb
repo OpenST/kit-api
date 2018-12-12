@@ -38,7 +38,7 @@ module Util
         manager_not_found_response("#{err_prefix}_1") if manager_id.blank?
         manager = CacheManagement::Manager.new([manager_id]).fetch[manager_id]
         manager_not_found_response("#{err_prefix}_2") if manager[:status] != GlobalConstant::Manager.active_status
-        success
+        manager
       end
 
       private
