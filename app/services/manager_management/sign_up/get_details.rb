@@ -49,6 +49,7 @@ module ManagerManagement
 
           success_with_data(
             client: @client,
+            manager: @inviter_manager,
             invited_manager: {
               email: @manager.email.gsub(/.{0,4}@/, '####@')
             }

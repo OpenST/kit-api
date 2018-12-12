@@ -7,20 +7,16 @@ module GlobalConstant
 
       ### Privilages start ###
 
-      def is_sandbox_admin_privilage
-        'is_sandbox_admin'
+      def is_admin_privilage
+        'is_admin'
       end
 
-      def is_sandbox_super_admin_privilage
-        'is_sandbox_owner'
+      def is_super_admin_privilage
+        'is_super_admin'
       end
 
-      def is_mainnet_admin_privilage
-        'is_mainnet_admin'
-      end
-
-      def is_mainnet_super_admin_privilage
-        'is_mainnet_owner'
+      def is_invited_privilage
+        'is_invited'
       end
 
       ### Privilages stop ###

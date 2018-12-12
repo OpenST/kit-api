@@ -165,21 +165,13 @@ module ManagerManagement
       #
       def validate_client_manager
 
-        puts "#{@manager_id}"
-        puts "#{@manager[:current_client_id]}"
-
         @client_manager = CacheManagement::ClientManager.new([@manager_id], {client_id: @manager[:current_client_id]}).fetch[@manager_id]
         fail OstCustomError.new unauthorized_access_response('am_vc_9') if @client_manager.blank?
 
-        if Util::CommonValidator.is_mainnet_env?
-          privilages = @client_manager[:mainnet_privilages]
-          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_mainnet_super_admin_privilage) ||
-              privilages.include?(GlobalConstant::ClientManager.is_mainnet_admin_privilage)
-        else
-          privilages = @client_manager[:sandbox_privilages]
-          is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_sandbox_super_admin_privilage) ||
-              privilages.include?(GlobalConstant::ClientManager.is_sandbox_admin_privilage)
-        end
+        privilages = @client_manager[:privilages]
+
+        is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_super_admin_privilage) ||
+            privilages.include?(GlobalConstant::ClientManager.is_admin_privilage)
 
         fail OstCustomError.new unauthorized_access_response('am_vc_10') unless is_client_manager_active
 

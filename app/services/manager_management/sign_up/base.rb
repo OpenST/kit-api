@@ -24,9 +24,9 @@ module ManagerManagement
 
         @client_id = nil
         @manager_id = nil
-        @manager = nil
+        @manager_obj = nil
         @client = nil
-        @client_manager = nil
+        @client_manager_obj = nil
         @cookie_value = nil
         @invite_token = nil
         @decrypted_invite_token = nil
@@ -111,7 +111,7 @@ module ManagerManagement
                                 )
       end
 
-      # Find & validate manager
+      # Find & validate invited manager
       #
       # * Author: Puneet
       # * Date: 06/12/2018
@@ -121,11 +121,11 @@ module ManagerManagement
       #
       def fetch_and_validate_invited_manager
 
-        @manager = Manager.where(id: @manager_id).first
+        @manager_obj = Manager.where(id: @manager_id).first
 
-        invalid_url_error('um_rp_9') if @manager.blank?
+        invalid_url_error('um_rp_9') if @manager_obj.blank?
 
-        invalid_url_error('um_rp_10') if @manager.status != GlobalConstant::Manager.invited_status
+        invalid_url_error('um_rp_10') if @manager_obj.status != GlobalConstant::Manager.invited_status
 
         success
 
@@ -161,18 +161,18 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # Sets @client_manager
+      # Sets @client_manager_obj
       #
       def create_client_manager
 
-        @client_manager = ClientManager.new(
+        @client_manager_obj = ClientManager.new(
             client_id: @client_id,
-            manager_id: @manager.id
+            manager_id: @manager_obj.id
         )
 
         add_privilages_to_client_manager
 
-        @client_manager.save!
+        @client_manager_obj.save!
 
       end
 
@@ -186,11 +186,11 @@ module ManagerManagement
       #
       def set_cookie_value
         @cookie_value = Manager.get_cookie_value(
-            manager_id: @manager.id,
-            current_client_id: @manager.current_client_id,
-            token_s: @manager.password,
+            manager_id: @manager_obj.id,
+            current_client_id: @manager_obj.current_client_id,
+            token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
-            last_session_updated_at: @manager.last_session_updated_at,
+            last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )
         success

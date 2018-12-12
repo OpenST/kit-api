@@ -48,6 +48,8 @@ module ManagerManagement
 
         create_invite_token
 
+        create_client_manager
+
         enqueue_job
 
         success_with_data({})
@@ -106,19 +108,11 @@ module ManagerManagement
           GlobalConstant::ErrorAction.default
       ) if client_manager.blank?
 
-      if Util::CommonValidator.is_mainnet_env?
-        privilages = client_manager[:mainnet_privilages]
-        super_admin_privilage = GlobalConstant::ClientManager.is_mainnet_super_admin_privilage
-      else
-        privilages = client_manager[:sandbox_privilages]
-        super_admin_privilage = GlobalConstant::ClientManager.is_sandbox_super_admin_privilage
-      end
-
       fail OstCustomError.new error_with_data(
                                   'um_su_6',
                                   'unauthorized_access_response',
                                   GlobalConstant::ErrorAction.default
-                              ) if privilages.exclude?(super_admin_privilage)
+                              ) if client_manager[:privilages].exclude?(GlobalConstant::ClientManager.is_super_admin_privilage)
 
       success
 
@@ -223,10 +217,32 @@ module ManagerManagement
 
     end
 
+    # Create Client Manager
+    #
+    # * Author: Puneet
+    # * Date: 08/12/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def create_client_manager
+
+      cm = ClientManager.new(
+         client_id: @client_id,
+         manager_id: @invitee_manager.id,
+      )
+
+      cm.send("set_#{GlobalConstant::ClientManager.is_invited_privilage}")
+      cm.save!
+
+      success
+
+    end
+
     # Enqueue Job
     #
     # * Author: Puneet
-    # * Date: 14/02/2018
+    # * Date: 08/12/2018
     # * Reviewed By:
     #
     # @return [Result::Base]

@@ -6,8 +6,7 @@ class CreateClientManagers < DbMigrationConnection
       create_table :client_managers do |t|
         t.column :client_id, :integer, null: false
         t.column :manager_id, :integer, null: false
-        t.column :mainnet_privilages, :tinyint, limit: 1, null: true
-        t.column :sandbox_privilages, :tinyint, limit: 1, null: true
+        t.column :privilages, :tinyint, limit: 1, null: true
         t.timestamps
       end
       add_index :client_managers, [:client_id, :manager_id], name: 'uk_1', unique: true

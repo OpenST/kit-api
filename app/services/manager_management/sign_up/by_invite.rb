@@ -119,7 +119,7 @@ module ManagerManagement
       #
       def decrypt_login_salt
 
-        r = Aws::Kms.new('login','user').decrypt(@manager.authentication_salt)
+        r = Aws::Kms.new('login','user').decrypt(@manager_obj.authentication_salt)
         fail r unless r.success?
 
         @login_salt_d = r.data[:plaintext]
@@ -138,11 +138,11 @@ module ManagerManagement
       #
       def update_manager
 
-        @manager.password = Manager.get_encrypted_password(@password, @login_salt_d)
-        @manager.current_client_id = @client_id
-        @manager.status = GlobalConstant::Manager.active_status
-        @manager.last_session_updated_at = current_timestamp
-        @manager.save
+        @manager_obj.password = Manager.get_encrypted_password(@password, @login_salt_d)
+        @manager_obj.current_client_id = @client_id
+        @manager_obj.status = GlobalConstant::Manager.active_status
+        @manager_obj.last_session_updated_at = current_timestamp
+        @manager_obj.save
 
       end
 
@@ -155,8 +155,8 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def add_privilages_to_client_manager
-        @client_manager.send("set_#{GlobalConstant::ClientManager.is_mainnet_admin_privilage}")
-        @client_manager.send("set_#{GlobalConstant::ClientManager.is_sandbox_admin_privilage}")
+        @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_invited_privilage}")
+        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilage}")
         success
       end
 

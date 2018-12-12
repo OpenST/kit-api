@@ -102,8 +102,7 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def add_privilages_to_client_manager
-        @client_manager.send("set_#{GlobalConstant::ClientManager.is_mainnet_super_admin_privilage}")
-        @client_manager.send("set_#{GlobalConstant::ClientManager.is_sandbox_super_admin_privilage}")
+        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilage}")
         success
       end
 
@@ -117,28 +116,39 @@ module ManagerManagement
       #
       def create_manager
 
-        @manager = Manager.where(email: @email).first
+        @manager_obj = Manager.where(email: @email).first
 
-        fail OstCustomError.new validation_error(
-                                    'um_su_4',
-                                    'invalid_api_params',
-                                    ['already_registered_email'],
-                                    GlobalConstant::ErrorAction.default
-                                ) if @manager.present?
+        if @manager_obj.present?
 
-        generate_login_salt
+          if @manager_obj.status != GlobalConstant::Manager.invited_status
+
+            fail OstCustomError.new validation_error(
+                                        'um_su_4',
+                                        'invalid_api_params',
+                                        ['already_registered_email'],
+                                        GlobalConstant::ErrorAction.default
+                                    )
+
+          end
+
+        else
+
+          generate_login_salt
+
+          @manager_obj = Manager.new(
+              email: @email,
+              authentication_salt: @authentication_salt_hash[:ciphertext_blob]
+          )
+
+        end
 
         password_e = Manager.get_encrypted_password(@password, @authentication_salt_hash[:plaintext])
 
-        @manager = Manager.new(
-            email: @email,
-            password: password_e,
-            authentication_salt: @authentication_salt_hash[:ciphertext_blob],
-            last_session_updated_at: current_timestamp,
-            status: GlobalConstant::Manager.active_status
-        )
+        @manager_obj.password = password_e
+        @manager_obj.last_session_updated_at = current_timestamp
+        @manager_obj.status = GlobalConstant::Manager.active_status
 
-        @manager.save!
+        @manager_obj.save!
 
         success
 
@@ -176,8 +186,8 @@ module ManagerManagement
       #
       def update_manager
 
-        @manager.current_client_id = @client_id
-        @manager.save
+        @manager_obj.current_client_id = @client_id
+        @manager_obj.save
 
       end
 
@@ -193,7 +203,7 @@ module ManagerManagement
       #
       def generate_login_salt
         r = Aws::Kms.new('login', 'user').generate_data_key
-        fail r unless r.success?
+        fail OstCustomError.new r unless r.success?
 
         @authentication_salt_hash = r.data
 

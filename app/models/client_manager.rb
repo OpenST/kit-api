@@ -1,23 +1,16 @@
 class ClientManager < EstablishKitClientDbConnection
 
-  def self.mainnet_privilages_config
-    @c_m_privilages ||= {
-        GlobalConstant::ClientManager.is_mainnet_super_admin_privilage => 1,
-        GlobalConstant::ClientManager.is_mainnet_admin_privilage => 2
-    }
-  end
-
-  def self.sandbox_privilages_config
-    @c_s_privilages ||= {
-        GlobalConstant::ClientManager.is_sandbox_super_admin_privilage => 1,
-        GlobalConstant::ClientManager.is_sandbox_admin_privilage => 2
+  def self.privilages_config
+    @c_privilages ||= {
+        GlobalConstant::ClientManager.is_super_admin_privilage => 1,
+        GlobalConstant::ClientManager.is_admin_privilage => 2,
+        GlobalConstant::ClientManager.is_invited_privilage => 4
     }
   end
 
   def self.bit_wise_columns_config
     @b_w_c_c ||= {
-        mainnet_privilages: mainnet_privilages_config,
-        sandbox_privilages: sandbox_privilages_config
+        privilages: privilages_config
     }
   end
 
@@ -38,8 +31,7 @@ class ClientManager < EstablishKitClientDbConnection
     {
         client_id: client_id,
         manager_id: manager_id,
-        mainnet_privilages: mainnet_privilages.present? ? ClientManager.get_bits_set_for_mainnet_privilages(mainnet_privilages) : [],
-        sandbox_privilages: sandbox_privilages.present? ? ClientManager.get_bits_set_for_sandbox_privilages(sandbox_privilages) : []
+        privilages: privilages.present? ? ClientManager.get_bits_set_for_privilages(privilages) : []
     }
   end
 
