@@ -240,7 +240,7 @@ module ManagerManagement
       def enqueue_job
 
         BackgroundJob.enqueue(
-            SignUpViaInviteJob,
+            SignUpJob,
             {
                 manager_id: @manager_id
             }

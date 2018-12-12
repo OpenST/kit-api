@@ -120,6 +120,11 @@ module GlobalConstant
         'forgot_password'
       end
 
+      # invite manager email - sent when manager is invited to a client
+      def invite_manager_template
+        'ost_kit_invite_manager'
+      end
+
       # All possible templates integrated with email service
       #
       # * Author: Puneet
