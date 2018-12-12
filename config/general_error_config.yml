@@ -28,6 +28,21 @@ client_inactive:
   code: "UNPROCESSABLE_ENTITY"
   message: "Client isn't active. Please contact support."
 
+client_not_found:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "Client not found."
+
+manager_inactive:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Manager isn't active. Please contact support."
+
+manager_not_found:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "Manager not found."
+
 client_manager_inactive:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"

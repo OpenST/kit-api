@@ -24,6 +24,7 @@ module ManagerManagement
         @browser_user_agent = @params[:browser_user_agent]
 
         @client = nil
+        @client_manager = nil
         @manager_obj = nil
         @authentication_salt_d = nil
         
@@ -46,6 +47,8 @@ module ManagerManagement
           fetch_manager
 
           fetch_client
+
+          fetch_client_manager
 
           decrypt_login_salt
 
@@ -118,9 +121,33 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def fetch_client
-        no_client_associated_response('mm_l_pa_1') if @manager_obj.current_client_id.blank?
-        @client = CacheManagement::Client.new([@manager_obj.current_client_id]).fetch[@manager_obj.current_client_id]
-        no_client_associated_response('mm_l_pa_2') if @client.blank?
+        @client = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'um_l_fu')
+      end
+
+      # Fetch client manager
+      #
+      # * Author: Puneet
+      # * Date: 15/01/2018
+      # * Reviewed By:
+      #
+      # Sets @client_manager
+      #
+      # @return [Result::Base]
+      #
+      def fetch_client_manager
+
+        @client_manager = CacheManagement::ClientManager.new([@manager_id],
+       {client_id: @manager[:current_client_id]}).fetch[@manager_id]
+
+        client_manager_not_associated_response('mm_l_pa_3') if @client_manager.blank?
+
+        privilages = @client_manager[:privilages]
+
+        is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_super_admin_privilage) ||
+            privilages.include?(GlobalConstant::ClientManager.is_admin_privilage)
+
+        client_manager_not_associated_response('mm_l_pa_4') unless is_client_manager_active
+
       end
 
       # Decrypt login salt
@@ -222,31 +249,15 @@ module ManagerManagement
       # @return [Hash]
       #
       def fetch_go_to
-        if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+        if !@manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+          GlobalConstant::GoTo.verify_email
+        elsif @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
           GlobalConstant::GoTo.authenticate_mfa
         elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
           GlobalConstant::GoTo.setup_mfa
         else
           GlobalConstant::GoTo.economy_planner_step_one
         end
-      end
-
-      # no client associated response
-      #
-      # * Author: Puneet
-      # * Date: 15/01/2018
-      # * Reviewed By:
-      #
-      # @param [String] err (mandatory) - err code
-      #
-      # @return [Result::Base]
-      #
-      def no_client_associated_response(err)
-        fail OstCustomError.new error_with_data(
-                                    err,
-                                    'no_client_associated',
-                                    GlobalConstant::ErrorAction.default
-                                )
       end
 
     end

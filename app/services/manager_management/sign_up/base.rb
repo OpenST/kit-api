@@ -141,19 +141,12 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def fetch_and_validate_client
-
-        @client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
-
-        invalid_url_error('um_rp_11') if @client.blank?
-
-        if Util::CommonValidator.is_mainnet_env?
-          invalid_url_error('um_rp_12') if @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_active_status)
-        else
-          invalid_url_error('um_rp_13') if @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_inactive_status)
+        begin
+          @client = Util::EntityHelper.fetch_and_validate_client(@client_id, 'um_rp')
+        rescue OstCustomError => ose
+          invalid_url_error(ose.internal_id)
         end
-
         success
-
       end
 
       # Find & validate inviter manager
@@ -165,11 +158,18 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def fetch_and_validate_inviter_manager
-        @inviter_manager = CacheManagement::Manager.new([@inviter_manager_id]).fetch[@inviter_manager_id]
-        invalid_url_error('um_rp_14') if @inviter_manager[:status] != GlobalConstant::Manager.active_status
+
+        begin
+          @inviter_manager = Util::EntityHelper.fetch_and_validate_manager(@inviter_manager_id, 'um_rp')
+        rescue OstCustomError => ose
+          invalid_url_error(ose.internal_id)
+        end
+
         client_manager = CacheManagement::ClientManager.new([@inviter_manager_id], {client_id: @client_id}).fetch[@inviter_manager_id]
         invalid_url_error('um_rp_15') if client_manager[:privilages].exclude?(GlobalConstant::ClientManager.is_super_admin_privilage)
+
         success
+
       end
 
       # Set cookie value
@@ -201,11 +201,7 @@ module ManagerManagement
       # @return [Hash]
       #
       def fetch_go_to
-        if @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
-          GlobalConstant::GoTo.setup_mfa
-        else
-          GlobalConstant::GoTo.economy_planner_step_one
-        end
+        GlobalConstant::GoTo.verify_email
       end
 
     end

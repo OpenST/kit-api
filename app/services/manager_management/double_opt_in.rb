@@ -23,7 +23,7 @@ module ManagerManagement
       @token = nil
       @manager_validation_hash_id = nil
       @manager_validation_hash_obj = nil
-      @manager = nil
+      @manager_obj = nil
 
     end
 
@@ -43,7 +43,7 @@ module ManagerManagement
 
         fetch_logged_in_manager
 
-        return success if @manager.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+        return success_with_data({}, go_to: fetch_go_to) if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
 
         fetch_manager_validation_record
 
@@ -53,9 +53,9 @@ module ManagerManagement
 
         create_update_contact_email_service_hook
 
-        mark_user_verified
+        mark_manager_verified
 
-        success
+        success_with_data({}, go_to: fetch_go_to)
         
       end
 
@@ -108,18 +108,18 @@ module ManagerManagement
     # * Date: 16/02/2018
     # * Reviewed By:
     #
-    # Sets @manager
+    # Sets @manager_obj
     #
     def fetch_logged_in_manager
 
-      @manager = Manager.where(id: @manager_id).first
+      @manager_obj = Manager.where(id: @manager_id).first
 
       fail OstCustomError.new validation_error(
         'mm_doi_4',
         'invalid_api_params',
         ['invalid_user_id'],
         GlobalConstant::ErrorAction.default
-      ) if @manager.blank? || @manager[:status] != GlobalConstant::Manager.active_status
+      ) if @manager_obj.blank? || @manager_obj[:status] != GlobalConstant::Manager.active_status
 
       success
 
@@ -171,7 +171,7 @@ module ManagerManagement
     #
     def create_update_contact_email_service_hook
       Email::HookCreator::UpdateContact.new(
-        email: @manager.email,
+        email: @manager_obj.email,
         custom_attributes: {
           GlobalConstant::PepoCampaigns.double_optin_done_attribute => GlobalConstant::PepoCampaigns.double_optin_done_value
         },
@@ -187,9 +187,9 @@ module ManagerManagement
     # * Date: 16/01/2018
     # * Reviewed By:
     #
-    def mark_user_verified
-      @manager.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
-      @manager.save!
+    def mark_manager_verified
+      @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
+      @manager_obj.save!
     end
 
     # Update Manager Validation hash used for double opt in and make all others inactive.
@@ -244,6 +244,24 @@ module ManagerManagement
         ['invalid_r_t'],
         GlobalConstant::ErrorAction.default
       )
+    end
+
+    # Get goto for next page
+    #
+    # * Author: Puneet
+    # * Date: 08/12/2018
+    # * Reviewed By:
+    #
+    # @return [Hash]
+    #
+    def fetch_go_to
+      if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+        GlobalConstant::GoTo.authenticate_mfa
+      elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
+        GlobalConstant::GoTo.setup_mfa
+      else
+        GlobalConstant::GoTo.economy_planner_step_one
+      end
     end
 
   end
