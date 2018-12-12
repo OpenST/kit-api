@@ -32,8 +32,19 @@ class Manager::SuperAdminController < Manager::BaseController
   # * Date: 12/12/2018
   # * Reviewed By:
   #
-  def invite_manager
+  def invite_admin
     service_response = ManagerManagement::SuperAdmin::InviteAdmin.new(params).perform
+    render_api_response(service_response)
+  end
+
+  # Delete admin
+  #
+  # * Author: Shlok
+  # * Date: 12/12/2018
+  # * Reviewed By:
+  #
+  def delete_admin
+    service_response = ManagerManagement::SuperAdmin::DeleteAdmin.new(params).perform
     render_api_response(service_response)
   end
 
