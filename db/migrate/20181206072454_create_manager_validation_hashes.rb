@@ -8,6 +8,7 @@ class CreateManagerValidationHashes < DbMigrationConnection
         t.column :validation_hash, :text, null: false
         t.column :kind, :tinyint, limit: 1, null: false
         t.column :status, :tinyint, limit: 1, null: false
+        t.text :extra_data, default: nil
         t.timestamps
       end
       execute ("ALTER TABLE manager_validation_hashes AUTO_INCREMENT = 5000")

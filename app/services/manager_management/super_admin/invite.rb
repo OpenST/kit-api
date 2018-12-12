@@ -88,36 +88,6 @@ module ManagerManagement
 
       end
 
-      # Validate inviter manager
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_and_validate_inviter_manager
-
-        client_manager = CacheManagement::ClientManager.new(
-          [@inviter_manager_id],
-          {client_id: @client_id}).fetch[@inviter_manager_id]
-
-        fail OstCustomError.new error_with_data(
-                                  'mm_su_i_2',
-                                  'unauthorized_access_response',
-                                  GlobalConstant::ErrorAction.default
-                                ) if client_manager.blank?
-
-        fail OstCustomError.new error_with_data(
-                                  'mm_su_i_3',
-                                  'unauthorized_access_response',
-                                  GlobalConstant::ErrorAction.default
-                                ) if client_manager[:privilages].exclude?(GlobalConstant::ClientManager.is_super_admin_privilage)
-
-        success
-
-      end
-
       # create manager
       #
       # * Author: Puneet
@@ -203,7 +173,10 @@ module ManagerManagement
           client_id: @client_id,
           kind: GlobalConstant::ManagerValidationHash.manager_invite_kind,
           validation_hash: invite_token_d,
-          status: GlobalConstant::ManagerValidationHash.active_status
+          status: GlobalConstant::ManagerValidationHash.active_status,
+          extra_data: {
+            inviter_manager_id: @inviter_manager_id
+          }
         )
 
         # create a custom key using db id and local cipher encrypt token

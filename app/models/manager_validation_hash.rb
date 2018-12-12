@@ -12,6 +12,8 @@ class ManagerValidationHash < EstablishKitClientDbConnection
       GlobalConstant::ManagerValidationHash.used_status => 3
   }
 
+  serialize :extra_data, Hash
+
   def self.token_delimitter
     return ':'
   end
