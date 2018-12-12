@@ -12,8 +12,8 @@
   :optional:
 'ManagerManagement::SignUp::GetDetails':
   :mandatory:
-  :optional:
     - :i_t
+  :optional:
 'ManagerManagement::VerifyCookie::PasswordAuth':
   :mandatory:
     - :cookie_value
@@ -67,7 +67,9 @@
   :optional:
 'ManagerManagement::ListAdmins':
   :mandatory:
+    - :client_id
   :optional:
+    - :page_no
 'ManagerManagement::SuperAdmin::VerifySuperAdmin':
   :mandatory:
     - :client_manager

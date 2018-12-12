@@ -40,7 +40,7 @@ module ManagerManagement
             if @manager_obj.mfa_token.present?
               if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
                 # If manager already setup MFA fail
-                return success_with_data(qr_code_url: @qr_code_url)
+                return success_response
               else
                 # case when QR Code URL was once generated but manager never submitted valid OTP against it to setup MFA
                 decrypt_authentication_salt
@@ -54,7 +54,7 @@ module ManagerManagement
 
             set_ga_secret_auth
 
-            success_with_data(qr_code_url: @qr_code_url)
+            success_response
 
           end
 
@@ -117,6 +117,14 @@ module ManagerManagement
         #
         def identifier_suffix
           Rails.env.production? ? "ost kit" : "#{Rails.env} ost kit"
+        end
+
+        def success_response
+          success_with_data({
+                              setup_mfa: {
+                                qr_code_url: @qr_code_url
+                              }
+                            })
         end
 
       end

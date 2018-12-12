@@ -10,7 +10,7 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [String] i_t (optional) - token if this user is signing up from via a manager invite link
+      # @param [String] i_t (mandatory) - token if this user is signing up from via a manager invite link
       #
       # @return [ManagerManagement::SignUp::GetDetails]
       #
