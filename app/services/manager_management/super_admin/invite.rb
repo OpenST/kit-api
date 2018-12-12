@@ -201,13 +201,24 @@ module ManagerManagement
       #
       def create_client_manager
 
-        cm = ClientManager.new(
-          client_id: @client_id,
-          manager_id: @invitee_manager.id,
-          )
+        cm = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
+
+        if cm.present? && cm.privilages.present?
+          privilages = ClientManager.get_bits_set_for_privilages(cm.privilages) - [GlobalConstant::ClientManager.is_invited_privilage]
+          # if any other privilage was set other than invite, either invite was already accepted or rejected. fail this request
+          fail OstCustomError.new validation_error(
+                                      'mm_su_i_5',
+                                      'invalid_api_params',
+                                      ['already_registered_email'],
+                                      GlobalConstant::ErrorAction.default
+                                  ) if privilages.any?
+        end
+
+        cm ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
 
         cm.send("set_#{GlobalConstant::ClientManager.is_invited_privilage}")
-        cm.save!
+
+        cm.save! if cm.changed?
 
         success
 
@@ -222,8 +233,14 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def enqueue_job
-        #TODO: Enqueue job to send email
         puts "invite_token: #{@invite_token}"
+        BackgroundJob.enqueue(
+            InviteJob,
+            {
+                manager_id: @invitee_manager.id,
+                invite_token: @invite_token
+            }
+        )
       end
 
     end
