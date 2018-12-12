@@ -27,6 +27,10 @@ class Manager::LoginController < Manager::BaseController
   #
   def sign_up_get
 
+    ManagerManagement::Logout.new(params).perform
+    # delete cookie irrespective if service response was success
+    delete_cookie(GlobalConstant::Cookie.user_cookie_name)
+
     if params[:i_t].present?
       service_response = ManagerManagement::SignUp::GetDetails.new(params).perform
     else
