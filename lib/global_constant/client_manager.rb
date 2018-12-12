@@ -23,6 +23,10 @@ module GlobalConstant
         'has_rejected_invite'
       end
 
+      def has_been_deleted_privilage
+        'has_been_deleted'
+      end
+
       ### Privilages stop ###
 
     end

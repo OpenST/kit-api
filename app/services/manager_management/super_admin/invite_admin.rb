@@ -2,7 +2,7 @@ module ManagerManagement
 
   module SuperAdmin
 
-    class Invite < ServicesBase
+    class InviteAdmin < ServicesBase
 
       # Initialize
       #
@@ -14,7 +14,7 @@ module ManagerManagement
       # @param [Integer] client_id (mandatory) - id of the client to which invite is for
       # @param [String] email (mandatory) - the email of the user which is to be invited
       #
-      # @return [ManagerManagement::SuperAdmin::Invite]
+      # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
       def initialize(params)
 

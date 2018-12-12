@@ -33,7 +33,7 @@ class Manager::SuperAdminController < Manager::BaseController
   # * Reviewed By:
   #
   def invite_manager
-    service_response = ManagerManagement::SuperAdmin::Invite.new(params).perform
+    service_response = ManagerManagement::SuperAdmin::InviteAdmin.new(params).perform
     render_api_response(service_response)
   end
 

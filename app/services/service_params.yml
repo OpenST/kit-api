@@ -72,9 +72,15 @@
   :mandatory:
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::Invite':
+'ManagerManagement::SuperAdmin::InviteAdmin':
   :mandatory:
     - :email
+    - :client_id
+    - :manager_id
+  :optional:
+'ManagerManagement::SuperAdmin::DeleteAdmin':
+  :mandatory:
+    - :client_manager_id
     - :client_id
     - :manager_id
   :optional:

@@ -5,7 +5,8 @@ class ClientManager < EstablishKitClientDbConnection
         GlobalConstant::ClientManager.is_super_admin_privilage => 1,
         GlobalConstant::ClientManager.is_admin_privilage => 2,
         GlobalConstant::ClientManager.is_invited_privilage => 4,
-        GlobalConstant::ClientManager.has_rejected_invite_privilage => 8
+        GlobalConstant::ClientManager.has_rejected_invite_privilage => 8,
+        GlobalConstant::ClientManager.has_been_deleted_privilage => 16
     }
   end
 
