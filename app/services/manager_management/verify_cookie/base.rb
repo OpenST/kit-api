@@ -143,7 +143,7 @@ module ManagerManagement
 
         @client = CacheManagement::Client.new([@manager[:current_client_id]]).fetch[@manager[:current_client_id]]
 
-        no_client_associated_response('am_vc_8') if @client.blank?
+        no_client_associated_response('am_vc_9') if @client.blank?
 
         if Util::CommonValidator.is_mainnet_env?
           is_client_inactive = @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_inactive_status)
@@ -152,7 +152,7 @@ module ManagerManagement
         end
 
         fail OstCustomError.new error_with_data(
-                                    'am_vc_9',
+                                    'am_vc_10',
                                     'client_inactive',
                                     GlobalConstant::ErrorAction.default
                                 ) if is_client_inactive
@@ -172,14 +172,14 @@ module ManagerManagement
       def validate_client_manager
 
         @client_manager = CacheManagement::ClientManager.new([@manager_id], {client_id: @manager[:current_client_id]}).fetch[@manager_id]
-        client_manager_not_associated_response('am_vc_9') if @client_manager.blank?
+        client_manager_not_associated_response('am_vc_11') if @client_manager.blank?
 
         privilages = @client_manager[:privilages]
 
         is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_super_admin_privilage) ||
             privilages.include?(GlobalConstant::ClientManager.is_admin_privilage)
 
-        client_manager_not_associated_response('am_vc_10') unless is_client_manager_active
+        client_manager_not_associated_response('am_vc_12') unless is_client_manager_active
 
         success
 

@@ -118,7 +118,9 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def fetch_client
+        no_client_associated_response('mm_l_pa_1') if @manager_obj.current_client_id.blank?
         @client = CacheManagement::Client.new([@manager_obj.current_client_id]).fetch[@manager_obj.current_client_id]
+        no_client_associated_response('mm_l_pa_2') if @client.blank?
       end
 
       # Decrypt login salt
@@ -227,6 +229,24 @@ module ManagerManagement
         else
           GlobalConstant::GoTo.economy_planner_step_one
         end
+      end
+
+      # no client associated response
+      #
+      # * Author: Puneet
+      # * Date: 15/01/2018
+      # * Reviewed By:
+      #
+      # @param [String] err (mandatory) - err code
+      #
+      # @return [Result::Base]
+      #
+      def no_client_associated_response(err)
+        fail OstCustomError.new error_with_data(
+                                    err,
+                                    'no_client_associated',
+                                    GlobalConstant::ErrorAction.default
+                                )
       end
 
     end
