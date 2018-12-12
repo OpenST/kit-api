@@ -6,7 +6,12 @@ invalid_client_id:
 invalid_r_t:
   parameter: 'r_t'
   code: 'invalid'
-  message: 'The reset password link has expired. Please use Forgot Password to generate a new one.'
+  message: 'The reset password link is either invalid or has expired. Please use Forgot Password to generate a new one.'
+
+invalid_i_t:
+  parameter: 'i_t'
+  code: 'invalid'
+  message: 'The invite link is either invalid or has expired.'
 
 missing_password_auth_cookie_value:
   parameter: 'r_t'
@@ -106,12 +111,12 @@ missing_cookie_value:
 missing_r_t:
   parameter: 'r_t'
   code: 'missing'
-  message: 'missing r_t'
+  message: 'missing reset_token'
 
 missing_i_t:
   parameter: 'i_t'
   code: 'missing'
-  message: 'missing Invite Token'
+  message: 'missing invite_token'
 
 missing_confirm_password:
   parameter: 'confirm_password'

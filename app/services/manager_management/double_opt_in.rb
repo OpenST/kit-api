@@ -9,6 +9,7 @@ module ManagerManagement
     # * Reviewed By:
     #
     # @params [String] r_t (mandatory) - token for double opt in
+    # @params [Integer] manager_id (mandatory) - manager id
     #
     # @return [ManagerManagement::DoubleOptIn]
     #
@@ -74,7 +75,9 @@ module ManagerManagement
     #
     def validate_and_sanitize
 
-      invalid_url_error('um_doi_1') if @r_t.blank?
+      invalid_url_error('mm_doi_1') if @r_t.blank?
+
+      invalid_url_error('mm_doi_2') if !Util::CommonValidator.is_valid_token?(@r_t)
 
       # NOTE: To be on safe side, check for generic errors as well
       validate
@@ -87,7 +90,7 @@ module ManagerManagement
 
       splited_reset_token = decripted_t.split(':')
 
-      invalid_url_error('um_doi_2') if splited_reset_token.length != 2
+      invalid_url_error('mm_doi_3') if splited_reset_token.length != 2
 
       @token = splited_reset_token[1].to_s
 
@@ -112,7 +115,7 @@ module ManagerManagement
       @manager = Manager.where(id: @manager_id).first
 
       fail OstCustomError.new validation_error(
-        'um_dop_3',
+        'mm_doi_4',
         'invalid_api_params',
         ['invalid_user_id'],
         GlobalConstant::ErrorAction.default
@@ -144,17 +147,17 @@ module ManagerManagement
     #
     def validate_double_opt_token
 
-      invalid_url_error('um_doi_3') if @manager_validation_hash_obj.blank?
+      invalid_url_error('mm_doi_5') if @manager_validation_hash_obj.blank?
 
-      invalid_url_error('um_doi_4') if @manager_validation_hash_obj.validation_hash != @token
+      invalid_url_error('mm_doi_6') if @manager_validation_hash_obj.validation_hash != @token
 
-      invalid_url_error('um_doi_5') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
+      invalid_url_error('mm_doi_7') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
 
-      invalid_url_error('um_doi_6') if @manager_validation_hash_obj.is_expired?
+      invalid_url_error('mm_doi_8') if @manager_validation_hash_obj.is_expired?
 
-      invalid_url_error('um_doi_7') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.double_optin_kind
+      invalid_url_error('mm_doi_9') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.double_optin_kind
 
-      fail OstCustomError.new unauthorized_access_response('um_doi_8') if @manager_validation_hash_obj.manager_id != @manager_id
+      fail OstCustomError.new unauthorized_access_response('mm_doi_10') if @manager_validation_hash_obj.manager_id != @manager_id
 
       success
 

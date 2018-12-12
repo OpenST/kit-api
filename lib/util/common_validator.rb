@@ -4,6 +4,7 @@ module Util
     
     REGEX_EMAIL = /\A[A-Z0-9]+[A-Z0-9_%+-]*(\.[A-Z0-9_%+-]{1,})*@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
     REGEX_EMAIL_DOMAIN = /\A@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
+    REGEX_TOKEN = /^[ \w\/=+-]{152}$/mi
 
     # Check for numeric-ness of an input
     #
@@ -100,6 +101,18 @@ module Util
     #
     def self.is_valid_email_domain?(domain)
       domain =~ REGEX_EMAIL_DOMAIN
+    end
+
+    # Is the Invite token valid
+    #
+    # * Author: Shlok
+    # * Date: 12/12/2018
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_token?(token)
+      token =~ REGEX_TOKEN
     end
 
     # Is the Email a Valid Email

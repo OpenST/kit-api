@@ -77,8 +77,8 @@ module ManagerManagement
 
       # Validate and sanitize
       #
-      # * Author: Puneet
-      # * Date: 06/12/2018
+      # * Author: Shlok
+      # * Date: 12/12/2018
       # * Reviewed By:
       #
       # @return [Result::Base]
@@ -90,13 +90,21 @@ module ManagerManagement
         validation_errors.push('password_incorrect') unless Util::CommonValidator.is_valid_password?(@password)
 
         if @invite_token.blank?
+
           validation_errors.push('missing_i_t')
+
         else
+
           @invite_token = @invite_token.to_s.strip
+
+          if !Util::CommonValidator.is_valid_token?(@invite_token)
+            validation_errors.push('invalid_i_t')
+          end
+
         end
 
         fail OstCustomError.new validation_error(
-                                    'm_su_1',
+                                    'mm_su_bi_2',
                                     'invalid_api_params',
                                     validation_errors,
                                     GlobalConstant::ErrorAction.default

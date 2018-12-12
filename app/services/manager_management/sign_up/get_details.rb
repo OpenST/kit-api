@@ -71,7 +71,19 @@ module ManagerManagement
       def validate_and_sanitize
 
         if @invite_token.present?
+
           @invite_token = @invite_token.to_s.strip
+
+          if !Util::CommonValidator.is_valid_token?(@invite_token)
+
+            fail OstCustomError.new validation_error(
+                                      'mm_su_gd_1',
+                                      'invalid_api_params',
+                                      ['invalid_i_t'],
+                                      GlobalConstant::ErrorAction.default
+                                    )
+          end
+
         end
 
         # NOTE: To be on safe side, check for generic errors as well
