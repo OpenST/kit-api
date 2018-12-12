@@ -23,6 +23,7 @@ module ManagerManagement
         @email = @params[:email]
 
         @authentication_salt_hash = nil
+        @authentication_salt_d = nil
 
       end
 
@@ -131,6 +132,8 @@ module ManagerManagement
 
           end
 
+          decrypt_login_salt
+
         else
 
           generate_login_salt
@@ -142,7 +145,7 @@ module ManagerManagement
 
         end
 
-        password_e = Manager.get_encrypted_password(@password, @authentication_salt_hash[:plaintext])
+        password_e = Manager.get_encrypted_password(@password, @authentication_salt_d)
 
         @manager_obj.password = password_e
         @manager_obj.last_session_updated_at = current_timestamp
@@ -197,7 +200,7 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # Sets @authentication_salt_hash
+      # Sets @authentication_salt_hash, @authentication_salt_d
       #
       # @return [Result::Base]
       #
@@ -206,6 +209,26 @@ module ManagerManagement
         fail OstCustomError.new r unless r.success?
 
         @authentication_salt_hash = r.data
+        @authentication_salt_d = @authentication_salt_hash[:plaintext]
+
+        success
+      end
+
+      # Decrypt login salt
+      #
+      # * Author: Puneet
+      # * Date: 10/12/2018
+      # * Reviewed By:
+      #
+      # Sets @authentication_salt_d
+      #
+      # @return [Result::Base]
+      #
+      def decrypt_login_salt
+        r = Aws::Kms.new('login','user').decrypt(@manager_obj.authentication_salt)
+        return r unless r.success?
+
+        @authentication_salt_d = r.data[:plaintext]
 
         success
       end
