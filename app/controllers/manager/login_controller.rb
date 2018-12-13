@@ -4,19 +4,14 @@ class Manager::LoginController < Manager::BaseController
   
   before_action :verify_recaptcha, only: [:sign_up, :login, :send_reset_password_link]
 
-  before_action :verify_mfa_cookie, except: [
-      :sign_up_post,
-      :sign_up_get,
-      :multi_factor_auth,
-      :mfa,
-      :login,
-      :logout,
-      :send_reset_password_link, :reset_password
+  before_action :verify_mfa_cookie, only: [
+    :list_admins
   ]
 
   before_action :verify_password_cookie, only: [
-      :multi_factor_auth,
-      :mfa,
+    :multi_factor_auth,
+    :mfa,
+    :send_verify_email_link
   ]
 
   # Sign up page load get request (to fetch dynamic data in signup page. for ex. invite related data)
