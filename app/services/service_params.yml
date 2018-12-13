@@ -83,7 +83,7 @@
   :optional:
 'ManagerManagement::SuperAdmin::DeleteAdmin':
   :mandatory:
-    - :client_manager_id
+    - :email
     - :client_id
     - :manager_id
   :optional:

@@ -42,7 +42,7 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate
+          validate_and_sanitize
 
           fetch_manager
 
@@ -64,6 +64,34 @@ module ManagerManagement
 
       private
 
+      # Validate
+      #
+      # * Author: Puneet
+      # * Date: 15/01/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def validate_and_sanitize
+
+        validation_errors = []
+
+        @email = @email.to_s.downcase.strip
+        validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
+        validation_errors.push('email_not_allowed_for_dev_program') unless Util::CommonValidator.is_whitelisted_email?(@email)
+
+        fail OstCustomError.new validation_error(
+                                  'm_su_1',
+                                  'invalid_api_params',
+                                  validation_errors,
+                                  GlobalConstant::ErrorAction.default
+                                ) if validation_errors.present?
+
+        # NOTE: To be on safe side, check for generic errors as well
+        validate
+
+      end
+
       # Fetch user
       #
       # * Author: Puneet
@@ -75,13 +103,6 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def fetch_manager
-
-        fail OstCustomError.new validation_error(
-            'um_l_fu_4',
-            'invalid_api_params',
-            ['email_not_allowed_for_dev_program'],
-            GlobalConstant::ErrorAction.default
-        ) unless Util::CommonValidator.is_whitelisted_email?(@email)
 
         @manager_obj = Manager.where(email: @email).first
 

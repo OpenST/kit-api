@@ -31,9 +31,10 @@ class ClientManager < EstablishKitClientDbConnection
   #
   def formated_cache_data
     {
-        client_id: client_id,
-        manager_id: manager_id,
-        privilages: privilages.present? ? ClientManager.get_bits_set_for_privilages(privilages) : []
+      id: id,
+      client_id: client_id,
+      manager_id: manager_id,
+      privilages: privilages.present? ? ClientManager.get_bits_set_for_privilages(privilages) : []
     }
   end
 

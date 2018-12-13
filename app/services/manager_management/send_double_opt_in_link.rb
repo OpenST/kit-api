@@ -65,14 +65,14 @@ module ManagerManagement
       @manager = Manager.where(id: @manager_id).first
 
       fail OstCustomError.new validation_error(
-          'um_srpl_1',
+          'um_doil_1',
           'invalid_api_params',
           ['unrecognized_email'],
           GlobalConstant::ErrorAction.default
       ) unless @manager.present? && (@manager.status == GlobalConstant::Manager.active_status)
 
       fail OstCustomError.new validation_error(
-          'um_srpl_2',
+          'um_doil_2',
           'invalid_api_params',
           ['already_verified_email'],
           GlobalConstant::ErrorAction.default
