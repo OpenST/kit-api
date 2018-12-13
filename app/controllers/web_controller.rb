@@ -72,7 +72,7 @@ class WebController < ApplicationController
       set_cookie(
           GlobalConstant::Cookie.user_cookie_name,
           extended_cookie_value,
-          GlobalConstant::Cookie.mfa_auth_expiry.from_now
+          GlobalConstant::Cookie.password_auth_expiry.from_now
       ) if extended_cookie_value.present?
 
       params[:manager_id] = password_cookie_verify_rsp.data[:manager_id]
@@ -137,15 +137,26 @@ class WebController < ApplicationController
 
       if password_cookie_verify_rsp.success?
 
-        client_properties = password_cookie_verify_rsp.data[:client][:properties]
-
-        # if client had enforced mfa and user is accessing something which requires mfa auth, redirect to mfa auth screen
-        if client_properties.present? &&
-            Client.get_bits_set_for_properties(client_properties).include?(GlobalConstant::Client.has_enforced_mfa_property)
-
-          redirect_to :mfa and return
-
+        if params[:manager][:properties].include?(GlobalConstant::Manager.has_verified_email_property)
+          go_to = GlobalConstant::GoTo.authenticate_mfa
+          render_api_response(error_with_go_to('wc_vmfc_1', 'unauthorized_access_response', go_to)) and return
+        elsif password_cookie_verify_rsp.data[:client][:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
+          go_to = GlobalConstant::GoTo.setup_mfa
+          render_api_response(error_with_go_to('wc_vmfc_2', 'unauthorized_access_response', go_to)) and return
         end
+
+        extended_cookie_value = mfa_cookie_verify_rsp.data[:extended_cookie_value]
+        set_cookie(
+            GlobalConstant::Cookie.user_cookie_name,
+            extended_cookie_value,
+            GlobalConstant::Cookie.password_auth_expiry.from_now
+        ) if extended_cookie_value.present?
+
+        params[:manager_id] = mfa_cookie_verify_rsp.data[:manager_id]
+        params[:manager] = mfa_cookie_verify_rsp.data[:manager]
+        params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
+        params[:client] = mfa_cookie_verify_rsp.data[:client]
+        params[:client_manager] = mfa_cookie_verify_rsp.data[:client_manager]
 
         # Remove sensitive data
         password_cookie_verify_rsp.data = {}
