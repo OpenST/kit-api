@@ -97,7 +97,7 @@ module ManagerManagement
         def set_ga_secret_auth
 
           rotp_client = Google::Authenticator.new(@ga_secret_d)
-          r = rotp_client.provisioning_uri("#{identifier_suffix}:#{@manager_obj.email}")
+          r = rotp_client.provisioning_uri("#{@manager_obj.email}")
           fail OstCustomError.new r unless r.success?
 
           otpauth = r.data[:otpauth]
@@ -107,18 +107,12 @@ module ManagerManagement
           @qr_code_url ="https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{escaped_otpauth}"
         end
 
-        # Set Ga Secret Auth
+        # Set success output format
         #
-        # * Author: Puneet
-        # * Date: 09/01/2018
+        # * Author: Shlok
+        # * Date: 13/12/2018
         # * Reviewed By:
         #
-        # returns[String] suffix for name of GA account
-        #
-        def identifier_suffix
-          Rails.env.production? ? "ost kit" : "#{Rails.env} ost kit"
-        end
-
         def success_response
           success_with_data({
                               setup_mfa: {
