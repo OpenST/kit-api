@@ -133,6 +133,16 @@ missing_client_id:
   code: 'missing'
   message: 'missing client_id'
 
+missing_agreed_terms_of_service:
+  parameter: 'agreed_terms_of_service'
+  code: 'missing'
+  message: 'Please read the Term & Conditions and Policy of Use before registration.'
+
+invalid_agreed_terms_of_service:
+  parameter: 'agreed_terms_of_service'
+  code: 'invalid'
+  message: 'Please read the Term & Conditions and Policy of Use before registration.'
+
 invalid_page_no:
   parameter: 'page_no'
   code: 'invalid'

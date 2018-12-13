@@ -3,6 +3,7 @@
     - :email
     - :password
     - :browser_user_agent
+    - :agreed_terms_of_service
   :optional:
 'ManagerManagement::SignUp::ByInvite':
   :mandatory:

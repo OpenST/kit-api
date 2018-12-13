@@ -13,6 +13,7 @@ module ManagerManagement
       # @param [String] password (mandatory) - user password
       # @param [String] browser_user_agent (mandatory) - browser user agent
       # @param [String] email (mandatory) - the email of the user which is to be signed up
+      # @param [String] agreed_terms_of_service (mandatory) - if terms of service was accepted
       #
       # @return [ManagerManagement::SignUp::WithoutInvite]
       #
@@ -21,6 +22,7 @@ module ManagerManagement
         super
 
         @email = @params[:email]
+        @agreed_terms_of_service = @params[:agreed_terms_of_service]
 
         @authentication_salt_hash = nil
         @authentication_salt_d = nil
@@ -77,6 +79,7 @@ module ManagerManagement
         validation_errors = []
 
         validation_errors.push('password_incorrect') unless Util::CommonValidator.is_valid_password?(@password)
+        validation_errors.push('invalid_agreed_terms_of_service') if @agreed_terms_of_service.to_s.downcase != 'on'
 
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
