@@ -204,6 +204,25 @@ module ManagerManagement
         GlobalConstant::GoTo.verify_email
       end
 
+      # Enqueue Job
+      #
+      # * Author: Puneet
+      # * Date: 08/12/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def enqueue_job
+
+        BackgroundJob.enqueue(
+            SignUpJob,
+            {
+                manager_id: @manager_obj.id
+            }
+        )
+
+      end
+
     end
 
   end

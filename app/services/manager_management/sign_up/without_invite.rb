@@ -244,25 +244,6 @@ module ManagerManagement
 
       end
 
-      # Enqueue Job
-      #
-      # * Author: Puneet
-      # * Date: 08/12/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def enqueue_job
-
-        BackgroundJob.enqueue(
-            SignUpJob,
-            {
-                manager_id: @manager_id
-            }
-        )
-
-      end
-
     end
 
   end
