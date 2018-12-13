@@ -257,7 +257,7 @@ module ManagerManagement
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )
 
-        success_with_data({cookie_value: cookie_value}, go_to: fetch_go_to)
+        success_with_data({cookie_value: cookie_value}, fetch_go_to)
 
       end
 

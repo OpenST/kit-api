@@ -12,7 +12,8 @@ class Manager::LoginController < Manager::BaseController
     :multi_factor_auth,
     :mfa,
     :send_verify_email_link,
-    :get_details
+    :get_details,
+    :verify_email
   ]
 
   # Sign up page load get request (to fetch dynamic data in signup page. for ex. invite related data)

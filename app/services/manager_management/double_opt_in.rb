@@ -10,6 +10,7 @@ module ManagerManagement
     #
     # @params [String] r_t (mandatory) - token for double opt in
     # @params [Integer] manager_id (mandatory) - manager id
+    # @params [Hash] client (mandatory) - client to which this manager is associated
     #
     # @return [ManagerManagement::DoubleOptIn]
     #
@@ -19,6 +20,7 @@ module ManagerManagement
 
       @r_t = @params[:r_t]
       @manager_id = @params[:manager_id]
+      @client = @params[:client]
 
       @token = nil
       @manager_validation_hash_id = nil
@@ -43,7 +45,7 @@ module ManagerManagement
 
         fetch_logged_in_manager
 
-        return success_with_data({}, go_to: fetch_go_to) if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+        return success_with_data({}, fetch_go_to) if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
 
         fetch_manager_validation_record
 
@@ -55,7 +57,7 @@ module ManagerManagement
 
         mark_manager_verified
 
-        success_with_data({}, go_to: fetch_go_to)
+        success_with_data({}, fetch_go_to)
         
       end
 

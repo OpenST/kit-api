@@ -59,7 +59,7 @@ module ManagerManagement
 
             success_with_data(
                 {double_auth_cookie_value: @double_auth_cookie_value},
-                go_to: fetch_go_to
+                fetch_go_to
             )
 
           end

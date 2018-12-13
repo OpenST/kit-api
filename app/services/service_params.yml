@@ -55,6 +55,7 @@
   :mandatory:
     - :manager_id
     - :r_t
+    - :client
   :optional:
 'ManagerManagement::SendResetPasswordLink':
   :mandatory:
