@@ -2,7 +2,7 @@ class Manager::LoginController < Manager::BaseController
 
   before_action :append_user_agent_to_params
   
-  before_action :verify_recaptcha, only: [:sign_up, :login, :send_reset_password_link]
+  before_action :verify_recaptcha, only: [:sign_up_post, :password_auth, :send_reset_password_link]
 
   before_action :verify_mfa_cookie, only: [
     :list_admins
