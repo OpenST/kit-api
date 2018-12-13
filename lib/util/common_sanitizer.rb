@@ -15,7 +15,7 @@ module Util
       # @return [String]
       #
       def secure_email(email)
-        email.gsub(/.{0,4}@/, '####@')
+        email.gsub(/.{0,4}@/, '***@')
       end
 
     end
