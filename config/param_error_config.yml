@@ -133,6 +133,11 @@ missing_client_id:
   code: 'missing'
   message: 'missing client_id'
 
+missing_otp:
+  parameter: 'otp'
+  code: 'missing'
+  message: 'missing otp'
+
 missing_agreed_terms_of_service:
   parameter: 'agreed_terms_of_service'
   code: 'missing'

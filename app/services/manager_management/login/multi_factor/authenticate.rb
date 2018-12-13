@@ -129,13 +129,7 @@ module ManagerManagement
         # @return [Hash]
         #
         def fetch_go_to
-          if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
-            GlobalConstant::GoTo.authenticate_mfa
-          elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
-            GlobalConstant::GoTo.setup_mfa
-          else
-            GlobalConstant::GoTo.economy_planner_step_one
-          end
+          GlobalConstant::GoTo.economy_planner_step_one
         end
 
       end
