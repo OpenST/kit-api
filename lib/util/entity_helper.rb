@@ -4,6 +4,8 @@ module Util
 
     class << self
 
+      include Util::ResultHelper
+
       # All methods of this module are common methods which are used to fetch and validate entities
 
       # Fetch Client By Id
