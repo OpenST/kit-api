@@ -101,7 +101,7 @@ module ManagerManagement
 
           @invite_token = @invite_token.to_s.strip
 
-          if !Util::CommonValidator.is_valid_token?(@invite_token)
+          unless Util::CommonValidator.is_valid_token?(@invite_token)
             validation_errors.push('invalid_i_t')
           end
 

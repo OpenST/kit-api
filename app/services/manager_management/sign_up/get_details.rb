@@ -79,7 +79,7 @@ module ManagerManagement
 
           @invite_token = @invite_token.to_s.strip
 
-          if !Util::CommonValidator.is_valid_token?(@invite_token)
+          unless Util::CommonValidator.is_valid_token?(@invite_token)
 
             fail OstCustomError.new validation_error(
                                       'mm_su_gd_1',

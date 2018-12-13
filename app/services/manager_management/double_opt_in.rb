@@ -77,7 +77,7 @@ module ManagerManagement
 
       invalid_url_error('mm_doi_1') if @r_t.blank?
 
-      invalid_url_error('mm_doi_2') if !Util::CommonValidator.is_valid_token?(@r_t)
+      invalid_url_error('mm_doi_2') unless Util::CommonValidator.is_valid_token?(@r_t)
 
       # NOTE: To be on safe side, check for generic errors as well
       validate
