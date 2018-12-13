@@ -51,11 +51,11 @@ module ManagerManagement
 
           success_with_data(
             client: @client,
-            inviter_manager_id: @inviter_manager_id,
-            invitee_manager_id: @manager_obj.id,
-            managers: {
-              @manager_obj.id => @manager_obj.formated_cache_data,
-              @inviter_manager_id => @inviter_manager
+            inviter_manager: {
+              email: Util::CommonSanitizer.secure_email(@inviter_manager[:email])
+            },
+            invitee_manager: {
+              email: Util::CommonSanitizer.secure_email(@manager_obj.email)
             }
           )
 
