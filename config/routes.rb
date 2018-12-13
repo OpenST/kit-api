@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     match 'verify-email' => :verify_email, via: :GET
     match 'send-verify-email-link' => :send_verify_email_link, via: :POST
     match 'list-admins' => :list_admins, via: :GET
+    match '' => :get_details, via: :GET
   end
 
   scope 'api/manager/super_admin', controller: 'manager/super_admin' do

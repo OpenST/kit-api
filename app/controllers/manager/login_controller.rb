@@ -11,7 +11,8 @@ class Manager::LoginController < Manager::BaseController
   before_action :verify_password_cookie, only: [
     :multi_factor_auth,
     :mfa,
-    :send_verify_email_link
+    :send_verify_email_link,
+    :get_details
   ]
 
   # Sign up page load get request (to fetch dynamic data in signup page. for ex. invite related data)
@@ -86,6 +87,21 @@ class Manager::LoginController < Manager::BaseController
 
     render_api_response(service_response)
 
+  end
+
+  # Get Manager's details
+  #
+  # * Author: Puneet
+  # * Date: 08/12/2018
+  # * Reviewed By:
+  #
+  def get_details
+    service_response = success_with_data({
+                                             manager: params[:manager],
+                                             client: params[:client],
+                                             client_manager: params[:client_manager]
+                                         })
+    render_api_response(service_response)
   end
 
   # Get MFA Page details
