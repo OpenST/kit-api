@@ -147,6 +147,7 @@ class Manager::LoginController < Manager::BaseController
   # * Reviewed By:
   #
   def logout
+    params[:cookie_value] = cookies[GlobalConstant::Cookie.user_cookie_name.to_sym]
     service_response = ManagerManagement::Logout.new(params).perform
     # delete cookie irrespective if service response was success
     delete_cookie(GlobalConstant::Cookie.user_cookie_name)
