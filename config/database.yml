@@ -24,6 +24,12 @@ saas_and_api_shared_db_identifier: &saas_and_api_shared_db
   username: <%= ENV['KA_SAAS_SHARED_DB_USER']%>
   password: <%= ENV['KA_SAAS_SHARED_DB_PASSWORD']%>
 
+config_db_identifier: &config_db
+  <<: *default
+  host: <%= ENV['KA_CONFIG_DB_MYSQL_HOST']%>
+  username: <%= ENV['KA_CONFIG_DB_MYSQL_USER']%>
+  password: <%= ENV['KA_CONFIG_DB_MYSQL_PASSWORD']%>
+
 # NOTE: Sub env specific databases
 <%= Rails.env%>:
   <<: *default_db
@@ -42,3 +48,7 @@ kit_client_<%= Rails.env%>:
 kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *saas_and_api_shared_db
   database: kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+saas_config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *config_db
+  database: saas_config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
