@@ -30,7 +30,7 @@ module Google
               return success_with_data(response: parsed_response)
             else
               return error_with_data('rv_1',
-                                     'something_went_wrong',
+                                     'recaptcha_fail',
                                      GlobalConstant::ErrorAction.default,
                                      parsed_response)
             end

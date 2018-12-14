@@ -2,7 +2,7 @@ module Google
 
   class Authenticator
 
-    DRIFT_TIME = 15 # expiry time difference for otp
+    DRIFT_TIME = 30 # expiry time difference for otp
 
     include ::Util::ResultHelper
 
