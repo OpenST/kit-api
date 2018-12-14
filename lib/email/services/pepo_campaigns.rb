@@ -265,7 +265,6 @@ module Email
       #
       def generate_signature(string_to_sign)
         digest = OpenSSL::Digest.new('sha256')
-        Rails.logger.info("--------string_to_sign=>#{string_to_sign}-----")
         OpenSSL::HMAC.hexdigest(digest, @api_secret, string_to_sign)
       end
 
