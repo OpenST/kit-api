@@ -60,8 +60,10 @@ class WebController < ApplicationController
   #
   def verify_password_cookie
 
+    cookie_value = cookies[GlobalConstant::Cookie.user_cookie_name.to_sym]
+
     password_cookie_verify_rsp = ManagerManagement::VerifyCookie::PasswordAuth.new(
-        cookie_value: cookies[GlobalConstant::Cookie.user_cookie_name.to_sym],
+        cookie_value: cookie_value,
         browser_user_agent: http_user_agent
     ).perform
 
@@ -80,17 +82,50 @@ class WebController < ApplicationController
       params[:client_id] = password_cookie_verify_rsp.data[:client_id]
       params[:client] = password_cookie_verify_rsp.data[:client]
       params[:client_manager] = password_cookie_verify_rsp.data[:client_manager]
+      params[:is_multi_auth_cookie_valid] = false
+      params[:is_password_auth_cookie_valid] = true
 
       # Remove sensitive data
       password_cookie_verify_rsp.data = {}
 
     else
 
-      # Clear cookie
-      delete_cookie(GlobalConstant::Cookie.user_cookie_name)
-      # Set 401 header
-      password_cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
-      render_api_response(password_cookie_verify_rsp)
+      mfa_cookie_verify_rsp = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
+          cookie_value: cookie_value,
+          browser_user_agent: http_user_agent
+      ).perform
+
+      if mfa_cookie_verify_rsp.success?
+
+        # Update Cookie, if required
+        extended_cookie_value = mfa_cookie_verify_rsp.data[:extended_cookie_value]
+        set_cookie(
+            GlobalConstant::Cookie.user_cookie_name,
+            extended_cookie_value,
+            GlobalConstant::Cookie.mfa_auth_expiry.from_now
+        ) if extended_cookie_value.present?
+
+        params[:manager_id] = mfa_cookie_verify_rsp.data[:manager_id]
+        params[:manager] = mfa_cookie_verify_rsp.data[:manager]
+        params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
+        params[:client] = mfa_cookie_verify_rsp.data[:client]
+        params[:client_manager] = mfa_cookie_verify_rsp.data[:client_manager]
+        params[:is_multi_auth_cookie_valid] = true
+        params[:is_password_auth_cookie_valid] = true
+
+        # Remove sensitive data
+        mfa_cookie_verify_rsp.data = {}
+
+      else
+
+        # Clear cookie
+        delete_cookie(GlobalConstant::Cookie.user_cookie_name)
+        # Set 401 header
+        password_cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
+        password_cookie_verify_rsp.go_to = GlobalConstant::GoTo.login
+        render_api_response(password_cookie_verify_rsp)
+
+      end
 
     end
 
@@ -124,6 +159,8 @@ class WebController < ApplicationController
       params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
       params[:client] = mfa_cookie_verify_rsp.data[:client]
       params[:client_manager] = mfa_cookie_verify_rsp.data[:client_manager]
+      params[:is_multi_auth_cookie_valid] = true
+      params[:is_password_auth_cookie_valid] = true
 
       # Remove sensitive data
       mfa_cookie_verify_rsp.data = {}
@@ -157,6 +194,8 @@ class WebController < ApplicationController
         params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
         params[:client] = mfa_cookie_verify_rsp.data[:client]
         params[:client_manager] = mfa_cookie_verify_rsp.data[:client_manager]
+        params[:is_multi_auth_cookie_valid] = false
+        params[:is_password_auth_cookie_valid] = true
 
         # Remove sensitive data
         password_cookie_verify_rsp.data = {}
@@ -166,6 +205,7 @@ class WebController < ApplicationController
         # Clear cookie
         delete_cookie(GlobalConstant::Cookie.user_cookie_name)
         # Set 401 header
+        mfa_cookie_verify_rsp.go_to = GlobalConstant::GoTo.login
         mfa_cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
         render_api_response(mfa_cookie_verify_rsp)
 

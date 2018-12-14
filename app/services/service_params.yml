@@ -57,9 +57,9 @@
 'ManagerManagement::DoubleOptIn':
   :mandatory:
     - :manager_id
-    - :r_t
     - :client
   :optional:
+    - :r_t
 'ManagerManagement::SendResetPasswordLink':
   :mandatory:
     - :email
@@ -110,3 +110,11 @@
   :mandatory:
     - :email_domain
   :optional:
+'FetchGoTo':
+  :mandatory:
+    - :is_password_auth_cookie_valid
+    - :is_multi_auth_cookie_valid
+    - :client
+    - :manager
+  :optional:
+    - :client_manager

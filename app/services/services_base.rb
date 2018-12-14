@@ -17,7 +17,14 @@ class ServicesBase
       permitted_params[pp] = service_params[pp] if service_params[pp].present?
     end
 
+    permitted_params[:client] = service_params[:client] if service_params[:client].present?
+    permitted_params[:manager] = service_params[:manager] if service_params[:manager].present?
+    permitted_params[:client_manager] = service_params[:client_manager] if service_params[:client_manager].present?
+    permitted_params[:is_password_auth_cookie_valid] = service_params[:is_password_auth_cookie_valid] if service_params[:is_password_auth_cookie_valid].present?
+    permitted_params[:is_multi_auth_cookie_valid] = service_params[:is_multi_auth_cookie_valid] if service_params[:is_multi_auth_cookie_valid].present?
+
     @params = HashWithIndifferentAccess.new(permitted_params)
+
   end
 
   # Handle Error & Exceptions

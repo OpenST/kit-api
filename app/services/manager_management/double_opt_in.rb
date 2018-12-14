@@ -11,6 +11,7 @@ module ManagerManagement
     # @params [String] r_t (mandatory) - token for double opt in
     # @params [Integer] manager_id (mandatory) - manager id
     # @params [Hash] client (mandatory) - client to which this manager is associated
+    # @params [Boolean] is_multi_auth_cookie_valid (optional)
     #
     # @return [ManagerManagement::DoubleOptIn]
     #
@@ -21,6 +22,7 @@ module ManagerManagement
       @r_t = @params[:r_t]
       @manager_id = @params[:manager_id]
       @client = @params[:client]
+      @is_multi_auth_cookie_valid = @params[:is_multi_auth_cookie_valid]
 
       @token = nil
       @manager_validation_hash_id = nil
@@ -45,7 +47,11 @@ module ManagerManagement
 
         fetch_logged_in_manager
 
-        return success_with_data({}, fetch_go_to) if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+        if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+          return success_with_data({}, fetch_go_to)
+        elsif @r_t.blank?
+          return success_with_data({manager: @manager_obj.formated_cache_data})
+        end
 
         fetch_manager_validation_record
 
@@ -77,12 +83,11 @@ module ManagerManagement
     #
     def validate_and_sanitize
 
-      invalid_url_error('mm_doi_1') if @r_t.blank?
+      validate
+
+      return if @r_t.blank?
 
       invalid_url_error('mm_doi_2') unless Util::CommonValidator.is_valid_token?(@r_t)
-
-      # NOTE: To be on safe side, check for generic errors as well
-      validate
 
       decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
       r = decryptor_obj.decrypt(@r_t)
@@ -259,7 +264,7 @@ module ManagerManagement
     def fetch_go_to
       FetchGoTo.new({
                         is_password_auth_cookie_valid: true,
-                        is_multi_auth_cookie_valid: false,
+                        is_multi_auth_cookie_valid: @is_multi_auth_cookie_valid,
                         client: @client,
                         manager: @manager_obj.formated_cache_data
                     }).fetch_by_manager_state

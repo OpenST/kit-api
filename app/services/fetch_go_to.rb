@@ -1,4 +1,4 @@
-class FetchGoTo
+class FetchGoTo < ServicesBase
 
   # Initialize
   #
