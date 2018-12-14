@@ -21,7 +21,6 @@ module ManagerManagement
       @password = @params[:password]
       @confirm_password = @params[:confirm_password]
 
-      @client = nil
       @reset_token = nil
       @manager_validation_hash_id = nil
       @manager_validation_hash_obj = nil
@@ -50,8 +49,6 @@ module ManagerManagement
 
         fetch_manager
 
-        fetch_client
-
         decrypt_login_salt
 
         @new_e_password = Manager.get_encrypted_password(@password, @login_salt_d)
@@ -62,7 +59,7 @@ module ManagerManagement
 
         update_user_validation_hashes_status
 
-        success_with_data({}, fetch_go_to)
+        success
 
       end
 
@@ -179,20 +176,6 @@ module ManagerManagement
 
     end
 
-    # Fetch client
-    #
-    # * Author: Shlok
-    # * Date: 14/12/2018
-    # * Reviewed By:
-    #
-    # Sets @client
-    #
-    # @return [Result::Base]
-    #
-    def fetch_client
-      @client = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'um_l_fu')
-    end
-
     # Decrypt login salt
     #
     # * Author: Puneet
@@ -287,26 +270,6 @@ module ManagerManagement
           ['invalid_r_t'],
           GlobalConstant::ErrorAction.default
       )
-    end
-
-    # Get goto for next page
-    #
-    # * Author: Shlok
-    # * Date: 14/12/2018
-    # * Reviewed By:
-    #
-    # @return [Hash]
-    #
-    def fetch_go_to
-
-      if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
-        GlobalConstant::GoTo.authenticate_mfa
-      elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
-        GlobalConstant::GoTo.setup_mfa
-      else
-        GlobalConstant::GoTo.economy_planner_step_one
-      end
-      
     end
 
   end
