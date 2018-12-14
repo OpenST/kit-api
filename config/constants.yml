@@ -24,26 +24,26 @@ constants:
     cookie_secret_key: <%= ENV['KA_COOKIE_SECRET_KEY'] %>
     email_tokens_decriptor_key: <%= ENV['KA_EMAIL_TOKENS_DECRIPTOR_KEY'] %>
     generic_sha_key: <%= ENV['KA_GENERIC_SHA_KEY'] %>
-    cache_data_sha_key: <%= ENV['KA_KACHE_DATA_SHA_KEY'] %>
+    cache_data_sha_key: <%= ENV['KA_CACHE_DATA_SHA_KEY'] %>
 
   recaptcha:
-    site_key: <%= ENV['KA_REKAPTCHA_SITE_KEY'] %>
-    secret_key: <%= ENV['KA_REKAPTCHA_SECRET'] %>
+    site_key: <%= ENV['KA_RECAPTCHA_SITE_KEY'] %>
+    secret_key: <%= ENV['KA_RECAPTCHA_SECRET'] %>
 
   memcached:
-    instances: <%= ENV['KA_MEMKACHED_INSTANCES'] %>
+    instances: <%= ENV['KA_MEMCACHED_INSTANCES'] %>
 
   redis:
     url: <%= ENV['KA_REDIS_ENDPOINT'] %>
 
   pepo_campaigns:
     api:
-      key: <%= ENV['KA_KAMPAIGN_CLIENT_KEY']%>
-      secret: <%= ENV['KA_KAMPAIGN_CLIENT_SECRET']%>
-      base_url: <%= ENV['KA_KAMPAIGN_BASE_URL']%>
+      key: <%= ENV['KA_CAMPAIGN_CLIENT_KEY']%>
+      secret: <%= ENV['KA_CAMPAIGN_CLIENT_SECRET']%>
+      base_url: <%= ENV['KA_CAMPAIGN_BASE_URL']%>
       version: 'v2'
     list_ids:
-      master_list: <%= ENV['KA_KAMPAIGN_MASTER_LIST']%>
+      master_list: <%= ENV['KA_CAMPAIGN_MASTER_LIST']%>
 
   saas_api:
     endpoint: '<%= ENV['KA_SAAS_API_ENDPOINT'] %>/'
