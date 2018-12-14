@@ -4,17 +4,6 @@ class Manager::SuperAdminController < Manager::BaseController
 
   before_action :verify_super_admin_role
 
-  # Check if Super Admin role
-  #
-  # * Author: Puneet
-  # * Date: 11/12/2018
-  # * Reviewed By:
-  #
-  def verify_super_admin_role
-    service_response = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(params).perform
-    render_api_response(service_response)
-  end
-
   # Reset MFA of admins
   #
   # * Author: Shlok
@@ -46,6 +35,30 @@ class Manager::SuperAdminController < Manager::BaseController
   def delete_admin
     service_response = ManagerManagement::SuperAdmin::DeleteAdmin.new(params).perform
     render_api_response(service_response)
+  end
+
+  # Update super admin role
+  #
+  # * Author: Puneet
+  # * Date: 12/12/2018
+  # * Reviewed By:
+  #
+  def update_super_admin_role
+    service_response = ManagerManagement::SuperAdmin::UpdateSuperAdminRole.new(params).perform
+    render_api_response(service_response)
+  end
+
+  private
+
+  # Check if Super Admin role
+  #
+  # * Author: Puneet
+  # * Date: 11/12/2018
+  # * Reviewed By:
+  #
+  def verify_super_admin_role
+    service_response = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(params).perform
+    render_api_response(service_response) unless service_response.success?
   end
 
 end

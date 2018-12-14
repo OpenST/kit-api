@@ -92,6 +92,13 @@
   :mandatory:
     - :email
   :optional:
+'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
+  :mandatory:
+    - :email
+    - :client_id
+    - :manager_id
+    - :is_super_admin
+  :optional:
 'AdminManagement::Whitelist::Email':
   :mandatory:
     - :email

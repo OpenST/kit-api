@@ -32,6 +32,26 @@ module Util
       %w(0 1).include?(object.to_s)
     end
 
+    # * Author: Puneet
+    # * Date: 09/10/2017
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_true_boolean_string?(object)
+      object.to_s == '1'
+    end
+
+    # * Author: Puneet
+    # * Date: 09/10/2017
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_false_boolean_string?(object)
+      object.to_s == '0'
+    end
+
     # Is boolean
     #
     # * Author: Puneet

@@ -138,6 +138,11 @@ invalid_otp:
   code: 'invalid'
   message: 'Invalid OTP'
 
+invalid_is_super_admin:
+  parameter: 'is_super_admin'
+  code: 'invalid'
+  message: 'invalid bool value for is_super_admin'
+
 missing_agreed_terms_of_service:
   parameter: 'agreed_terms_of_service'
   code: 'missing'
