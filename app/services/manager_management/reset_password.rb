@@ -21,10 +21,11 @@ module ManagerManagement
       @password = @params[:password]
       @confirm_password = @params[:confirm_password]
 
+      @client = nil
       @reset_token = nil
       @manager_validation_hash_id = nil
       @manager_validation_hash_obj = nil
-      @manager = nil
+      @manager_obj = nil
       @login_salt_d = nil
       @new_e_password = nil
     end
@@ -47,7 +48,9 @@ module ManagerManagement
 
         validate_reset_token
 
-        fetch_user
+        fetch_manager
+
+        fetch_client
 
         decrypt_login_salt
 
@@ -59,7 +62,7 @@ module ManagerManagement
 
         update_user_validation_hashes_status
 
-        success
+        success_with_data({}, fetch_go_to)
 
       end
 
@@ -157,23 +160,37 @@ module ManagerManagement
     # * Date: 11/01/2018
     # * Reviewed By:
     #
-    # Sets @manager
+    # Sets @manager_obj
     #
     # @return [Result::Base]
     #
-    def fetch_user
+    def fetch_manager
 
-      @manager = Manager.where(id: @manager_validation_hash_obj.manager_id).first
+      @manager_obj = Manager.where(id: @manager_validation_hash_obj.manager_id).first
 
       fail OstCustomError.new validation_error(
           'um_rp_9',
           'invalid_api_params',
           ['invalid_r_t'],
           GlobalConstant::ErrorAction.default
-      ) if @manager.blank? || !@manager.is_eligible_for_reset_password?
+      ) if @manager_obj.blank? || !@manager_obj.is_eligible_for_reset_password?
 
       success
 
+    end
+
+    # Fetch client
+    #
+    # * Author: Shlok
+    # * Date: 14/12/2018
+    # * Reviewed By:
+    #
+    # Sets @client
+    #
+    # @return [Result::Base]
+    #
+    def fetch_client
+      @client = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'um_l_fu')
     end
 
     # Decrypt login salt
@@ -187,7 +204,7 @@ module ManagerManagement
     # @return [Result::Base]
     #
     def decrypt_login_salt
-      r = Aws::Kms.new('login', 'user').decrypt(@manager.authentication_salt)
+      r = Aws::Kms.new('login', 'user').decrypt(@manager_obj.authentication_salt)
       fail OstCustomError.new r unless r.success?
 
       @login_salt_d = r.data[:plaintext]
@@ -210,7 +227,7 @@ module ManagerManagement
           'invalid_api_params',
           ['password_same'],
           GlobalConstant::ErrorAction.default
-      ) if @manager.password == @new_e_password
+      ) if @manager_obj.password == @new_e_password
 
       success
 
@@ -223,14 +240,14 @@ module ManagerManagement
     # * Reviewed By:
     #
     def update_password
-      @manager.password = @new_e_password
-      if GlobalConstant::Manager.auto_blocked_status == @manager.status
+      @manager_obj.password = @new_e_password
+      if GlobalConstant::Manager.auto_blocked_status == @manager_obj.status
         # if we had blocked a user for more than a threshhold failed login attemps we set status to blocked
         # now we should reset it to active
-        @manager.status = GlobalConstant::Manager.active_status
-        @manager.failed_login_attempt_count = 0
+        @manager_obj.status = GlobalConstant::Manager.active_status
+        @manager_obj.failed_login_attempt_count = 0
       end
-      @manager.save!
+      @manager_obj.save!
     end
 
     # Update Manager Validation hash used in resetting password and make all others inactive.
@@ -245,7 +262,7 @@ module ManagerManagement
       @manager_validation_hash_obj.save!
 
       ManagerValidationHash.where(
-          manager_id: @manager.id,
+          manager_id: @manager_obj.id,
           kind: GlobalConstant::ManagerValidationHash.reset_password_kind,
           status: GlobalConstant::ManagerValidationHash.active_status
       ).update_all(
@@ -270,6 +287,26 @@ module ManagerManagement
           ['invalid_r_t'],
           GlobalConstant::ErrorAction.default
       )
+    end
+
+    # Get goto for next page
+    #
+    # * Author: Shlok
+    # * Date: 14/12/2018
+    # * Reviewed By:
+    #
+    # @return [Hash]
+    #
+    def fetch_go_to
+
+      if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+        GlobalConstant::GoTo.authenticate_mfa
+      elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
+        GlobalConstant::GoTo.setup_mfa
+      else
+        GlobalConstant::GoTo.economy_planner_step_one
+      end
+      
     end
 
   end
