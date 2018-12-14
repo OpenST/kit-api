@@ -2,7 +2,7 @@ module Google
 
   class Authenticator
 
-    DRIFT_TIME = 30 # expiry time difference for otp
+    DRIFT_TIME = 15 # expiry time difference for otp
 
     include ::Util::ResultHelper
 
@@ -43,14 +43,12 @@ module Google
                                       {}
                                   )
         end
-      rescue StandardError => e
-        fail OstCustomError.new exception_with_data(
-                                    e,
+      rescue StandardError
+        fail OstCustomError.new validation_error(
                                     'r_t_2',
-                                    GlobalConstant::ErrorAction.default,
-                                    {
-                                        otp: otp
-                                    }
+                                    'invalid_api_params',
+                                    ['invalid_otp'],
+                                    GlobalConstant::ErrorAction.default
                                 )
       end
     end
