@@ -106,6 +106,13 @@ module ManagerManagement
                                     GlobalConstant::ErrorAction.default
                                 ) if @manager_to_be_updated_obj.blank?
 
+        fail OstCustomError.new validation_error(
+                                    'mm_sa_utsar_3',
+                                    'invalid_api_params',
+                                    ['email_inactive'],
+                                    GlobalConstant::ErrorAction.default
+                                ) if @manager_to_be_updated_obj.status != GlobalConstant::Manager.active_status
+
       end
 
       # Fetch client manager
@@ -121,14 +128,14 @@ module ManagerManagement
         @client_manager = ClientManager.where(client_id: @client_id, manager_id: @manager_to_be_updated_obj.id).first
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_utsar_3',
+                                    'mm_sa_utsar_4',
                                     'resource_not_found',
                                     [],
                                     GlobalConstant::ErrorAction.default
                                 ) if @client_manager.blank?
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_utsar_4',
+                                    'mm_sa_utsar_5',
                                     'unauthorized_access_response',
                                     [],
                                     GlobalConstant::ErrorAction.default
