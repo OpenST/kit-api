@@ -72,7 +72,7 @@
     - :client_id
   :optional:
     - :page_no
-'ManagerManagement::SuperAdmin::VerifySuperAdmin':
+'ManagerManagement::SuperAdmin::CheckSuperAdminRole':
   :mandatory:
     - :client_manager
   :optional:

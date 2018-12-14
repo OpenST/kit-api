@@ -2,7 +2,7 @@ module ManagerManagement
 
   module SuperAdmin
 
-    class VerifySuperAdmin < ServicesBase
+    class CheckSuperAdminRole < ServicesBase
 
       # Initialize
       #
@@ -12,7 +12,7 @@ module ManagerManagement
       #
       # @params [Integer] client_manager (mandatory) - client manager object
       #
-      # @return [ManagerManagement::SuperAdmin::VerifySuperAdmin]
+      # @return [ManagerManagement::SuperAdmin::CheckSuperAdminRole]
       #
       def initialize(params)
         super
