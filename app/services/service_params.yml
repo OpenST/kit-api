@@ -29,12 +29,15 @@
   :mandatory:
     - :manager_id
     - :browser_user_agent
+    - :cookie_value
     - :otp
     - :client
   :optional:
 'ManagerManagement::Login::MultiFactor::GetMfaUrl':
   :mandatory:
     - :manager_id
+    - :browser_user_agent
+    - :cookie_value
   :optional:
 'ManagerManagement::Login::PasswordAuth':
   :mandatory:

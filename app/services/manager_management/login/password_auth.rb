@@ -270,15 +270,12 @@ module ManagerManagement
       # @return [Hash]
       #
       def fetch_go_to
-        if !@manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
-          GlobalConstant::GoTo.verify_email
-        elsif @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
-          GlobalConstant::GoTo.authenticate_mfa
-        elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
-          GlobalConstant::GoTo.setup_mfa
-        else
-          GlobalConstant::GoTo.economy_planner_step_one
-        end
+        FetchGoTo.new({
+                          is_password_auth_cookie_valid: true,
+                          is_multi_auth_cookie_valid: false,
+                          client: @client,
+                          manager: @manager_obj.formated_cache_data
+                      }).fetch_by_manager_state
       end
 
     end

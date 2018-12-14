@@ -5,6 +5,12 @@ module GlobalConstant
 
     class << self
 
+      def login
+        {
+            by_screen_name: :login
+        }
+      end
+
       def verify_email
         {
             by_screen_name: :verify_email

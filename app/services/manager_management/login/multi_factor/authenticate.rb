@@ -16,6 +16,7 @@ module ManagerManagement
         # @params [Hash] client (mandatory) - client of logged in manager
         # @params [String] otp (mandatory) - this is the Otp entered
         # @params [String] browser_user_agent (mandatory) - browser user agent
+        # @params [String] cookie_value (mandatory) - cookie value
         #
         # @return [ManagerManagement::Login::MultiFactor::Authenticate]
         #
@@ -48,6 +49,8 @@ module ManagerManagement
             fetch_manager
 
             fail OstCustomError.new unauthorized_access_response('am_l_ma_b_3') if @manager_obj.mfa_token.blank?
+
+            handle_go_to
 
             decrypt_authentication_salt
 

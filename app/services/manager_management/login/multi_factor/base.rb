@@ -13,6 +13,9 @@ module ManagerManagement
         # * Reviewed By: 
         #
         # @params [String] password_auth_cookie_value (mandatory) - single auth cookie value
+        # @params [String] browser_user_agent (mandatory) - browser user agent
+        # @params [String] cookie_value (mandatory) - cookie value
+        # @params [Hash] client (mandatory) - client
         #
         # @return [ManagerManagement::Login::MultiFactor::Base]
         #
@@ -20,7 +23,10 @@ module ManagerManagement
 
           super
 
+          @client = @params[:client]
           @manager_id = @params[:manager_id]
+          @cookie_value = @params[:cookie_value]
+          @browser_user_agent = @params[:browser_user_agent]
 
           @manager_obj = nil
           @authentication_salt_d = nil
@@ -119,9 +125,43 @@ module ManagerManagement
           )
         end
 
+        # Handle Go To
+        #
+        # * Author: Puneet
+        # * Date: 08/12/2018
+        # * Reviewed By:
+        #
+        # @return [Result::Base]
+        #
+        def handle_go_to
+
+          r = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
+              browser_user_agent: @browser_user_agent, cookie_value: @cookie_value
+          ).perform
+
+          if r.success?
+
+            go_to = FetchGoTo.new({
+                              is_password_auth_cookie_valid: true,
+                              is_multi_auth_cookie_valid: true,
+                              client: @client,
+                              manager: @manager_obj.formated_cache_data
+                          }).fetch_by_economy_state
+
+            fail OstCustomError.new error_with_go_to(
+                                        'am_l_ma_b_7',
+                                        'unauthorized_access_response',
+                                        go_to
+                                    )
+
+          end
+
+        end
+
       end
 
     end
+
   end
 
 end

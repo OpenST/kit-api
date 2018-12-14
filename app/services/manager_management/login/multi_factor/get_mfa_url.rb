@@ -13,6 +13,8 @@ module ManagerManagement
         # * Reviewed By:
         #
         # @params [String] manager_id (mandatory) - manager_id
+        # @params [String] browser_user_agent (mandatory) - browser user agent
+        # @params [String] cookie_value (mandatory) -
         #
         # @return [ManagerManagement::Login::MultiFactor::GetMfaUrl]
         #
@@ -36,6 +38,8 @@ module ManagerManagement
             validate
 
             fetch_manager
+
+            handle_go_to
 
             if @manager_obj.mfa_token.present?
               if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
