@@ -11,6 +11,14 @@ module GlobalConstant
       'sandbox'
     end
 
+    def self.mainnet_environment
+      'mainnet'
+    end
+
+    def self.testnet_environment
+      'testnet'
+    end
+
   end
 
 end

@@ -16,11 +16,11 @@ module GlobalConstant
     end
 
     def self.main_sub_environment?
-      sub_environment_name =='main'
+      sub_environment_name == GlobalConstant::Environment.main_sub_environment
     end
 
     def self.sandbox_sub_environment?
-      sub_environment_name =='sandbox'
+      sub_environment_name == GlobalConstant::Environment.sandbox_sub_environment
     end
 
     def self.environment_name_short
