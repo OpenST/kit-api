@@ -6,7 +6,6 @@ class CreateClientConfigStrategyTable < DbMigrationConnection
       create_table :client_config_strategies do |t|
         t.column :client_id, :integer, null: false
         t.column :config_strategy_id, :integer, null: false
-        t.column :auxilary_data, :text, null: true
         t.timestamps
       end
 

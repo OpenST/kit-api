@@ -6,7 +6,7 @@ class CreateConfigStrategyTable < DbMigrationConnection
     run_migration_for_db(EstablishSaasConfigDbConnection) do
 
       create_table :config_strategies do |t|
-        t.column :group_id, :string, limit: 255, null: true
+        t.column :chain_id, :string, limit: 255, null: true
         t.column :kind, :tinyint, limit: 1, null: false
         t.column :encrypted_params, :text, null: true #encrypted
         t.column :unencrypted_params, :text
