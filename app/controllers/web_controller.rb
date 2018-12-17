@@ -174,28 +174,31 @@ class WebController < ApplicationController
 
       if password_cookie_verify_rsp.success?
 
-        if params[:manager][:properties].include?(GlobalConstant::Manager.has_verified_email_property)
-          go_to = GlobalConstant::GoTo.authenticate_mfa
+        params[:manager_id] = password_cookie_verify_rsp.data[:manager_id]
+        params[:manager] = password_cookie_verify_rsp.data[:manager]
+        params[:client_id] = password_cookie_verify_rsp.data[:client_id]
+        params[:client] = password_cookie_verify_rsp.data[:client]
+        params[:client_manager] = password_cookie_verify_rsp.data[:client_manager]
+        params[:is_multi_auth_cookie_valid] = false
+        params[:is_password_auth_cookie_valid] = true
+
+        if params[:manager][:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
+          go_to = GlobalConstant::GoTo.verify_email
           render_api_response(error_with_go_to('wc_vmfc_1', 'unauthorized_access_response', go_to)) and return
+        elsif params[:manager][:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
+          go_to = GlobalConstant::GoTo.authenticate_mfa
+          render_api_response(error_with_go_to('wc_vmfc_2', 'unauthorized_access_response', go_to)) and return
         elsif password_cookie_verify_rsp.data[:client][:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
           go_to = GlobalConstant::GoTo.setup_mfa
-          render_api_response(error_with_go_to('wc_vmfc_2', 'unauthorized_access_response', go_to)) and return
+          render_api_response(error_with_go_to('wc_vmfc_3', 'unauthorized_access_response', go_to)) and return
         end
 
-        extended_cookie_value = mfa_cookie_verify_rsp.data[:extended_cookie_value]
+        extended_cookie_value = password_cookie_verify_rsp.data[:extended_cookie_value]
         set_cookie(
             GlobalConstant::Cookie.user_cookie_name,
             extended_cookie_value,
             GlobalConstant::Cookie.password_auth_expiry.from_now
         ) if extended_cookie_value.present?
-
-        params[:manager_id] = mfa_cookie_verify_rsp.data[:manager_id]
-        params[:manager] = mfa_cookie_verify_rsp.data[:manager]
-        params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
-        params[:client] = mfa_cookie_verify_rsp.data[:client]
-        params[:client_manager] = mfa_cookie_verify_rsp.data[:client_manager]
-        params[:is_multi_auth_cookie_valid] = false
-        params[:is_password_auth_cookie_valid] = true
 
         # Remove sensitive data
         password_cookie_verify_rsp.data = {}

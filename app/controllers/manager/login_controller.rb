@@ -5,6 +5,7 @@ class Manager::LoginController < Manager::BaseController
   before_action :verify_recaptcha, only: [:sign_up_post, :password_auth, :send_reset_password_link]
 
   before_action :verify_mfa_cookie, only: [
+    :get_details,
     :list_admins
   ]
 
@@ -12,7 +13,6 @@ class Manager::LoginController < Manager::BaseController
     :multi_factor_auth,
     :mfa,
     :send_verify_email_link,
-    :get_details,
     :verify_email
   ]
 
@@ -98,10 +98,17 @@ class Manager::LoginController < Manager::BaseController
   #
   def get_details
     service_response = success_with_data({
-                                             manager: params[:manager],
-                                             client: params[:client],
-                                             client_manager: params[:client_manager]
-                                         })
+           manager: params[:manager],
+           client: params[:client],
+           client_manager: params[:client_manager]
+       },
+       FetchGoTo.new({
+           is_password_auth_cookie_valid: true,
+           is_multi_auth_cookie_valid: true,
+           client: params[:client],
+           manager: params[:manager]
+         }).fetch_by_manager_state
+       )
     render_api_response(service_response)
   end
 
