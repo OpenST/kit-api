@@ -16,7 +16,7 @@ class CreateConfigStrategyTable < DbMigrationConnection
         t.timestamps
       end
 
-      add_index :config_strategies, [:group_id, :kind], unique: true, name: 'uk_group_id_kind_uniq'
+      add_index :config_strategies, [:chain_id, :kind], unique: true, name: 'uk_chain_id_kind_uniq'
     end
 
   end
