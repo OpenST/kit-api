@@ -30,10 +30,11 @@ class EmailTokenEncryptor
     begin
       fail 'no code to execute' unless block_given?
       yield
-    rescue => e
-      exception_with_data(
-          e,
+    rescue ActiveSupport::MessageEncryptor::InvalidMessage => e
+      validation_error(
           'etc_1',
+          'invalid_api_params',
+          ['invalid_r_t'],
           GlobalConstant::ErrorAction.default
       )
     end

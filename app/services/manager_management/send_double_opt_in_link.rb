@@ -122,7 +122,6 @@ module ManagerManagement
     # * Reviewed By:
     #
     def send_double_optin_email
-      puts "@double_optin_token #{@double_optin_token}"
       Email::HookCreator::SendTransactionalMail.new(
           email: @manager.email,
           template_name: GlobalConstant::PepoCampaigns.double_opt_in_template,

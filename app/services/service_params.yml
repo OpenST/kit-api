@@ -7,13 +7,13 @@
   :optional:
 'ManagerManagement::SignUp::ByInvite':
   :mandatory:
-    - :i_t
+    - :r_t
     - :password
     - :browser_user_agent
   :optional:
 'ManagerManagement::SignUp::GetDetails':
   :mandatory:
-    - :i_t
+    - :r_t
   :optional:
 'ManagerManagement::VerifyCookie::PasswordAuth':
   :mandatory:
