@@ -3,27 +3,28 @@ class CreateConfigStrategyTable < DbMigrationConnection
   def up
 
     default_inactive_value = 2
-    run_migration_for_db(EstablishSaasConfigDbConnection) do
+    run_migration_for_db(EstablishConfigDbConnection) do
 
       create_table :config_strategies do |t|
-        t.column :chain_id, :string, limit: 255, null: true
         t.column :kind, :tinyint, limit: 1, null: false
-        t.column :encrypted_params, :text, null: true #encrypted
-        t.column :unencrypted_params, :text
+        t.column :chain_id, :integer, null: false
+        t.column :group_id, :integer, null: false
+        t.column :status, :tinyint, limit: 1, null: false
+        t.column :unencrypted_params, :text, null: false
         t.column :hashed_params, :text, null: false
-        t.column :status, :integer, null: false, default: default_inactive_value
-        t.column :managed_address_salts_id, :integer,limit: 8, null: false
+        t.column :encrypted_params, :text, null: false
+        t.column :managed_address_salts_id, :integer, limit: 8, null: true
         t.timestamps
       end
 
-      add_index :config_strategies, [:chain_id, :kind], unique: true, name: 'uk_chain_id_kind_uniq'
+      add_index :config_strategies, [:kind, :chain_id, :group_id], unique: true, name: 'uk_kind_chain_id_group_id_uniq'
     end
 
   end
 
   def down
 
-    run_migration_for_db(EstablishSaasConfigDbConnection) do
+    run_migration_for_db(EstablishConfigDbConnection) do
 
       drop_table :config_strategies
 

@@ -49,6 +49,6 @@ kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *saas_and_api_shared_db
   database: kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
-saas_config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_db
-  database: saas_config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+  database: config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>

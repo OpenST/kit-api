@@ -1,9 +1,9 @@
-class EstablishSaasConfigDbConnection < ApplicationRecord
+class EstablishConfigDbConnection < ApplicationRecord
 
   self.abstract_class = true
 
   def self.config_key
-    "saas_config_#{GlobalConstant::Base.sub_environment_name}_#{Rails.env}"
+    "config_#{GlobalConstant::Base.sub_environment_name}_#{Rails.env}"
   end
 
   def self.applicable_sub_environments
