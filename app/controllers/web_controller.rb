@@ -60,6 +60,7 @@ class WebController < ApplicationController
   #
   def verify_password_cookie
 
+    # We firstly verify the password cookie. If password cookie is present, we return.
     cookie_value = cookies[GlobalConstant::Cookie.user_cookie_name.to_sym]
 
     password_cookie_verify_rsp = ManagerManagement::VerifyCookie::PasswordAuth.new(
@@ -88,6 +89,9 @@ class WebController < ApplicationController
       # Remove sensitive data
       password_cookie_verify_rsp.data = {}
 
+    # If password cookie is not present, we check for MFA cookie. We do this because sometimes a higher authenticated
+    # manager might try to re-visit some page which only needs a password cookie. That manager won't have a password
+    # cookie but would have a MFA cookie.
     else
 
       mfa_cookie_verify_rsp = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
