@@ -118,3 +118,14 @@
     - :manager
   :optional:
     - :client_manager
+'TokenManagement::GetTokenDetails':
+  :mandatory:
+    - :client_id
+  :optional:
+'TokenManagement::InsertTokenDetails':
+  :mandatory:
+    - :client_id
+    - :name
+    - :symbol
+    - :conversion_factor
+  :optional:

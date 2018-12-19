@@ -24,3 +24,13 @@ client_manager:
   details:
     key_template: 'c_md_%{client_id}_%{manager_id}'
     expiry_in_seconds: 86400
+
+token_management:
+  details:
+    key_template: 't_md_%{client_id}'
+    expiry_in_seconds: 86400
+
+ost_price_points:
+  default:
+    key_template: 'c_oppd_def'
+    expiry_in_seconds: 300

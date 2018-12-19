@@ -15,12 +15,10 @@ module CacheManagement
     #
     def fetch
 
-      data_to_cache = Memcache.get_set_memcached(get_cache_key, get_cache_expiry) do
+      Memcache.get_set_memcached(get_cache_key, get_cache_expiry) do
         {emails: ClientWhitelisting.where(kind: GlobalConstant::ClientWhitelisting.email_kind).
             select(:identifier).all.collect(&:identifier)}
       end
-
-      success_with_data(data_to_cache)
 
     end
 

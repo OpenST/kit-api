@@ -159,7 +159,7 @@ module Util
     #
     def self.whitelisted_emails
       r = CacheManagement::ClientWhitelistedEmails.new().fetch
-      r.success? ? r.data[:emails] : []
+      r[:emails] || []
     end
 
     # Is the Email a OST Email
@@ -184,7 +184,7 @@ module Util
     #
     def self.allowed_domains
       r = CacheManagement::ClientWhitelistedDomains.new().fetch
-      r.success? ? r.data[:domains] : []
+      r[:domains] || []
     end
 
     # Does password contains allowed characters and size
@@ -296,6 +296,34 @@ module Util
     #
     def self.is_sandbox_env?
       @i_mn_env ||= GlobalConstant::Base.sub_environment_name == GlobalConstant::Environment.sandbox_sub_environment
+    end
+
+    # check if string is a valid Token Symbol
+    #
+    # * Author: Puneet
+    # * Date: 22/02/2018
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_token_symbol?(str)
+      length = str.length
+      return false if length > 4 || length < 3
+      (str =~ /\A[a-z][0-9a-z]*\z/i).present?
+    end
+
+    # check if string is a valid Token name
+    #
+    # * Author: Puneet
+    # * Date: 22/02/2018
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_token_name?(str)
+      length = str.length
+      return false if length > 20 || length < 3
+      (str =~ /\A[a-z][a-z0-9]*[\s]*[0-9a-z]*[\s]*[0-9a-z]*\z/i).present?
     end
 
   end

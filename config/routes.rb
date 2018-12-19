@@ -26,6 +26,17 @@ Rails.application.routes.draw do
     match 'delete-admin' => :delete_admin, via: :POST
   end
 
+  scope 'api/token', controller: 'token' do
+    match '' => :token_details_get, via: :GET
+    match '' => :token_details_post, via: :POST
+  end
+
+  scope 'api/token/addresses', controller: 'token/addresses' do
+    match '' => :token_addresses_get, via: :GET
+    match '' => :token_addresses_post, via: :POST
+    match 'is-available' => :token_addresses_is_available, via: :GET
+  end
+
   # Handle any other routes
   match '*permalink', to: 'application#not_found', via: :all
 
