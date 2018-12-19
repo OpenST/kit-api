@@ -21,7 +21,7 @@ class CreateKnownAddress < DbMigrationConnection
       add_index :known_addresses, [:encryption_salt_id], name: 'uk_2', unique: true
       add_index :known_addresses, [:ethereum_address], name: 'uk_3', unique: true
 
-      execute ("ALTER TABLE managed_addresses AUTO_INCREMENT = 70000")
+      execute ("ALTER TABLE known_addresses AUTO_INCREMENT = 70000")
 
     end
 
