@@ -18,6 +18,12 @@ sub_env_shared_db_identifier: &sub_env_shared_db
   username: <%= ENV['KA_SUB_ENV_SHARED_DB_USER']%>
   password: <%= ENV['KA_SUB_ENV_SHARED_DB_PASSWORD']%>
 
+saas_api_and_sub_env_shared_db_identifier: &saas_api_and_sub_env_shared_db
+  <<: *default
+  host: <%= ENV['KA_SUB_ENV_SHARED_DB_HOST']%>
+  username: <%= ENV['KA_SUB_ENV_SHARED_DB_USER']%>
+  password: <%= ENV['KA_SUB_ENV_SHARED_DB_PASSWORD']%>
+
 saas_and_api_shared_db_identifier: &saas_and_api_shared_db
   <<: *default
   host: <%= ENV['KA_SAAS_SHARED_DB_HOST']%>
@@ -48,6 +54,11 @@ kit_client_<%= Rails.env%>:
 kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *saas_and_api_shared_db
   database: kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+# NOTE: Database shared between saas, kit and sub env shared api
+kit_saas_shared_<%= Rails.env%>:
+  <<: *saas_api_and_sub_env_shared_db
+  database: kit_saas_shared_<%= Rails.env%>
 
 config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_db
