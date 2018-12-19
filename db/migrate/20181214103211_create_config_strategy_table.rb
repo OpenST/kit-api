@@ -13,6 +13,7 @@ class CreateConfigStrategyTable < DbMigrationConnection
         t.column :unencrypted_params, :text, null: false
         t.column :encrypted_params, :text, null: true
         t.column :encryption_salt_id, :integer, limit: 8, null: true
+        t.column :is_available_for_allocation, :integer, limit: 1, null: true
         t.timestamps
       end
 
