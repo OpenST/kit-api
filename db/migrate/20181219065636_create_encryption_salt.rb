@@ -4,6 +4,7 @@ class CreateEncryptionSalt < DbMigrationConnection
     run_migration_for_db(EstablishSaasBigDbConnection) do
       create_table :encryption_salts do |t|
         t.column :client_id, :integer, null: true
+        t.column :kind, :tinyint, limit: 1, null: false
         t.column :salt, :blob, null: false #kms_encrypted
         t.timestamps
       end
