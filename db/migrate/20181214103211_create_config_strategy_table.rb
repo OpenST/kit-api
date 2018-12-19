@@ -12,7 +12,7 @@ class CreateConfigStrategyTable < DbMigrationConnection
         t.column :status, :tinyint, limit: 1, null: false
         t.column :unencrypted_params, :text, null: false
         t.column :encrypted_params, :text, null: false
-        t.column :managed_address_salts_id, :integer, limit: 8, null: true
+        t.column :encryption_salt_id, :integer, limit: 8, null: true
         t.timestamps
       end
 
