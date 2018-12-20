@@ -90,4 +90,8 @@ class ServicesBase
 
   end
 
+  def sanitize_address(address)
+    address.to_s.strip.downcase
+  end
+
 end

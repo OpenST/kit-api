@@ -58,6 +58,7 @@ module WalletAddressesManagement
 
       validate
 
+      @address = sanitize_address(@address)
       success
 
     end
@@ -73,9 +74,9 @@ module WalletAddressesManagement
     def is_address_available
 
       if ClientWalletAddress.where('address = ?' , @address).first.present?
-        @api_response_data['is_address_available'] = true
-      else
         @api_response_data['is_address_available'] = false
+      else
+        @api_response_data['is_address_available'] = true
       end
 
     end

@@ -1,7 +1,7 @@
 module GlobalConstant
   class MessageToSign
-    def self.message
-      'static message'
+    def self.wallet_association
+      'static-message'
     end
   end
 end
