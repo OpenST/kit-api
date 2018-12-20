@@ -11,7 +11,7 @@ class CreateCurrencyConversionRates < DbMigrationConnection
         t.column :status, :tinyint, limit: 1, null:false
         t.timestamps
       end
-      add_index :currency_conversion_rates, [:chain_id, :timestamp, :status, :base_currency, :quote_currency], name: 'index_1'
+      add_index :currency_conversion_rates, [:chain_id, :timestamp, :status, :base_currency, :quote_currency], unique: true, name: 'cuk_1'
     end
   end
 
