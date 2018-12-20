@@ -69,7 +69,7 @@ kit_saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
 
 # NOTE: Database shared between saas, kit and sub env shared api
 kit_saas_<%= Rails.env%>:
-  <<: *saas_api_and_sub_env_db
+  <<: *saas_api_and_sub_env_shared_db
   database: kit_saas_<%= Rails.env%>
 
 config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
