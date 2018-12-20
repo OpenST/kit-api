@@ -1,6 +1,6 @@
 class CreateTokens < DbMigrationConnection
   def up
-    run_migration_for_db(EstablishKitSaasSharedSubenvSpecificDbConnection) do
+    run_migration_for_db(EstablishKitSaasSubenvSpecificDbConnection) do
       create_table :tokens do |t|
         t.column :client_id, :integer, null: false, unique: true
         t.column :name, :string, null: false, unique: true
@@ -17,8 +17,8 @@ class CreateTokens < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishKitSaasSharedSubenvSpecificDbConnection) do
-      drop_table :tokens if EstablishKitSaasSharedSubenvSpecificDbConnection.connection.table_exists? :tokens
+    run_migration_for_db(EstablishKitSaasSubenvSpecificDbConnection) do
+      drop_table :tokens if EstablishKitSaasSubenvSpecificDbConnection.connection.table_exists? :tokens
     end
   end
 end

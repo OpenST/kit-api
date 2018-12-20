@@ -1,9 +1,9 @@
-class EstablishKitSaasSharedSubenvSpecificDbConnection < ApplicationRecord
+class EstablishKitSaasSubenvSpecificDbConnection < ApplicationRecord
 
   self.abstract_class = true
 
   def self.config_key
-    "kit_saas_shared_#{GlobalConstant::Base.sub_environment_name}_#{Rails.env}"
+    "kit_saas_#{GlobalConstant::Base.sub_environment_name}_#{Rails.env}"
   end
 
   def self.applicable_sub_environments

@@ -1,9 +1,9 @@
-class EstablishKitSaasSharedDbConnection < ApplicationRecord
+class EstablishKitSaasDbConnection < ApplicationRecord
 
   self.abstract_class = true
 
   def self.config_key
-    "kit_saas_shared_#{Rails.env}"
+    "kit_saas_#{Rails.env}"
   end
 
   def self.applicable_sub_environments

@@ -63,14 +63,14 @@ kit_client_<%= Rails.env%>:
   database: kit_client_<%= Rails.env%>
 
 # NOTE: Database shared between saas and kit api
-kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *saas_and_api_shared_db
-  database: kit_saas_shared_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+kit_saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *saas_and_api_db
+  database: kit_saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
 # NOTE: Database shared between saas, kit and sub env shared api
-kit_saas_shared_<%= Rails.env%>:
-  <<: *saas_api_and_sub_env_shared_db
-  database: kit_saas_shared_<%= Rails.env%>
+kit_saas_<%= Rails.env%>:
+  <<: *saas_api_and_sub_env_db
+  database: kit_saas_<%= Rails.env%>
 
 config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_db

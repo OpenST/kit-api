@@ -1,6 +1,6 @@
 class CreateCurrencyConversionRates < DbMigrationConnection
   def up
-    run_migration_for_db(EstablishKitSaasSharedSubenvSpecificDbConnection) do
+    run_migration_for_db(EstablishKitSaasSubenvSpecificDbConnection) do
       create_table :currency_conversion_rates do |t|
         t.column :chain_id, :integer, null: false
         t.column :base_currency, :tinyint, limit: 1, null: false
@@ -16,8 +16,8 @@ class CreateCurrencyConversionRates < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishKitSaasSharedSubenvSpecificDbConnection) do
-      drop_table :currency_conversion_rates if EstablishKitSaasSharedSubenvSpecificDbConnection.connection.table_exists? :currency_conversion_rates
+    run_migration_for_db(EstablishKitSaasSubenvSpecificDbConnection) do
+      drop_table :currency_conversion_rates if EstablishKitSaasSubenvSpecificDbConnection.connection.table_exists? :currency_conversion_rates
     end
   end
 end

@@ -1,4 +1,4 @@
-class Token < EstablishKitSaasSharedSubenvSpecificDbConnection
+class Token < EstablishKitSaasSubenvSpecificDbConnection
 
 
 # Format data to a format which goes into cache
