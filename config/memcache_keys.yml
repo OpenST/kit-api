@@ -30,6 +30,11 @@ token_management:
     key_template: 't_md_%{client_id}'
     expiry_in_seconds: 86400
 
+token_address:
+  details:
+    key_template: 't_md_%{token_id}'
+    expiry_in_seconds: 86400
+
 ost_price_points:
   default:
     key_template: 'c_oppd_def'

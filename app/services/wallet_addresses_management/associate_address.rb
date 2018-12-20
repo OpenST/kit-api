@@ -141,7 +141,7 @@ module WalletAddressesManagement
 
     end
 
-    # associate address. Creates entry in client wallet addresses table
+    # Creates entry in client wallet addresses and token addresses
     #
     #
     # * Author: Ankit
@@ -150,13 +150,30 @@ module WalletAddressesManagement
     #
     # @return [Result::Base]
 
-    def associate
+    def create_entries
 
       ClientWalletAddress.create!(
         client_id: @client_id,
         sub_environment: GlobalConstant::Environment.url_prefix,
         address: @owner_address,
         status:GlobalConstant::WalletAddressStatus.active_status
+      )
+
+      token_details = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
+      token_id = token_details.id
+
+      TokenAddresses.create!(
+        token_id: token_id,
+        chain_kind: GlobalConstant::TokenAddresses.aux,
+        kind: GlobalConstant::TokenAddresses.owner,
+        address: @owner_address
+      )
+
+      TokenAddresses.create!(
+        token_id: token_id,
+        chain_kind: GlobalConstant::TokenAddresses.origin,
+        kind: GlobalConstant::TokenAddresses.owner,
+        address: @owner_address
       )
 
       success
