@@ -2,7 +2,7 @@ class CreateEmailServiceApiCallHooks < DbMigrationConnection
 
   def up
 
-    run_migration_for_db(EstablishKitAsyncHooksDbConnection) do
+    run_migration_for_db(DbConnection::KitBigSubenv) do
 
       create_table :email_service_api_call_hooks do |t|
 
@@ -33,7 +33,7 @@ class CreateEmailServiceApiCallHooks < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishKitAsyncHooksDbConnection) do
+    run_migration_for_db(DbConnection::KitBigSubenv) do
       drop_table :email_service_api_call_hooks
     end
   end

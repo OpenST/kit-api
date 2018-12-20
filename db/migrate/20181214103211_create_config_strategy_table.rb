@@ -3,7 +3,7 @@ class CreateConfigStrategyTable < DbMigrationConnection
   def up
 
     default_inactive_value = 2
-    run_migration_for_db(EstablishConfigDbConnection) do
+    run_migration_for_db(DbConnection::ConfigSubenv) do
 
       create_table :config_strategies do |t|
         t.column :kind, :tinyint, limit: 1, null: false
@@ -24,7 +24,7 @@ class CreateConfigStrategyTable < DbMigrationConnection
 
   def down
 
-    run_migration_for_db(EstablishConfigDbConnection) do
+    run_migration_for_db(DbConnection::ConfigSubenv) do
 
       drop_table :config_strategies
 

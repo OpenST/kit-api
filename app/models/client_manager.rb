@@ -1,4 +1,4 @@
-class ClientManager < EstablishKitClientDbConnection
+class ClientManager < DbConnection::KitClient
 
   def self.privilages_config
     @c_privilages ||= {

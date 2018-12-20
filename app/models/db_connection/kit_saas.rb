@@ -1,4 +1,4 @@
-class EstablishKitSaasDbConnection < ApplicationRecord
+class DbConnection::KitSaas < ApplicationRecord
 
   self.abstract_class = true
 
@@ -8,7 +8,7 @@ class EstablishKitSaasDbConnection < ApplicationRecord
 
   def self.applicable_sub_environments
     [
-        GlobalConstant::Environment.sandbox_sub_environment
+      GlobalConstant::Environment.sandbox_sub_environment
     ]
   end
 

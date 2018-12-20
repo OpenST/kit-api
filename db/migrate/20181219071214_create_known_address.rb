@@ -2,7 +2,7 @@ class CreateKnownAddress < DbMigrationConnection
 
   def up
 
-    run_migration_for_db(EstablishSaasDbConnection) do
+    run_migration_for_db(DbConnection::SaasSubenv) do
 
       create_table :known_addresses do |t|
         t.column :address, :string, limit: 255
@@ -20,8 +20,8 @@ class CreateKnownAddress < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishSaasDbConnection) do
-      drop_table :known_addresses if EstablishSaasDbConnection.connection.table_exists? :known_addresses
+    run_migration_for_db(DbConnection::SaasSubenv) do
+      drop_table :known_addresses if DbConnection::SaasSubenv.connection.table_exists? :known_addresses
     end
   end
   

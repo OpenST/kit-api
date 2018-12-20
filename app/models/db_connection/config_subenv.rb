@@ -1,4 +1,4 @@
-class EstablishConfigDbConnection < ApplicationRecord
+class DbConnection::ConfigSubenv < ApplicationRecord
 
   self.abstract_class = true
 

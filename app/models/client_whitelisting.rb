@@ -1,4 +1,4 @@
-class ClientWhitelisting < EstablishKitClientDbConnection
+class ClientWhitelisting < DbConnection::KitClient
 
   enum kind: {
       GlobalConstant::ClientWhitelisting.domain_kind => 1,

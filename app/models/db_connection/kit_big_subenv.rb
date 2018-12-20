@@ -1,9 +1,9 @@
-class EstablishKitAsyncHooksDbConnection < ApplicationRecord
+class DbConnection::KitBigSubenv < ApplicationRecord
 
   self.abstract_class = true
 
   def self.config_key
-    "kit_async_hooks_#{GlobalConstant::Base.sub_environment_name}_#{Rails.env}"
+    "kit_big_#{GlobalConstant::Base.sub_environment_name}_#{Rails.env}"
   end
 
   def self.applicable_sub_environments

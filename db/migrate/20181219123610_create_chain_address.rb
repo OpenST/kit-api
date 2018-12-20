@@ -2,7 +2,7 @@ class CreateChainAddress < DbMigrationConnection
 
   def up
 
-    run_migration_for_db(EstablishSaasDbConnection) do
+    run_migration_for_db(DbConnection::SaasSubenv) do
 
       create_table :chain_addresses do |t|
         t.column :chain_id, :integer, null: false
@@ -21,8 +21,8 @@ class CreateChainAddress < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishSaasDbConnection) do
-      drop_table :chain_addresses if EstablishSaasDbConnection.connection.table_exists? :chain_addresses
+    run_migration_for_db(DbConnection::SaasSubenv) do
+      drop_table :chain_addresses if DbConnection::SaasSubenv.connection.table_exists? :chain_addresses
     end
   end
   

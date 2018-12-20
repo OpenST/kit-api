@@ -1,4 +1,4 @@
-class EstablishSaasBigDbConnection < ApplicationRecord
+class DbConnection::SaasBigSubenv < ApplicationRecord
 
   self.abstract_class = true
 
@@ -8,8 +8,8 @@ class EstablishSaasBigDbConnection < ApplicationRecord
 
   def self.applicable_sub_environments
     [
-        GlobalConstant::Environment.sandbox_sub_environment,
-        GlobalConstant::Environment.main_sub_environment
+      GlobalConstant::Environment.sandbox_sub_environment,
+      GlobalConstant::Environment.main_sub_environment
     ]
   end
 

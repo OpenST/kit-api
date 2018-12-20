@@ -1,4 +1,4 @@
-class Client < EstablishKitClientDbConnection
+class Client < DbConnection::KitClient
 
   def self.properties_config
     @c_props ||= {

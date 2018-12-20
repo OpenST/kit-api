@@ -1,4 +1,4 @@
-class CurrencyConversionRate < EstablishKitSaasSubenvSpecificDbConnection
+class CurrencyConversionRate < DbConnection::KitSaasSubenv
 
   enum base_currency: {
     GlobalConstant::ConversionRates.ost_currency => 1

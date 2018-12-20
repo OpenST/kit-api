@@ -1,7 +1,7 @@
 class CreateManagers < DbMigrationConnection
 
   def up
-    run_migration_for_db(EstablishKitClientDbConnection) do
+    run_migration_for_db(DbConnection::KitClient) do
       create_table :managers do |t|
         t.column :email, :string, null: false
         t.column :password, :text, null: true #encrypted
@@ -19,8 +19,8 @@ class CreateManagers < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishKitClientDbConnection) do
-      drop_table :managers if EstablishKitClientDbConnection.connection.table_exists? :managers
+    run_migration_for_db(DbConnection::KitClient) do
+      drop_table :managers if DbConnection::KitClient.connection.table_exists? :managers
     end
   end
 

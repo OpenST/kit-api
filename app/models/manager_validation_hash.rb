@@ -1,4 +1,4 @@
-class ManagerValidationHash < EstablishKitClientDbConnection
+class ManagerValidationHash < DbConnection::KitClient
 
   enum kind: {
       GlobalConstant::ManagerValidationHash.reset_password_kind => 1,

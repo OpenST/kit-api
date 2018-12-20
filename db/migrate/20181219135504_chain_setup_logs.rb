@@ -2,7 +2,7 @@ class ChainSetupLogs < DbMigrationConnection
 
   def up
 
-    run_migration_for_db(EstablishSaasBigDbConnection) do
+    run_migration_for_db(DbConnection::SaasBigSubenv) do
 
       create_table :chain_setup_logs do |t|
         t.column :chain_id, :integer, null: false
@@ -17,8 +17,8 @@ class ChainSetupLogs < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishSaasBigDbConnection) do
-      drop_table :chain_setup_logs if EstablishSaasBigDbConnection.connection.table_exists? :chain_setup_logs
+    run_migration_for_db(DbConnection::SaasBigSubenv) do
+      drop_table :chain_setup_logs if DbConnection::SaasBigSubenv.connection.table_exists? :chain_setup_logs
     end
   end
   

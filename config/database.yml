@@ -53,9 +53,9 @@ saas_db_identifier: &saas_db
   <<: *default_db
   database: kit_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
-kit_async_hooks_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *default_db
-  database: kit_async_hooks_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+  database: kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
 # NOTE: Databases shared between sub environments
 kit_client_<%= Rails.env%>:

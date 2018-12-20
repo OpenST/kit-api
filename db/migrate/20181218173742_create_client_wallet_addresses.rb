@@ -1,6 +1,6 @@
 class CreateClientWalletAddresses < DbMigrationConnection
   def up
-    run_migration_for_db(EstablishKitSaasDbConnection) do
+    run_migration_for_db(DbConnection::KitSaas) do
       create_table :client_wallet_addresses do |t|
         t.column :client_id, :integer, null: false
         t.column :sub_environment, :tinyint, limit: 1, null: false
@@ -14,8 +14,8 @@ class CreateClientWalletAddresses < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(EstablishKitSaasDbConnection) do
-      drop_table :client_wallet_addresses if EstablishKitSaasDbConnection.connection.table_exists? :client_wallet_addresses
+    run_migration_for_db(DbConnection::KitSaas) do
+      drop_table :client_wallet_addresses if DbConnection::KitSaas.connection.table_exists? :client_wallet_addresses
     end
   end
 end
