@@ -10,12 +10,16 @@ module ManagerManagement
       # * Date: 03/05/2018
       # * Reviewed By:
       #
+      # @param [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
+      # @param [Integer] client_id (mandatory) - id of the client who is deleting this admin
       # @params [Integer] to_update_client_manager_id (mandatory) - id of manager whose MFA has to be set
       #
       # @return [ManagerManagement::SuperAdmin::ResetMfa]
       #
       def initialize(params)
         super
+        @manager_id = @params[:manager_id]
+        @client_id = @params[:client_id]
         @to_update_client_manager_id = @params[:to_update_client_manager_id]
         @to_update_client_manager = nil
         @to_update_manager_obj = nil

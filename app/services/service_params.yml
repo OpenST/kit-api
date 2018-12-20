@@ -94,6 +94,8 @@
 'ManagerManagement::SuperAdmin::ResetMfa':
   :mandatory:
     - :to_update_client_manager_id
+    - :client_id
+    - :manager_id
   :optional:
 'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
   :mandatory:
