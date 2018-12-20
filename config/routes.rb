@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     match 'reset-mfa' => :reset_mfa, via: :POST
     match 'invite-admin' => :invite_admin, via: :POST
     match 'delete-admin' => :delete_admin, via: :POST
+    match 'update-super-admin-role' => :update_super_admin_role, via: :POST
   end
 
   scope 'api/token', controller: 'token' do

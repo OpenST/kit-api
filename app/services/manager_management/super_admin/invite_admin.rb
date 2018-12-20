@@ -25,6 +25,7 @@ module ManagerManagement
         @client_id = @params[:client_id]
 
         @invitee_manager = nil
+        @invitee_client_manager = nil
         @invite_token = nil
         @authentication_salt_hash = nil
 
@@ -52,7 +53,15 @@ module ManagerManagement
 
           enqueue_job
 
-          success_with_data({})
+          success_with_data({
+                                result_type: result_type,
+                                result_type => [
+                                    @invitee_client_manager.formated_cache_data
+                                ],
+                                managers: {
+                                    @invitee_manager.id => @invitee_manager.formated_cache_data
+                                }
+                            })
 
         end
 
@@ -220,6 +229,8 @@ module ManagerManagement
 
         cm.save! if cm.changed?
 
+        @invitee_client_manager = cm
+
         success
 
       end
@@ -233,7 +244,6 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def enqueue_job
-        puts "invite_token: #{@invite_token}"
         BackgroundJob.enqueue(
             InviteJob,
             {
@@ -241,6 +251,10 @@ module ManagerManagement
                 invite_token: @invite_token
             }
         )
+      end
+
+      def result_type
+        :client_managers
       end
 
     end
