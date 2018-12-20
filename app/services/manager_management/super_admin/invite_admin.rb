@@ -203,20 +203,20 @@ module ManagerManagement
 
         cm = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
 
-        if cm.present? && cm.privilages.present?
-          privilages = ClientManager.get_bits_set_for_privilages(cm.privilages) - [GlobalConstant::ClientManager.is_invited_privilage]
-          # if any other privilage was set other than invite, either invite was already accepted or rejected. fail this request
+        if cm.present? && cm.privileges.present?
+          privileges = ClientManager.get_bits_set_for_privileges(cm.privileges) - [GlobalConstant::ClientManager.is_invited_privilege]
+          # if any other privilege was set other than invite, either invite was already accepted or rejected. fail this request
           fail OstCustomError.new validation_error(
                                       'mm_su_i_5',
                                       'invalid_api_params',
                                       ['already_registered_email'],
                                       GlobalConstant::ErrorAction.default
-                                  ) if privilages.any?
+                                  ) if privileges.any?
         end
 
         cm ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
 
-        cm.send("set_#{GlobalConstant::ClientManager.is_invited_privilage}")
+        cm.send("set_#{GlobalConstant::ClientManager.is_invited_privilege}")
 
         cm.save! if cm.changed?
 

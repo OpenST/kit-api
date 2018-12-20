@@ -166,7 +166,7 @@ module ManagerManagement
         end
 
         client_manager = CacheManagement::ClientManager.new([@inviter_manager_id], {client_id: @client_id}).fetch[@inviter_manager_id]
-        invalid_url_error('um_rp_15') if client_manager[:privilages].exclude?(GlobalConstant::ClientManager.is_super_admin_privilage)
+        invalid_url_error('um_rp_15') if client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
 
         success
 

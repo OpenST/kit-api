@@ -158,10 +158,10 @@ module ManagerManagement
         @client_manager = CacheManagement::ClientManager.new([@manager_id], {client_id: @manager[:current_client_id]}).fetch[@manager_id]
         client_manager_not_associated_response('am_vc_11') if @client_manager.blank?
 
-        privilages = @client_manager[:privilages]
+        privileges = @client_manager[:privileges]
 
-        is_client_manager_active = privilages.include?(GlobalConstant::ClientManager.is_super_admin_privilage) ||
-            privilages.include?(GlobalConstant::ClientManager.is_admin_privilage)
+        is_client_manager_active = privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
+            privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
 
         client_manager_not_associated_response('am_vc_12') unless is_client_manager_active
 

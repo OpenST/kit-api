@@ -99,8 +99,8 @@ module ManagerManagement
       offset_value = (@page_no - 1) * @page_size
 
       client_managers_data = ClientManager.where(
-        'client_id = ? AND privilages & ? = 0',
-        @client_id, ClientManager.privilages_config[GlobalConstant::ClientManager.has_been_deleted_privilage]).
+        'client_id = ? AND privileges & ? = 0',
+        @client_id, ClientManager.privileges_config[GlobalConstant::ClientManager.has_been_deleted_privilege]).
         limit(@page_size + 1). # Fetch one more to check whether more entries are there or not.
         offset(offset_value)
 

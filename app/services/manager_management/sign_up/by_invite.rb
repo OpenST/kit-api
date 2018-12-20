@@ -197,7 +197,7 @@ module ManagerManagement
 
         client_ids = ar.select(:client_id).all.collect(&:client_id)
 
-        ar.update_all(privilages: ClientManager.privilages_config[GlobalConstant::ClientManager.has_rejected_invite_privilage])
+        ar.update_all(privileges: ClientManager.privileges_config[GlobalConstant::ClientManager.has_rejected_invite_privilege])
 
         client_ids.each do |client_id|
           CacheManagement::ClientManager.new([@manager_id], {client_id: client_id}).clear
@@ -222,8 +222,8 @@ module ManagerManagement
             manager_id: @manager_obj.id
         ).first
 
-        @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_invited_privilage}")
-        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilage}")
+        @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_invited_privilege}")
+        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
 
         @client_manager_obj.save!
 

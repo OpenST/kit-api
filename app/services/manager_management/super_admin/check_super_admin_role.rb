@@ -63,7 +63,7 @@ module ManagerManagement
                                   'mm_sa_vsa_2',
                                   'unauthorized_access_response',
                                   GlobalConstant::ErrorAction.default
-                                ) if @client_manager[:privilages].exclude?(GlobalConstant::ClientManager.is_super_admin_privilage)
+                                ) if @client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
 
         success
 

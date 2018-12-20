@@ -1,18 +1,18 @@
 class ClientManager < DbConnection::KitClient
 
-  def self.privilages_config
-    @c_privilages ||= {
-        GlobalConstant::ClientManager.is_super_admin_privilage => 1,
-        GlobalConstant::ClientManager.is_admin_privilage => 2,
-        GlobalConstant::ClientManager.is_invited_privilage => 4,
-        GlobalConstant::ClientManager.has_rejected_invite_privilage => 8,
-        GlobalConstant::ClientManager.has_been_deleted_privilage => 16
+  def self.privileges_config
+    @c_privileges ||= {
+        GlobalConstant::ClientManager.is_super_admin_privilege => 1,
+        GlobalConstant::ClientManager.is_admin_privilege => 2,
+        GlobalConstant::ClientManager.is_invited_privilege => 4,
+        GlobalConstant::ClientManager.has_rejected_invite_privilege => 8,
+        GlobalConstant::ClientManager.has_been_deleted_privilege => 16
     }
   end
 
   def self.bit_wise_columns_config
     @b_w_c_c ||= {
-        privilages: privilages_config
+        privileges: privileges_config
     }
   end
 
@@ -34,7 +34,7 @@ class ClientManager < DbConnection::KitClient
       id: id,
       client_id: client_id,
       manager_id: manager_id,
-      privilages: privilages.present? ? ClientManager.get_bits_set_for_privilages(privilages) : []
+      privileges: privileges.present? ? ClientManager.get_bits_set_for_privileges(privileges) : []
     }
   end
 

@@ -156,9 +156,9 @@ module ManagerManagement
       def update_client_manager
 
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
-          @client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilage}")
+          @client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
         else
-          @client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilage}")
+          @client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
         end
 
         @client_manager.save!

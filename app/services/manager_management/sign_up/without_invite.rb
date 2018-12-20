@@ -238,7 +238,7 @@ module ManagerManagement
             manager_id: @manager_obj.id
         )
 
-        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilage}")
+        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
 
         @client_manager_obj.save!
 

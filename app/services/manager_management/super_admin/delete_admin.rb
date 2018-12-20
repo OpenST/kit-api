@@ -132,7 +132,7 @@ module ManagerManagement
                                     [],
                                     GlobalConstant::ErrorAction.default
                                 ) if @client_manager.manager_id == @manager_id ||
-            @client_manager.send("#{GlobalConstant::ClientManager.is_super_admin_privilage}?")
+            @client_manager.send("#{GlobalConstant::ClientManager.is_super_admin_privilege}?")
 
         success
 
@@ -148,10 +148,10 @@ module ManagerManagement
       #
       def update_client_manager
 
-        @client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilage}")
-        @client_manager.send("unset_#{GlobalConstant::ClientManager.is_invited_privilage}")
-        @client_manager.send("unset_#{GlobalConstant::ClientManager.has_rejected_invite_privilage}")
-        @client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilage}")
+        @client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
+        @client_manager.send("unset_#{GlobalConstant::ClientManager.is_invited_privilege}")
+        @client_manager.send("unset_#{GlobalConstant::ClientManager.has_rejected_invite_privilege}")
+        @client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
 
         @client_manager.save!
 
