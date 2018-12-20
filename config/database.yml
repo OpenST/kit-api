@@ -6,80 +6,83 @@ default: &default
   collation: utf8_unicode_ci
   reconnect: true
 
-default_db_identifier: &default_db
+kit_subenv_identifier: &kit_subenv
   <<: *default
-  host: <%= ENV['KA_DEFAULT_DB_HOST']%>
-  username: <%= ENV['KA_DEFAULT_DB_USER']%>
-  password: <%= ENV['KA_DEFAULT_DB_PASSWORD']%>
+  host: <%= ENV['KA_KIT_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_SUBENV_MYSQL_PASSWORD']%>
 
-sub_env_shared_db_identifier: &sub_env_shared_db
+kit_client_identifier: &kit_client
   <<: *default
-  host: <%= ENV['KA_SUB_ENV_SHARED_DB_HOST']%>
-  username: <%= ENV['KA_SUB_ENV_SHARED_DB_USER']%>
-  password: <%= ENV['KA_SUB_ENV_SHARED_DB_PASSWORD']%>
+  host: <%= ENV['KA_KIT_CLIENT_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_CLIENT_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_CLIENT_MYSQL_PASSWORD']%>
 
-saas_api_and_sub_env_shared_db_identifier: &saas_api_and_sub_env_shared_db
+kit_saas_subenv_identifier: &kit_saas_subenv
   <<: *default
-  host: <%= ENV['KA_SUB_ENV_SHARED_DB_HOST']%>
-  username: <%= ENV['KA_SUB_ENV_SHARED_DB_USER']%>
-  password: <%= ENV['KA_SUB_ENV_SHARED_DB_PASSWORD']%>
+  host: <%= ENV['KA_KIT_SAAS_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_SAAS_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_SAAS_SUBENV_MYSQL_PASSWORD']%>
 
-saas_and_api_shared_db_identifier: &saas_and_api_shared_db
+kit_saas_identifier: &kit_saas
   <<: *default
-  host: <%= ENV['KA_SAAS_SHARED_DB_HOST']%>
-  username: <%= ENV['KA_SAAS_SHARED_DB_USER']%>
-  password: <%= ENV['KA_SAAS_SHARED_DB_PASSWORD']%>
+  host: <%= ENV['KA_KIT_SAAS_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_SAAS_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_SAAS_MYSQL_PASSWORD']%>
 
-config_db_identifier: &config_db
+saas_subenv_identifier: &saas_subenv
   <<: *default
-  host: <%= ENV['KA_CONFIG_DB_MYSQL_HOST']%>
-  username: <%= ENV['KA_CONFIG_DB_MYSQL_USER']%>
-  password: <%= ENV['KA_CONFIG_DB_MYSQL_PASSWORD']%>
+  host: <%= ENV['KA_SAAS_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_SAAS_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_SAAS_SUBENV_MYSQL_PASSWORD']%>
 
-saas_big_db_identifier: &saas_big_db
+saas_big_subenv_identifier: &saas_big_subenv
   <<: *default
-  host: <%= ENV['KA_SAAS_BIG_DB_HOST']%>
-  username: <%= ENV['KA_SAAS_BIG_DB_USER']%>
-  password: <%= ENV['KA_SAAS_BIG_DB_PASSWORD']%>
+  host: <%= ENV['KA_SAAS_BIG_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_SAAS_BIG_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_SAAS_BIG_SUBENV_MYSQL_PASSWORD']%>
 
-saas_db_identifier: &saas_db
+kit_big_subenv_identifier: &kit_big_subenv
   <<: *default
-  host: <%= ENV['KA_SAAS_DB_HOST']%>
-  username: <%= ENV['KA_SAAS_DB_USER']%>
-  password: <%= ENV['KA_SAAS_DB_PASSWORD']%>
+  host: <%= ENV['KA_KIT_BIG_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_BIG_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_BIG_SUBENV_MYSQL_PASSWORD']%>
 
-# NOTE: Sub env specific databases
+config_subenv_identifier: &config_subenv
+  <<: *default
+  host: <%= ENV['KA_CONFIG_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_CONFIG_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_CONFIG_SUBENV_MYSQL_PASSWORD']%>
+
+### ACTUAL DB configs start here ###
 <%= Rails.env%>:
-  <<: *default_db
+  <<: *kit_subenv
   database: kit_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
-kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *default_db
-  database: kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
-
-# NOTE: Databases shared between sub environments
 kit_client_<%= Rails.env%>:
-  <<: *sub_env_shared_db
+  <<: *kit_client
   database: kit_client_<%= Rails.env%>
 
-# NOTE: Database shared between saas and kit api
 kit_saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *saas_and_api_shared_db
+  <<: *kit_saas_subenv
   database: kit_saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
-# NOTE: Database shared between saas, kit and sub env shared api
 kit_saas_<%= Rails.env%>:
-  <<: *saas_api_and_sub_env_shared_db
+  <<: *kit_saas
   database: kit_saas_<%= Rails.env%>
 
-config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *config_db
-  database: config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
-
 saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *saas_db
+  <<: *saas_subenv
   database: saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
 saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *saas_big_db
+  <<: *saas_big_subenv
   database: saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *kit_big_subenv
+  database: kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *config_subenv
+  database: config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
