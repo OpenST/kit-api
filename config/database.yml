@@ -42,6 +42,12 @@ saas_big_db_identifier: &saas_big_db
   username: <%= ENV['KA_SAAS_BIG_DB_USER']%>
   password: <%= ENV['KA_SAAS_BIG_DB_PASSWORD']%>
 
+saas_db_identifier: &saas_db
+  <<: *default
+  host: <%= ENV['KA_SAAS_DB_HOST']%>
+  username: <%= ENV['KA_SAAS_DB_USER']%>
+  password: <%= ENV['KA_SAAS_DB_PASSWORD']%>
+
 # NOTE: Sub env specific databases
 <%= Rails.env%>:
   <<: *default_db
@@ -69,6 +75,10 @@ kit_saas_shared_<%= Rails.env%>:
 config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_db
   database: config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *saas_db
+  database: saas_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
 saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *saas_big_db

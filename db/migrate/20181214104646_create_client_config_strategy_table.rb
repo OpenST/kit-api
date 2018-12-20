@@ -2,7 +2,7 @@ class CreateClientConfigStrategyTable < DbMigrationConnection
 
   def up
 
-    run_migration_for_db(EstablishConfigDbConnection) do
+    run_migration_for_db(EstablishSaasDbConnection) do
       create_table :client_config_strategies do |t|
         t.column :client_id, :integer, null: false
         t.column :config_strategy_id, :integer, null: false
@@ -18,7 +18,7 @@ class CreateClientConfigStrategyTable < DbMigrationConnection
 
   def down
 
-    run_migration_for_db(EstablishConfigDbConnection) do
+    run_migration_for_db(EstablishSaasDbConnection) do
 
       drop_table :client_config_strategies
 
