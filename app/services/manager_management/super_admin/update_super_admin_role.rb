@@ -12,7 +12,7 @@ module ManagerManagement
       #
       # @param [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
       # @param [Integer] client_id (mandatory) - id of the client who is deleting this admin
-      # @param [String] email (mandatory) - email of the client_manager who is to be updated
+      # @param [String] to_update_client_manager_id (mandatory) - id of the client_manager who is to be updated
       # @param [Integer] is_super_admin (mandatory) - value to be set to. 1 => set, 0 => unset
       #
       # @return [ManagerManagement::SuperAdmin::UpdateSuperAdminRole]
@@ -21,13 +21,13 @@ module ManagerManagement
 
         super
 
-        @email = @params[:email]
+        @to_update_client_manager_id = @params[:to_update_client_manager_id]
         @manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
         @is_super_admin = @params[:is_super_admin]
 
         @manager_to_be_updated_obj = nil
-        @client_manager = nil
+        @to_update_client_manager = nil
 
       end
 
@@ -45,13 +45,21 @@ module ManagerManagement
 
           validate_and_sanitize
 
-          fetch_manager_to_be_updated
-
           fetch_client_manager
+
+          fetch_manager_to_be_updated
 
           update_client_manager
 
-          success_with_data({})
+          success_with_data({
+              result_type: result_type,
+              result_type => [
+                @to_update_client_manager.formated_cache_data
+              ],
+              managers: {
+                  @manager_to_be_updated_obj.id => @manager_to_be_updated_obj.formated_cache_data
+              }
+          })
 
         end
 
@@ -71,8 +79,6 @@ module ManagerManagement
 
         validation_errors = []
 
-        @email = @email.to_s.downcase.strip
-        validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
         validation_errors.push('invalid_is_super_admin') unless Util::CommonValidator.is_boolean_string?(@is_super_admin)
 
         fail OstCustomError.new validation_error(
@@ -97,7 +103,7 @@ module ManagerManagement
       #
       def fetch_manager_to_be_updated
 
-        @manager_to_be_updated_obj = Manager.where(email: @email).first
+        @manager_to_be_updated_obj = Manager.where(id: @to_update_client_manager.manager_id).first
 
         fail OstCustomError.new validation_error(
                                     'mm_sa_utsar_2',
@@ -125,21 +131,21 @@ module ManagerManagement
       #
       def fetch_client_manager
 
-        @client_manager = ClientManager.where(client_id: @client_id, manager_id: @manager_to_be_updated_obj.id).first
+        @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         fail OstCustomError.new validation_error(
                                     'mm_sa_utsar_4',
                                     'resource_not_found',
                                     [],
                                     GlobalConstant::ErrorAction.default
-                                ) if @client_manager.blank?
+                                ) if @to_update_client_manager.blank?
 
         fail OstCustomError.new validation_error(
                                     'mm_sa_utsar_5',
                                     'unauthorized_access_response',
                                     [],
                                     GlobalConstant::ErrorAction.default
-                                ) if @client_manager.manager_id == @manager_id
+                                ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id
 
         success
 
@@ -156,15 +162,19 @@ module ManagerManagement
       def update_client_manager
 
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
-          @client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
         else
-          @client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
         end
 
-        @client_manager.save!
+        @to_update_client_manager.save!
 
         success
 
+      end
+
+      def result_type
+        :client_managers
       end
 
     end

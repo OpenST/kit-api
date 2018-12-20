@@ -87,17 +87,17 @@
   :optional:
 'ManagerManagement::SuperAdmin::DeleteAdmin':
   :mandatory:
-    - :email
+    - :to_update_client_manager_id
     - :client_id
     - :manager_id
   :optional:
 'ManagerManagement::SuperAdmin::ResetMfa':
   :mandatory:
-    - :email
+    - :to_update_client_manager_id
   :optional:
 'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
   :mandatory:
-    - :email
+    - :to_update_client_manager_id
     - :client_id
     - :manager_id
     - :is_super_admin

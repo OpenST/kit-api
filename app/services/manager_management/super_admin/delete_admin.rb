@@ -12,7 +12,7 @@ module ManagerManagement
       #
       # @param [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
       # @param [Integer] client_id (mandatory) - id of the client who is deleting this admin
-      # @param [Integer] email (mandatory) - email of the client_manager which is to be deleted
+      # @param [Integer] to_update_client_manager_id (mandatory) - id of the client_manager which is to be deleted
       #
       # @return [ManagerManagement::SuperAdmin::DeleteAdmin]
       #
@@ -20,12 +20,12 @@ module ManagerManagement
 
         super
 
-        @email = @params[:email]
+        @to_update_client_manager_id = @params[:to_update_client_manager_id]
         @manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
 
         @manager_to_be_deleted_obj = nil
-        @client_manager = nil
+        @to_update_client_manager = nil
 
       end
 
@@ -43,15 +43,23 @@ module ManagerManagement
 
           validate_and_sanitize
 
-          fetch_manager_to_be_deleted
-
           fetch_client_manager
+
+          fetch_manager_to_be_deleted
 
           update_client_manager
 
           update_manager
 
-          success_with_data({})
+          success_with_data({
+            result_type: result_type,
+            result_type => [
+              @to_update_client_manager.formated_cache_data
+            ],
+            managers: {
+              @manager_to_be_deleted_obj.id => @manager_to_be_deleted_obj.formated_cache_data
+            }
+          })
 
         end
 
@@ -69,41 +77,8 @@ module ManagerManagement
       #
       def validate_and_sanitize
 
-        validation_errors = []
-
-        @email = @email.to_s.downcase.strip
-        validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
-
-        fail OstCustomError.new validation_error(
-                                  'm_su_1',
-                                  'invalid_api_params',
-                                  validation_errors,
-                                  GlobalConstant::ErrorAction.default
-                                ) if validation_errors.present?
-
         # NOTE: To be on safe side, check for generic errors as well
         validate
-
-      end
-
-      # Fetch manager to be deleted
-      #
-      # * Author: Puneet
-      # * Date: 15/01/2018
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_manager_to_be_deleted
-
-        @manager_to_be_deleted_obj = Manager.where(email: @email).first
-
-        fail OstCustomError.new validation_error(
-                                  'mm_su_dm_1',
-                                  'resource_not_found',
-                                  [],
-                                  GlobalConstant::ErrorAction.default
-                                ) if @manager_to_be_deleted_obj.blank?
 
       end
 
@@ -117,24 +92,45 @@ module ManagerManagement
       #
       def fetch_client_manager
 
-        @client_manager = ClientManager.where(client_id: @client_id, manager_id: @manager_to_be_deleted_obj.id).first
+        @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         fail OstCustomError.new validation_error(
                                     'mm_su_dm_2',
                                     'resource_not_found',
                                     [],
                                     GlobalConstant::ErrorAction.default
-                                ) if @client_manager.blank?
+                                ) if @to_update_client_manager.blank?
 
         fail OstCustomError.new validation_error(
                                     'mm_su_dm_2',
                                     'unauthorized_access_response',
                                     [],
                                     GlobalConstant::ErrorAction.default
-                                ) if @client_manager.manager_id == @manager_id ||
-            @client_manager.send("#{GlobalConstant::ClientManager.is_super_admin_privilege}?")
+                                ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id ||
+            @to_update_client_manager.send("#{GlobalConstant::ClientManager.is_super_admin_privilege}?")
 
         success
+
+      end
+
+      # Fetch manager to be deleted
+      #
+      # * Author: Puneet
+      # * Date: 15/01/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_manager_to_be_deleted
+
+        @manager_to_be_deleted_obj = Manager.where(id: @to_update_client_manager.manager_id).first
+
+        fail OstCustomError.new validation_error(
+                                    'mm_su_dm_1',
+                                    'resource_not_found',
+                                    [],
+                                    GlobalConstant::ErrorAction.default
+                                ) if @manager_to_be_deleted_obj.blank?
 
       end
 
@@ -148,12 +144,12 @@ module ManagerManagement
       #
       def update_client_manager
 
-        @client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
-        @client_manager.send("unset_#{GlobalConstant::ClientManager.is_invited_privilege}")
-        @client_manager.send("unset_#{GlobalConstant::ClientManager.has_rejected_invite_privilege}")
-        @client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
+        @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
+        @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_invited_privilege}")
+        @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.has_rejected_invite_privilege}")
+        @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
 
-        @client_manager.save!
+        @to_update_client_manager.save!
 
         success
 
@@ -175,6 +171,10 @@ module ManagerManagement
 
         success
 
+      end
+
+      def result_type
+        :client_managers
       end
 
     end

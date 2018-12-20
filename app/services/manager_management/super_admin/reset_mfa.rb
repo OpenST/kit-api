@@ -10,15 +10,15 @@ module ManagerManagement
       # * Date: 03/05/2018
       # * Reviewed By:
       #
-      # @params [Integer] email (mandatory) - email of manager whose MFA has to be set
+      # @params [Integer] to_update_client_manager_id (mandatory) - id of manager whose MFA has to be set
       #
       # @return [ManagerManagement::SuperAdmin::ResetMfa]
       #
       def initialize(params)
         super
-
-        @email = @params[:email]
-
+        @to_update_client_manager_id = @params[:to_update_client_manager_id]
+        @to_update_client_manager = nil
+        @to_update_manager_obj = nil
       end
 
       # Perform
@@ -35,11 +35,21 @@ module ManagerManagement
 
           validate_and_sanitize
 
+          fetch_client_manager
+
           fetch_manager
 
           reset_mfa
 
-          success_with_data({})
+          success_with_data({
+            result_type: result_type,
+            result_type => [
+              @to_update_client_manager.formated_cache_data
+            ],
+            managers: {
+                @to_update_manager_obj.id => @to_update_manager_obj.formated_cache_data
+            }
+          })
 
         end
 
@@ -56,21 +66,36 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def validate_and_sanitize
+        validate
+      end
 
-        validation_errors = []
+      # Fetch client manager
+      #
+      # * Author: Puneet
+      # * Date: 06/12/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_client_manager
 
-        @email = @email.to_s.downcase.strip
-        validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
+        @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_rm_1',
-                                    'invalid_api_params',
-                                    validation_errors,
+                                    'mm_su_rm_2',
+                                    'resource_not_found',
+                                    [],
                                     GlobalConstant::ErrorAction.default
-                                ) if validation_errors.present?
+                                ) if @to_update_client_manager.blank?
 
-        # NOTE: To be on safe side, check for generic errors as well
-        validate
+        fail OstCustomError.new validation_error(
+                                    'mm_su_rm_3',
+                                    'unauthorized_access_response',
+                                    [],
+                                    GlobalConstant::ErrorAction.default
+                                ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id
+
+        success
 
       end
 
@@ -84,8 +109,8 @@ module ManagerManagement
       #
       def fetch_manager
 
-        @manager_obj = Manager.where(email: @email).first
-        fail OstCustomError.new unauthorized_access_response('mm_sa_rm_2') if @manager_obj.blank?
+        @to_update_manager_obj = Manager.where(id: @to_update_client_manager.manager_id).first
+        fail OstCustomError.new unauthorized_access_response('mm_sa_rm_2') if @to_update_manager_obj.blank?
         success
 
       end
@@ -100,13 +125,17 @@ module ManagerManagement
       #
       def reset_mfa
 
-        @manager_obj.mfa_token = nil
-        @manager_obj.send("unset_#{GlobalConstant::Manager.has_setup_mfa_property}")
-        @manager_obj.last_session_updated_at = current_timestamp
-        @manager_obj.save!
+        @to_update_manager_obj.mfa_token = nil
+        @to_update_manager_obj.send("unset_#{GlobalConstant::Manager.has_setup_mfa_property}")
+        @to_update_manager_obj.last_session_updated_at = current_timestamp
+        @to_update_manager_obj.save!
 
         success
 
+      end
+
+      def result_type
+        :client_managers
       end
 
     end

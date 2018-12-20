@@ -25,7 +25,7 @@ module ManagerManagement
       @api_response_data = {}
       @api_response_data[:meta] = {}
       @api_response_data[:meta][:nextPagePayload] = {}
-      @api_response_data[:result_type] = 'client_admins'
+      @api_response_data[:result_type] = 'client_managers'
 
     end
 
@@ -124,7 +124,7 @@ module ManagerManagement
         client_managers_info = client_managers_info.first(@page_size)
       end
 
-      @api_response_data[:client_admins] = client_managers_info
+      @api_response_data[@api_response_data[:result_type]] = client_managers_info
 
     end
 
