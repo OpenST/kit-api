@@ -142,3 +142,6 @@
     - :client_id
     - :personal_sign
   :optional:
+'WalletAddressesManagement::SignMessages':
+  :mandatory:
+  :optional:
