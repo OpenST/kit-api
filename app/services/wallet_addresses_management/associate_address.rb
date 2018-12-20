@@ -21,6 +21,10 @@ module WalletAddressesManagement
 
       @signed_by_address = nil
 
+      @api_response_data = {}
+      @api_response_data[:origin_addresses] = {}
+      @api_response_data[:auxiliary_addresses] = {}
+
     end
 
     # Perform
@@ -46,6 +50,8 @@ module WalletAddressesManagement
 
         r = create_entries
         return r unless r.success?
+
+        success_with_data(@api_response_data)
 
       end
 
@@ -176,6 +182,18 @@ module WalletAddressesManagement
         address: @owner_address
       )
 
+      @api_response_data[:origin_addresses][:owner_address] = @owner_address
+      @api_response_data[:auxiliary_addresses][:owner_address] = @owner_address
+
+      @api_response_data[:origin_addresses][:admin] = ""
+      @api_response_data[:auxiliary_addresses][:admin] = ""
+      
+      @api_response_data[:origin_addresses][:whitelisted] = []
+      @api_response_data[:auxiliary_addresses][:whitelisted] = []
+      
+      @api_response_data[:origin_addresses][:workers] = []
+      @api_response_data[:auxiliary_addresses][:workers] = []
+      
       success
     end
 
