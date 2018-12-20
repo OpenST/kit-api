@@ -11,12 +11,16 @@ module GlobalConstant
       'sandbox'
     end
 
-    def self.mainnet_environment
+    def self.mainnet_url_prefix
       'mainnet'
     end
 
-    def self.testnet_environment
+    def self.testnet_url_prefix
       'testnet'
+    end
+
+    def self.url_prefix
+      GlobalConstant::Base.main_sub_environment? ? mainnet_url_prefix : testnet_url_prefix
     end
 
   end

@@ -27,12 +27,12 @@ Rails.application.routes.draw do
     match 'update-super-admin-role' => :update_super_admin_role, via: :POST
   end
 
-  scope 'api/token', controller: 'token' do
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup' do
     match '' => :token_details_get, via: :GET
     match '' => :token_details_post, via: :POST
   end
 
-  scope 'api/token/addresses', controller: 'token/addresses' do
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses' do
     match '' => :token_addresses_get, via: :GET
     match '' => :token_addresses_post, via: :POST
     match 'is-available' => :token_addresses_is_available, via: :GET

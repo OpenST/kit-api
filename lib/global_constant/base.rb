@@ -67,6 +67,12 @@ module GlobalConstant
       @redis_config ||= fetch_config.fetch('redis', {})
     end
 
+    def self.saas_api
+      @saas_api ||= fetch_config.fetch('saas_api', {}).with_indifferent_access
+    end
+
+
+
     private
 
     def self.fetch_config

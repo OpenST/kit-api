@@ -39,9 +39,9 @@ module TokenManagement
 
         return r unless r.success?
 
-        insert_token_details
+        insert_update_token_details
 
-        success_with_data({})
+        success_with_data({token: @token_details.formated_cache_data})
 
       end
 
@@ -64,12 +64,14 @@ module TokenManagement
 
       validation_errors = validate_token_creation_params
 
-      return validation_error(
-        'um_su_1',
-        'invalid_api_params',
-        validation_errors,
-        GlobalConstant::ErrorAction.default
-      ) if validation_errors.present?
+      if validation_errors.present?
+        return validation_error(
+          'a_tm_itd_1',
+          'invalid_api_params',
+          validation_errors,
+          GlobalConstant::ErrorAction.default
+        )
+      end
 
       # NOTE: To be on safe side, check for generic errors as well
       r = validate
@@ -108,11 +110,15 @@ module TokenManagement
         validation_errors.push('inappropriate_token_symbol')
       end
 
-      if Token.where('name = ?', @name).first.present?
+      @conversion_factor = BigDecimal.new(@conversion_factor.to_s)
+
+      validation_errors.push('invalid_conversion_factor') if @conversion_factor <= 0
+
+      if Token.where('client_id != ? AND name = ?', @client_id, @name).first.present?
         validation_errors.push('duplicate_token_name')
       end
 
-      if Token.where('symbol = ?', @symbol).first.present?
+      if Token.where('client_id != ? AND symbol = ?', @client_id, @symbol).first.present?
         validation_errors.push('duplicate_token_symbol')
       end
 
@@ -128,14 +134,17 @@ module TokenManagement
     # * Reviewed By:
     #
     # @return [Result::Base]
-    def insert_token_details
-      Token.create!(
-        client_id: @client_id,
-        name: @name,
-        symbol: @symbol,
-        conversion_factor: @conversion_factor
-      )
-      CacheManagement::TokenDetails.new(client_id: @client_id).clear
+    def insert_update_token_details
+      @token_details = Token.where(client_id: @client_id).first
+      @token_details ||= Token.new(client_id: @client_id)
+
+      @token_details.name = @name
+      @token_details.symbol = @symbol
+      @token_details.conversion_factor = @conversion_factor
+
+      @token_details.save!
+
+      CacheManagement::TokenDetails.new([@client_id]).clear
 
       success
     end

@@ -19,9 +19,6 @@ module TokenManagement
       @client_id = @params[:client_id]
 
       @api_response_data = {}
-      @api_response_data[:meta] = {}
-      @api_response_data[:meta][:nextPagePayload] = {}
-      @api_response_data[:result_type] = 'token_details'
 
     end
 
@@ -76,7 +73,7 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_token_details
-      @api_response_data[:token_details] = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
+      @api_response_data[:token] = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
     end
 
 

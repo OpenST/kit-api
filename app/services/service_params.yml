@@ -131,3 +131,14 @@
     - :symbol
     - :conversion_factor
   :optional:
+'WalletAddressesManagement::IsAddressAvailable':
+  :mandatory:
+    - :address
+    - :client_id
+  :optional:
+'WalletAddressesManagement::AssociateAddress':
+  :mandatory:
+    - :owner_address
+    - :client_id
+    - :personal_sign
+  :optional:

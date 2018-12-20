@@ -1,5 +1,5 @@
 module WalletAddressesManagement
-  class GetWalletAddresses < ServicesBase
+  class IsAddressAvailable < ServicesBase
 
     # Initialize
     #
@@ -16,11 +16,9 @@ module WalletAddressesManagement
       super
 
       @client_id = @params[:client_id]
+      @address = @params[:address]
 
       @api_response_data = {}
-      @api_response_data[:meta] = {}
-      @api_response_data[:meta][:nextPagePayload] = {}
-      @api_response_data[:result_type] = 'token_details'
 
     end
 
@@ -38,9 +36,7 @@ module WalletAddressesManagement
 
         validate_and_sanitize
 
-        fetch_token_details
-
-        fetch_default_price_points
+        is_address_available
 
         success_with_data(@api_response_data)
 
@@ -66,32 +62,22 @@ module WalletAddressesManagement
 
     end
 
-    # Fetch token details
-    #
-    #
-    # * Author: Ankit
-    # * Date: 19/12/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    def fetch_token_details
-      @token_details = CacheManagement::TokenDetails.new([@client_id]).fetch
-      @api_response_data[:token_details] = @token_details
-    end
-
-
-    # Fetch default price points
-    #
+    # Is the given address available
     #
     # * Author: Ankit
     # * Date: 19/12/2018
     # * Reviewed By:
     #
     # @return [Result::Base]
-    def fetch_default_price_points
+    #
+    def is_address_available
 
+      if ClientWalletAddress.where('address = ?' , @address).first.present?
+        @api_response_data['is_address_available'] = true
+      else
+        @api_response_data['is_address_available'] = false
+      end
 
     end
-
   end
 end

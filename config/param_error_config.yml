@@ -152,3 +152,43 @@ invalid_page_no:
   parameter: 'page_no'
   code: 'invalid'
   message: 'invalid page_no'
+
+invalid_signature:
+  parameter: 'personal_sign'
+  code: 'invalid'
+  message: 'The signature is not valid'
+
+invalid_token_symbol:
+  parameter: 'token_symbol'
+  code: 'invalid'
+  message: 'Please enter from 3 to 4 letters or numbers. No special characters allowed.'
+
+invalid_token_name:
+  parameter: 'token_name'
+  code: 'invalid'
+  message: 'Come on, the token name you entered is inappropriate. Please choose a nicer word.'
+
+inappropriate_token_name:
+  parameter: 'token_name'
+  code: 'invalid'
+  message: 'Come on, the token name you entered is inappropriate. Please choose a nicer word.'
+
+inappropriate_token_symbol:
+  parameter: 'token_symbol'
+  code: 'invalid'
+  message: 'Come on, the token symbol you entered is inappropriate. Please choose a nicer word.'
+
+duplicate_token_name:
+  parameter: 'token_name'
+  code: 'invalid'
+  message: 'This token name is already in use. Please try a different one.'
+
+duplicate_token_symbol:
+  parameter: 'token_symbol'
+  code: 'invalid'
+  message: 'This token symbol is already in use. Please try a different one.'
+
+invalid_conversion_factor:
+  parameter: 'conversion_factor'
+  code: 'invalid'
+  message: 'Invalid conversion_factor'
