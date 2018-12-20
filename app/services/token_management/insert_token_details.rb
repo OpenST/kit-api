@@ -39,7 +39,11 @@ module TokenManagement
 
         return r unless r.success?
 
-        insert_update_token_details
+        r = insert_update_token_details
+        return r unless r.success?
+
+        r = delete_old_addresses
+        return r unless r.success?
 
         success_with_data({token: @token_details.formated_cache_data})
 
@@ -145,6 +149,25 @@ module TokenManagement
       @token_details.save!
 
       CacheManagement::TokenDetails.new([@client_id]).clear
+
+      success
+    end
+
+    # Delete old addresses which were present in wallet_addresses and token_addresses table
+    #
+    #
+    # * Author: Ankit
+    # * Date: 19/12/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def delete_old_addresses
+      #fetch token id
+      # delete if any address present in token addresses table and client_wallet_addresses table
+
+      token_id = @token_details.id
+      ClientWalletAddress.where('client_id = ?', @client_id).delete_all
+      TokenAddresses.where('token_id = ?', token_id).delete_all
 
       success
     end

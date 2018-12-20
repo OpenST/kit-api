@@ -44,7 +44,7 @@ module WalletAddressesManagement
         r = verify_signer
         return r unless r.success?
 
-        r = associate
+        r = create_entries
         return r unless r.success?
 
       end
@@ -160,7 +160,7 @@ module WalletAddressesManagement
       )
 
       token_details = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
-      token_id = token_details.id
+      token_id = token_details[@client_id][:id]
 
       TokenAddresses.create!(
         token_id: token_id,
