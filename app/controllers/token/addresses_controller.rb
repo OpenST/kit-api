@@ -1,4 +1,4 @@
-class TokenAddressesController < WebController
+class Token::AddressesController < WebController
 
   # Set token details
   #

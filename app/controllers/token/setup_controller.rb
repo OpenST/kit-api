@@ -1,4 +1,4 @@
-class TokenSetupController < WebController
+class Token::SetupController < WebController
 
   before_action :verify_mfa_cookie
 
