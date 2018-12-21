@@ -5,11 +5,11 @@ class CreateTokenAddresses < DbMigrationConnection
         t.column :token_id, :integer, null: false
         t.column :chain_kind, :tinyint, limit: 1, null: false
         t.column :kind, :tinyint, limit: 1, null:false
-        t.column :address, :string, limit: 255
+        t.column :address, :string, limit: 255, null:false
         t.column :known_address_id, :integer, null: true
         t.timestamps
       end
-      add_index :token_addresses, [:token_id,:chain_kind, :kind, :address ], unique: true, name: 'cuk_1'
+      add_index :token_addresses, [:token_id, :chain_kind, :kind, :address], unique: true, name: 'cuk_1'
     end
   end
   
