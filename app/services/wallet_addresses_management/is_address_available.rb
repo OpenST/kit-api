@@ -8,8 +8,9 @@ module WalletAddressesManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [String] address (mandatory) - address
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [WalletAddressesManagement::IsAddressAvailable]
     #
     def initialize(params)
 
@@ -34,9 +35,11 @@ module WalletAddressesManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        is_address_available
+        r = is_address_available
+        return r unless r.success?
 
         success_with_data(@api_response_data)
 
@@ -56,9 +59,11 @@ module WalletAddressesManagement
     #
     def validate_and_sanitize
 
-      validate
+      r = validate
+      return r unless r.success?
 
       @address = sanitize_address(@address)
+
       success
 
     end
@@ -78,6 +83,8 @@ module WalletAddressesManagement
       else
         @api_response_data['is_address_available'] = true
       end
+
+      success
 
     end
   end

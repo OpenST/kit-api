@@ -7,7 +7,7 @@ class Token::AddressesController < WebController
   # * Reviewed By:
   #
   def token_addresses_post
-    service_response = WalletAddressesManagement::InsertTokenDetails.new(params).perform
+    service_response = WalletAddressesManagement::AssociateAddress.new(params).perform
     render_api_response(service_response)
   end
 

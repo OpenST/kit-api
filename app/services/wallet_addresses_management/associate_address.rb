@@ -8,8 +8,10 @@ module WalletAddressesManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [String] owner_address (mandatory) - owner address
+    # @params [String] personal_sign (mandatory) - Sign to verify
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [WalletAddressesManagement::AssociateAddress]
     #
     def initialize(params)
 
@@ -20,10 +22,6 @@ module WalletAddressesManagement
       @personal_sign = @params[:personal_sign]
 
       @signed_by_address = nil
-
-      @api_response_data = {}
-      @api_response_data[:origin_addresses] = {}
-      @api_response_data[:auxiliary_addresses] = {}
 
     end
 
@@ -51,7 +49,10 @@ module WalletAddressesManagement
         r = create_entries
         return r unless r.success?
 
-        success_with_data(@api_response_data)
+        success_with_data({
+                            origin_addresses: @origin_addresses,
+                            auxiliary_addresses: @auxiliary_addresses
+                          })
 
       end
 
@@ -73,20 +74,21 @@ module WalletAddressesManagement
       return r unless r.success?
 
       # sanitize
-      @owner_address = @owner_address.to_s.strip.downcase
+      @owner_address = sanitize_address(@owner_address)
+      @client_id = @client_id.to_i
 
       unless Util::CommonValidator.is_ethereum_address?(@owner_address)
         return validation_error(
           'cm_vea_1',
           'invalid_api_params',
-          ['invalid_eth_address'],
+          ['invalid_owner_address'],
           GlobalConstant::ErrorAction.default
         )
       end
 
-      client_token = CacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
+      @token_details = CacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
 
-      if client_token.blank?
+      if @token_details.blank?
         return validation_error(
           'cm_vea_2',
           'invalid_api_params',
@@ -95,7 +97,8 @@ module WalletAddressesManagement
         )
       end
 
-      @client_id = @client_id.to_i
+      @origin_addresses = {owner_address: @owner_address, admin: '', whitelisted: [], workers: []}
+      @auxiliary_addresses = {owner_address: @owner_address, admin: '', whitelisted: [], workers: []}
 
       success
 
@@ -165,8 +168,7 @@ module WalletAddressesManagement
         status:GlobalConstant::WalletAddressStatus.active_status
       )
 
-      token_details = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
-      token_id = token_details[@client_id][:id]
+      token_id = @token_details[:id]
 
       TokenAddresses.create!(
         token_id: token_id,
@@ -182,18 +184,6 @@ module WalletAddressesManagement
         address: @owner_address
       )
 
-      @api_response_data[:origin_addresses][:owner_address] = @owner_address
-      @api_response_data[:auxiliary_addresses][:owner_address] = @owner_address
-
-      @api_response_data[:origin_addresses][:admin] = ""
-      @api_response_data[:auxiliary_addresses][:admin] = ""
-      
-      @api_response_data[:origin_addresses][:whitelisted] = []
-      @api_response_data[:auxiliary_addresses][:whitelisted] = []
-      
-      @api_response_data[:origin_addresses][:workers] = []
-      @api_response_data[:auxiliary_addresses][:workers] = []
-      
       success
     end
 

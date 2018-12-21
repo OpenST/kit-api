@@ -34,11 +34,14 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        fetch_token_details
+        r = fetch_token_details
+        return r unless r.success?
 
-        fetch_default_price_points
+        r = fetch_default_price_points
+        return r unless r.success?
 
         success_with_data(@api_response_data)
 
@@ -58,7 +61,8 @@ module TokenManagement
     #
     def validate_and_sanitize
 
-      validate
+      r = validate
+      return r unless r.success?
 
       success
 

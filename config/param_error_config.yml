@@ -3,6 +3,11 @@ invalid_client_id:
   code: 'invalid'
   message: 'Invalid client id'
 
+invalid_owner_address:
+  parameter: 'owner_address'
+  code: 'invalid'
+  message: 'Invalid owner_address'
+
 invalid_r_t:
   parameter: 'r_t'
   code: 'invalid'
