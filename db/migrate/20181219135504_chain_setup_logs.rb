@@ -6,7 +6,8 @@ class ChainSetupLogs < DbMigrationConnection
 
       create_table :chain_setup_logs do |t|
         t.column :chain_id, :integer, null: false
-        t.column :kind, :tinyint, null: false, limit: 1
+        t.column :chain_kind, :tinyint, null: false, limit: 1
+        t.column :step_kind, :tinyint, null: false, limit: 1
         t.column :debug_params, :text, null: false
         t.column :transaction_hash, :string, limit: 255, null: true
         t.timestamps
