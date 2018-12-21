@@ -7,7 +7,7 @@ class CreateCurrencyConversionRates < DbMigrationConnection
         t.column :quote_currency, :tinyint, limit: 1, null: false
         t.column :conversion_rate, :decimal, precision: 15, scale: 6, null: false
         t.column :timestamp, :integer, null:false
-        t.column :transaction_hash, :string
+        t.column :transaction_hash, :string, limit: 255, null: true
         t.column :status, :tinyint, limit: 1, null:false
         t.timestamps
       end

@@ -10,6 +10,7 @@ class ChainSetupLogs < DbMigrationConnection
         t.column :step_kind, :tinyint, null: false, limit: 1
         t.column :debug_params, :text, null: false
         t.column :transaction_hash, :string, limit: 255, null: true
+        t.column :status, :tinyint, null: false, limit: 1
         t.timestamps
       end
 
