@@ -1,6 +1,7 @@
 constants:
   sub_env: <%= ENV['KA_SUB_ENV']%>
   env_identifier: <%= ENV['ENV_IDENTIFIER'] %>
+  cookie_domain: <%= ENV['KA_COOKIE_DOMAIN'] %>
 
   admin_basic_auth:
     username: <%= ENV['KA_ADMIN_BASIC_AUTH_USERNAME'] %>

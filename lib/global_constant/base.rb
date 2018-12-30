@@ -15,6 +15,10 @@ module GlobalConstant
       @env_identifier ||= fetch_config.fetch('env_identifier', '')
     end
 
+    def self.cookie_domain
+      @cookie_domain ||= fetch_config.fetch('cookie_domain', '')
+    end
+
     def self.main_sub_environment?
       sub_environment_name == GlobalConstant::Environment.main_sub_environment
     end
@@ -70,8 +74,6 @@ module GlobalConstant
     def self.saas_api
       @saas_api ||= fetch_config.fetch('saas_api', {}).with_indifferent_access
     end
-
-
 
     private
 
