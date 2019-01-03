@@ -31,7 +31,7 @@ class WebController < ApplicationController
     cookies[cookie_name.to_sym] = {
         value: value,
         expires: expires,
-        domain: GlobalConstant::Base.cookie_domain,
+        domain: :all, #TODO: Domain specific
         http_only: true,
         secure: Rails.env.production?,
         same_site: :strict
@@ -49,7 +49,7 @@ class WebController < ApplicationController
   def delete_cookie(cookie_name)
     cookies.delete(
       cookie_name.to_sym,
-      domain: GlobalConstant::Base.cookie_domain,
+      domain: :all, #TODO: Domain specific
       secure: Rails.env.production?,
       same_site: :strict
     )
