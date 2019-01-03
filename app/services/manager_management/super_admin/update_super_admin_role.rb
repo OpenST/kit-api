@@ -115,7 +115,7 @@ module ManagerManagement
         fail OstCustomError.new validation_error(
                                     'mm_sa_utsar_3',
                                     'invalid_api_params',
-                                    ['email_inactive'],
+                                    ['to_update_client_manager_id_inactive'],
                                     GlobalConstant::ErrorAction.default
                                 ) if @manager_to_be_updated_obj.status != GlobalConstant::Manager.active_status
 

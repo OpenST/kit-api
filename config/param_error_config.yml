@@ -43,6 +43,11 @@ email_inactive:
   code: 'invalid'
   message: 'The email address you provided is inactive. Please contact Support.'
 
+to_update_client_manager_id_inactive:
+  parameter: 'to_update_client_manager_id'
+  code: 'invalid'
+  message: 'Selected user has not verified his email yet.'
+
 missing_email:
   parameter: 'email'
   code: 'missing'
