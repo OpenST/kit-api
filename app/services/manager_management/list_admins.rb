@@ -102,6 +102,7 @@ module ManagerManagement
         'client_id = ? AND privileges & ? = 0',
         @client_id, ClientManager.privileges_config[GlobalConstant::ClientManager.has_been_deleted_privilege]).
         limit(@page_size + 1). # Fetch one more to check whether more entries are there or not.
+        order('id DESC').
         offset(offset_value)
 
       # Fetch all client ids.
