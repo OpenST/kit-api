@@ -77,7 +77,9 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_token_details
-      @api_response_data[:token] = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
+      r = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
+      @api_response_data[:token] = r[@client_id]
+      success
     end
 
 
@@ -91,6 +93,7 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_default_price_points
       @api_response_data[:price_points] = CacheManagement::OstPricePointsDefault.new.fetch
+      success
     end
 
   end
