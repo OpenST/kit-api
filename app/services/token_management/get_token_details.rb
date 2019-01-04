@@ -17,6 +17,7 @@ module TokenManagement
       super
 
       @client_id = @params[:client_id]
+      @client_manager = params[:client_manager]
 
       @api_response_data = {}
 
@@ -43,10 +44,29 @@ module TokenManagement
         r = fetch_default_price_points
         return r unless r.success?
 
+        r = append_logged_in_manager_details
+        return r unless r.success?
+
         success_with_data(@api_response_data)
 
       end
 
+    end
+
+    # Append logged in manager details
+    #
+    # * Author: Santhosh
+    # * Date: 04/01/2019
+    # * Reviewed By: Kedar
+    #
+    # @return [Result::Base]
+    #
+    def append_logged_in_manager_details
+      return success unless @client_manager.present?
+
+      @api_response_data[:client_manager] = @client_manager
+
+      success
     end
 
     #private

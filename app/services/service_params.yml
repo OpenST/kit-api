@@ -124,6 +124,7 @@
   :mandatory:
     - :client_id
   :optional:
+    - :client_manager
 'TokenManagement::InsertTokenDetails':
   :mandatory:
     - :client_id
