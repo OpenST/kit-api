@@ -34,7 +34,7 @@ class EmailTokenEncryptor
       validation_error(
           'etc_1',
           'invalid_api_params',
-          ['invalid_i_t'],
+          ['invalid_r_t'],
           GlobalConstant::ErrorAction.default
       )
     end

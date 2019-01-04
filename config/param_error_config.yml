@@ -13,8 +13,8 @@ invalid_r_t:
   code: 'invalid'
   message: 'The reset password link is either invalid or has expired. Please use Forgot Password to generate a new one.'
 
-invalid_i_t:
-  parameter: 'i_t'
+invalid_r_t:
+  parameter: 'r_t'
   code: 'invalid'
   message: 'The invite link is either invalid or has expired.'
 
