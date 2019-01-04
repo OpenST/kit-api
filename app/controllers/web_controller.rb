@@ -34,7 +34,7 @@ class WebController < ApplicationController
         domain: :all, #TODO: Domain specific
         http_only: true,
         secure: Rails.env.production?,
-        same_site: :strict
+        same_site: :lax #TODO: env specific strict or lax
     }
   end
 
@@ -51,7 +51,7 @@ class WebController < ApplicationController
       cookie_name.to_sym,
       domain: :all, #TODO: Domain specific
       secure: Rails.env.production?,
-      same_site: :strict
+      same_site: :lax #TODO: env specific strict or lax
     )
   end
 
