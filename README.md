@@ -12,6 +12,11 @@ Start the MySQL server.
 mysql.server start
 ```
 
+Start Memcache
+```
+memcached -p 11211 -d
+```
+
 Source the ENV vars.
 ```
 source set_env_vars.sh
