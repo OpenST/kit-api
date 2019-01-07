@@ -2,7 +2,7 @@ class Manager::LoginController < Manager::BaseController
 
   before_action :append_user_agent_to_params
   
-  before_action :verify_recaptcha, only: [:sign_up_post, :password_auth, :send_reset_password_link]
+  before_action :verify_recaptcha, only: [:password_auth, :send_reset_password_link]
 
   before_action :verify_mfa_cookie, only: [
     :get_details,
@@ -40,8 +40,8 @@ class Manager::LoginController < Manager::BaseController
   
   # Sign up Post request
   #
-  # * Author: Puneet
-  # * Date: 08/12/2018
+  # * Author: Shlok
+  # * Date: 07/01/2019
   # * Reviewed By: 
   #
   def sign_up_post
@@ -49,6 +49,9 @@ class Manager::LoginController < Manager::BaseController
     if params[:r_t].present?
       service_response = ManagerManagement::SignUp::ByInvite.new(params).perform
     else
+      # Verify recaptcha only if invite token is not passed.
+      verify_recaptcha
+
       service_response = ManagerManagement::SignUp::WithoutInvite.new(params).perform
     end
 
