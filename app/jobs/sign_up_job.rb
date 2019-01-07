@@ -16,7 +16,7 @@ class SignUpJob < ApplicationJob
 
     add_contact_in_email_service
 
-    send_double_optin_link
+    send_double_optin_link if @manager[:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
 
     notify_devs
 

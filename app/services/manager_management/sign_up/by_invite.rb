@@ -152,6 +152,7 @@ module ManagerManagement
 
         @manager_obj.password = Manager.get_encrypted_password(@password, @login_salt_d)
         @manager_obj.current_client_id = @client_id
+        @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
         @manager_obj.status = GlobalConstant::Manager.active_status
         @manager_obj.last_session_updated_at = current_timestamp
         @manager_obj.save
@@ -227,6 +228,18 @@ module ManagerManagement
 
         @client_manager_obj.save!
 
+      end
+
+      # Get goto for next page
+      #
+      # * Author: Shlok
+      # * Date: 07/01/2019
+      # * Reviewed By:
+      #
+      # @return [Hash]
+      #
+      def fetch_go_to
+        GlobalConstant::GoTo.setup_mfa
       end
 
     end
