@@ -82,19 +82,19 @@ already_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'An invite email is already sent to this email.
-  Please check your email or contact support for further information.'
+  Please check your email or contact Support.'
 
 already_client_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'This email is already associated with another economy.
-  Please contact support for further information.'
+  Please contact Support.'
 
 was_current_client_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'This email was already associated with your economy.
-  Please contact support to reactivate the admin.'
+  Please contact Support.'
 
 is_current_client_associated_email:
   parameter: 'email'

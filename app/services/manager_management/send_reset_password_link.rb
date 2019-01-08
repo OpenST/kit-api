@@ -72,6 +72,27 @@ module ManagerManagement
         error_key = 'email_inactive'
       end
 
+      # TODO: Does the below comment make sense?
+      # Check client_manager entry only if no error found previously. No need to waste an extra query.
+      if error_key.length == 0
+
+        # Fetch client_manager to check if the manager is deleted or not.
+        @client_manager = ClientManager.where(manager_id: @manager.id).first
+
+        # If client_manager is present, check for privileges.
+        if @client_manager.present? && @client_manager.privileges.present?
+
+          privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges)
+
+          # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
+          # previously associated with the client.
+          error_key = 'email_inactive' if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
+
+        end
+
+      end
+
+
       fail OstCustomError.new validation_error(
           'um_srpl_1',
           'invalid_api_params',
@@ -124,7 +145,6 @@ module ManagerManagement
     # * Reviewed By:
     #
     def send_forgot_password_mail
-      puts "@reset_password_token: #{@reset_password_token}"
       Email::HookCreator::SendTransactionalMail.new(
           email: @manager.email,
           template_name: GlobalConstant::PepoCampaigns.forgot_password_template,
