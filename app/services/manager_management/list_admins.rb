@@ -24,7 +24,7 @@ module ManagerManagement
 
       @api_response_data = {}
       @api_response_data[:meta] = {}
-      @api_response_data[:meta][:nextPagePayload] = {}
+      @api_response_data[:meta][:next_page_payload] = {}
       @api_response_data[:result_type] = 'client_managers'
 
     end
@@ -118,10 +118,10 @@ module ManagerManagement
         client_managers_info.push(client_manager)
       end
 
-      # If more entries are still available, populate nextPagePayload in response.
+      # If more entries are still available, populate next_page_payload in response.
       if @manager_ids.length > @page_size
-        @api_response_data[:meta][:nextPagePayload][:page_size] = @page_size
-        @api_response_data[:meta][:nextPagePayload][:page_no] = @page_no + 1
+        @api_response_data[:meta][:next_page_payload][:page_size] = @page_size
+        @api_response_data[:meta][:next_page_payload][:page_no] = @page_no + 1
         client_managers_info = client_managers_info.first(@page_size)
       end
 
