@@ -9,6 +9,7 @@
   :mandatory:
     - :r_t
     - :password
+    - :confirm_password
     - :browser_user_agent
   :optional:
 'ManagerManagement::SignUp::GetDetails':

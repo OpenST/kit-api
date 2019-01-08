@@ -11,6 +11,7 @@ module ManagerManagement
       # * Reviewed By:
       #
       # @param [String] password (mandatory) - user password
+      # @param [String] confirm_password (mandatory) - user password
       # @param [String] browser_user_agent (mandatory) - browser user agent
       #
       # @return [ManagerManagement::SignUp::ByInvite]
@@ -20,6 +21,7 @@ module ManagerManagement
         super
 
         @password = @params[:password]
+        @confirm_password = @params[:confirm_password]
         @browser_user_agent = @params[:browser_user_agent]
 
         @client_id = nil

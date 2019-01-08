@@ -12,6 +12,7 @@ module ManagerManagement
       #
       # @param [String] r_t (mandatory) - token if this user is signing up from via a manager invite link
       # @param [String] password (mandatory) - user password
+      # @param [String] confirm_password (mandatory) - user password
       # @param [String] browser_user_agent (mandatory) - browser user agent
       #
       # @return [ManagerManagement::SignUp::ByInvite]
@@ -92,6 +93,7 @@ module ManagerManagement
         validation_errors = []
 
         validation_errors.push('password_incorrect') unless Util::CommonValidator.is_valid_password?(@password)
+        validation_errors.push('confirm_password_invalid') if @confirm_password != @password
 
         if @invite_token.blank?
 
