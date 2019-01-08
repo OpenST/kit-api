@@ -82,7 +82,7 @@ module ManagerManagement
         validation_errors.push('invalid_is_super_admin') unless Util::CommonValidator.is_boolean_string?(@is_super_admin)
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_utsar_1',
+                                    'mm_sa_usar_1',
                                     'invalid_api_params',
                                     validation_errors,
                                     GlobalConstant::ErrorAction.default
@@ -106,14 +106,14 @@ module ManagerManagement
         @manager_to_be_updated_obj = Manager.where(id: @to_update_client_manager.manager_id).first
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_utsar_2',
+                                    'mm_sa_usar_2',
                                     'resource_not_found',
                                     [],
                                     GlobalConstant::ErrorAction.default
                                 ) if @manager_to_be_updated_obj.blank?
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_utsar_3',
+                                    'mm_sa_usar_3',
                                     'invalid_api_params',
                                     ['to_update_client_manager_id_inactive'],
                                     GlobalConstant::ErrorAction.default
@@ -134,14 +134,14 @@ module ManagerManagement
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_utsar_4',
+                                    'mm_sa_usar_4',
                                     'resource_not_found',
                                     [],
                                     GlobalConstant::ErrorAction.default
                                 ) if @to_update_client_manager.blank?
 
         fail OstCustomError.new validation_error(
-                                    'mm_sa_utsar_5',
+                                    'mm_sa_usar_5',
                                     'unauthorized_access_response',
                                     [],
                                     GlobalConstant::ErrorAction.default

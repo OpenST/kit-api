@@ -120,7 +120,7 @@ module ManagerManagement
           # Either the invitee_manager was previously associated with the client, or is currently associated with the client.
           if @invitee_manager.current_client_id == @client_id
 
-            # Fetch client_manager to check is the invitee_manager was previously associated with the client.
+            # Fetch client_manager to check if the invitee_manager was previously associated with the client.
             @client_manager = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
 
             # If client_manager is present, check for privileges.

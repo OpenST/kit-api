@@ -61,7 +61,6 @@ class InviteJob < ApplicationJob
   # * Reviewed By:
   #
   def send_invite_link
-    puts "@invite_link #{@invite_token}"
     r = Email::HookCreator::SendTransactionalMail.new(
         email: @manager[:email],
         template_name: GlobalConstant::PepoCampaigns.invite_manager_template,
