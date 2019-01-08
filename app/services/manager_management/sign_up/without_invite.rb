@@ -114,10 +114,21 @@ module ManagerManagement
           if @manager_obj.status != GlobalConstant::Manager.invited_status
 
             fail OstCustomError.new validation_error(
-                                        'um_su_4',
+                                        'mm_su_wi_1',
                                         'invalid_api_params',
                                         ['already_registered_email'],
                                         GlobalConstant::ErrorAction.default
+                                    )
+
+          end
+
+          if @manager_obj.status == GlobalConstant::Manager.invited_status
+
+            fail OstCustomError.new validation_error(
+                                      'mm_su_wi_2',
+                                      'invalid_api_params',
+                                      ['already_associated_email'],
+                                      GlobalConstant::ErrorAction.default
                                     )
 
           end

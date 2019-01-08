@@ -106,7 +106,7 @@ module ManagerManagement
         offset(offset_value)
 
       # Fetch all client ids.
-      @client_ids = client_managers_data.select(:manager_id).all.collect(&:manager_id)
+      @manager_ids = client_managers_data.select(:manager_id).all.collect(&:manager_id)
 
       # Fetch all client info.
       client_info = client_managers_data.to_a
@@ -119,7 +119,7 @@ module ManagerManagement
       end
 
       # If more entries are still available, populate nextPagePayload in response.
-      if @client_ids.length > @page_size
+      if @manager_ids.length > @page_size
         @api_response_data[:meta][:nextPagePayload][:page_size] = @page_size
         @api_response_data[:meta][:nextPagePayload][:page_no] = @page_no + 1
         client_managers_info = client_managers_info.first(@page_size)
@@ -139,7 +139,7 @@ module ManagerManagement
     #
     def fetch_admin_email_ids
 
-      managers_data = CacheManagement::Manager.new(@client_ids).fetch
+      managers_data = CacheManagement::Manager.new(@manager_ids).fetch
 
       @api_response_data[:managers] = managers_data
 

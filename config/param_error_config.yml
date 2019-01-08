@@ -73,6 +73,12 @@ already_registered_email:
   code: 'invalid'
   message: 'This email address is already in use. Please try logging in.'
 
+already_associated_email:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'An invite email is already sent to this email.
+  Please check your email or contact support for further information.'
+
 already_verified_email:
   parameter: 'email'
   code: 'invalid'
