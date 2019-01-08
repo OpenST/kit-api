@@ -157,7 +157,7 @@ module WalletAddressesManagement
     # Is the given address already associated
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 08/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
