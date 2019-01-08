@@ -107,21 +107,21 @@ module ManagerManagement
         @manager_obj = Manager.where(email: @email).first
 
         fail OstCustomError.new validation_error(
-            'um_l_fu_1',
+            'mm_l_pa_1',
             'invalid_api_params',
             ['email_not_registered'],
             GlobalConstant::ErrorAction.default
         ) if !@manager_obj.present? || !@manager_obj.password.present? || !@manager_obj.authentication_salt.present?
 
         fail OstCustomError.new validation_error(
-            'um_l_fu_2',
+            'mm_l_pa_2',
             'invalid_api_params',
             ['email_auto_blocked'],
             GlobalConstant::ErrorAction.default
         ) if @manager_obj.status == GlobalConstant::Manager.auto_blocked_status
 
         fail OstCustomError.new validation_error(
-            'um_l_fu_2',
+            'mm_l_pa_3',
             'invalid_api_params',
             ['email_inactive'],
             GlobalConstant::ErrorAction.default
@@ -142,7 +142,7 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def fetch_client
-        @client = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'um_l_fu')
+        @client = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'mm_l_pa')
       end
 
       # Fetch client manager
@@ -160,14 +160,15 @@ module ManagerManagement
         @client_manager = CacheManagement::ClientManager.new([@manager_obj.id],
        {client_id: @manager_obj.current_client_id}).fetch[@manager_obj.id]
 
-        client_manager_not_associated_response('mm_l_pa_3') if @client_manager.blank?
+        Util::EntityHelper.client_manager_not_associated_response('mm_l_pa_4') if @client_manager.blank?
 
         privileges = @client_manager[:privileges]
 
-        is_client_manager_active = privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
-            privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
+        is_client_manager_active = privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
+          (privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
+          privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
 
-        client_manager_not_associated_response('mm_l_pa_4') unless is_client_manager_active
+        Util::EntityHelper.client_manager_not_associated_response('mm_l_pa_5') unless is_client_manager_active
 
       end
 
@@ -209,7 +210,7 @@ module ManagerManagement
           manager.status = GlobalConstant::Manager.auto_blocked_status if manager.failed_login_attempt_count >= 5
           manager.save
           fail OstCustomError.new validation_error(
-              'um_l_fu_2',
+              'mm_l_pa_7',
               'invalid_api_params',
               ['password_incorrect'],
               GlobalConstant::ErrorAction.default
