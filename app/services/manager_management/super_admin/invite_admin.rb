@@ -13,6 +13,7 @@ module ManagerManagement
       # @param [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
       # @param [Integer] client_id (mandatory) - id of the client to which invite is for
       # @param [String] email (mandatory) - the email of the user which is to be invited
+      # @param [Integer] invitee_admin_status (optional) - the status of the admin once the invite is accepted. 1 => super_admin, 0 => admin
       #
       # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
@@ -23,6 +24,8 @@ module ManagerManagement
         @email = @params[:email]
         @inviter_manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
+        @invitee_admin_status = @params[:invitee_admin_status] || 0
+        # TODO: Take the above parameter from the params.
 
         @invitee_manager = nil
         @invitee_client_manager = nil
@@ -84,9 +87,10 @@ module ManagerManagement
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
         validation_errors.push('email_not_allowed_for_dev_program') unless Util::CommonValidator.is_whitelisted_email?(@email)
+        validation_errors.push('invalid_invitee_admin_status') unless Util::CommonValidator.is_boolean_string?(@invitee_admin_status)
 
         fail OstCustomError.new validation_error(
-                                  'mm_su_i_1',
+                                  'mm_su_ia_1',
                                   'invalid_api_params',
                                   validation_errors,
                                   GlobalConstant::ErrorAction.default
@@ -109,14 +113,57 @@ module ManagerManagement
 
         @invitee_manager = Manager.where(email: @email).first
 
+        # If invitee_manager is present, that is an error.
         if @invitee_manager.present?
 
+          # If invitee_manager is associated with the current client, two conditions are possible.
+          # Either the invitee_manager was previously associated with the client, or is currently associated with the client.
+          if @invitee_manager.current_client_id == @client_id
+
+            # Fetch client_manager to check is the invitee_manager was previously associated with the client.
+            @client_manager = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
+
+            # If client_manager is present, check for privileges.
+            if @client_manager.present? && @client_manager.privileges.present?
+
+              privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges)
+
+              # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
+              # previously associated with the client.
+              if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
+
+                fail OstCustomError.new validation_error(
+                                          'mm_su_ia_2',
+                                          'invalid_api_params',
+                                          ['was_current_client_associated_email'],
+                                          GlobalConstant::ErrorAction.default
+                                        )
+                # If privileges excludes has_been_deleted_privilege, display error message that the admin IS
+                # currently associated with the client. We don't handle that error condition here because it is handled
+                # in the previous if block.
+
+              end
+
+            end
+
+            # The invitee_manager IS currently associated with the client.
+            fail OstCustomError.new validation_error(
+                                      'mm_su_ia_3',
+                                      'invalid_api_params',
+                                      ['is_current_client_associated_email'],
+                                      GlobalConstant::ErrorAction.default
+                                    )
+          else
+
+          # The invitee_manager is associated to some other client.
           fail OstCustomError.new validation_error(
-                                    'mm_su_i_4',
+                                    'mm_su_ia_4',
                                     'invalid_api_params',
                                     ['already_client_associated_email'],
                                     GlobalConstant::ErrorAction.default
                                   )
+
+          end
 
         end
 
@@ -125,6 +172,7 @@ module ManagerManagement
         @invitee_manager = Manager.new(
           email: @email,
           authentication_salt: @authentication_salt_hash[:ciphertext_blob],
+          current_client_id: @client_id,
           status: GlobalConstant::Manager.invited_status
         )
 
@@ -170,6 +218,10 @@ module ManagerManagement
           "#{@client_id}::#{@email}::#{current_timestamp}::invite::#{rand}"
         )
 
+        @invitee_admin_status == 1 ?
+          @invitee_admin_status = GlobalConstant::ClientManager.is_super_admin_privilege
+          : @invitee_admin_status = GlobalConstant::ClientManager.is_admin_privilege
+
         db_row = ManagerValidationHash.create!(
           manager_id: @invitee_manager.id,
           client_id: @client_id,
@@ -177,7 +229,8 @@ module ManagerManagement
           validation_hash: invite_token_d,
           status: GlobalConstant::ManagerValidationHash.active_status,
           extra_data: {
-            inviter_manager_id: @inviter_manager_id
+            inviter_manager_id: @inviter_manager_id,
+            invitee_admin_status: @invitee_admin_status
           }
         )
 
@@ -203,26 +256,24 @@ module ManagerManagement
       #
       def create_client_manager
 
-        cm = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
-
-        if cm.present? && cm.privileges.present?
-          privileges = ClientManager.get_bits_set_for_privileges(cm.privileges) - [GlobalConstant::ClientManager.is_invited_privilege]
+        if @client_manager.present? && @client_manager.privileges.present?
+          privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges) - [GlobalConstant::ClientManager.is_invited_privilege]
           # if any other privilege was set other than invite, either invite was already accepted or rejected. fail this request
           fail OstCustomError.new validation_error(
-                                      'mm_su_i_5',
+                                      'mm_su_ia_5',
                                       'invalid_api_params',
                                       ['already_registered_email'],
                                       GlobalConstant::ErrorAction.default
                                   ) if privileges.any?
         end
 
-        cm ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
+        @client_manager ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
 
-        cm.send("set_#{GlobalConstant::ClientManager.is_invited_privilege}")
+        @client_manager.send("set_#{GlobalConstant::ClientManager.is_invited_privilege}")
 
-        cm.save! if cm.changed?
+        @client_manager.save! if @client_manager.changed?
 
-        @invitee_client_manager = cm
+        @invitee_client_manager = @client_manager
 
         success
 

@@ -87,8 +87,19 @@ already_associated_email:
 already_client_associated_email:
   parameter: 'email'
   code: 'invalid'
-  message: 'This email is already associated to another client.
+  message: 'This email is already associated with another economy.
   Please contact support for further information.'
+
+was_current_client_associated_email:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'This email was already associated with your economy.
+  Please contact support to reactivate the admin.'
+
+is_current_client_associated_email:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'This email is already associated with your economy.'
 
 already_verified_email:
   parameter: 'email'
@@ -164,6 +175,11 @@ invalid_is_super_admin:
   parameter: 'is_super_admin'
   code: 'invalid'
   message: 'invalid bool value for is_super_admin'
+
+invalid_invitee_admin_status:
+  parameter: 'invitee_admin_status'
+  code: 'invalid'
+  message: 'invalid bool value for invitee_admin_status'
 
 missing_agreed_terms_of_service:
   parameter: 'agreed_terms_of_service'

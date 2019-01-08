@@ -188,6 +188,7 @@ module ManagerManagement
 
       end
 
+      # TODO: The below method can be removed now given the assumption that no other client would be able to send an invite to that particular email.
       # Reject invites for other client(s) if any
       #
       # * Author: Puneet
@@ -226,7 +227,13 @@ module ManagerManagement
         ).first
 
         @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_invited_privilege}")
-        @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
+
+        # Decide invite privilege depending on the invitee_admin_status set in the manager validation hash.
+        if @invitee_admin_status == GlobalConstant::ClientManager.is_super_admin_privilege
+          @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+        else
+          @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
+        end
 
         @client_manager_obj.save!
 

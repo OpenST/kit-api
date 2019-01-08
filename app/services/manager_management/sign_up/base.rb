@@ -68,30 +68,31 @@ module ManagerManagement
       def validate_invite_token
 
         splited_reset_token = @decrypted_invite_token.split(ManagerValidationHash.token_delimitter)
-        invalid_url_error('um_rp_1') if splited_reset_token.length != 2
+        invalid_url_error('mm_su_b_1') if splited_reset_token.length != 2
 
         validation_hash = splited_reset_token[1]
         manager_validation_hash_id = splited_reset_token[0]
 
-        invalid_url_error('um_rp_3') unless Util::CommonValidator.is_numeric?(manager_validation_hash_id)
+        invalid_url_error('mm_su_b_3') unless Util::CommonValidator.is_numeric?(manager_validation_hash_id)
 
-        invalid_url_error('um_rp_4') unless Util::CommonValidator.is_alphanumeric?(validation_hash)
+        invalid_url_error('mm_su_b_4') unless Util::CommonValidator.is_alphanumeric?(validation_hash)
 
         @manager_validation_hash = ManagerValidationHash.where(id: manager_validation_hash_id.to_i).first
 
-        invalid_url_error('um_rp_4') if @manager_validation_hash.blank?
+        invalid_url_error('mm_su_b_4') if @manager_validation_hash.blank?
 
-        invalid_url_error('um_rp_5') if @manager_validation_hash.validation_hash != validation_hash
+        invalid_url_error('mm_su_b_5') if @manager_validation_hash.validation_hash != validation_hash
 
-        invalid_url_error('um_rp_6') if @manager_validation_hash.status != GlobalConstant::ManagerValidationHash.active_status
+        invalid_url_error('mm_su_b_6') if @manager_validation_hash.status != GlobalConstant::ManagerValidationHash.active_status
 
-        invalid_url_error('um_rp_7') if @manager_validation_hash.is_expired?
+        invalid_url_error('mm_su_b_7') if @manager_validation_hash.is_expired?
 
-        invalid_url_error('um_rp_8') if @manager_validation_hash.kind != GlobalConstant::ManagerValidationHash.manager_invite_kind
+        invalid_url_error('mm_su_b_8') if @manager_validation_hash.kind != GlobalConstant::ManagerValidationHash.manager_invite_kind
 
         @client_id = @manager_validation_hash.client_id
         @manager_id = @manager_validation_hash.manager_id
         @inviter_manager_id = @manager_validation_hash.extra_data[:inviter_manager_id].to_i
+        @invitee_admin_status = @manager_validation_hash.extra_data[:invitee_admin_status]
 
         success
 
@@ -126,9 +127,9 @@ module ManagerManagement
 
         @manager_obj = Manager.where(id: @manager_id).first
 
-        invalid_url_error('um_rp_9') if @manager_obj.blank?
+        invalid_url_error('mm_su_b_9') if @manager_obj.blank?
 
-        invalid_url_error('um_rp_10') if @manager_obj.status != GlobalConstant::Manager.invited_status
+        invalid_url_error('mm_su_b_10') if @manager_obj.status != GlobalConstant::Manager.invited_status
 
         success
 
@@ -168,7 +169,7 @@ module ManagerManagement
         end
 
         client_manager = CacheManagement::ClientManager.new([@inviter_manager_id], {client_id: @client_id}).fetch[@inviter_manager_id]
-        invalid_url_error('um_rp_15') if client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
+        invalid_url_error('mm_su_b_15') if client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
 
         success
 
