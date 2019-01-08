@@ -40,6 +40,10 @@ module WalletAddressesManagement
         r = validate_and_sanitize
         return r unless r.success?
 
+        #Check if the given address is associated in db
+        r = is_address_available_check
+        return r unless r.success?
+
         r = redirect_request_to_saas_api
         return r unless r.success?
 
@@ -147,6 +151,29 @@ module WalletAddressesManagement
       end
 
       success
+
+    end
+
+    # Is the given address already associated
+    #
+    # * Author: Ankit
+    # * Date: 19/12/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def is_address_available_check
+
+      if ClientWalletAddress.where('address = ?' , @owner_address).first.present?
+        return validation_error(
+          'cm_vea_4',
+          'already_associated',
+          ['already_associated_address'],
+          GlobalConstant::ErrorAction.default
+        )
+      else
+        success
+      end
 
     end
 
