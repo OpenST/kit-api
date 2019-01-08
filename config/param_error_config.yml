@@ -84,6 +84,12 @@ already_associated_email:
   message: 'An invite email is already sent to this email.
   Please check your email or contact support for further information.'
 
+already_client_associated_email:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'This email is already associated to another client.
+  Please contact support for further information.'
+
 already_verified_email:
   parameter: 'email'
   code: 'invalid'
