@@ -8,6 +8,11 @@ invalid_owner_address:
   code: 'invalid'
   message: 'Invalid owner_address'
 
+already_associated_address:
+  parameter: 'owner_address'
+  code: 'invalid'
+  message: 'The given address is already associated. Please check.'
+
 invalid_r_t:
   parameter: 'r_t'
   code: 'invalid'
