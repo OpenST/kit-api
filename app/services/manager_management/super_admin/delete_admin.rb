@@ -47,6 +47,8 @@ module ManagerManagement
 
           fetch_manager_to_be_deleted
 
+          reject_invites if @manager_to_be_deleted_obj.status == GlobalConstant::Manager.invited_status
+
           update_client_manager
 
           update_manager
@@ -95,14 +97,14 @@ module ManagerManagement
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         fail OstCustomError.new validation_error(
-                                    'mm_su_dm_2',
+                                    'mm_su_da_1',
                                     'resource_not_found',
                                     [],
                                     GlobalConstant::ErrorAction.default
                                 ) if @to_update_client_manager.blank?
 
         fail OstCustomError.new validation_error(
-                                    'mm_su_dm_2',
+                                    'mm_su_da_2',
                                     'unauthorized_access_response',
                                     [],
                                     GlobalConstant::ErrorAction.default
@@ -126,12 +128,33 @@ module ManagerManagement
         @manager_to_be_deleted_obj = Manager.where(id: @to_update_client_manager.manager_id).first
 
         fail OstCustomError.new validation_error(
-                                    'mm_su_dm_1',
+                                    'mm_su_da_3',
                                     'resource_not_found',
                                     [],
                                     GlobalConstant::ErrorAction.default
                                 ) if @manager_to_be_deleted_obj.blank?
 
+      end
+
+      # Reject invite tokens for the manager if its status is invited.
+      #
+      # * Author: Shlok
+      # * Date: 08/01/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def reject_invites
+          # Mark any other active invite token (s) for this manager as inactive
+          ManagerValidationHash.where(
+            manager_id: @manager_to_be_deleted_obj.id,
+            kind: GlobalConstant::ManagerValidationHash.manager_invite_kind,
+            status: GlobalConstant::ManagerValidationHash.active_status
+          ).update_all(
+            status: GlobalConstant::ManagerValidationHash.inactive_status
+          )
+
+          success
       end
 
       # Update client manager
@@ -144,12 +167,14 @@ module ManagerManagement
       #
       def update_client_manager
 
-        @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
-        @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_invited_privilege}")
-        @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.has_rejected_invite_privilege}")
-        @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
-
-        @to_update_client_manager.save!
+        if @manager_to_be_deleted_obj.status == GlobalConstant::Manager.invited_status
+          @to_update_client_manager.delete
+          # We are completely deleting the entry from the database if the user is only invited.
+        else
+          @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
+          @to_update_client_manager.save!
+          # We are marking that the admin has been deleted.
+        end
 
         success
 
@@ -165,9 +190,12 @@ module ManagerManagement
       #
       def update_manager
 
-        @manager_to_be_deleted_obj.current_client_id = nil
+        if @manager_to_be_deleted_obj.status == GlobalConstant::Manager.invited_status
+          @manager_to_be_deleted_obj.delete
+          # We are completely deleting the entry from the database if the user is only invited.
+        end
 
-        @manager_to_be_deleted_obj.save!
+        # We are not doing anything if the admin was active because we need to store the information for future.
 
         success
 
