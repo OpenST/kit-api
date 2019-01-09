@@ -19,7 +19,7 @@ module WalletAddressesManagement
       super
 
       @client_id = @params[:client_id]
-      @owner_address = @params[:owner_address]
+      @owner_address = @params[:owner]
       @personal_sign = @params[:personal_sign]
 
       @signed_by_address = nil

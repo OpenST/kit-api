@@ -4,12 +4,12 @@ invalid_client_id:
   message: 'Invalid client id'
 
 invalid_owner_address:
-  parameter: 'owner_address'
+  parameter: 'owner'
   code: 'invalid'
   message: 'Invalid owner_address'
 
 already_associated_address:
-  parameter: 'owner_address'
+  parameter: 'owner'
   code: 'invalid'
   message: 'The given address is already associated. Please check.'
 
