@@ -108,8 +108,7 @@ module ManagerManagement
                                     'unauthorized_access_response',
                                     [],
                                     GlobalConstant::ErrorAction.default
-                                ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id ||
-            @to_update_client_manager.send("#{GlobalConstant::ClientManager.is_super_admin_privilege}?")
+                                ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id
 
         success
 
