@@ -10,7 +10,7 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [String] r_t (mandatory) - token if this user is signing up from via a manager invite link
+      # @param [String] i_t (mandatory) - token if this user is signing up from via a manager invite link
       # @param [String] password (mandatory) - user password
       # @param [String] confirm_password (mandatory) - user password
       # @param [String] browser_user_agent (mandatory) - browser user agent
@@ -21,7 +21,7 @@ module ManagerManagement
 
         super
 
-        @invite_token = @params[:r_t]
+        @invite_token = @params[:i_t]
 
         @decrypted_invite_token = nil
         @manager_validation_hash = nil
@@ -42,7 +42,7 @@ module ManagerManagement
 
           validate_and_sanitize
 
-          # 1. decode r_t to determine email and client to which invite is for
+          # 1. decode i_t to determine email and client to which invite is for
           # 2. find manager & client record
 
           decrypt_invite_token
