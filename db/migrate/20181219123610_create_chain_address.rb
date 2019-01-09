@@ -6,10 +6,12 @@ class CreateChainAddress < DbMigrationConnection
 
       create_table :chain_addresses do |t|
         t.column :chain_id, :integer, null: false
+        t.column :aux_chain_id, :integer, null: true
         t.column :chain_kind, :tinyint, null: false, limit: 1
         t.column :kind, :tinyint, null: false, limit: 1
         t.column :address, :string, limit: 255, null: false
         t.column :known_address_id, :integer, null: true
+        t.column :status, :tinyint, limit: 1, null:false
         t.timestamps
       end
 
