@@ -141,7 +141,7 @@
   :optional:
 'WalletAddressesManagement::AssociateAddress':
   :mandatory:
-    - :owner_address
+    - :owner
     - :client_id
     - :personal_sign
   :optional:
