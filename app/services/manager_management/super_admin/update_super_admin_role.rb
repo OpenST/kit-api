@@ -49,6 +49,8 @@ module ManagerManagement
 
           fetch_manager_to_be_updated
 
+          validate_client_manager_privilege
+
           update_client_manager
 
           success_with_data({
@@ -151,6 +153,40 @@ module ManagerManagement
 
       end
 
+      # Validate client manager's existing privileges.
+      #
+      # * Author: Shlok
+      # * Date: 09/01/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def validate_client_manager_privilege
+
+        privileges = ClientManager.get_bits_set_for_privileges(@to_update_client_manager.privileges)
+
+        if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
+          # Fail if trying to set a super admin as super admin.
+          fail OstCustomError.new validation_error(
+                                    'mm_sa_usar_6',
+                                    'already_super_admin',
+                                    [],
+                                    GlobalConstant::ErrorAction.default
+                                  ) if privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege)
+
+        else
+          # Fail if trying to set an admin as admin.
+          fail OstCustomError.new validation_error(
+                                    'mm_sa_usar_7',
+                                    'already_admin',
+                                    [],
+                                    GlobalConstant::ErrorAction.default
+                                  ) if privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
+
+        end
+
+      end
+
       # Update client manager
       #
       # * Author: Puneet
@@ -162,9 +198,11 @@ module ManagerManagement
       def update_client_manager
 
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
+          @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
         else
           @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
         end
 
         @to_update_client_manager.save!

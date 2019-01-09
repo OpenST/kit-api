@@ -181,6 +181,16 @@ invalid_invitee_admin_status:
   code: 'invalid'
   message: 'invalid bool value for invitee_admin_status'
 
+already_super_admin:
+  parameter: 'is_super_admin'
+  code: 'invalid'
+  message: 'This admin already has super admin privileges.'
+
+already_admin:
+  parameter: 'is_super_admin'
+  code: 'invalid'
+  message: 'This admin already has admin privileges.'
+
 missing_agreed_terms_of_service:
   parameter: 'agreed_terms_of_service'
   code: 'missing'
