@@ -25,12 +25,16 @@ module Google
     # * Reviewed By:
     #
     # @param [String] otp - Current OTP
-    # @param [TimeStamp] last_otp_at - last otp generation timestamp. All opts generated <= last_otp_at will invalidate
+    # @param [TimeStamp] last_otp_at - last otp generation timestamp. All otps generated <= last_otp_at will invalidate
     #
     # @return [Result::Base]
     #
     def verify_with_drift_and_prior(otp, last_otp_at = nil)
       begin
+        # We are subtracting 60 seconds from the timestamp to ensure that the current OTP being in use is not invalidated.
+        if last_otp_at
+          last_otp_at = last_otp_at - 60
+        end
         verified_at_timestamp = client.verify_with_drift_and_prior(otp, DRIFT_TIME, last_otp_at)
 
         if verified_at_timestamp.present?
