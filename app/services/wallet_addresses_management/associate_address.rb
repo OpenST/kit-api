@@ -15,7 +15,6 @@ module WalletAddressesManagement
     #
     def initialize(params)
 
-      Rails.logger.info("-----associate address params-----#{params}")
       super
 
       @client_id = @params[:client_id]
@@ -38,7 +37,6 @@ module WalletAddressesManagement
 
       handle_errors_and_exceptions do
 
-        Rails.logger.info("-----associate address params-----")
         r = validate_and_sanitize
         return r unless r.success?
 
