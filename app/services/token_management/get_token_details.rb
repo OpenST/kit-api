@@ -41,8 +41,9 @@ module TokenManagement
         r = fetch_token_details
         return r unless r.success?
 
-        r = fetch_token_details_from_saas
-        return r unless r.success?
+        # TODO: Open this functionality when economy setup is functional
+        #r = fetch_token_details_from_saas
+        #return r unless r.success?
 
         r = fetch_default_price_points
         return r unless r.success?
