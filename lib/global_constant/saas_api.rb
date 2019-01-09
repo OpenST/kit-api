@@ -20,6 +20,10 @@ module GlobalConstant
       'internal/signer/verify'
     end
 
+    def self.fetch_token_details
+      'internal/token/details'
+    end
+
   end
 
 end

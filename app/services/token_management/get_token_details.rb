@@ -41,6 +41,9 @@ module TokenManagement
         r = fetch_token_details
         return r unless r.success?
 
+        r = fetch_token_details_from_saas
+        return r unless r.success?
+
         r = fetch_default_price_points
         return r unless r.success?
 
@@ -100,6 +103,25 @@ module TokenManagement
       r = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
       @api_response_data[:token] = r[@client_id]
       success
+    end
+
+    # Fetch token details from Saas
+    #
+    #
+    # * Author: Santhosh
+    # * Date: 07/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def fetch_token_details_from_saas
+      params = {
+          chain_id: 12345,
+          contract_address: '0x0x0x0x00x0x0x31280931hdfad32193as34as1dsad2'
+      }
+      r = SaasApi::Token::FetchDetails.new.perform(params) # TODO: Pass params appropriately
+      return r unless r.success?
+
+      @api_response_data[:token].merge!(r.data)
     end
 
 
