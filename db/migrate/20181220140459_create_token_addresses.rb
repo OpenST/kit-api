@@ -3,7 +3,6 @@ class CreateTokenAddresses < DbMigrationConnection
     run_migration_for_db(DbConnection::KitSaasSubenv) do
       create_table :token_addresses do |t|
         t.column :token_id, :integer, null: false
-        t.column :chain_kind, :tinyint, limit: 1, null: false
         t.column :kind, :tinyint, limit: 1, null:false
         t.column :address, :string, limit: 255, null:false
         t.column :known_address_id, :integer, null: true
