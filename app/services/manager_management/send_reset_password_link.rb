@@ -129,7 +129,7 @@ module ManagerManagement
 
       reset_pass_token_str = "#{db_row.id.to_s}:#{reset_token}"
       encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
-      r = encryptor_obj.encrypt(reset_pass_token_str)
+      r = encryptor_obj.encrypt(reset_pass_token_str, GlobalConstant::ManagerValidationHash::reset_password_kind)
       fail OstCustomError.new(r) unless r.success?
 
       @reset_password_token = r.data[:ciphertext_blob]

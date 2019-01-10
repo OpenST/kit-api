@@ -189,7 +189,7 @@ module ManagerManagement
 
         # encrypt it again to send it over in email
         encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
-        r = encryptor_obj.encrypt(invite_token_str)
+        r = encryptor_obj.encrypt(invite_token_str, GlobalConstant::ManagerValidationHash::manager_invite_kind)
         fail OstCustomError.new(r) unless r.success?
 
         @invite_token = r.data[:ciphertext_blob]

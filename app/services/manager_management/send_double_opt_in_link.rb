@@ -106,7 +106,7 @@ module ManagerManagement
 
       double_opt_in_token_str = "#{db_row.id.to_s}:#{double_opt_in_token}"
       encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
-      r = encryptor_obj.encrypt(double_opt_in_token_str)
+      r = encryptor_obj.encrypt(double_opt_in_token_str, GlobalConstant::ManagerValidationHash::double_optin_kind)
       fail OstCustomError.new r unless r.success?
 
       @double_optin_token = r.data[:ciphertext_blob]

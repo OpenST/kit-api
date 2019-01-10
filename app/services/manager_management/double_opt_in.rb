@@ -90,12 +90,12 @@ module ManagerManagement
       invalid_url_error('mm_doi_2') unless Util::CommonValidator.is_valid_token?(@r_t)
 
       decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
-      r = decryptor_obj.decrypt(@r_t)
+      r = decryptor_obj.decrypt(@r_t, GlobalConstant::ManagerValidationHash::double_optin_kind)
       fail OstCustomError.new r unless r.success?
 
-      decripted_t = r.data[:plaintext]
+      decrypted_t = r.data[:plaintext]
 
-      splited_reset_token = decripted_t.split(':')
+      splited_reset_token = decrypted_t.split(':')
 
       invalid_url_error('mm_doi_3') if splited_reset_token.length != 2
 

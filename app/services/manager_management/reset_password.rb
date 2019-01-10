@@ -97,7 +97,7 @@ module ManagerManagement
       validate
 
       decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
-      r = decryptor_obj.decrypt(@r_t)
+      r = decryptor_obj.decrypt(@r_t, GlobalConstant::ManagerValidationHash::reset_password_kind)
       fail OstCustomError.new r unless r.success?
 
       decrypted_t = r.data[:plaintext]
