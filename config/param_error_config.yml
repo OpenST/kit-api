@@ -38,8 +38,8 @@ email_not_registered:
   code: 'invalid'
   message: 'The email address you provided is not associated with an OST KIT⍺ account. Please sign up.'
 
-email_not_invited:
-  parameter: 'email'
+manager_not_invited:
+  parameter: 'to_update_client_manager_id'
   code: 'invalid'
   message: 'The email address you provided is not associated with an OST KIT⍺ account. Please invite the admin first.'
 
@@ -95,16 +95,22 @@ already_client_associated_email:
   message: 'This email is already associated with another economy.
   Please contact Support.'
 
+already_client_associated_manager:
+  parameter: 'to_update_client_manager_id'
+  code: 'invalid'
+  message: 'This manager is already associated with another economy.
+  Please contact Support.'
+
 was_current_client_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'This email was already associated with your economy.
   Please contact Support to re-activate the account.'
 
-was_current_client_associated_deleted_email:
-  parameter: 'email'
+was_current_client_associated_deleted_manager:
+  parameter: 'to_update_client_manager_id'
   code: 'invalid'
-  message: 'This email was already associated with your economy. We cannot invite the email again.
+  message: 'This manager was already associated with your economy. We cannot invite the manager again.
   Please contact Support to re-activate the account.'
 
 is_current_client_associated_email:
@@ -112,10 +118,10 @@ is_current_client_associated_email:
   code: 'invalid'
   message: 'This email is already associated with your economy.'
 
-is_active_current_client_associated_email:
-  parameter: 'email'
+is_active_current_client_associated_manager:
+  parameter: 'to_update_client_manager_id'
   code: 'invalid'
-  message: 'This email is already associated with your economy and active.'
+  message: 'This manager is already associated with your economy and active.'
 
 already_verified_email:
   parameter: 'email'

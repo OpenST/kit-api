@@ -73,7 +73,7 @@ module ManagerManagement
 
         fail OstCustomError.new validation_error(
                                   'mm_su_rai_1',
-                                  'email_not_invited',
+                                  'manager_not_invited',
                                   [],
                                   GlobalConstant::ErrorAction.default
                                 ) if @to_update_client_manager.blank?
@@ -115,7 +115,7 @@ module ManagerManagement
             fail OstCustomError.new validation_error(
                                       'mm_su_rai_3',
                                       'invalid_api_params',
-                                      ['was_current_client_associated_deleted_email'],
+                                      ['was_current_client_associated_deleted_manager'],
                                       GlobalConstant::ErrorAction.default
                                     ) if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
@@ -128,7 +128,7 @@ module ManagerManagement
             fail OstCustomError.new validation_error(
                                       'mm_su_rai_4',
                                       'invalid_api_params',
-                                      ['is_active_current_client_associated_email'],
+                                      ['is_active_current_client_associated_manager'],
                                       GlobalConstant::ErrorAction.default
                                     ) if is_client_manager_active
 
@@ -147,7 +147,7 @@ module ManagerManagement
           fail OstCustomError.new validation_error(
                                     'mm_su_rai_5',
                                     'invalid_api_params',
-                                    ['already_client_associated_email'],
+                                    ['already_client_associated_manager'],
                                     GlobalConstant::ErrorAction.default
                                   )
 
