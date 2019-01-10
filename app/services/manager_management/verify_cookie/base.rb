@@ -84,10 +84,10 @@ module ManagerManagement
         parts = @cookie_value.split(':')
         unauthorized_access_response('am_vc_1') unless parts.length == 4
 
-        puts "========auth_level======= #{auth_level}"
-        puts "======================================="
-        puts "========parts======= #{parts}"
-        puts "======================================="
+        Rails.logger.info("========auth_level======= #{auth_level}")
+        Rails.logger.info("=======================================")
+        Rails.logger.info("========parts======= #{parts}")
+        Rails.logger.info("=======================================")
 
 
         unauthorized_access_response('am_vc_2') unless parts[2] == auth_level
