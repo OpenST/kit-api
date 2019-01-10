@@ -12,7 +12,7 @@ module ManagerManagement
       #
       # @param [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
       # @param [Integer] client_id (mandatory) - id of the client who is deleting this admin
-      # @params [Integer] to_update_client_manager_id (mandatory) - id of manager whose MFA has to be set
+      # @param [Integer] to_update_client_manager_id (mandatory) - id of manager whose MFA has to be set
       #
       # @return [ManagerManagement::SuperAdmin::ResetMfa]
       #

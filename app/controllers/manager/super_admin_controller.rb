@@ -48,6 +48,17 @@ class Manager::SuperAdminController < Manager::BaseController
     render_api_response(service_response)
   end
 
+  # Resend admin invite
+  #
+  # * Author: Shlok
+  # * Date: 10/01/2019
+  # * Reviewed By:
+  #
+  def resend_admin_invite
+    service_response = ManagerManagement::SuperAdmin::ResendAdminInvite.new(params).perform
+    render_api_response(service_response)
+  end
+
   private
 
   # Check if Super Admin role

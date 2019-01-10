@@ -99,6 +99,12 @@
     - :client_id
     - :manager_id
   :optional:
+'ManagerManagement::SuperAdmin::ResendAdminInvite':
+  :mandatory:
+    - :manager_id
+    - :client_id
+    - :email
+  :optional:
 'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
   :mandatory:
     - :to_update_client_manager_id

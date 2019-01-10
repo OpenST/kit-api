@@ -38,6 +38,11 @@ email_not_registered:
   code: 'invalid'
   message: 'The email address you provided is not associated with an OST KIT⍺ account. Please sign up.'
 
+email_not_invited:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'The email address you provided is not associated with an OST KIT⍺ account. Please invite the admin first.'
+
 email_auto_blocked:
   parameter: 'email'
   code: 'invalid'
@@ -94,12 +99,23 @@ was_current_client_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'This email was already associated with your economy.
-  Please contact Support.'
+  Please contact Support to re-activate the account.'
+
+was_current_client_associated_deleted_email:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'This email was already associated with your economy. We cannot invite the email again.
+  Please contact Support to re-activate the account.'
 
 is_current_client_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'This email is already associated with your economy.'
+
+is_active_current_client_associated_email:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'This email is already associated with your economy and active.'
 
 already_verified_email:
   parameter: 'email'
