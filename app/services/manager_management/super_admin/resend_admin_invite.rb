@@ -25,7 +25,6 @@ module ManagerManagement
         @client_id = @params[:client_id]
 
         @invitee_manager = nil
-        @invitee_client_manager = nil
         @invite_token = nil
 
       end
