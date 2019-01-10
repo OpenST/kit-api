@@ -63,8 +63,6 @@ module ManagerManagement
 
           update_invite_token
 
-          reject_other_invites
-
           set_cookie_value
 
           enqueue_job
@@ -183,29 +181,6 @@ module ManagerManagement
         ).update_all(
             status: GlobalConstant::ManagerValidationHash.inactive_status
         )
-
-        success
-
-      end
-
-      # TODO: The below method can be removed now given the assumption that no other client would be able to send an invite to that particular email.
-      # Reject invites for other client(s) if any
-      #
-      # * Author: Puneet
-      # * Date: 06/12/2018
-      # * Reviewed By:
-      #
-      def reject_other_invites
-
-        ar = ClientManager.where('manager_id = ? AND client_id != ?', @manager_id, @client_id)
-
-        client_ids = ar.select(:client_id).all.collect(&:client_id)
-
-        ar.update_all(privileges: ClientManager.privileges_config[GlobalConstant::ClientManager.has_rejected_invite_privilege])
-
-        client_ids.each do |client_id|
-          CacheManagement::ClientManager.new([@manager_id], {client_id: client_id}).clear
-        end
 
         success
 
