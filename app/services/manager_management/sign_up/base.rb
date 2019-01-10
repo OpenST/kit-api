@@ -92,7 +92,7 @@ module ManagerManagement
         @client_id = @manager_validation_hash.client_id
         @manager_id = @manager_validation_hash.manager_id
         @inviter_manager_id = @manager_validation_hash.extra_data[:inviter_manager_id].to_i
-        @invitee_admin_status = @manager_validation_hash.extra_data[:invitee_admin_status]
+        @is_super_admin = @manager_validation_hash.extra_data[:is_super_admin]
 
         success
 

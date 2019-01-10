@@ -15,8 +15,8 @@ module GlobalConstant
         'is_super_admin'
       end
 
-      def is_invited_privilege
-        'is_invited'
+      def is_admin_invited_privilege
+        'is_admin_invited'
       end
 
       def has_rejected_invite_privilege
@@ -25,6 +25,10 @@ module GlobalConstant
 
       def has_been_deleted_privilege
         'has_been_deleted'
+      end
+
+      def is_super_admin_invited_privilege
+        'is_super_admin_invited'
       end
 
       ### Privileges stop ###

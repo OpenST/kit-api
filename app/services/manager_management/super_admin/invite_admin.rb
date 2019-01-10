@@ -13,7 +13,7 @@ module ManagerManagement
       # @param [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
       # @param [Integer] client_id (mandatory) - id of the client to which invite is for
       # @param [String] email (mandatory) - the email of the user which is to be invited
-      # @param [Integer] invitee_admin_status (optional) - the status of the admin once the invite is accepted. 1 => super_admin, 0 => admin
+      # @param [Integer] is_super_admin (mandatory) - the privilege of the admin once the invite is accepted. 1 => super_admin, 0 => admin
       #
       # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
@@ -24,8 +24,7 @@ module ManagerManagement
         @email = @params[:email]
         @inviter_manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
-        @invitee_admin_status = @params[:invitee_admin_status] || 0
-        # TODO: Take the above parameter from the params.
+        @is_super_admin = @params[:is_super_admin].to_s
 
         @invitee_manager = nil
         @invitee_client_manager = nil
@@ -87,7 +86,7 @@ module ManagerManagement
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
         validation_errors.push('email_not_allowed_for_dev_program') unless Util::CommonValidator.is_whitelisted_email?(@email)
-        validation_errors.push('invalid_invitee_admin_status') unless Util::CommonValidator.is_boolean_string?(@invitee_admin_status)
+        validation_errors.push('invalid_is_super_admin') unless Util::CommonValidator.is_boolean_string?(@is_super_admin)
 
         fail OstCustomError.new validation_error(
                                   'mm_su_ia_1',
@@ -218,9 +217,9 @@ module ManagerManagement
           "#{@client_id}::#{@email}::#{current_timestamp}::invite::#{rand}"
         )
 
-        @invitee_admin_status == 1 ?
-          @invitee_admin_status = GlobalConstant::ClientManager.is_super_admin_privilege
-          : @invitee_admin_status = GlobalConstant::ClientManager.is_admin_privilege
+        Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
+          invitee_admin_privilege = GlobalConstant::ClientManager.is_super_admin_privilege
+          : invitee_admin_privilege = GlobalConstant::ClientManager.is_admin_privilege
 
         db_row = ManagerValidationHash.create!(
           manager_id: @invitee_manager.id,
@@ -230,7 +229,7 @@ module ManagerManagement
           status: GlobalConstant::ManagerValidationHash.active_status,
           extra_data: {
             inviter_manager_id: @inviter_manager_id,
-            invitee_admin_status: @invitee_admin_status
+            is_super_admin: invitee_admin_privilege
           }
         )
 
@@ -257,7 +256,7 @@ module ManagerManagement
       def create_client_manager
 
         if @client_manager.present? && @client_manager.privileges.present?
-          privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges) - [GlobalConstant::ClientManager.is_invited_privilege]
+          privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges) - [GlobalConstant::ClientManager.is_admin_invited_privilege] - [GlobalConstant::ClientManager.is_super_admin_invited_privilege]
           # if any other privilege was set other than invite, either invite was already accepted or rejected. fail this request
           fail OstCustomError.new validation_error(
                                       'mm_su_ia_5',
@@ -269,7 +268,9 @@ module ManagerManagement
 
         @client_manager ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
 
-        @client_manager.send("set_#{GlobalConstant::ClientManager.is_invited_privilege}")
+        Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
+          @client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
+          : @client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
 
         @client_manager.save! if @client_manager.changed?
 

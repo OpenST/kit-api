@@ -4,9 +4,10 @@ class ClientManager < DbConnection::KitClient
     @c_privileges ||= {
         GlobalConstant::ClientManager.is_super_admin_privilege => 1,
         GlobalConstant::ClientManager.is_admin_privilege => 2,
-        GlobalConstant::ClientManager.is_invited_privilege => 4,
+        GlobalConstant::ClientManager.is_admin_invited_privilege => 4,
         GlobalConstant::ClientManager.has_rejected_invite_privilege => 8,
-        GlobalConstant::ClientManager.has_been_deleted_privilege => 16
+        GlobalConstant::ClientManager.has_been_deleted_privilege => 16,
+        GlobalConstant::ClientManager.is_super_admin_invited_privilege => 32,
     }
   end
 

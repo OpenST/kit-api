@@ -83,13 +83,6 @@ module ManagerManagement
       def set_parts
         parts = @cookie_value.split(':')
         unauthorized_access_response('am_vc_1') unless parts.length == 4
-
-        Rails.logger.info("========auth_level======= #{auth_level}")
-        Rails.logger.info("=======================================")
-        Rails.logger.info("========parts======= #{parts}")
-        Rails.logger.info("=======================================")
-
-
         unauthorized_access_response('am_vc_2') unless parts[2] == auth_level
 
         @manager_id = parts[0].to_i

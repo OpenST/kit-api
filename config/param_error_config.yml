@@ -176,11 +176,6 @@ invalid_is_super_admin:
   code: 'invalid'
   message: 'invalid bool value for is_super_admin'
 
-invalid_invitee_admin_status:
-  parameter: 'invitee_admin_status'
-  code: 'invalid'
-  message: 'invalid bool value for invitee_admin_status'
-
 already_super_admin:
   parameter: 'is_super_admin'
   code: 'invalid'

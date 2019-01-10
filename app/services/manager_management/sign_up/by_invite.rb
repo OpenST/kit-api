@@ -226,12 +226,12 @@ module ManagerManagement
             manager_id: @manager_obj.id
         ).first
 
-        @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_invited_privilege}")
-
-        # Decide invite privilege depending on the invitee_admin_status set in the manager validation hash.
-        if @invitee_admin_status == GlobalConstant::ClientManager.is_super_admin_privilege
+        # Decide invite privilege depending on the is_super_admin set in the manager validation hash.
+        if @is_super_admin == GlobalConstant::ClientManager.is_super_admin_privilege
+          @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
         else
+          @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
         end
 

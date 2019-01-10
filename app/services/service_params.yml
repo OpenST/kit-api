@@ -85,8 +85,8 @@
     - :email
     - :client_id
     - :manager_id
+    - :is_super_admin
   :optional:
-    - :invitee_admin_status
 'ManagerManagement::SuperAdmin::DeleteAdmin':
   :mandatory:
     - :to_update_client_manager_id

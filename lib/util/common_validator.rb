@@ -19,7 +19,7 @@ module Util
     end
 
     # front end sends 0 / 1 instead of boolean true / false
-    # Check for booblean-ness of an input
+    # Check for boolean-ness of an input
     # check if '0' or '1' was passed
     #
     # * Author: Puneet
