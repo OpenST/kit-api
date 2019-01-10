@@ -144,10 +144,15 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def reject_invites
+
+        kinds = [GlobalConstant::ManagerValidationHash.manager_invite_kind,
+                 GlobalConstant::ManagerValidationHash.double_optin_kind,
+                 GlobalConstant::ManagerValidationHash.reset_password_kind]
+
           # Mark any other active invite token (s) for this manager as inactive
           ManagerValidationHash.where(
             manager_id: @manager_to_be_deleted_obj.id,
-            kind: GlobalConstant::ManagerValidationHash.manager_invite_kind,
+            kind: kinds,
             status: GlobalConstant::ManagerValidationHash.active_status
           ).update_all(
             status: GlobalConstant::ManagerValidationHash.inactive_status
