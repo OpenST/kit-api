@@ -12,7 +12,7 @@ module ManagerManagement
       #
       # @param [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
       # @param [Integer] client_id (mandatory) - id of the client to which invite is for
-      # @param [String] email (mandatory) - the email of the user which is to be invited
+      # @param [String] to_update_client_manager_id (mandatory) - id of the client_manager which is to be re-invited.
       #
       # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
@@ -20,7 +20,7 @@ module ManagerManagement
 
         super
 
-        @email = @params[:email]
+        @to_update_client_manager_id = @params[:to_update_client_manager_id]
         @inviter_manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
 
@@ -41,7 +41,9 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          validate
+
+          fetch_client_manager
 
           validate_invitee_manager_exists
 
@@ -57,7 +59,7 @@ module ManagerManagement
 
       private
 
-      # Validate and sanitize
+      # Fetch client manager
       #
       # * Author: Puneet
       # * Date: 06/12/2018
@@ -65,23 +67,25 @@ module ManagerManagement
       #
       # @return [Result::Base]
       #
-      def validate_and_sanitize
+      def fetch_client_manager
 
-        validation_errors = []
-
-        @email = @email.to_s.downcase.strip
-        validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
-        validation_errors.push('email_not_allowed_for_dev_program') unless Util::CommonValidator.is_whitelisted_email?(@email)
+        @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         fail OstCustomError.new validation_error(
                                   'mm_su_rai_1',
-                                  'invalid_api_params',
-                                  validation_errors,
+                                  'email_not_invited',
+                                  [],
                                   GlobalConstant::ErrorAction.default
-                                ) if validation_errors.present?
+                                ) if @to_update_client_manager.blank?
 
-        # NOTE: To be on safe side, check for generic errors as well
-        validate
+        fail OstCustomError.new validation_error(
+                                  'mm_su_rai_2',
+                                  'unauthorized_access_response',
+                                  [],
+                                  GlobalConstant::ErrorAction.default
+                                ) if @to_update_client_manager.manager_id == @manager_id
+
+        success
 
       end
 
@@ -95,7 +99,7 @@ module ManagerManagement
       #
       def validate_invitee_manager_exists
 
-        @invitee_manager = Manager.where(email: @email).first
+        @invitee_manager = Manager.where(id: @to_update_client_manager.manager_id).first
 
         # If invitee_manager is present, that is an error.
         if @invitee_manager.present?
@@ -104,67 +108,48 @@ module ManagerManagement
           # Either the invitee_manager was previously associated with the client, or is currently associated with the client.
           if @invitee_manager.current_client_id == @client_id
 
-            # Fetch client_manager to check if the invitee_manager was previously associated with the client.
-            @client_manager = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
+            privileges = ClientManager.get_bits_set_for_privileges(@to_update_client_manager.privileges)
 
-            # If client_manager is present, check for privileges.
-            if @client_manager.present? && @client_manager.privileges.present?
-
-              privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges)
-
-              # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
-              # previously associated with the client.
-              fail OstCustomError.new validation_error(
-                                        'mm_su_rai_2',
-                                        'invalid_api_params',
-                                        ['was_current_client_associated_deleted_email'],
-                                        GlobalConstant::ErrorAction.default
-                                      ) if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
+            # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
+            # previously associated with the client.
+            fail OstCustomError.new validation_error(
+                                      'mm_su_rai_3',
+                                      'invalid_api_params',
+                                      ['was_current_client_associated_deleted_email'],
+                                      GlobalConstant::ErrorAction.default
+                                    ) if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
 
-              # Check whether the admin is active or not.
-              is_client_manager_active = privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
-                privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
+            # Check whether the admin is active or not.
+            is_client_manager_active = privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
+              privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
 
-              # The invitee_manager IS currently associated with the client and active.
-              fail OstCustomError.new validation_error(
-                                        'mm_su_rai_3',
-                                        'invalid_api_params',
-                                        ['is_active_current_client_associated_email'],
-                                        GlobalConstant::ErrorAction.default
-                                      ) if is_client_manager_active
-
-              # Decide the privilege for the new invite.
-              if privileges.include?(GlobalConstant::ClientManager.is_admin_invited_privilege)
-                @admin_invite_privilege = GlobalConstant::ClientManager.is_admin_privilege
-              elsif privileges.include?(GlobalConstant::ClientManager.is_super_admin_invited_privilege)
-                @admin_invite_privilege = GlobalConstant::ClientManager.is_super_admin_privilege
-              end
-
-            end
-
-          else
-
-            # The clientId is invalid.
+            # The invitee_manager IS currently associated with the client and active.
             fail OstCustomError.new validation_error(
                                       'mm_su_rai_4',
                                       'invalid_api_params',
-                                      ['already_client_associated_email'],
+                                      ['is_active_current_client_associated_email'],
                                       GlobalConstant::ErrorAction.default
-                                    )
+                                    ) if is_client_manager_active
+
+            # Decide the privilege for the new invite.
+            if privileges.include?(GlobalConstant::ClientManager.is_admin_invited_privilege)
+              @admin_invite_privilege = GlobalConstant::ClientManager.is_admin_privilege
+            elsif privileges.include?(GlobalConstant::ClientManager.is_super_admin_invited_privilege)
+              @admin_invite_privilege = GlobalConstant::ClientManager.is_super_admin_privilege
+            end
 
           end
 
         else
 
-          # The invitee_manager does not exist.
+          # The clientId is invalid.
           fail OstCustomError.new validation_error(
                                     'mm_su_rai_5',
                                     'invalid_api_params',
-                                    ['email_not_invited'],
+                                    ['already_client_associated_email'],
                                     GlobalConstant::ErrorAction.default
                                   )
-
 
         end
 

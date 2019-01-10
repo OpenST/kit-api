@@ -103,7 +103,7 @@
   :mandatory:
     - :manager_id
     - :client_id
-    - :email
+    - :to_update_client_manager_id
   :optional:
 'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
   :mandatory:
