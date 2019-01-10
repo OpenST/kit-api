@@ -50,7 +50,7 @@ module ManagerManagement
       def decrypt_invite_token
         decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
         r = decryptor_obj.decrypt(@invite_token)
-        return r unless r.success?
+        invalid_url_error('mm_su_b_9') unless r.success?
         @decrypted_invite_token = r.data[:plaintext]
         success
       end
@@ -110,7 +110,7 @@ module ManagerManagement
         fail OstCustomError.new validation_error(
                                     code,
                                     'invalid_api_params',
-                                    ['invalid_r_t'],
+                                    ['invalid_i_t'],
                                     GlobalConstant::ErrorAction.default
                                 )
       end

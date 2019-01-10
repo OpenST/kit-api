@@ -84,6 +84,12 @@ module ManagerManagement
         parts = @cookie_value.split(':')
         unauthorized_access_response('am_vc_1') unless parts.length == 4
 
+        puts "========auth_level======= #{auth_level}"
+        puts "======================================="
+        puts "========parts======= #{parts}"
+        puts "======================================="
+
+
         unauthorized_access_response('am_vc_2') unless parts[2] == auth_level
 
         @manager_id = parts[0].to_i

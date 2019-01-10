@@ -87,7 +87,7 @@ module ManagerManagement
       validation_errors << 'invalid_r_t' if @r_t.blank?
 
       fail OstCustomError.new validation_error(
-          'um_cp_1',
+          'mm_rp_1',
           'invalid_api_params',
           validation_errors,
           GlobalConstant::ErrorAction.default
@@ -104,7 +104,7 @@ module ManagerManagement
 
       splitted_reset_token = decrypted_t.split(':')
 
-      invalid_url_error('um_rp_3') if splitted_reset_token.length != 2
+      invalid_url_error('mm_rp_2') if splitted_reset_token.length != 2
 
       @reset_token = splitted_reset_token[1].to_s
 
@@ -137,15 +137,15 @@ module ManagerManagement
     #
     def validate_reset_token
 
-      invalid_url_error('um_rp_4') if @manager_validation_hash_obj.blank?
+      invalid_url_error('mm_rp_3') if @manager_validation_hash_obj.blank?
 
-      invalid_url_error('um_rp_5') if @manager_validation_hash_obj.validation_hash != @reset_token
+      invalid_url_error('mm_rp_4') if @manager_validation_hash_obj.validation_hash != @reset_token
 
-      invalid_url_error('um_rp_6') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
+      invalid_url_error('mm_rp_5') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
 
-      invalid_url_error('um_rp_7') if @manager_validation_hash_obj.is_expired?
+      invalid_url_error('mm_rp_6') if @manager_validation_hash_obj.is_expired?
 
-      invalid_url_error('um_rp_8') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.reset_password_kind
+      invalid_url_error('mm_rp_7') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.reset_password_kind
 
       success
 
@@ -166,7 +166,7 @@ module ManagerManagement
       @manager_obj = Manager.where(id: @manager_validation_hash_obj.manager_id).first
 
       fail OstCustomError.new validation_error(
-          'um_rp_9',
+          'mm_rp_8',
           'invalid_api_params',
           ['invalid_r_t'],
           GlobalConstant::ErrorAction.default
@@ -206,7 +206,7 @@ module ManagerManagement
     def validate_previous_password
 
       fail OstCustomError.new validation_error(
-          'um_cp_vpp_1',
+          'mm_rp_9',
           'invalid_api_params',
           ['password_same'],
           GlobalConstant::ErrorAction.default
