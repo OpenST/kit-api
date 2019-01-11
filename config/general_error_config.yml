@@ -51,7 +51,7 @@ manager_not_found:
 client_manager_inactive:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
-  message: "Client manager is not active. Please contact support."
+  message: "You are no longer a part of this economy. Please contact your admin."
 
 something_went_wrong:
   http_code: 422

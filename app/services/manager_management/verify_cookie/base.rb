@@ -159,8 +159,9 @@ module ManagerManagement
 
         privileges = @client_manager[:privileges]
 
-        is_client_manager_active = privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
-            privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
+        is_client_manager_active = privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
+          (privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
+            privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
 
         client_manager_not_associated_response('am_vc_12') unless is_client_manager_active
 

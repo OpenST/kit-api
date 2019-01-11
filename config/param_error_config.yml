@@ -26,7 +26,7 @@ invalid_i_t:
 missing_password_auth_cookie_value:
   parameter: 'r_t'
   code: 'missing'
-  message: 'Your session has expired. please refresh your page.'
+  message: 'Your session has expired. Please refresh your page.'
 
 email_not_allowed_for_dev_program:
   parameter: 'email'

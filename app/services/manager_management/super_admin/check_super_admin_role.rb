@@ -61,6 +61,12 @@ module ManagerManagement
 
         fail OstCustomError.new error_with_data(
                                   'mm_sa_vsa_2',
+                                  'email_inactive',
+                                  GlobalConstant::ErrorAction.default
+                                ) if @client_manager[:privileges].include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
+
+        fail OstCustomError.new error_with_data(
+                                  'mm_sa_vsa_3',
                                   'unauthorized_access_response',
                                   GlobalConstant::ErrorAction.default
                                 ) if @client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)

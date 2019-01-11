@@ -172,7 +172,7 @@ module ManagerManagement
       def update_client_manager
 
         if @manager_to_be_deleted_obj.status == GlobalConstant::Manager.invited_status
-          @to_update_client_manager.delete
+          @to_update_client_manager.destroy!
           # We are completely deleting the entry from the database if the user is only invited.
         else
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
@@ -195,7 +195,7 @@ module ManagerManagement
       def update_manager
 
         if @manager_to_be_deleted_obj.status == GlobalConstant::Manager.invited_status
-          @manager_to_be_deleted_obj.delete
+          @manager_to_be_deleted_obj.destroy!
           # We are completely deleting the entry from the database if the user is only invited.
         end
 
