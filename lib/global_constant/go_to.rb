@@ -29,9 +29,15 @@ module GlobalConstant
         }
       end
 
-      def economy_planner_step_one
+      def token_setup
         {
-            by_screen_name: :economy_planner_step_one
+            by_screen_name: :token_setup
+        }
+      end
+
+      def token_deploy
+        {
+          by_screen_name: :token_deploy
         }
       end
 

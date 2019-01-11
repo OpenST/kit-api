@@ -59,7 +59,7 @@ class FetchGoTo < ServicesBase
   def fetch_by_economy_state
     #TODO: Implement logic here
     handle_errors_and_exceptions do
-      GlobalConstant::GoTo.economy_planner_step_one
+      GlobalConstant::GoTo.token_setup
     end
   end
 

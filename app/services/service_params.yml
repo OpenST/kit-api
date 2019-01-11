@@ -140,6 +140,11 @@
     - :symbol
     - :conversion_factor
   :optional:
+'TokenManagement::Deploy':
+  :mandatory:
+    - :client_id
+    - :token_id
+  :optional:
 'WalletAddressesManagement::IsAddressAvailable':
   :mandatory:
     - :address

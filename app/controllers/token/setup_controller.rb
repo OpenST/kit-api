@@ -1,7 +1,5 @@
 class Token::SetupController < WebController
 
-  before_action :verify_mfa_cookie
-
   # Get token details
   #
   # * Author: Ankit
@@ -23,4 +21,10 @@ class Token::SetupController < WebController
     service_response = TokenManagement::InsertTokenDetails.new(params).perform
     render_api_response(service_response)
   end
+
+  def deploy
+    service_response = TokenManagement::Deploy.new(params).perform
+    render_api_response(service_response)
+  end
+
 end

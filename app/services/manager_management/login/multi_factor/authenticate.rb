@@ -132,7 +132,7 @@ module ManagerManagement
         # @return [Hash]
         #
         def fetch_go_to
-          GlobalConstant::GoTo.economy_planner_step_one
+          GlobalConstant::GoTo.token_setup
         end
 
       end

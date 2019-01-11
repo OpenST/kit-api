@@ -1,7 +1,5 @@
 class Manager::SuperAdminController < Manager::BaseController
 
-  before_action :verify_mfa_cookie
-
   before_action :verify_super_admin_role
 
   # Reset MFA of admins
