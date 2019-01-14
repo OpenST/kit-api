@@ -203,12 +203,22 @@ module WalletAddressesManagement
 
     def create_entries
 
-      ClientWalletAddress.create!(
-        client_id: @client_id,
-        sub_environment: GlobalConstant::Environment.url_prefix,
-        address: @owner_address,
-        status:GlobalConstant::WalletAddressStatus.active_status
-      )
+      #check if the same client has some address associated with it. Update the address if already present
+      clientWalletAddress = ClientWalletAddress.where('client_id = ?' , @client_id).first
+
+      if clientWalletAddress.present?
+        #update the new address
+        clientWalletAddress.address = @owner_address
+        clientWalletAddress.sub_environment = GlobalConstant::Base.sub_environment_name
+        clientWalletAddress.save!
+      else
+        ClientWalletAddress.create!(
+          client_id: @client_id,
+          sub_environment: GlobalConstant::Base.sub_environment_name,
+          address: @owner_address,
+          status:GlobalConstant::WalletAddressStatus.active_status
+        )
+      end
 
       token_id = @token_details[:id]
 

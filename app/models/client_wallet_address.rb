@@ -1,8 +1,8 @@
 class ClientWalletAddress < DbConnection::KitSaas
 
   enum sub_environment: {
-    GlobalConstant::Environment.mainnet_url_prefix => 1,
-    GlobalConstant::Environment.testnet_url_prefix => 2
+    GlobalConstant::Environment.main_sub_environment => 1,
+    GlobalConstant::Environment.sandbox_sub_environment => 2
   }
 
   enum status: {
