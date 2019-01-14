@@ -21,6 +21,7 @@ module WalletAddressesManagement
       @owner_address = @params[:owner]
       @personal_sign = @params[:personal_sign]
 
+      @isRequestFromSameClient = false
       @signed_by_address = nil
 
     end
@@ -43,6 +44,14 @@ module WalletAddressesManagement
         #Check if the given address is associated in db
         r = is_address_available_check
         return r unless r.success?
+
+        #This check is added for a scenario when same client calls the associate address more than once.
+        if @isRequestFromSameClient
+          return success_with_data({
+                                     origin_addresses: @origin_addresses,
+                                     auxiliary_addresses: @auxiliary_addresses
+                                   })
+        end
 
         r = redirect_request_to_saas_api
         return r unless r.success?
@@ -164,17 +173,23 @@ module WalletAddressesManagement
     #
     def is_address_available_check
 
-      if ClientWalletAddress.where('address = ?' , @owner_address).first.present?
-        return validation_error(
-          'cm_vea_4',
-          'already_associated',
-          ['already_associated_address'],
-          GlobalConstant::ErrorAction.default
-        )
+      clientWalletAddress = ClientWalletAddress.where('address = ?' , @owner_address).first
+
+      if clientWalletAddress.present?
+        if clientWalletAddress.client_id != @client_id
+          return validation_error(
+            'cm_vea_4',
+            'already_associated',
+            ['already_associated_address'],
+            GlobalConstant::ErrorAction.default
+          )
+        else
+          @isRequestFromSameClient = true
+          success
+        end
       else
         success
       end
-
     end
 
     # Creates entry in client wallet addresses and token addresses
