@@ -222,19 +222,25 @@ module WalletAddressesManagement
 
       token_id = @token_details[:id]
 
-      TokenAddresses.create!(
-        token_id: token_id,
-        chain_kind: GlobalConstant::TokenAddresses.aux,
-        kind: GlobalConstant::TokenAddresses.owner,
-        address: @owner_address
-      )
+      tokenAddresses = TokenAddresses.where('token_id = ?', token_id)
 
-      TokenAddresses.create!(
-        token_id: token_id,
-        chain_kind: GlobalConstant::TokenAddresses.origin,
-        kind: GlobalConstant::TokenAddresses.owner,
-        address: @owner_address
-      )
+      if tokenAddresses.present?
+        TokenAddresses.where('token_id = ?',token_id).update_all(address:@owner_address)
+      else
+        TokenAddresses.create!(
+          token_id: token_id,
+          chain_kind: GlobalConstant::TokenAddresses.aux,
+          kind: GlobalConstant::TokenAddresses.owner,
+          address: @owner_address
+        )
+
+        TokenAddresses.create!(
+          token_id: token_id,
+          chain_kind: GlobalConstant::TokenAddresses.origin,
+          kind: GlobalConstant::TokenAddresses.owner,
+          address: @owner_address
+        )
+      end
 
       success
     end
