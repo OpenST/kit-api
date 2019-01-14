@@ -14,8 +14,6 @@ module TokenSetup
       template = ERB.new File.new("#{Rails.root}/config/economy_setup.yml").read
       @step_config = YAML.load(template.result(binding))['step_config']
       @group_config = YAML.load(template.result(binding))['group_config']
-      Rails.logger.info("Step Config: #{@step_config}")
-      Rails.logger.info("Group Config: #{@group_config}")
     end
 
     def perform
@@ -42,16 +40,24 @@ module TokenSetup
 
     def calculate_progress
 
-      percentage_completed = 0.to_i
+      percentage_completed = 0
+      display_text = nil
       @step_config.each do |step|
-        puts step['kind']
-        if(@workflow_data_map[step['kind']] && @workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.processed_status)
-         # puts step['weight']
-          percentage_completed = percentage_completed + step['weight'].to_i
+        if @workflow_data_map[step['kind']]
+          if (@workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.processed_status)
+            percentage_completed = percentage_completed + step['weight']
+          end
+          if ((@workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.queued_status || @workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.pending_status))
+            display_text = @group_config[step['group']]
+          end
         end
       end
 
+
       puts percentage_completed
+      puts display_text
+      @api_response_data = {}
+
       success
     end
 

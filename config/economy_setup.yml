@@ -34,14 +34,10 @@ step_config:
     group: 3
 
 group_config:
-  - id: 0
-    text: "Generating Addresses"
-  - id: 1
-    text: "Deploying organization"
-  - id: 2
-    text: "Deploying Gateway and Co-gateway"
-  - id: 0
-    text: "Set gateway and co-gateway"
+  0: "Generating Addresses"
+  1: "Deploying organization"
+  2: "Deploying Gateway and Co-gateway"
+  3: "Set gateway and co-gateway"
 
 
 
