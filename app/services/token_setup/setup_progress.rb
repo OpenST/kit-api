@@ -41,11 +41,18 @@ module TokenSetup
     end
 
     def calculate_progress
-      @step_config.each do |a|
-        #if(@workflow_data_map[a] && a.status == )
 
-       # end
+      percentage_completed = 0.to_i
+      @step_config.each do |step|
+        puts step['kind']
+        if(@workflow_data_map[step['kind']] && @workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.processed_status)
+         # puts step['weight']
+          percentage_completed = percentage_completed + step['weight'].to_i
+        end
       end
+
+      puts percentage_completed
+      success
     end
 
 
