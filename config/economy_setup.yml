@@ -1,0 +1,47 @@
+step_config:
+  - kind: 'economySetupInit'
+    weight: 5
+    group: 0
+  - kind: 'generateTokenAddresses'
+    weight: 5
+    group: 0
+  - kind: 'deployOriginTokenOrganization'
+    weight: 10
+    group: 1
+  - kind: 'deployAuxTokenOrganization'
+    weight: 10
+    group: 1
+  - kind: 'deployOriginBrandedToken'
+    weight: 10
+    group: 1
+  - kind: 'deployUtilityBrandedToken'
+    weight: 10
+    group: 1
+  - kind: 'tokenDeployGateway'
+    weight: 10
+    group: 2
+  - kind: 'tokenDeployCoGateway'
+    weight: 10
+    group: 2
+  - kind: 'activateTokenGateway'
+    weight: 10
+    group: 2
+  - kind: 'setCoGatewayInUbt'
+    weight: 10
+    group: 3
+  - kind: 'setGatewayInBt'
+    weight: 10
+    group: 3
+
+group_config:
+  - id: 0
+    text: "Generating Addresses"
+  - id: 1
+    text: "Deploying organization"
+  - id: 2
+    text: "Deploying Gateway and Co-gateway"
+  - id: 0
+    text: "Set gateway and co-gateway"
+
+
+

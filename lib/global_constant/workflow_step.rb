@@ -56,6 +56,10 @@ module GlobalConstant
         'tokenDeployCoGateway'
       end
 
+      def activate_token_gateway_kind
+        'activateTokenGateway'
+      end
+
       def set_co_gateway_in_ubt_kind
         'setCoGatewayInUbt'
       end

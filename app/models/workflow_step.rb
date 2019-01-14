@@ -9,8 +9,9 @@ class WorkflowStep < DbConnection::KitSaasSubenv
       GlobalConstant::WorkflowStep.deploy_utility_branded_token_kind => 6,
       GlobalConstant::WorkflowStep.token_deploy_gateway_kind => 7,
       GlobalConstant::WorkflowStep.token_deploy_co_gateway_kind => 8,
-      GlobalConstant::WorkflowStep.set_co_gateway_in_ubt_kind => 9,
-      GlobalConstant::WorkflowStep.set_gateway_in_bt_kind => 10
+      GlobalConstant::WorkflowStep.activate_token_gateway_kind => 9,
+      GlobalConstant::WorkflowStep.set_co_gateway_in_ubt_kind => 10,
+      GlobalConstant::WorkflowStep.set_gateway_in_bt_kind => 11
   }
 
   enum status: {

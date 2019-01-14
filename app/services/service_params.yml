@@ -159,3 +159,6 @@
 'WalletAddressesManagement::SignMessages':
   :mandatory:
   :optional:
+'TokenSetup::SetupProgress':
+  :mandatory:
+  :optional:

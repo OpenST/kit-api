@@ -44,5 +44,6 @@ redis-server --port 6379  --requirepass 'st123'
 
 Start Sidekiq
 ```bash
+source set_env_vars.sh
 sidekiq -C ./config/sidekiq.yml -q sk_api_high_task  -q sk_api_med_task -q sk_api_default
 ```
