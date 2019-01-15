@@ -58,7 +58,7 @@ class GetWorkflowStatus < ServicesBase
       return validation_error(
         'a_s_gws_1',
         'invalid_api_params',
-        'workflow_id',
+        ['workflow_id'],
         GlobalConstant::ErrorAction.default
       )
     end

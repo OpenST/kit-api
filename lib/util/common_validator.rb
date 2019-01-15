@@ -15,7 +15,7 @@ module Util
     # @return [Boolean] returns a boolean
     #
     def self.is_integer?(object)
-      return object.is_a? Integer rescue false
+      return is_numeric?(object) && Float(object) == Integer(object) rescue false
     end
 
     # Check for numeric-ness of an input
