@@ -78,6 +78,12 @@ class GetWorkflowStatus < ServicesBase
 
     cached_response_data = CacheManagement::WorkflowStatus.new([@workflow_id]).fetch
     @api_response_data['workflow_current_step'] = cached_response_data[@workflow_id]
+
+    workflow_entity = {}
+    workflow_entity['id'] = @workflow_id
+    workflow_entity['kind'] = GlobalConstant::WorkflowStatus.token_deploy_workflow_kind
+
+    @api_response_data['workflow'] = workflow_entity
     success_with_data(@api_response_data)
   end
 

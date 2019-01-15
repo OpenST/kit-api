@@ -13,6 +13,10 @@ module GlobalConstant
         config['group_config']
       end
 
+      def token_deploy_workflow_kind
+        'token_deploy'
+      end
+
       private_class_method
 
       def config
