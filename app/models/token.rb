@@ -1,5 +1,11 @@
 class Token < DbConnection::KitSaasSubenv
 
+  enum status: {
+    GlobalConstant::ClientToken.not_deployed => 1,
+    GlobalConstant::ClientToken.deployment_started => 2,
+    GlobalConstant::ClientToken.deployment_completed => 3,
+    GlobalConstant::ClientToken.deployment_failed => 4
+  }
 
 # Format data to a format which goes into cache
 #

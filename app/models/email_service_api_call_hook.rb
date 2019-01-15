@@ -12,7 +12,7 @@ class EmailServiceApiCallHook < DbConnection::KitBigSubenv
 
   class << self
 
-    # limit for number of records to be processed in one iteration of continuis cron
+    # limit for number of records to be processed in one iteration of continuous cron
     #
     # * Author: Puneet
     # * Date: 06/12/2018

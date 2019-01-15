@@ -5,6 +5,21 @@ module GlobalConstant
 
     class << self
 
+      def not_deployed
+        'notDeployed'
+      end
+
+      def deployment_started
+        'deploymentStarted'
+      end
+
+      def deployment_completed
+        'deploymentCompleted'
+      end
+
+      def deployment_failed
+        'deploymentFailed'
+      end
 
     end
 
