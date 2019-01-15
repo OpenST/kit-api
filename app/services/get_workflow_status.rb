@@ -54,6 +54,15 @@ class GetWorkflowStatus < ServicesBase
     r = validate
     return r unless r.success?
 
+    unless Util::CommonValidator.is_integer?(@workflow_id)
+      return validation_error(
+        'a_s_gws_1',
+        'invalid_api_params',
+        'workflow_id',
+        GlobalConstant::ErrorAction.default
+      )
+    end
+
     success
   end
 
