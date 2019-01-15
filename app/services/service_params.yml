@@ -159,7 +159,7 @@
 'WalletAddressesManagement::SignMessages':
   :mandatory:
   :optional:
-'GetWorkflowProgress':
+'GetWorkflowStatus':
   :mandatory:
     - :workflow_id
   :optional:
