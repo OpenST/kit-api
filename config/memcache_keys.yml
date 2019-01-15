@@ -44,3 +44,4 @@ deployment_status:
   default:
     key_template: 'c_d_s_%{workflow_id}'
     expiry_in_seconds: 300
+    used_in_shared_env: 1
