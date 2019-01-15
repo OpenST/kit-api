@@ -6,18 +6,6 @@ module Util
     REGEX_EMAIL_DOMAIN = /\A@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
     REGEX_TOKEN = /^[ \w\/=+%-].*$/mi
 
-    # Check for integer-ness of an input
-    #
-    # * Author: Ankit
-    # * Date: 09/10/2017
-    # * Reviewed By:
-    #
-    # @return [Boolean] returns a boolean
-    #
-    def self.is_integer?(object)
-      true if Integer(object) rescue false
-    end
-
     # Check for numeric-ness of an input
     #
     # * Author: Puneet
