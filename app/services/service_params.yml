@@ -161,4 +161,5 @@
   :optional:
 'TokenSetup::SetupProgress':
   :mandatory:
+    - :parent_id
   :optional:
