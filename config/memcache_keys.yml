@@ -39,3 +39,8 @@ ost_price_points:
   default:
     key_template: 'c_oppd_def'
     expiry_in_seconds: 300
+
+deployment_status:
+  default:
+    key_template: 'c_d_s_%{workflow_id}'
+    expiry_in_seconds: 300

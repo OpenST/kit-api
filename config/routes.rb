@@ -40,6 +40,10 @@ Rails.application.routes.draw do
     match 'sign-messages' => :token_addresses_sign_messages, via: :GET
   end
 
+  scope "#{GlobalConstant::Environment.url_prefix}/api/workflow/:workflow_id", controller: 'workflow' do
+    match '' => :workflow_status, via: :GET
+  end
+
   # Handle any other routes
   match '*permalink', to: 'application#not_found', via: :all
 
