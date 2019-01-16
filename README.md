@@ -1,7 +1,7 @@
 # kit-api
-API layer for handling KIT APIs.
+API layer for OST KIT.
 
-## setup
+## Setup
 Install all the Gems.
 ```
 bundle install
@@ -43,6 +43,7 @@ redis-server --port 6379  --requirepass 'st123'
 ```
 
 Start Sidekiq
+For local setup remove the line ':pidfile: ./tmp/pids/sidekiq.pid' from config/sidekiq.yml
 ```bash
 source set_env_vars.sh
 sidekiq -C ./config/sidekiq.yml -q sk_api_high_task  -q sk_api_med_task -q sk_api_default
