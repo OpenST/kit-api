@@ -145,6 +145,9 @@
     - :client_id
     - :token_id
   :optional:
+'WalletAddressesManagement::GetAddresses':
+  :mandatory:
+  :optional:
 'WalletAddressesManagement::IsAddressAvailable':
   :mandatory:
     - :address
@@ -162,4 +165,7 @@
 'GetWorkflowStatus':
   :mandatory:
     - :workflow_id
+  :optional:
+'TokenManagement::deploy':
+  :mandatory:
   :optional:
