@@ -15,7 +15,7 @@ module WalletAddressesManagement
 
       super
 
-      @client_id = @params[:client_id]
+      @client_id = params[:client_id]
 
       @api_response_data = {}
 
@@ -33,14 +33,14 @@ module WalletAddressesManagement
 
       handle_errors_and_exceptions do
 
-        #r = validate_and_sanitize
-        #return r unless r.success?
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        #Check if the given address is associated in db
-        #r = fetch_addresses
-        #return r unless r.success?
+        r = fetch_addresses
+        return r unless r.success?
 
-
+        r = format_response_data(r.data)
+        return r unless r.success?
 
         success_with_data(@api_response_data)
 
@@ -65,7 +65,6 @@ module WalletAddressesManagement
       return r unless r.success?
 
       # sanitize
-      @client_id = @client_id.to_i
 
       unless Util::CommonValidator.is_integer?(@client_id)
         return validation_error(
@@ -93,6 +92,27 @@ module WalletAddressesManagement
 
 
     def fetch_addresses
+      @token_id = @token_details[:id]
+      data_from_cache = CacheManagement::TokenAddresses.new([@token_id]).fetch
+      success_with_data(data_from_cache)
+    end
+
+    def format_response_data(addresses_data)
+      addresses = {}
+      addresses[:whitelisted] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind] ||= []
+      addresses[:workers] = addresses_data[@token_id][GlobalConstant::TokenAddresses.worker_address_kind] ||= []
+      addresses[:owner] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind]
+      addresses[:admin] = addresses_data[@token_id][GlobalConstant::TokenAddresses.admin_address_kind]
+
+      sign_messages = {
+        wallet_association: GlobalConstant::MessageToSign.wallet_association
+      }
+
+      @api_response_data[:origin_addresses] = addresses
+      @api_response_data[:auxiliary_addresses] = addresses
+      @api_response_data[:sign_messages] = sign_messages
+
+      success
 
     end
   end

@@ -229,17 +229,10 @@ module WalletAddressesManagement
       else
         TokenAddresses.create!(
           token_id: token_id,
-          chain_kind: GlobalConstant::TokenAddresses.aux,
-          kind: GlobalConstant::TokenAddresses.owner,
+          kind: GlobalConstant::TokenAddresses.owner_address_kind,
           address: @owner_address
         )
 
-        TokenAddresses.create!(
-          token_id: token_id,
-          chain_kind: GlobalConstant::TokenAddresses.origin,
-          kind: GlobalConstant::TokenAddresses.owner,
-          address: @owner_address
-        )
       end
 
       success

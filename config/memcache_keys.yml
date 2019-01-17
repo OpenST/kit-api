@@ -32,8 +32,9 @@ token_management:
 
 token_address:
   details:
-    key_template: 't_md_%{token_id}'
+    key_template: 'ta_%{token_id}'
     expiry_in_seconds: 86400
+    used_in_shared_env: 1
 
 ost_price_points:
   default:

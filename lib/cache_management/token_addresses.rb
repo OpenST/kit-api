@@ -10,12 +10,9 @@ module CacheManagement
     #
     # @return [Result::Base]
     #
-    def fetch_from_db(token_id)
-      tokens = ::TokenAddresses.where(token_id: token_id).all
-      data_to_cache = {}
-      tokens.each do |token|
-        data_to_cache[token.token_id] = token.formated_cache_data
-      end
+    def fetch_from_db(token_ids)
+      rsp = ::TokenAddresses.new.fetch_all_addresses({token_ids:token_ids})
+      data_to_cache = rsp.data
       success_with_data(data_to_cache)
     end
 
