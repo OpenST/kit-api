@@ -68,6 +68,14 @@ module GlobalConstant
         'setGatewayInBt'
       end
 
+      def token_deployment_completed
+        'tokenDeploymentCompleted'
+      end
+
+      def token_deployment_failed
+        'tokenDeploymentFailed'
+      end
+
     end
 
   end
