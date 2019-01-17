@@ -24,6 +24,10 @@ module GlobalConstant
       'internal/token/details'
     end
 
+    def self.token_deploy
+      "#{GlobalConstant::Environment.url_prefix}/api/internal/token/deploy"
+    end
+
   end
 
 end

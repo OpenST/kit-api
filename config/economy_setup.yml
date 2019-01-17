@@ -34,10 +34,20 @@ step_config:
     group: 3
 
 group_config:
-  0: "Generating Addresses"
-  1: "Deploying organization"
-  2: "Deploying Gateway and Co-gateway"
-  3: "Set gateway and co-gateway"
+  0:
+    display_text: 'Generating Addresses'
+    name: "Address Generation"
+  1:
+    display_text: 'Deploying organization'
+    name: 'Organization Deployment'
+  2:
+    display_text: 'Deploying Gateway and Co-gateway'
+    name: 'Gateway, CoGateway Deployment'
+  3:
+    display_text: 'Set gateway and co-gateway'
+    name: 'Set Gateway, Co-Gateway'
+
+
 
 
 

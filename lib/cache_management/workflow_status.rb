@@ -13,10 +13,10 @@ module CacheManagement
     # @return [Result::Base]
     #
     def fetch_from_db(cache_miss_ids)
-      workflow_steps = ::WorkflowSteps.new({workflow_id:cache_miss_ids[0]}).perform
 
-      data_to_cache = {}
-      data_to_cache[cache_miss_ids[0]] = workflow_steps.data
+      workflow_steps = ::WorkflowSteps.new({workflow_ids:cache_miss_ids}).perform
+
+      data_to_cache = workflow_steps.data
       success_with_data(data_to_cache)
     end
 

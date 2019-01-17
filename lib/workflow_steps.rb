@@ -13,23 +13,12 @@ class WorkflowSteps
   # @return [TokenSetup::SetupProgress]
   def initialize(params)
 
-    @workflow_id = params[:workflow_id]
+    @workflow_ids = params[:workflow_ids]
 
     @response_data = {}
 
   end
 
-  # Fetch step config and group config from YML file
-  #
-  # * Author: Anagha
-  # * Date: 15/01/2019
-  # * Reviewed By:
-  #
-  # @return [Result::Base]
-  def fetch_economy_setup_config
-    @step_config = GlobalConstant::WorkflowStatus.step_config
-    @group_config = GlobalConstant::WorkflowStatus.group_config
-  end
 
   # Perform
   #
@@ -40,10 +29,10 @@ class WorkflowSteps
   # @return [Result::Base]
   def perform
 
-
-    fetch_economy_setup_config
-
     r = fetch_workflow_steps
+    return r unless r.success?
+
+    fetch_workflow_data
     return r unless r.success?
 
     r = calculate_progress
@@ -53,8 +42,32 @@ class WorkflowSteps
 
   end
 
+  # Fetch step config and group config from YML file
+  #
+  # * Author: Anagha
+  # * Date: 15/01/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  def fetch_economy_setup_config(workflow_kind)
+    case workflow_kind
+    when GlobalConstant::Workflow.token_deploy
+      @step_config = GlobalConstant::WorkflowStatus.economy_setup_step_config
+      @group_config = GlobalConstant::WorkflowStatus.economy_setup_group_config
+    else
+      return error_with_data('l_ws_1',
+                             'something_went_wrong',
+                             GlobalConstant::ErrorAction.default)
+    end
+    success
+  end
 
-  # fetch workflow steps from db
+
+  # fetch workflow steps from db and prepare workflow data map
+  #
+  # {
+  #   workflow_id:{kind: {`complete_row_of_that_kind`}}]
+  # }
   #
   # * Author: Anagha
   # * Date: 15/01/2019
@@ -63,12 +76,17 @@ class WorkflowSteps
   # @return [Result::Base]
   #
   def fetch_workflow_steps
-    @workflow_data_map = {}
-    workflow_step_data = WorkflowStep.where('parent_id = ? OR id = ?', @workflow_id, @workflow_id).order('id ASC').all
+    @workflow_steps_data_map = {}
+    workflow_step_data = WorkflowStep.where(workflow_id: @workflow_ids).order('id ASC').all
     workflow_step_data.each do |a|
-      @workflow_data_map[a.kind] = a
-      #Todo : add validation of client_id
+      @workflow_steps_data_map[a.workflow_id] ||= {}
+      @workflow_steps_data_map[a.workflow_id][a.kind] = a
     end
+    success
+  end
+
+  def fetch_workflow_data
+    @workflow_data_map = CacheManagement::Workflow.new(@workflow_steps_data_map.keys).fetch
     success
   end
 
@@ -81,21 +99,48 @@ class WorkflowSteps
   # @return [Result::Base]
   #
   def calculate_progress
-    percentage_completed = 0
-    display_text = ''
 
-    @step_config.each do |step|
-      if @workflow_data_map[step['kind']]
-        if @workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.processed_status
-          percentage_completed = percentage_completed + step['weight']
-        elsif ((@workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.queued_status || @workflow_data_map[step['kind']].status == GlobalConstant::WorkflowStep.pending_status))
-          display_text = @group_config[step['group']]
+    @workflow_steps_data_map.each do |workflow_id,kind_to_data_map|
+      percentage_completed = 0
+
+      workflow_kind = @workflow_data_map[workflow_id][:kind]
+      r = fetch_economy_setup_config(workflow_kind)
+      return r unless r.success?
+
+      display_text = ''
+      display_name = ''
+      all_steps = {}
+      @step_config.each do |step|
+        step_group_display_text = @group_config[step['group']]['display_text']
+        step_group_name = @group_config[step['group']]['name']
+
+        all_steps[step] ||= {
+          display_text: step_group_display_text,
+          name: step_group_name,
+          status: @workflow_data_map[workflow_id].status
+        }
+
+        if kind_to_data_map[step['kind']]
+          if kind_to_data_map[step['kind']].status == GlobalConstant::WorkflowStep.processed_status
+            percentage_completed = percentage_completed + step['weight']
+          elsif kind_to_data_map[step['kind']].status == GlobalConstant::WorkflowStep.queued_status || kind_to_data_map[step['kind']].status == GlobalConstant::WorkflowStep.pending_status
+
+            display_text = step_group_display_text
+            display_name = step_group_name
+          end
         end
       end
-    end
 
-    @response_data['display_text'] = display_text
-    @response_data['percent_completion'] = percentage_completed
+      @response_data[workflow_id] = {
+        current_step: {
+          display_text: display_text,
+          name: display_name,
+          percent_completion: percentage_completed,
+          status: @workflow_data_map[workflow_id].status
+        },
+        all_steps: all_steps
+      }
+    end
 
     success
   end

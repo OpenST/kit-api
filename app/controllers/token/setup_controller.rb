@@ -22,6 +22,12 @@ class Token::SetupController < WebController
     render_api_response(service_response)
   end
 
+  # Start token deployment
+  #
+  # * Author: Ankit
+  # * Date: 19/12/2018
+  # * Reviewed By:
+  #
   def deploy
     service_response = TokenManagement::Deploy.new(params).perform
     render_api_response(service_response)
