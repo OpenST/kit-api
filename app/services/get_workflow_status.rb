@@ -63,6 +63,8 @@ class GetWorkflowStatus < ServicesBase
       )
     end
 
+    @workflow_id = @workflow_id.to_i
+
     success
   end
 
