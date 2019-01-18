@@ -16,7 +16,7 @@ module TokenManagement
 
       super
 
-      @client_id = @params[:client_id]
+      @client_id = params[:client_id]
 
       @api_response_data = {}
       @token_id = nil
