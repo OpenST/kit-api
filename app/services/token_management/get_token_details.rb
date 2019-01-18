@@ -51,6 +51,9 @@ module TokenManagement
         r = append_logged_in_manager_details
         return r unless r.success?
 
+        r = fetch_running_workflows
+        return r unless r.success?
+
         success_with_data(@api_response_data)
 
       end
@@ -69,6 +72,34 @@ module TokenManagement
       return success unless @client_manager.present?
 
       @api_response_data[:client_manager] = @client_manager
+
+      success
+    end
+
+
+    # Fetch all running workflows.
+    #
+    # * Author: Alpesh
+    # * Date: 07/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    # @sets @api_response_data[:workflows]
+    #
+    def fetch_running_workflows
+      workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
+      @api_response_data[:workflows] = []
+
+      if(workflows.present? && workflows[@client_id].present?)
+        workflows[@client_id].each do |wf|
+          @api_response_data[:workflows].push(
+            {
+              id: wf.id,
+              kind: wf.kind
+            }) if wf.status == GlobalConstant::Workflow.in_progress
+        end
+      end
 
       success
     end
