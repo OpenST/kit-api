@@ -127,7 +127,7 @@ module GlobalConstant
         'verifySetInternalActorForOwnerInUBT'
       end
 
-      def verify_enomy_setup
+      def verify_economy_setup
         'verifyEconomySetup'
       end
       # workflow economy setup kind: finish

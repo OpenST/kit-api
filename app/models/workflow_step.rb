@@ -26,7 +26,7 @@ class WorkflowStep < DbConnection::KitSaasSubenv
       GlobalConstant::WorkflowStep.verify_deploy_gateway_composer => 23,
       GlobalConstant::WorkflowStep.set_internal_actor_for_owner_in_ubt => 24,
       GlobalConstant::WorkflowStep.verify_set_internal_actor_for_owner_in_ubt => 25,
-      GlobalConstant::WorkflowStep.verify_enomy_setup => 26,
+      GlobalConstant::WorkflowStep.verify_economy_setup => 26,
 
   }
 
