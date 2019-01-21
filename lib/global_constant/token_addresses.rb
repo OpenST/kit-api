@@ -5,6 +5,14 @@ module GlobalConstant
 
     class << self
 
+      def active_status
+        'active'
+      end
+
+      def inactive_status
+        'inactive'
+      end
+
       def aux
         'aux'
       end

@@ -19,6 +19,11 @@ class TokenAddresses < DbConnection::KitSaasSubenv
     GlobalConstant::TokenAddresses.simple_stake_contract => 57
   }
 
+  enum status: {
+    GlobalConstant::TokenAddresses.active_status => 1,
+    GlobalConstant::TokenAddresses.inactive_status => 2,
+  }
+
   # Format data to a format which goes into cache
   #
   # * Author: Dhananjay
@@ -40,7 +45,7 @@ class TokenAddresses < DbConnection::KitSaasSubenv
     @token_ids = params[:token_ids]
 
     @return_data = {}
-    token_addresses = TokenAddresses.where(token_id: @token_ids).all
+    token_addresses = TokenAddresses.where(token_id: @token_ids, status: GlobalConstant::TokenAddresses.active_status).all
 
     token_addresses.each do |token_address_row|
       @return_data[token_address_row.token_id] ||= {}
