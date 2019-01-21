@@ -47,6 +47,20 @@ module GlobalConstant
         }
       end
 
+      def token_mint
+        {
+          by_screen_name: :token_mint
+        }
+      end
+
+      def identify_wf_goto(workflow)
+        if workflow.kind == GlobalConstant::Workflow.token_deploy
+          return token_deploy
+        elsif workflow.kind == GlobalConstant::Workflow.stake_and_mint
+          return token_mint
+        end
+      end
+
     end
 
   end

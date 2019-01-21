@@ -39,6 +39,7 @@ module TokenManagement
         r = validate_and_sanitize
         return r unless r.success?
 
+        Rails.logger.info("----------------@client_id-----#{@client_id}")
         r = fetch_token_details
         return r unless r.success?
 
@@ -102,7 +103,8 @@ module TokenManagement
     # @return [Result::Base]
     def direct_request_to_saas_api
       params_for_saas_api = {
-        token_id: @token_id
+        token_id: @token_id,
+        client_id: @client_id
       }
 
       r = SaasApi::Token::Deploy.new.perform(params_for_saas_api)

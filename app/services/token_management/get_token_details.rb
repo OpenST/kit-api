@@ -148,7 +148,8 @@ module TokenManagement
     def fetch_token_details_from_saas
       params = {
           chain_id: 12345,
-          contract_address: '0x0x0x0x00x0x0x31280931hdfad32193as34as1dsad2'
+          contract_address: '0x0x0x0x00x0x0x31280931hdfad32193as34as1dsad2',
+          client_id: @client_id
       }
       r = SaasApi::Token::FetchDetails.new.perform(params) # TODO: Pass params appropriately
       return r unless r.success?

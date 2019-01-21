@@ -129,7 +129,8 @@ module WalletAddressesManagement
       params_for_saas_api = {
         signer: @owner_address,
         personal_sign: @personal_sign,
-        message_to_sign: GlobalConstant::MessageToSign.wallet_association
+        message_to_sign: GlobalConstant::MessageToSign.wallet_association,
+        client_id: @client_id
       }
 
       r = SaasApi::WalletAddress::Associate.new.perform(params_for_saas_api)

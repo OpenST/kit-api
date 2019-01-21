@@ -13,15 +13,15 @@ module GlobalConstant
 
 
     def self. fetch_client_stats
-      'internal/client/fetch-stats'
+      "#{GlobalConstant::Environment.url_prefix}/api/internal/client/fetch-stats"
     end
 
     def self.associate_address
-      'internal/signer/verify'
+      "#{GlobalConstant::Environment.url_prefix}/api/internal/signer/verify"
     end
 
     def self.fetch_token_details
-      'internal/token/details'
+      "#{GlobalConstant::Environment.url_prefix}/api/internal/token/details"
     end
 
     def self.token_deploy

@@ -130,7 +130,8 @@ module TokenManagement
       params_for_saas_api = {
         approve_transaction_hash: @approve_tx_hash,
         request_stake_transaction_hash:@request_stake_tx_hash,
-        token_id: @token_id
+        token_id: @token_id,
+        client_id: @client_id
       }
 
       r = SaasApi::Token::Mint.new.perform(params_for_saas_api)

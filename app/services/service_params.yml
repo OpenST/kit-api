@@ -170,3 +170,6 @@
   :mandatory:
     - :workflow_id
   :optional:
+'TokenManagement::Mint':
+  :mandatory:
+  :optional:
