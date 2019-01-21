@@ -31,10 +31,6 @@ module Google
     #
     def verify_with_drift_and_prior(otp, last_otp_at = nil)
       begin
-        # We are subtracting 60 seconds from the timestamp to ensure that the current OTP being in use is not invalidated.
-        if last_otp_at
-          last_otp_at = last_otp_at - 60
-        end
         verified_at_timestamp = client.verify_with_drift_and_prior(otp, DRIFT_TIME, last_otp_at)
 
         if verified_at_timestamp.present?

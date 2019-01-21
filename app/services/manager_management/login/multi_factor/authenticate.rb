@@ -82,7 +82,7 @@ module ManagerManagement
         def validate_otp
 
           rotp_obj = Google::Authenticator.new(@ga_secret_d)
-          r = rotp_obj.verify_with_drift_and_prior(@otp, @manager_obj.last_session_updated_at)
+          r = rotp_obj.verify_with_drift_and_prior(@otp)
 
           fail OstCustomError.new error_with_data(
                                       'am_l_ma_7',
