@@ -44,7 +44,7 @@ class WorkflowSteps
 
   # Fetch step config and group config from YML file
   #
-  # * Author: Anagha
+  # * Author: Ankit
   # * Date: 15/01/2019
   # * Reviewed By:
   #
@@ -114,7 +114,7 @@ class WorkflowSteps
         step_group_display_text = @group_config[step['group']]['display_text']
         step_group_name = @group_config[step['group']]['name']
 
-        all_steps[step] ||= {
+        all_steps[step['group']] ||= {
           display_text: step_group_display_text,
           name: step_group_name,
           status: @workflow_data_map[workflow_id].status
@@ -138,7 +138,7 @@ class WorkflowSteps
           percent_completion: percentage_completed,
           status: @workflow_data_map[workflow_id].status
         },
-        all_steps: all_steps
+        all_steps: all_steps.values
       }
     end
 

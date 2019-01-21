@@ -28,6 +28,10 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/api/internal/token/deploy"
     end
 
+    def self.mint
+      "#{GlobalConstant::Environment.url_prefix}/api/internal/token/mint"
+    end
+
   end
 
 end

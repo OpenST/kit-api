@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     match '' => :token_details_get, via: :GET
     match '' => :token_details_post, via: :POST
     match 'deploy' => :deploy, via: :POST
-    match 'mint' => :mint, via: :POST
+    match 'mint' => :mint_post, via: :POST
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses' do

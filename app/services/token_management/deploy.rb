@@ -130,7 +130,7 @@ module TokenManagement
 
       @api_response_data['workflow'] = {
         id: @workflow_id,
-        kind: GlobalConstant::WorkflowStatus.token_deploy_workflow_kind
+        kind: GlobalConstant::Workflow.token_deploy
       }
 
       success

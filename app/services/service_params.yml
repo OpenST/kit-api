@@ -144,6 +144,11 @@
   :mandatory:
     - :client_id
   :optional:
+'TokenManagement::StartMint':
+  :mandatory:
+    - :approve_transaction_hash
+    - :request_stake_transaction_hash
+    - :client_id
 'WalletAddressesManagement::GetAddresses':
   :mandatory:
   :optional:
@@ -164,7 +169,4 @@
 'GetWorkflowStatus':
   :mandatory:
     - :workflow_id
-  :optional:
-'TokenManagement::deploy':
-  :mandatory:
   :optional:

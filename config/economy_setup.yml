@@ -1,51 +1,90 @@
 step_config:
-  - kind: 'economySetupInit'
+  - kind: <%= GlobalConstant::WorkflowStep.economy_setup_init_kind%>
     weight: 5
     group: 0
-  - kind: 'generateTokenAddresses'
+  - kind: <%= GlobalConstant::WorkflowStep.generate_token_addresses_kind%>
     weight: 5
     group: 0
-  - kind: 'deployOriginTokenOrganization'
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_token_organization_kind%>
+    weight: 10
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.save_origin_token_organization_kind%>
+    weight: 5
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_aux_token_organization_kind%>
+    weight: 10
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.save_aux_token_organization_kind%>
+    weight: 10
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_branded_token_kind%>
     weight: 10
     group: 1
-  - kind: 'deployAuxTokenOrganization'
+  - kind: <%= GlobalConstant::WorkflowStep.save_origin_token_branded_token_kind%>
     weight: 10
     group: 1
-  - kind: 'deployOriginBrandedToken'
-    weight: 10
-    group: 1
-  - kind: 'deployUtilityBrandedToken'
-    weight: 10
-    group: 1
-  - kind: 'tokenDeployGateway'
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_utility_branded_token_kind%>
     weight: 10
     group: 2
-  - kind: 'tokenDeployCoGateway'
+  - kind: <%= GlobalConstant::WorkflowStep.save_utility_branded_token_kind%>
     weight: 10
     group: 2
-  - kind: 'activateTokenGateway'
-    weight: 10
-    group: 2
-  - kind: 'setCoGatewayInUbt'
+  - kind: <%= GlobalConstant::WorkflowStep.token_deploy_gateway_kind%>
     weight: 10
     group: 3
-  - kind: 'setGatewayInBt'
+  - kind: <%= GlobalConstant::WorkflowStep.save_token_gateway_kind%>
     weight: 10
     group: 3
+  - kind: <%= GlobalConstant::WorkflowStep.token_deploy_co_gateway_kind%>
+    weight: 10
+    group: 4
+  - kind: <%= GlobalConstant::WorkflowStep.save_token_co_gateway_kind%>
+    weight: 10
+    group: 4
+  - kind: <%= GlobalConstant::WorkflowStep.update_token_in_ost_view%>
+    weight: 10
+    group: 4
+  - kind: <%= GlobalConstant::WorkflowStep.activate_token_gateway_kind%>
+    weight: 10
+    group: 5
+  - kind: <%= GlobalConstant::WorkflowStep.verify_activate_token_gateway%>
+    weight: 10
+    group: 5
+  - kind: <%= GlobalConstant::WorkflowStep.set_co_gateway_in_ubt_kind%>
+    weight: 10
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_co_gateway_in_ubt%>
+    weight: 10
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.set_gateway_in_bt_kind%>
+    weight: 10
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_gateway_in_bt%>
+    weight: 10
+    group: 6
 
 group_config:
   0:
-    display_text: 'Generating Addresses'
-    name: "Address Generation"
+    display_text: 'Deploying organization contracts'
+    name: "Organization Deployment"
   1:
-    display_text: 'Deploying organization'
+    display_text: 'Setting up conversion rate on origin chain'
     name: 'Organization Deployment'
   2:
-    display_text: 'Deploying Gateway and Co-gateway'
-    name: 'Gateway, CoGateway Deployment'
+    display_text: 'Deploying utility branded token contract'
+    name: 'UBT Deployment'
   3:
-    display_text: 'Set gateway and co-gateway'
-    name: 'Set Gateway, Co-Gateway'
+    display_text: 'Deploying gateway contract on origin chain'
+    name: 'Gateway Deployment'
+  4:
+    display_text: 'Deploying co-gateway contract on auxiliary chain'
+    name: 'Co-Gateway Deployment'
+  5:
+    display_text: 'Linking gateways'
+    name: 'Gateway Link'
+  6:
+    display_text: 'Verifying and finalizing token setup'
+    name: 'Token Setup Finalization'
 
 
 

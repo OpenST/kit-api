@@ -338,6 +338,34 @@ module Util
       (str =~ /\A[a-z][a-z0-9]*[\s]*[0-9a-z]*[\s]*[0-9a-z]*\z/i).present?
     end
 
+    # check if the transaction hash is a valid transaction hash
+    #
+    # * Author: Ankit
+    # * Date: 18/01/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_transaction_hash?(tx_hash)
+      !(/\A(0x|0X)?[a-fA-F0-9]{64}\z/.match(tx_hash.to_s)).nil?
+    end
+
+    # Sanitize transaction hash
+    #
+    # * Author: Ankit
+    # * Date: 18/01/2019
+    # * Reviewed By:
+    #
+    # @return [String] returns sanitized transaction hash
+    #
+    def self.sanitize_transaction_hash(tx_hash)
+      transaction_hash = tx_hash.to_s.strip
+      if (!transaction_hash.start_with?('0x') && !transaction_hash.start_with?('0X'))
+        transaction_hash = '0x' + transaction_hash
+      end
+      transaction_hash
+    end
+
   end
 
 end
