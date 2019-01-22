@@ -41,7 +41,7 @@ module TokenManagement
 
         fetch_workflow
 
-        if @token.present?
+        if @token.present?  && @token[:status] != GlobalConstant::ClientToken.not_deployed
           r = fetch_goto
           return r unless r.success?
         end
