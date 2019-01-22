@@ -35,6 +35,30 @@ module GlobalConstant
         'generateTokenAddresses'
       end
 
+      def fund_aux_funder_addr_kind
+        'fundAuxFunderAddress'
+      end
+
+      def verify_fund_aux_funder_addr_kind
+        'verifyFundAuxFunderAddress'
+      end
+
+      def fund_aux_admin_addr_kind
+        'fundAuxAdminAddress'
+      end
+
+      def verify_fund_aux_admin_addr_kind
+        'verifyFundAuxAdminAddress'
+      end
+
+      def fund_aux_worker_addr_kind
+        'fundAuxWorkerAddress'
+      end
+
+      def verify_fund_aux_worker_addr_kind
+        'verifyFundAuxWorkerAddress'
+      end
+
       def deploy_origin_token_organization_kind
         'deployOriginTokenOrganization'
       end

@@ -1,66 +1,84 @@
 step_config:
   - kind: <%= GlobalConstant::WorkflowStep.economy_setup_init_kind%>
-    weight: 5
+    weight: 3
     group: 0
   - kind: <%= GlobalConstant::WorkflowStep.generate_token_addresses_kind%>
-    weight: 5
+    weight: 3
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.fund_aux_funder_addr_kind%>
+    weight: 3
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_funder_addr_kind%>
+    weight: 3
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.fund_aux_admin_addr_kind%>
+    weight: 3
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_admin_addr_kind%>
+    weight: 3
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.fund_aux_worker_addr_kind%>
+    weight: 3
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_worker_addr_kind%>
+    weight: 3
     group: 0
   - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_token_organization_kind%>
-    weight: 10
+    weight: 3
     group: 0
   - kind: <%= GlobalConstant::WorkflowStep.save_origin_token_organization_kind%>
     weight: 5
     group: 0
   - kind: <%= GlobalConstant::WorkflowStep.deploy_aux_token_organization_kind%>
-    weight: 10
+    weight: 3
     group: 0
   - kind: <%= GlobalConstant::WorkflowStep.save_aux_token_organization_kind%>
-    weight: 10
+    weight: 3
     group: 0
   - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_branded_token_kind%>
-    weight: 10
+    weight: 5
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.save_origin_token_branded_token_kind%>
-    weight: 10
+    weight: 3
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.deploy_utility_branded_token_kind%>
     weight: 10
     group: 2
   - kind: <%= GlobalConstant::WorkflowStep.save_utility_branded_token_kind%>
-    weight: 10
+    weight: 3
     group: 2
   - kind: <%= GlobalConstant::WorkflowStep.token_deploy_gateway_kind%>
-    weight: 10
+    weight: 3
     group: 3
   - kind: <%= GlobalConstant::WorkflowStep.save_token_gateway_kind%>
     weight: 10
     group: 3
   - kind: <%= GlobalConstant::WorkflowStep.token_deploy_co_gateway_kind%>
-    weight: 10
+    weight: 3
     group: 4
   - kind: <%= GlobalConstant::WorkflowStep.save_token_co_gateway_kind%>
-    weight: 10
+    weight: 3
     group: 4
   - kind: <%= GlobalConstant::WorkflowStep.update_token_in_ost_view%>
-    weight: 10
+    weight: 3
     group: 4
   - kind: <%= GlobalConstant::WorkflowStep.activate_token_gateway_kind%>
-    weight: 10
+    weight: 3
     group: 5
   - kind: <%= GlobalConstant::WorkflowStep.verify_activate_token_gateway%>
-    weight: 10
+    weight: 3
     group: 5
   - kind: <%= GlobalConstant::WorkflowStep.set_co_gateway_in_ubt_kind%>
-    weight: 10
+    weight: 3
     group: 6
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_co_gateway_in_ubt%>
-    weight: 10
+    weight: 3
     group: 6
   - kind: <%= GlobalConstant::WorkflowStep.set_gateway_in_bt_kind%>
-    weight: 10
+    weight: 3
     group: 6
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_gateway_in_bt%>
-    weight: 10
+    weight: 3
     group: 6
 
 group_config:
