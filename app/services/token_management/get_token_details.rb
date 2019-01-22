@@ -39,6 +39,11 @@ module TokenManagement
 
         fetch_token_details
 
+        fetch_workflow
+
+        r = fetch_goto
+        return r unless r.success?
+
         # TODO: Open this functionality when economy setup is functional
         #r = fetch_token_details_from_saas
         #return r unless r.success?
@@ -64,9 +69,47 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_token_details
-      r = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
-      @api_response_data[:token] = r[@client_id]
+      @token = CacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
+
+      @api_response_data[:token] = @token
+
       success
+    end
+
+    # Fetch workflow details
+    #
+    # * Author: Shlok
+    # * Date: 21/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_workflow
+      @workflow = Workflow.where({
+                                   client_id: @client_id,
+                                   kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
+                                 })
+                    .order('id DESC')
+                    .limit(1).first
+    end
+
+    # Fetch token details
+    #
+    # * Author: Shlok
+    # * Date: 21/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_goto
+
+      FetchGoToByEconomyState.new({
+                                    token: @token,
+                                    client_id: @client_id,
+                                    workflow: @workflow,
+                                    from_page: GlobalConstant::GoTo.token_setup
+                                  }).fetch_by_economy_state
+
     end
 
     # Append logged in manager details

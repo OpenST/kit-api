@@ -40,11 +40,6 @@ module GlobalConstant
       end
 
       # *******************************************************
-
-      def api_timeout
-        5
-      end
-
     end
 
   end

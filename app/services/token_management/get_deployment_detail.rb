@@ -79,13 +79,9 @@ module TokenManagement
     #
     def fetch_goto
 
-      client = Util::EntityHelper.fetch_and_validate_client(@client_id, 'tm_gdd')
-      client_id = client[:id]
-      token = CacheManagement::TokenDetails.new([client_id]).fetch[client_id]
-
       FetchGoToByEconomyState.new({
-                                    token: token,
-                                    client_id: client_id,
+                                    token: @token,
+                                    client_id: @client_id,
                                     workflow: @workflow,
                                     from_page: GlobalConstant::GoTo.token_deploy
                                   }).fetch_by_economy_state
