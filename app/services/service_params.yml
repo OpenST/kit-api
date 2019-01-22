@@ -129,10 +129,12 @@
   :optional:
     - :client_manager
     - :token
+    - :workflow
 'FetchGoToByEconomyState':
   :mandatory:
     - :token
     - :client_id
+    - :workflow
 'TokenManagement::GetTokenDetails':
   :mandatory:
     - :client_id

@@ -20,6 +20,7 @@ class FetchGoTo < ServicesBase
     @manager = params[:manager]
     @client_manager = params[:client_manager]
     @token = params[:token]
+    @workflow = params[:workflow]
   end
 
   # Perform
@@ -40,10 +41,11 @@ class FetchGoTo < ServicesBase
 
       if @is_multi_auth_cookie_valid
 
-        if @token.present?
+        if @token.present? && @workflow.present?
           return FetchGoToByEconomyState.new({
                                                token: params[@token],
                                                client_id: params[@client][:id],
+                                               workflow: @workflow
                                              }).fetch_by_economy_state
         end
 
@@ -58,10 +60,11 @@ class FetchGoTo < ServicesBase
         GlobalConstant::GoTo.setup_mfa
 
       else
-        if @token.present?
+        if @token.present? && @workflow.present?
           return FetchGoToByEconomyState.new({
                                                token: params[@token],
                                                client_id: params[@client][:id],
+                                               workflow: @workflow
                                              }).fetch_by_economy_state
         end
 

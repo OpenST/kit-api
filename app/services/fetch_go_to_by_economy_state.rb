@@ -16,6 +16,7 @@ class FetchGoToByEconomyState < ServicesBase
 
     @token = params[:token]
     @client_id = params[:client_id]
+    @workflow = params[:workflow]
   end
 
   # Perform
@@ -27,23 +28,9 @@ class FetchGoToByEconomyState < ServicesBase
   # @return [Hash]
   #
   def fetch_by_economy_state
-    #TODO: Get this verified.
     handle_errors_and_exceptions do
 
       return GlobalConstant::GoTo.token_setup if @token[:status] == GlobalConstant::ClientToken.not_deployed
-
-      # Fetch workflow details.
-      workflow_details = Workflow.where({
-                                         client_id: @client_id,
-                                         kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
-                                       }).first
-
-      fail OstCustomError.new validation_error(
-                                's_fgt_2',
-                                'workflow_empty',
-                                [],
-                                GlobalConstant::ErrorAction.default
-                              ) if workflow_details.blank?
 
       # If token deployment has started.
       if @token[:status] == GlobalConstant::ClientToken.deployment_started
@@ -53,7 +40,7 @@ class FetchGoToByEconomyState < ServicesBase
                                   'invalid_token_deployment_workflow_status',
                                   [],
                                   GlobalConstant::ErrorAction.default
-                                ) unless workflow_details.status == GlobalConstant::Workflow.in_progress
+                                ) unless @workflow.status == GlobalConstant::Workflow.in_progress
 
         return GlobalConstant::GoTo.token_deploy
 
@@ -67,7 +54,7 @@ class FetchGoToByEconomyState < ServicesBase
                                   'invalid_token_deployment_workflow_status',
                                   [],
                                   GlobalConstant::ErrorAction.default
-                                ) unless workflow_details.status == GlobalConstant::Workflow.completed
+                                ) unless @workflow.status == GlobalConstant::Workflow.completed
 
         return GlobalConstant::GoTo.token_mint
 
@@ -81,7 +68,7 @@ class FetchGoToByEconomyState < ServicesBase
                                   'invalid_token_deployment_workflow_status',
                                   [],
                                   GlobalConstant::ErrorAction.default
-                                ) unless workflow_details.status == GlobalConstant::Workflow.failed
+                                ) unless @workflow.status == GlobalConstant::Workflow.failed
 
         return GlobalConstant::GoTo.service_unavailable
 

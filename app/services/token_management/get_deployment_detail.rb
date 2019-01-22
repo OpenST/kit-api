@@ -40,6 +40,8 @@ module TokenManagement
 
         add_token_to_response
 
+        fetch_workflow
+
         fetch_goto
 
         fetch_workflow
@@ -47,6 +49,23 @@ module TokenManagement
         success_with_data(@api_response_data)
 
       end
+    end
+
+    # Fetch workflow details
+    #
+    # * Author: Shlok
+    # * Date: 21/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_workflow
+      @workflow = Workflow.where({
+                                   client_id: @client_id,
+                                   kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
+                                 })
+                    .order('id DESC')
+                    .limit(1).first
     end
 
     # Fetch token details
@@ -65,28 +84,12 @@ module TokenManagement
 
       goto = FetchGoToByEconomyState.new({
                                     token: token,
-                                    client: client,
+                                    client_id: client_id,
+                                    workflow: @workflow
                                   }).fetch_by_economy_state
 
       @api_response_data[go_to: goto]
 
-    end
-
-    # Fetch workflow details
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_workflow
-      @workflow = Workflow.where({
-                                          client_id: @client_id,
-                                          kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
-                                        })
-                           .order('id DESC')
-                            .limit(1).first
     end
 
     # Fetch workflow current status
