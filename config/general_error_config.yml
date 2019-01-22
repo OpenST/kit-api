@@ -84,6 +84,11 @@ user_not_verified:
   message: "user not verified."
 
 invalid_authenticity_token:
-  http_code: 422
+  http_code: 401
   code: "UNAUTHORIZED"
   message: "Session has expired. Please refresh your page."
+
+data_validation_failed:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "data validation failed."

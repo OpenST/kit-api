@@ -17,6 +17,7 @@ class FetchGoToByEconomyState < ServicesBase
     @token = params[:token]
     @client_id = params[:client_id]
     @workflow = params[:workflow]
+    @from_page = params[:from_page]
   end
 
   # Perform
@@ -30,7 +31,9 @@ class FetchGoToByEconomyState < ServicesBase
   def fetch_by_economy_state
     handle_errors_and_exceptions do
 
-      return GlobalConstant::GoTo.token_setup if @token[:status] == GlobalConstant::ClientToken.not_deployed
+      go_to = {}
+
+      return error_with_go_to('s_fgtbes_1', 'data_validation_failed', GlobalConstant::GoTo.token_setup) if @workflow.blank? || @token[:status] == GlobalConstant::ClientToken.not_deployed
 
       # If token deployment has started.
       if @token[:status] == GlobalConstant::ClientToken.deployment_started
@@ -42,12 +45,9 @@ class FetchGoToByEconomyState < ServicesBase
                                   GlobalConstant::ErrorAction.default
                                 ) unless @workflow.status == GlobalConstant::Workflow.in_progress
 
-        return GlobalConstant::GoTo.token_deploy
+        go_to = GlobalConstant::GoTo.token_deploy
 
-      end
-
-      # If token deployment has completed.
-      if @token[:status] == GlobalConstant::ClientToken.deployment_completed
+      elsif @token[:status] == GlobalConstant::ClientToken.deployment_completed
 
         fail OstCustomError.new validation_error(
                                   's_fgt_4',
@@ -56,12 +56,9 @@ class FetchGoToByEconomyState < ServicesBase
                                   GlobalConstant::ErrorAction.default
                                 ) unless @workflow.status == GlobalConstant::Workflow.completed
 
-        return GlobalConstant::GoTo.token_mint
+        go_to = GlobalConstant::GoTo.token_mint
 
-      end
-
-      # If token deployment has failed.
-      if @token[:status] == GlobalConstant::ClientToken.deployment_failed
+      elsif @token[:status] == GlobalConstant::ClientToken.deployment_failed
 
         fail OstCustomError.new validation_error(
                                   's_fgt_5',
@@ -70,9 +67,16 @@ class FetchGoToByEconomyState < ServicesBase
                                   GlobalConstant::ErrorAction.default
                                 ) unless @workflow.status == GlobalConstant::Workflow.failed
 
-        return GlobalConstant::GoTo.service_unavailable
+        go_to = GlobalConstant::GoTo.service_unavailable
 
       end
+
+      if go_to.blank? || go_to.by_screen_name == @from_page.by_screen_name
+        return success
+      else
+        return error_with_go_to('s_fgtbes_2', 'data_validation_failed', go_to)
+      end
+
     end
   end
 

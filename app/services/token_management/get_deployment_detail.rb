@@ -42,9 +42,10 @@ module TokenManagement
 
         fetch_workflow
 
-        fetch_goto
+        r = fetch_goto
+        return r unless r.success?
 
-        fetch_workflow
+        fetch_workflow_current_status
 
         success_with_data(@api_response_data)
 
@@ -85,11 +86,11 @@ module TokenManagement
       goto = FetchGoToByEconomyState.new({
                                     token: token,
                                     client_id: client_id,
-                                    workflow: @workflow
+                                    workflow: @workflow,
+                                    from_page: GlobalConstant::GoTo.token_deploy
                                   }).fetch_by_economy_state
 
-      @api_response_data[go_to: goto]
-
+      return goto unless goto.success?
     end
 
     # Fetch workflow current status

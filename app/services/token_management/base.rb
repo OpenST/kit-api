@@ -50,11 +50,7 @@ module TokenManagement
     # @return [Result::Base]
     #
     def fetch_and_validate_token
-      begin
-        @token = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
-      rescue OstCustomError => ose
-        invalid_url_error(ose.internal_id)
-      end
+      @token = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
 
       success
     end

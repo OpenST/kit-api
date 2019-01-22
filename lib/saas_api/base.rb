@@ -59,7 +59,7 @@ module SaasApi
                 GlobalConstant::ErrorAction.default
             )
         end
-        parsed_response = Oj.load(response.body.to_s)
+        parsed_response = Oj.load(response.body.to_s,{})
         if parsed_response.has_key?('success')
           # internal response
           if parsed_response['success']
