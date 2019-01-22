@@ -30,12 +30,12 @@ class FetchGoToByEconomyState < ServicesBase
     #TODO: Get this verified.
     handle_errors_and_exceptions do
 
-      return GlobalConstant::GoTo.token_setup if @token.status == GlobalConstant::ClientToken.not_deployed
+      return GlobalConstant::GoTo.token_setup if @token[:status] == GlobalConstant::ClientToken.not_deployed
 
       # Fetch workflow details.
       workflow_details = Workflow.where({
                                          client_id: @client_id,
-                                         kind: Workflow.kind[GlobalConstant::Workflow.token_deploy]
+                                         kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
                                        }).first
 
       fail OstCustomError.new validation_error(
@@ -46,7 +46,7 @@ class FetchGoToByEconomyState < ServicesBase
                               ) if workflow_details.blank?
 
       # If token deployment has started.
-      if @token.status == GlobalConstant::ClientToken.deployment_started
+      if @token[:status] == GlobalConstant::ClientToken.deployment_started
 
         fail OstCustomError.new validation_error(
                                   's_fgt_3',
@@ -60,7 +60,7 @@ class FetchGoToByEconomyState < ServicesBase
       end
 
       # If token deployment has completed.
-      if @token.status == GlobalConstant::ClientToken.deployment_completed
+      if @token[:status] == GlobalConstant::ClientToken.deployment_completed
 
         fail OstCustomError.new validation_error(
                                   's_fgt_4',
@@ -74,7 +74,7 @@ class FetchGoToByEconomyState < ServicesBase
       end
 
       # If token deployment has failed.
-      if @token.status == GlobalConstant::ClientToken.deployment_failed
+      if @token[:status] == GlobalConstant::ClientToken.deployment_failed
 
         fail OstCustomError.new validation_error(
                                   's_fgt_5',
