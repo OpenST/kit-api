@@ -22,7 +22,8 @@ class Token < DbConnection::KitSaasSubenv
         name: name,
         symbol: symbol,
         conversion_factor: conversion_factor.present? ? conversion_factor.to_s : conversion_factor, # should be string as it goes to FE
-        decimal: decimal
+        decimal: decimal,
+        status: status
     }
   end
 
