@@ -37,9 +37,7 @@ module TokenManagement
 
         validate
 
-        fetch_and_validate_token
-
-        add_token_to_response
+        fetch_token_details
 
         # TODO: Open this functionality when economy setup is functional
         #r = fetch_token_details_from_saas
@@ -55,6 +53,20 @@ module TokenManagement
 
       end
 
+    end
+
+    # Fetch token details
+    #
+    #
+    # * Author: Ankit
+    # * Date: 19/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def fetch_token_details
+      r = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
+      @api_response_data[:token] = r[@client_id]
+      success
     end
 
     # Append logged in manager details
