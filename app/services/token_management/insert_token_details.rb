@@ -137,7 +137,6 @@ module TokenManagement
     # @return [Result::Base]
     def insert_update_token_details
       @token_details = Token.where(client_id: @client_id).first
-      #TODO: @shlok - Shouldn't there be a check first if the same token already exists?
       @token_details ||= Token.new(client_id: @client_id)
 
       @token_details.name = @name
