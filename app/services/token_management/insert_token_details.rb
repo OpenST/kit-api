@@ -37,8 +37,6 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        fetch_and_validate_token
-
         validate_and_sanitize
 
         insert_update_token_details
@@ -63,8 +61,8 @@ module TokenManagement
     #
     def validate_and_sanitize
 
-      @token_name = @token_name.to_s.strip
-      @token_symbol = @token_symbol.to_s.strip
+      @name = @name.to_s.strip
+      @symbol = @symbol.to_s.strip
 
       validation_errors = validate_token_creation_params
 
