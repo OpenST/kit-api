@@ -3,7 +3,7 @@ class Token::AddressesController < WebController
   # Get Adresses
   #
   # * Author: Ankit
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
   def token_addresses_get
@@ -14,7 +14,7 @@ class Token::AddressesController < WebController
   # Set token details
   #
   # * Author: Ankit
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
   def token_addresses_post
@@ -25,7 +25,7 @@ class Token::AddressesController < WebController
   # Set token details
   #
   # * Author: Ankit
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
   def token_addresses_is_available
@@ -36,7 +36,7 @@ class Token::AddressesController < WebController
   # Set token details
   #
   # * Author: Ankit
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
   def token_addresses_sign_messages

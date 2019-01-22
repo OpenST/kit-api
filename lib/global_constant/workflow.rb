@@ -16,7 +16,7 @@ module GlobalConstant
       end
 
       def in_progress
-        'in_progress'
+        'inProgress'
       end
 
       def completed
@@ -27,8 +27,8 @@ module GlobalConstant
         'failed'
       end
 
-      def failed_complete
-        'failed_complete'
+      def completely_failed
+        'completelyFailed'
       end
 
     end

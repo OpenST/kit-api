@@ -4,7 +4,7 @@ module WalletAddressesManagement
     # Initialize
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [TokenManagement::TokenDetails]
@@ -20,7 +20,7 @@ module WalletAddressesManagement
     # Perform
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]

@@ -10,6 +10,6 @@ class Workflow < DbConnection::KitSaasSubenv
     GlobalConstant::Workflow.in_progress => 1,
     GlobalConstant::Workflow.completed => 2,
     GlobalConstant::Workflow.failed => 3,
-    GlobalConstant::Workflow.failed_complete => 4
+    GlobalConstant::Workflow.completely_failed => 4
   }
 end
