@@ -3,7 +3,7 @@ class Token::SetupController < WebController
   # Get token details
   #
   # * Author: Ankit
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
   def token_details_get
@@ -14,7 +14,7 @@ class Token::SetupController < WebController
   # Set token details
   #
   # * Author: Ankit
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
   def token_details_post
@@ -25,18 +25,29 @@ class Token::SetupController < WebController
   # Start token deployment
   #
   # * Author: Ankit
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
-  def deploy
-    service_response = TokenManagement::Deploy.new(params).perform
+  def deploy_post
+    service_response = TokenManagement::StartDeployment.new(params).perform
+    render_api_response(service_response)
+  end
+
+  # Start token deployment
+  #
+  # * Author: Shlok
+  # * Date: 21/01/2018
+  # * Reviewed By:
+  #
+  def deploy_get
+    service_response = TokenManagement::GetDeploymentDetail.new(params).perform
     render_api_response(service_response)
   end
 
   # token start mint
   #
   # * Author: Alpesh
-  # * Date: 19/12/2018
+  # * Date: 19/01/2019
   # * Reviewed By:
   #
   def mint_get

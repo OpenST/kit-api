@@ -128,6 +128,11 @@
     - :manager
   :optional:
     - :client_manager
+    - :token
+'FetchGoToByEconomyState':
+  :mandatory:
+    - :token
+    - :client_id
 'TokenManagement::GetTokenDetails':
   :mandatory:
     - :client_id
@@ -140,7 +145,11 @@
     - :symbol
     - :conversion_factor
   :optional:
-'TokenManagement::Deploy':
+'TokenManagement::StartDeployment':
+  :mandatory:
+    - :client_id
+  :optional:
+'TokenManagement::GetDeploymentDetail':
   :mandatory:
     - :client_id
   :optional:

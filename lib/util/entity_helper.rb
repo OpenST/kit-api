@@ -43,6 +43,21 @@ module Util
         manager
       end
 
+      # Find & validate token
+      #
+      # * Author: Shlok
+      # * Date: 21/01/2019
+      # * Reviewed By:
+      #
+      # @return [Hash]
+      #
+      def fetch_and_validate_token(client_id, err_prefix = 'u_eh_m')
+        token_not_found_response("#{err_prefix}_1") if client_id.blank?
+        token = CacheManagement::TokenDetails.new([client_id]).fetch[client_id]
+        token_not_found_response("#{err_prefix}_2") if token.blank?
+        token
+      end
+
       #TODO: Discuss about the following below private methods.
       #private
       
@@ -82,7 +97,7 @@ module Util
                                 )
       end
 
-      # no manager found
+      # No manager found
       #
       # * Author: Puneet
       # * Date: 15/01/2018
@@ -100,7 +115,7 @@ module Util
                                 )
       end
 
-      # manager inactive response
+      # Manager inactive response
       #
       # * Author: Puneet
       # * Date: 15/01/2018
@@ -118,7 +133,25 @@ module Util
                                 )
       end
 
-      #  client manager not associated response
+      # No token found
+      #
+      # * Author: Shlok
+      # * Date: 21/01/2019
+      # * Reviewed By:
+      #
+      # @param [String] err (mandatory) - err code
+      #
+      # @return [Result::Base]
+      #
+      def token_not_found_response(err)
+        fail OstCustomError.new error_with_data(
+                                  err,
+                                  'token_not_found',
+                                  GlobalConstant::ErrorAction.default
+                                )
+      end
+
+      #  Client manager not associated response
       #
       # * Author: Puneet
       # * Date: 15/01/2018

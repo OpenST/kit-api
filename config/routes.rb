@@ -31,7 +31,8 @@ Rails.application.routes.draw do
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup' do
     match '' => :token_details_get, via: :GET
     match '' => :token_details_post, via: :POST
-    match 'deploy' => :deploy, via: :get
+    match 'deploy' => :deploy_get, via: :GET
+    match 'deploy' => :deploy_post, via: :POST
     match 'mint' => :mint_get, via: :GET
     match 'mint' => :mint_post, via: :POST
   end

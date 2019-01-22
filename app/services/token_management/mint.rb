@@ -1,6 +1,6 @@
 module TokenManagement
 
-  class Mint < ServicesBase
+  class Mint < TokenManagement::Base
 
     # Initialize
     #
@@ -11,12 +11,12 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client_manager (optional) - Client manager hash
     #
+    # @return [TokenManagement::TokenDetails]
     #
     def initialize(params)
 
       super
 
-      @client_id = params[:client_id]
       @client_manager = params[:client_manager]
 
       @api_response_data = {}
@@ -39,26 +39,23 @@ module TokenManagement
 
         validate_and_sanitize
 
-        r = fetch_running_workflows
-        return r unless r.success?
+        fetch_running_workflows
 
-        r = fetch_token_details
-        return r unless r.success?
+        fetch_and_validate_token
 
-        r = fetch_addresses
-        return r unless r.success?
+        add_token_to_response
 
-        r = get_details_from_saas
-        return r unless r.success?
+        @token_id = @token[:id]
 
-        r = fetch_default_price_points
-        return r unless r.success?
+        fetch_addresses
 
-        r = append_logged_in_manager_details
-        return r unless r.success?
+        get_details_from_saas
 
-        r = fetch_origin_gas_price
-        return r unless r.success?
+        fetch_default_price_points
+
+        append_logged_in_manager_details
+
+        fetch_origin_gas_price
 
         return success_with_data(@api_response_data)
       end
@@ -89,7 +86,7 @@ module TokenManagement
       workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
       @api_response_data[:workflows] = []
 
-      if(workflows.present? && workflows[@client_id].present?)
+      if workflows.present? && workflows[@client_id].present?
         workflows[@client_id].each do |wf|
           if wf.kind == GlobalConstant::Workflow.token_deploy
             return error_with_go_to('s_tm_m_1', 'invalid_api_params', GlobalConstant::GoTo.token_deploy)
@@ -102,22 +99,6 @@ module TokenManagement
         end
       end
 
-      success
-    end
-
-    # Fetch token details
-    #
-    # * Author: Alpesh
-    # * Date: 18/01/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_token_details
-      r = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
-      #Todo add check if no data is returned from cache return error
-      @api_response_data[:token] = r[@client_id]
-      @token_id = r[@client_id][:id]
       success
     end
 
@@ -160,20 +141,6 @@ module TokenManagement
         }
       }
 
-      success
-    end
-
-    # Fetch default price points
-    #
-    #
-    # * Author: Alpesh
-    # * Date: 18/01/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_default_price_points
-      @api_response_data[:price_points] = CacheManagement::OstPricePointsDefault.new.fetch
       success
     end
 

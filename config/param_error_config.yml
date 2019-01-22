@@ -3,6 +3,11 @@ invalid_client_id:
   code: 'invalid'
   message: 'Invalid client id'
 
+invalid_workflow_id:
+  parameter: 'workflow_id'
+  code: 'invalid'
+  message: 'Invalid workflow id'
+
 invalid_owner_address:
   parameter: 'owner'
   code: 'invalid'

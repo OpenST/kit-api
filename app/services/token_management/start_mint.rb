@@ -1,6 +1,6 @@
 module TokenManagement
 
-  class StartMint < ServicesBase
+  class StartMint < TokenManagement::Base
 
     # Initialize
     #
@@ -18,8 +18,6 @@ module TokenManagement
 
       @approve_tx_hash = params[:approve_transaction_hash]
       @request_stake_tx_hash = params[:request_stake_transaction_hash]
-
-      @client_id = params[:client_id]
 
       @api_response_data = {}
       @token_id = nil
@@ -39,17 +37,17 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        r = validate_and_sanitize
-        return r unless r.success?
+        validate_and_sanitize
 
-        r = fetch_token_details
-        return r unless r.success?
+        fetch_and_validate_token
 
-        r = direct_request_to_saas_api
-        return r unless r.success?
+        add_token_to_response
 
-        r = fetch_workflow_data
-        return r unless r.success?
+        @token_id = @token[:id]
+
+        direct_request_to_saas_api
+
+        fetch_workflow_data
 
         success_with_data(@api_response_data)
 
@@ -57,9 +55,8 @@ module TokenManagement
     end
 
     def validate_and_sanitize
-      validate
 
-      #santize
+      # Santize
       @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)
       @request_stake_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@request_stake_tx_hash)
 
@@ -67,12 +64,14 @@ module TokenManagement
 
       if validation_errors.present?
         return validation_error(
-          'a_tm_m_1',
+          'tm_sm_1',
           'invalid_api_params',
           validation_errors,
           GlobalConstant::ErrorAction.default
         )
       end
+
+      validate
 
       success
     end
@@ -97,25 +96,6 @@ module TokenManagement
       end
 
       validation_errors
-    end
-
-    # Fetch token details
-    #
-    # * Author: Ankit
-    # * Date: 17/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_token_details
-      r = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
-      return error_with_data('a_tm_m_2',
-          'something_went_wrong',
-          GlobalConstant::ErrorAction.default
-      ) unless r.present?
-
-      @token_id = r[@client_id][:id]
-      success
     end
 
     # direct request to saas api

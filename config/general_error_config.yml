@@ -48,6 +48,21 @@ manager_not_found:
   code: "NOT_FOUND"
   message: "Manager not found."
 
+token_not_found:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "Token not found."
+
+workflow_empty:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "Token not found."
+
+invalid_token_deployment_workflow_status:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "Workflow status does not match the token deployment status."
+
 client_manager_inactive:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"

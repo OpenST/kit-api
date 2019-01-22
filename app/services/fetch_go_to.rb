@@ -11,11 +11,15 @@ class FetchGoTo < ServicesBase
   # @return [GoTo::ByManagerState]
   #
   def initialize(params)
+
+    super
+
     @is_password_auth_cookie_valid = params[:is_password_auth_cookie_valid]
     @is_multi_auth_cookie_valid = params[:is_multi_auth_cookie_valid]
     @client = params[:client]
     @manager = params[:manager]
     @client_manager = params[:client_manager]
+    @token = params[:token]
   end
 
   # Perform
@@ -34,13 +38,33 @@ class FetchGoTo < ServicesBase
 
       return GlobalConstant::GoTo.verify_email if @manager[:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
 
-      return fetch_by_economy_state if @is_multi_auth_cookie_valid
+      if @is_multi_auth_cookie_valid
+
+        if @token.present?
+          return FetchGoToByEconomyState.new({
+                                               token: params[@token],
+                                               client_id: params[@client][:id],
+                                             }).fetch_by_economy_state
+        end
+
+        fetch_by_economy_state
+
+      end
 
       if @manager[:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
         GlobalConstant::GoTo.authenticate_mfa
+
       elsif @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
         GlobalConstant::GoTo.setup_mfa
+
       else
+        if @token.present?
+          return FetchGoToByEconomyState.new({
+                                               token: params[@token],
+                                               client_id: params[@client][:id],
+                                             }).fetch_by_economy_state
+        end
+
         fetch_by_economy_state
       end
 

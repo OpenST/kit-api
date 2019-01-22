@@ -1,14 +1,15 @@
 module TokenManagement
 
-  class GetTokenDetails < ServicesBase
+  class GetTokenDetails < TokenManagement::Base
 
     # Initialize
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Object] client_manager(optional) - Client manager
     #
     # @return [TokenManagement::TokenDetails]
     #
@@ -16,7 +17,6 @@ module TokenManagement
 
       super
 
-      @client_id = @params[:client_id]
       @client_manager = params[:client_manager]
 
       @api_response_data = {}
@@ -26,7 +26,7 @@ module TokenManagement
     # Perform
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
@@ -35,24 +35,21 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        r = validate_and_sanitize
-        return r unless r.success?
+        validate
 
-        r = fetch_token_details
-        return r unless r.success?
+        fetch_and_validate_token
+
+        add_token_to_response
 
         # TODO: Open this functionality when economy setup is functional
         #r = fetch_token_details_from_saas
         #return r unless r.success?
 
-        r = fetch_default_price_points
-        return r unless r.success?
+        fetch_default_price_points
 
-        r = append_logged_in_manager_details
-        return r unless r.success?
+        append_logged_in_manager_details
 
-        r = fetch_running_workflows
-        return r unless r.success?
+        fetch_running_workflows
 
         success_with_data(@api_response_data)
 
@@ -75,7 +72,6 @@ module TokenManagement
 
       success
     end
-
 
     # Fetch all running workflows.
     #
@@ -106,37 +102,6 @@ module TokenManagement
 
     #private
 
-    # Validate and sanitize
-    #
-    # * Author: Ankit
-    # * Date: 19/12/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def validate_and_sanitize
-
-      r = validate
-      return r unless r.success?
-
-      success
-
-    end
-
-    # Fetch token details
-    #
-    #
-    # * Author: Ankit
-    # * Date: 19/12/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    def fetch_token_details
-      r = CacheManagement::TokenDetails.new([@client_id]).fetch || {}
-      @api_response_data[:token] = r[@client_id]
-      success
-    end
-
     # Fetch token details from Saas
     #
     #
@@ -151,24 +116,10 @@ module TokenManagement
           contract_address: '0x0x0x0x00x0x0x31280931hdfad32193as34as1dsad2',
           client_id: @client_id
       }
-      r = SaasApi::Token::FetchDetails.new.perform(params) # TODO: Pass params appropriately
-      return r unless r.success?
+      saas_response = SaasApi::Token::FetchDetails.new.perform(params) # TODO: Pass params appropriately
+      return saas_response unless saas_response.success?
 
-      @api_response_data[:token].merge!(r.data)
-    end
-
-
-    # Fetch default price points
-    #
-    #
-    # * Author: Ankit
-    # * Date: 19/12/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    def fetch_default_price_points
-      @api_response_data[:price_points] = CacheManagement::OstPricePointsDefault.new.fetch
-      success
+      @api_response_data[:token].merge!(saas_response.data)
     end
 
   end

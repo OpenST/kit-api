@@ -1,14 +1,17 @@
 module TokenManagement
 
-  class InsertTokenDetails < ServicesBase
+  class InsertTokenDetails < TokenManagement::Base
 
     # Initialize
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [String] name (mandatory) - Token name
+    # @params [String] symbol (mandatory) - Token symbol
+    # @params [String] conversion_factor (mandatory) - Conversion factor
     #
     # @return [TokenManagement::TokenDetails]
     #
@@ -16,7 +19,6 @@ module TokenManagement
 
       super
 
-      @client_id = @params[:client_id]
       @name = @params[:name]
       @symbol = @params[:symbol]
       @conversion_factor = @params[:conversion_factor]
@@ -26,7 +28,7 @@ module TokenManagement
     # Perform
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
@@ -35,14 +37,13 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        r = validate_and_sanitize
-        return r unless r.success?
+        fetch_and_validate_token
 
-        r = insert_update_token_details
-        return r unless r.success?
+        validate_and_sanitize
 
-        r = delete_old_addresses
-        return r unless r.success?
+        insert_update_token_details
+
+        delete_old_addresses
 
         success_with_data({token: @token_details.formated_cache_data})
 
@@ -55,15 +56,12 @@ module TokenManagement
     # Validate and sanitize
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
     #
     def validate_and_sanitize
-
-      r = validate
-      return r unless r.success?
 
       @token_name = @token_name.to_s.strip
       @token_symbol = @token_symbol.to_s.strip
@@ -78,6 +76,8 @@ module TokenManagement
           GlobalConstant::ErrorAction.default
         )
       end
+
+      validate
 
       success
 
@@ -130,14 +130,14 @@ module TokenManagement
 
     # Insert token details
     #
-    #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
     def insert_update_token_details
       @token_details = Token.where(client_id: @client_id).first
+      #TODO: @shlok - Shouldn't there be a check first if the same token already exists?
       @token_details ||= Token.new(client_id: @client_id)
 
       @token_details.name = @name
@@ -156,12 +156,12 @@ module TokenManagement
     #
     #
     # * Author: Ankit
-    # * Date: 19/12/2018
+    # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
     def delete_old_addresses
-      #fetch token id
+      # Fetch token id
       # delete if any address present in token addresses table and client_wallet_addresses table
 
       token_id = @token_details.id
