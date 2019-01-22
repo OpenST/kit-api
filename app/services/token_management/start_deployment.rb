@@ -42,7 +42,8 @@ module TokenManagement
 
         @token_id = @token[:id]
 
-        direct_request_to_saas_api
+        r = direct_request_to_saas_api
+        return r unless r.success?
 
         fetch_workflow_current_status
 
@@ -87,15 +88,11 @@ module TokenManagement
 
       cached_response_data = CacheManagement::WorkflowStatus.new([@workflow_id]).fetch
 
-      fail OstCustomError.new validation_error(
-                                'tm_sd_1',
-                                'invalid_api_params',
-                                ['invalid_workflow_id'],
-                                GlobalConstant::ErrorAction.default
-                              ) if cached_response_data[@workflow_id].blank?
-
-      @api_response_data['workflow_current_step'] = cached_response_data[@workflow_id][:current_step]
-
+      workflow_current_step = {}
+      if cached_response_data[@workflow_id].present?
+        workflow_current_step = cached_response_data[@workflow_id][:current_step]
+      end
+      @api_response_data['workflow_current_step'] = workflow_current_step
       @api_response_data['workflow'] = {
         id: @workflow_id,
         kind: GlobalConstant::Workflow.token_deploy

@@ -71,7 +71,7 @@ class FetchGoToByEconomyState < ServicesBase
 
       end
 
-      if go_to.blank? || go_to.by_screen_name == @from_page.by_screen_name
+      if go_to.blank? || go_to[:by_screen_name] == @from_page[:by_screen_name]
         return success
       else
         return error_with_go_to('s_fgtbes_2', 'data_validation_failed', go_to)

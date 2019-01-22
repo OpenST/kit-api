@@ -83,14 +83,13 @@ module TokenManagement
       client_id = client[:id]
       token = CacheManagement::TokenDetails.new([client_id]).fetch[client_id]
 
-      goto = FetchGoToByEconomyState.new({
+      FetchGoToByEconomyState.new({
                                     token: token,
                                     client_id: client_id,
                                     workflow: @workflow,
                                     from_page: GlobalConstant::GoTo.token_deploy
                                   }).fetch_by_economy_state
 
-      return goto unless goto.success?
     end
 
     # Fetch workflow current status
