@@ -25,7 +25,7 @@ module SaasApi
       #
       def perform(params = {})
         send_request_of_type(
-          'get',
+          'post',
           GlobalConstant::SaasApi.token_deploy,
           params
         )
