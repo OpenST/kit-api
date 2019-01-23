@@ -131,7 +131,7 @@ module ManagerManagement
       #
       def decrypt_login_salt
 
-        r = Aws::Kms.new('login','user').decrypt(@manager_obj.authentication_salt)
+        r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).decrypt(@manager_obj.authentication_salt)
         fail r unless r.success?
 
         @login_salt_d = r.data[:plaintext]

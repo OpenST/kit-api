@@ -16,7 +16,7 @@ module GlobalConstant
     end
 
     def self.cookie_domain
-      @cookie_domain ||= fetch_config.fetch('cookie_domain', 'kit-stag3.stagingost.com')
+      @cookie_domain ||= fetch_config.fetch('cookie_domain')
     end
 
     def self.main_sub_environment?

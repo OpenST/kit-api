@@ -77,7 +77,7 @@ module ManagerManagement
           authentication_salt_e = @manager_obj.authentication_salt
           fail OstCustomError.new unauthorized_access_response('am_l_ma_b_4') unless authentication_salt_e.present?
 
-          r = Aws::Kms.new('login', 'user').decrypt(authentication_salt_e)
+          r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).decrypt(authentication_salt_e)
           fail OstCustomError.new unauthorized_access_response('am_l_ma_b_5') unless r.success?
 
           @authentication_salt_d = r.data[:plaintext]

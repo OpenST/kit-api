@@ -192,7 +192,7 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def generate_login_salt
-        r = Aws::Kms.new('login', 'user').generate_data_key
+        r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).generate_data_key
         fail OstCustomError.new r unless r.success?
 
         @authentication_salt_hash = r.data

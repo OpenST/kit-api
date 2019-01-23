@@ -19,6 +19,10 @@ client:
   whitelisted_domains:
     key_template: 'c_whtie_dmns'
     expiry_in_seconds: 86400
+  api_credentials:
+    key_template: 'c_ac_%{id}'
+    expiry_in_seconds: 86400
+    used_in_shared_env: 1
 
 client_manager:
   details:

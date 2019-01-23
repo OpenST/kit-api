@@ -185,6 +185,24 @@
   :mandatory:
     - :workflow_id
   :optional:
+'ClientManagement::ApiCredentials::Fetch':
+  :mandatory:
+    - :client_id
+  :optional:
+'ClientManagement::ApiCredentials::Create':
+  :mandatory:
+    - :client_id
+  :optional:
+'ClientManagement::ApiCredentials::Rotate':
+  :mandatory:
+    - :client_id
+  :optional:
+    - :buffer_time
+'ClientManagement::ApiCredentials::Deactivate':
+  :mandatory:
+    - :client_id
+    - :id_to_deactivate
+  :optional:
 'TokenManagement::Mint':
   :mandatory:
     - :client_id

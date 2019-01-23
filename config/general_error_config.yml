@@ -18,6 +18,11 @@ recaptcha_fail:
   code: "INVALID_REQUEST"
   message: "Re-Captcha has failed. "
 
+client_already_initiated_rotate:
+  http_code: 422
+  code: "INVALID_REQUEST"
+  message: "Looks like already key was rotated once. Please wait for buffer time before reinitiating"
+
 resource_not_found:
   http_code: 404
   code: "NOT_FOUND"

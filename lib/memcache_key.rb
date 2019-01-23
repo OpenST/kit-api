@@ -21,15 +21,20 @@ class MemcacheKey
       memcache_config = YAML.load_file(GlobalConstant::Cache.keys_config_file)
       memcache_config.inject({}) do |formatted_memcache_config, (group, group_config)|
         group_config.each do |entity, config|
-          prefix = (config['used_in_shared_env'] == 1) ? 'ca_sa_shared' : 'ca'
+          prefix = key_prefix(config['used_in_shared_env'] == 1)
           formatted_memcache_config["#{group}.#{entity}".to_sym] = {
-              key_template: "#{prefix}_#{GlobalConstant::Base.environment_name_short}_#{GlobalConstant::Base.sub_env_short}_#{config['key_template']}",
+              key_template: "#{prefix}_#{config['key_template']}",
               expiry: config['expiry_in_seconds'].to_i
           }
         end
         formatted_memcache_config
       end
     end
+  end
+
+  def self.key_prefix(shared_cache)
+    buffer = shared_cache ? 'ca_sa_shared' : 'ca'
+    "#{buffer}_#{GlobalConstant::Base.environment_name_short}_#{GlobalConstant::Base.sub_env_short}"
   end
 
 end
