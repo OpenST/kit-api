@@ -216,7 +216,7 @@ module WalletAddressesManagement
         ClientWalletAddress.create!(
           client_id: @client_id,
           sub_environment: GlobalConstant::Base.sub_environment_name,
-          address: @owner_address,
+          address: @owner_address.downcase,
           status:GlobalConstant::WalletAddressStatus.active_status
         )
       end
