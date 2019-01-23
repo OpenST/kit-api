@@ -13,23 +13,23 @@ module GlobalConstant
 
 
     def self. fetch_client_stats
-      "#{GlobalConstant::Environment.url_prefix}/api/internal/client/fetch-stats"
+      "#{GlobalConstant::Environment.url_prefix}/internal/client/fetch-stats"
     end
 
     def self.associate_address
-      "#{GlobalConstant::Environment.url_prefix}/api/internal/signer/verify"
+      "#{GlobalConstant::Environment.url_prefix}/internal/signer/verify"
     end
 
     def self.fetch_token_details
-      "#{GlobalConstant::Environment.url_prefix}/api/internal/token/details"
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/details"
     end
 
     def self.token_deploy
-      "#{GlobalConstant::Environment.url_prefix}/api/internal/token/deploy"
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/deploy"
     end
 
     def self.mint
-      "#{GlobalConstant::Environment.url_prefix}/api/internal/token/mint"
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/mint"
     end
 
   end
