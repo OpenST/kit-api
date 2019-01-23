@@ -66,4 +66,15 @@ class Token::SetupController < WebController
     render_api_response(service_response)
   end
 
+  # Start token minting
+  #
+  # * Author: Shlok
+  # * Date: 22/01/2019
+  # * Reviewed By:
+  #
+  def reset_deployment
+    service_response = TokenManagement::ResetDeployment.new(params).perform
+    render_api_response(service_response)
+  end
+
 end

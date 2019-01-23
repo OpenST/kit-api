@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     match 'deploy' => :deploy_post, via: :POST
     match 'mint' => :mint_get, via: :GET
     match 'mint' => :mint_post, via: :POST
+    match 'reset-deployment' => :reset_deployment, via: :POST
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses' do

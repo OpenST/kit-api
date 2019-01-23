@@ -155,6 +155,10 @@
   :mandatory:
     - :client_id
   :optional:
+'TokenManagement::ResetDeployment':
+  :mandatory:
+    - :client_id
+  :optional:
 'TokenManagement::StartMint':
   :mandatory:
     - :approve_transaction_hash
