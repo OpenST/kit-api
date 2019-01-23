@@ -16,8 +16,6 @@ module TokenManagement
 
       super
 
-      @api_response_data = {}
-
     end
 
     # Perform
@@ -38,7 +36,7 @@ module TokenManagement
 
         reset_status
 
-        success_with_data(@api_response_data)
+        success_with_data({})
 
       end
     end
@@ -71,10 +69,6 @@ module TokenManagement
 
       @token_details.status = GlobalConstant::ClientToken.not_deployed
       @token_details.save!
-
-      @api_response_data[:token] = @token_details
-
-      success
 
     end
 
