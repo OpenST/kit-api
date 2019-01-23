@@ -37,9 +37,9 @@ module Util
       # @return [Hash]
       #
       def fetch_and_validate_manager(manager_id, err_prefix = 'u_eh_m')
-        manager_not_found_response("#{err_prefix}_1") if manager_id.blank?
+        return manager_not_found_response("#{err_prefix}_1") if manager_id.blank?
         manager = CacheManagement::Manager.new([manager_id]).fetch[manager_id]
-        manager_not_found_response("#{err_prefix}_2") if manager[:status] != GlobalConstant::Manager.active_status
+        return manager_not_found_response("#{err_prefix}_2") if manager[:status] != GlobalConstant::Manager.active_status
         manager
       end
 
@@ -52,9 +52,9 @@ module Util
       # @return [Hash]
       #
       def fetch_and_validate_token(client_id, err_prefix = 'u_eh_m')
-        token_not_found_response("#{err_prefix}_1") if client_id.blank?
+        return token_not_found_response("#{err_prefix}_1") if client_id.blank?
         token = CacheManagement::TokenDetails.new([client_id]).fetch[client_id]
-        token_not_found_response("#{err_prefix}_2") if token.blank?
+        return token_not_found_response("#{err_prefix}_2") if token.blank?
         token
       end
 

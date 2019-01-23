@@ -55,8 +55,6 @@ module TokenManagement
 
         append_logged_in_manager_details
 
-        fetch_origin_gas_price
-
         return success_with_data(@api_response_data)
       end
 
@@ -131,15 +129,24 @@ module TokenManagement
     # * Reviewed By:
     #
     # @return [Result::Base]
+    # @sets @api_response_data[:contract_details], @api_response_data[:gas_price]
     #
     def get_details_from_saas
+      params = {
+        client_id: @client_id
+      }
+      saas_response = SaasApi::Token::MintDetails.new.perform(params)
+      return saas_response unless saas_response.success?
+
       @api_response_data[:contract_details] = {
         simple_token: {
           abi: GlobalConstant::ContractDetails::SimpleToken.abi,
           gas: GlobalConstant::ContractDetails::SimpleToken.gas,
-          address: "0xkdldj3o0eifo3idm......"
+          address: saas_response.data["contract_address"]["simple_token"]["address"]
         }
       }
+
+      @api_response_data[:gas_price] = saas_response.data["gas_price"]
 
       success
     end
@@ -156,20 +163,6 @@ module TokenManagement
       return success unless @client_manager.present?
 
       @api_response_data[:client_manager] = @client_manager
-
-      success
-    end
-
-    # Fetch dynamic gas price.
-    #
-    # * Author: Alpesh
-    # * Date: 18/01/2018
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_origin_gas_price
-      @api_response_data[:gas_price] = {origin: 0}
 
       success
     end

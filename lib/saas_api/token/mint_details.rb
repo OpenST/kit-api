@@ -2,7 +2,7 @@ module SaasApi
 
   module Token
 
-    class Mint < SaasApi::Base
+    class MintDetails < SaasApi::Base
       # Initialize
       #
       # * Author: Ankit
@@ -25,8 +25,8 @@ module SaasApi
       #
       def perform(params = {})
         send_request_of_type(
-          'post',
-          GlobalConstant::SaasApi.mint,
+          'get',
+          GlobalConstant::SaasApi.mint_details,
           params
         )
       end

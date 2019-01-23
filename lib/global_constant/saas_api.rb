@@ -28,8 +28,12 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/token/deploy"
     end
 
-    def self.mint
+    def self.start_mint
       "#{GlobalConstant::Environment.url_prefix}/internal/token/mint"
+    end
+
+    def self.mint_details
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/mint-details"
     end
 
   end

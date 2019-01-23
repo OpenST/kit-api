@@ -114,10 +114,9 @@ module TokenManagement
         client_id: @client_id
       }
 
-      r = SaasApi::Token::Mint.new.perform(params_for_saas_api)
+      r = SaasApi::Token::StartMint.new.perform(params_for_saas_api)
       return r unless r.success?
 
-      #r.data['workflow_id']
       @workflow_id = r.data['workflow_id']
 
       success

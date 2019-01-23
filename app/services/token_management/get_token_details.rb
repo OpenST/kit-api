@@ -56,6 +56,10 @@ module TokenManagement
 
         fetch_running_workflows
 
+        @api_response_data[:sign_messages] = {
+          wallet_association: GlobalConstant::MessageToSign.wallet_association
+        }
+
         success_with_data(@api_response_data)
 
       end
