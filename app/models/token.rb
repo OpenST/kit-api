@@ -27,4 +27,17 @@ class Token < DbConnection::KitSaasSubenv
     }
   end
 
+  after_commit :flush_cache
+
+# Flush caches
+#
+# * Author: Shlok
+# * Date: 22/01/2019
+# * Reviewed By:
+#
+  def flush_cache
+    CacheManagement::TokenDetails.new([client_id]).clear
+  end
+
+
 end
