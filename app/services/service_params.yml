@@ -183,4 +183,5 @@
   :optional:
 'TokenManagement::Mint':
   :mandatory:
+    - :client_id
   :optional:
