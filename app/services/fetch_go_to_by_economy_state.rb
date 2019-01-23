@@ -69,7 +69,7 @@ class FetchGoToByEconomyState < ServicesBase
                                   GlobalConstant::ErrorAction.default
                                 ) unless @workflow.status == GlobalConstant::Workflow.failed
 
-        go_to = GlobalConstant::GoTo.service_unavailable
+        go_to = GlobalConstant::GoTo.token_deploy
 
       end
 
