@@ -230,6 +230,36 @@ module GlobalConstant
       end
       # ST prime stake and mint steps: finish
 
+      # Bt stake and mint steps: start
+
+      def bt_stake_and_mint_init
+        'btStakeAndMintInit'
+      end
+
+      def approve_gateway_composer_trx
+        'approveGatewayComposerTrx'
+      end
+
+      def staker_request_stake_trx
+        'stakerRequestStakeTrx'
+      end
+
+      def check_gc_allowance
+        'checkGatewayComposerAllowance'
+      end
+
+      def fetch_stake_request_hash
+        'fetchStakeRequestHash'
+      end
+
+      def accept_stake
+        'acceptStake'
+      end
+
+      # Bt stake and mint steps: finish
+
+
+      # Common Steps start
 
       def mark_success
         'markSuccess'
@@ -238,6 +268,7 @@ module GlobalConstant
       def mark_failure
         'markFailure'
       end
+      # Common steps finish
 
       def token_deployment_completed
         'tokenDeploymentCompleted'

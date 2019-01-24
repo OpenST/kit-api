@@ -56,7 +56,7 @@ module GlobalConstant
       def identify_wf_goto(workflow)
         if workflow.kind == GlobalConstant::Workflow.token_deploy
           return token_deploy
-        elsif workflow.kind == GlobalConstant::Workflow.stake_and_mint
+        elsif workflow.kind == GlobalConstant::Workflow.bt_stake_and_mint
           return token_mint
         end
       end

@@ -215,3 +215,8 @@
     - :staker_address
     - :client_id
   :optional:
+'TokenManagement::MintProgress':
+  :mandatory:
+    - :client_id
+    - :client_manager
+  :optional:

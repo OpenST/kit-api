@@ -34,9 +34,22 @@ class WorkflowStep < DbConnection::KitSaasSubenv
       GlobalConstant::WorkflowStep.verify_set_internal_actor_for_owner_in_ubt => 31,
       GlobalConstant::WorkflowStep.verify_economy_setup => 32,
 
-      GlobalConstant::WorkflowStep.mark_success => 101
+      GlobalConstant::WorkflowStep.bt_stake_and_mint_init => 70,
+      GlobalConstant::WorkflowStep.approve_gateway_composer_trx =>71,
+      GlobalConstant::WorkflowStep.staker_request_stake_trx => 72,
+      GlobalConstant::WorkflowStep.check_gc_allowance => 73,
+      GlobalConstant::WorkflowStep.fetch_stake_request_hash => 74,
+      GlobalConstant::WorkflowStep.accept_stake => 75,
 
+      GlobalConstant::WorkflowStep.check_approve_status => 80,
+      GlobalConstant::WorkflowStep.check_stake_status => 81,
+      GlobalConstant::WorkflowStep.check_prove_gateway_status => 82,
+      GlobalConstant::WorkflowStep.check_confirm_stake_status => 83,
+      GlobalConstant::WorkflowStep.check_progress_stake_status => 84,
+      GlobalConstant::WorkflowStep.check_progress_mint_status => 85,
 
+      GlobalConstant::WorkflowStep.mark_success => 101,
+      GlobalConstant::WorkflowStep.mark_failure => 102
 
   }
 

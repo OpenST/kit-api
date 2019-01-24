@@ -138,7 +138,7 @@ module TokenManagement
 
       @api_response_data[:workflow_extended] = {
         id: @workflow_id,
-        kind: GlobalConstant::Workflow.stake_and_mint,
+        kind: GlobalConstant::Workflow.bt_stake_and_mint,
         steps: cached_response_data[@workflow_id][:all_steps]
       }
 

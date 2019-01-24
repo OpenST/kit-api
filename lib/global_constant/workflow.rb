@@ -7,8 +7,8 @@ module GlobalConstant
         'token_deploy'
       end
 
-      def stake_and_mint
-        'stake_and_mint'
+      def bt_stake_and_mint
+        'bt_stake_and_mint'
       end
 
       def state_root_sync

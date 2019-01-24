@@ -11,7 +11,7 @@ module CacheManagement
     # @return [Result::Base]
     #
     def fetch_from_db(client_ids)
-      rsp = ::Workflow.where(client_id: client_ids).all
+      rsp = ::Workflow.where(client_id: client_ids).order('id DESC')
       data_to_cache = {}
       rsp.each do |workflow_row_data|
         data_to_cache[workflow_row_data.client_id] ||= []

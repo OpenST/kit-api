@@ -1,0 +1,54 @@
+step_config:
+  - kind: <%= GlobalConstant::WorkflowStep.bt_stake_and_mint_init%>
+    weight: 5
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.approve_gateway_composer_trx%>
+    weight: 5
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.staker_request_stake_trx%>
+    weight: 10
+    group: 1
+  - kind: <%= GlobalConstant::WorkflowStep.check_gc_allowance%>
+    weight: 10
+    group: 1
+  - kind: <%= GlobalConstant::WorkflowStep.fetch_stake_request_hash%>
+    weight: 10
+    group: 1
+  - kind: <%= GlobalConstant::WorkflowStep.accept_stake%>
+    weight: 10
+    group: 1
+  - kind: <%=GlobalConstant::WorkflowStep.check_approve_status%>
+    weight: 10
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.check_stake_status%>
+    weight: 10
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.check_prove_gateway_status%>
+    weight: 10
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.check_confirm_stake_status%>
+    weight: 10
+    group: 3
+  - kind: <%=GlobalConstant::WorkflowStep.check_progress_stake_status%>
+    weight: 10
+    group: 3
+  - kind: <%=GlobalConstant::WorkflowStep.check_progress_mint_status%>
+    weight: 10
+    group: 3
+  - kind: <%=GlobalConstant::WorkflowStep.mark_success%>
+    weight: 10
+    group: 3
+
+group_config:
+  0:
+    display_text: 'Starting stake and mint'
+    name: "S&M Start"
+  1:
+    display_text: 'Deploying organization'
+    name: 'Organization Deployment'
+  2:
+    display_text: 'Deploying Gateway and Co-gateway'
+    name: 'Gateway, CoGateway Deployment'
+  3:
+    display_text: 'Set gateway and co-gateway'
+    name: 'Set Gateway, Co-Gateway'

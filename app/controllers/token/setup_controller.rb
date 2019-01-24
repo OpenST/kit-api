@@ -77,4 +77,15 @@ class Token::SetupController < WebController
     render_api_response(service_response)
   end
 
+  # Start token minting
+  #
+  # * Author: Anagha
+  # * Date: 23/01/2019
+  # * Reviewed By:
+  #
+  def mint_progress
+    service_response = TokenManagement::MintProgress.new(params).perform
+    render_api_response(service_response)
+  end
+
 end
