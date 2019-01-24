@@ -89,7 +89,7 @@ module TokenManagement
     # @return [Result::Base]
     #
     def fetch_workflow
-      @workflow = Workflow.where({
+      @deployment_workflow = Workflow.where({
                                    client_id: @client_id,
                                    kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
                                  })
@@ -110,7 +110,7 @@ module TokenManagement
       FetchGoToByEconomyState.new({
                                     token: @token,
                                     client_id: @client_id,
-                                    workflow: @workflow,
+                                    deployment_workflow: @deployment_workflow,
                                     from_page: GlobalConstant::GoTo.token_setup
                                   }).fetch_by_economy_state
 

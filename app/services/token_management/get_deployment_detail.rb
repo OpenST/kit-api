@@ -61,7 +61,7 @@ module TokenManagement
     # @return [Result::Base]
     #
     def fetch_workflow
-      @workflow = Workflow.where({
+      @deployment_workflow = Workflow.where({
                                    client_id: @client_id,
                                    kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
                                  })
@@ -82,7 +82,7 @@ module TokenManagement
       FetchGoToByEconomyState.new({
                                     token: @token,
                                     client_id: @client_id,
-                                    workflow: @workflow,
+                                    deployment_workflow: @deployment_workflow,
                                     from_page: GlobalConstant::GoTo.token_deploy
                                   }).fetch_by_economy_state
 
@@ -98,16 +98,16 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_workflow_current_status
 
-      cached_response_data = CacheManagement::WorkflowStatus.new([@workflow.id]).fetch
+      cached_response_data = CacheManagement::WorkflowStatus.new([@deployment_workflow.id]).fetch
 
       @api_response_data['workflow_current_step'] = {}
 
-      if cached_response_data[@workflow.id].present?
-        @api_response_data['workflow_current_step'] = cached_response_data[@workflow.id][:current_step]
+      if cached_response_data[@deployment_workflow.id].present?
+        @api_response_data['workflow_current_step'] = cached_response_data[@deployment_workflow.id][:current_step]
       end
 
       @api_response_data['workflow'] = {
-        id: @workflow.id,
+        id: @deployment_workflow.id,
         kind: GlobalConstant::Workflow.token_deploy
       }
 

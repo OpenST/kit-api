@@ -129,12 +129,15 @@
   :optional:
     - :client_manager
     - :token
-    - :workflow
+    - :deployment_workflow
 'FetchGoToByEconomyState':
   :mandatory:
     - :token
     - :client_id
-    - :workflow
+    - :deployment_workflow
+    - :from_page
+  :optional:
+      - :mint_workflow
 'TokenManagement::GetTokenDetails':
   :mandatory:
     - :client_id
