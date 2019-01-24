@@ -78,13 +78,29 @@ class GetWorkflowStatus < ServicesBase
   #
   def fetch_data
 
-    cached_response_data = CacheManagement::WorkflowStatus.new([@workflow_id]).fetch
-    @api_response_data['workflow_current_step'] = cached_response_data[@workflow_id][:current_step]
+    cached_workflow_data = CacheManagement::Workflow.new([@workflow_id]).fetch
+
+    if cached_workflow_data[@workflow_id].blank?
+       fail OstCustomError.new validation_error(
+                                'a_s_gws_2',
+                                'invalid_api_params',
+                                ['workflow_id'],
+                                GlobalConstant::ErrorAction.default
+                              )
+    end
 
     @api_response_data['workflow'] = {
       id: @workflow_id,
-      kind: GlobalConstant::WorkflowStatus.token_deploy_workflow_kind
+      kind: cached_workflow_data[@workflow_id][:kind]
     }
+
+
+    cached_workflow_status_data = CacheManagement::WorkflowStatus.new([@workflow_id]).fetch
+
+    @api_response_data['workflow_current_step'] = {}
+    if cached_workflow_status_data[@workflow_id][:current_step].present?
+      @api_response_data['workflow_current_step'] = cached_workflow_status_data[@workflow_id][:current_step]
+    end
 
     success_with_data(@api_response_data)
   end

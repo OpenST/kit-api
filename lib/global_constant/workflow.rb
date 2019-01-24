@@ -15,6 +15,10 @@ module GlobalConstant
         'state_root_sync'
       end
 
+      def st_prime_stake_and_mint
+        'st_prime_stake_and_mint'
+      end
+
       def in_progress
         'inProgress'
       end
