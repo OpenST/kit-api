@@ -207,3 +207,8 @@
   :mandatory:
     - :client_id
   :optional:
+'ContractManagement::GetGatewayComposerAddress':
+  :mandatory:
+    - :staker_address
+    - :client_id
+  :optional:

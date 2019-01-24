@@ -45,6 +45,10 @@ Rails.application.routes.draw do
     match 'sign-messages' => :token_addresses_sign_messages, via: :GET
   end
 
+  scope "#{GlobalConstant::Environment.url_prefix}/api/contracts", controller: 'contracts' do
+    match 'gateway-composer' => :gateway_composer_get, via: :GET
+  end
+
   scope "#{GlobalConstant::Environment.url_prefix}/api/workflow/:workflow_id", controller: 'workflow' do
     match '' => :workflow_status, via: :GET
   end

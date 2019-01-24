@@ -297,3 +297,8 @@ invalid_id_to_deactivate:
   parameter: 'id_to_deactivate'
   code: 'invalid'
   message: 'Invalid id to deactivate'
+
+invalid_staker_address:
+  parameter: 'staker_address'
+  code: 'invalid'
+  message: 'Invalid staker_address'

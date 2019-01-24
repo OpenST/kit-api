@@ -36,6 +36,10 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/token/mint-details"
     end
 
+    def self.get_gateway_composer
+      "#{GlobalConstant::Environment.url_prefix}/internal/contracts/gateway-composer"
+    end
+
   end
 
 end
