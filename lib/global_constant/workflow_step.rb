@@ -231,7 +231,13 @@ module GlobalConstant
       # ST prime stake and mint steps: finish
 
 
+      def mark_success
+        'markSuccess'
+      end
 
+      def mark_failure
+        'markFailure'
+      end
 
       def token_deployment_completed
         'tokenDeploymentCompleted'

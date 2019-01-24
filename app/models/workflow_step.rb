@@ -32,7 +32,11 @@ class WorkflowStep < DbConnection::KitSaasSubenv
       GlobalConstant::WorkflowStep.verify_deploy_gateway_composer => 29,
       GlobalConstant::WorkflowStep.set_internal_actor_for_owner_in_ubt => 30,
       GlobalConstant::WorkflowStep.verify_set_internal_actor_for_owner_in_ubt => 31,
-      GlobalConstant::WorkflowStep.verify_economy_setup => 32
+      GlobalConstant::WorkflowStep.verify_economy_setup => 32,
+
+      GlobalConstant::WorkflowStep.mark_success => 101
+
+
 
   }
 

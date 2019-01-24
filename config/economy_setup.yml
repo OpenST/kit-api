@@ -42,7 +42,7 @@ step_config:
     weight: 3
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.deploy_utility_branded_token_kind%>
-    weight: 10
+    weight: 3
     group: 2
   - kind: <%= GlobalConstant::WorkflowStep.save_utility_branded_token_kind%>
     weight: 3
@@ -51,7 +51,7 @@ step_config:
     weight: 3
     group: 3
   - kind: <%= GlobalConstant::WorkflowStep.save_token_gateway_kind%>
-    weight: 10
+    weight: 3
     group: 3
   - kind: <%= GlobalConstant::WorkflowStep.token_deploy_co_gateway_kind%>
     weight: 3
@@ -80,6 +80,25 @@ step_config:
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_gateway_in_bt%>
     weight: 3
     group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_gateway_composer%>
+    weight: 3
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.verify_deploy_gateway_composer%>
+    weight: 3
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_owner_in_ubt%>
+    weight: 3
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_owner_in_ubt%>
+    weight: 3
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.verify_economy_setup%>
+    weight: 3
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.mark_success%>
+    weight: 3
+    group: 7
+
 
 group_config:
   0:
@@ -103,6 +122,9 @@ group_config:
   6:
     display_text: 'Verifying and finalizing token setup'
     name: 'Token Setup Finalization'
+  7:
+    display_text: 'Token Setup Completed'
+    name: 'Completed'
 
 
 
