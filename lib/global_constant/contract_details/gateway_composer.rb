@@ -4,7 +4,7 @@ module GlobalConstant
 
       def self.gas
         return {
-          approve: 1000
+          stakeRequests: 1000
         }
       end
 

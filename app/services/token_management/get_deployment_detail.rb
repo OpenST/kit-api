@@ -100,14 +100,11 @@ module TokenManagement
 
       cached_response_data = CacheManagement::WorkflowStatus.new([@workflow.id]).fetch
 
-      fail OstCustomError.new validation_error(
-                                'tm_sd_1',
-                                'invalid_api_params',
-                                ['invalid_workflow_id'],
-                                GlobalConstant::ErrorAction.default
-                              ) if cached_response_data[@workflow.id].blank?
+      @api_response_data['workflow_current_step'] = {}
 
-      @api_response_data['workflow_current_step'] = cached_response_data[@workflow.id][:current_step]
+      if cached_response_data[@workflow.id].present?
+        @api_response_data['workflow_current_step'] = cached_response_data[@workflow.id][:current_step]
+      end
 
       @api_response_data['workflow'] = {
         id: @workflow.id,

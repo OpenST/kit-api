@@ -33,12 +33,10 @@ class FetchGoToByEconomyState < ServicesBase
 
       go_to = {}
 
-      return error_with_go_to('s_fgtbes_1', 'data_validation_failed', GlobalConstant::GoTo.token_setup) if @token.blank? ||
-        @workflow.blank? ||
-        @token[:status] == GlobalConstant::ClientToken.not_deployed
+      if @token.blank? || @workflow.blank? || @token[:status] == GlobalConstant::ClientToken.not_deployed
+        go_to = GlobalConstant::GoTo.token_setup
 
-      # If token deployment has started.
-      if @token[:status] == GlobalConstant::ClientToken.deployment_started
+      elsif @token[:status] == GlobalConstant::ClientToken.deployment_started
 
         fail OstCustomError.new validation_error(
                                   's_fgt_3',

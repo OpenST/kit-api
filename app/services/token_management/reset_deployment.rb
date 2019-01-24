@@ -54,6 +54,7 @@ module TokenManagement
       @token_details = Token.where(client_id: @client_id).first
       Util::EntityHelper.token_not_found_response("s_tm_rd_1") if @token_details.blank?
 
+      success
     end
 
 
@@ -70,6 +71,7 @@ module TokenManagement
       @token_details.status = GlobalConstant::ClientToken.not_deployed
       @token_details.save!
 
+      success
     end
 
 

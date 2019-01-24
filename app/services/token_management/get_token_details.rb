@@ -41,10 +41,8 @@ module TokenManagement
 
         fetch_workflow
 
-        if @token.present?  && @token[:status] != GlobalConstant::ClientToken.not_deployed
-          r = fetch_goto
-          return r unless r.success?
-        end
+        r = fetch_goto
+        return r unless r.success?
 
         # TODO: Open this functionality when economy setup is functional
         #r = fetch_token_details_from_saas
