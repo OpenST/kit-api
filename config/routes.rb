@@ -33,10 +33,14 @@ Rails.application.routes.draw do
     match '' => :token_details_post, via: :POST
     match 'deploy' => :deploy_get, via: :GET
     match 'deploy' => :deploy_post, via: :POST
-    match 'mint' => :mint_get, via: :GET
-    match 'mint' => :mint_post, via: :POST
-    match 'mint_progress' => :mint_progress, via: :GET
     match 'reset-deployment' => :reset_deployment, via: :POST
+  end
+
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token/mint", controller: 'token/mint' do
+    match '' => :mint_get, via: :GET
+    match '' => :mint_post, via: :POST
+    match 'mint_progress' => :mint_progress, via: :GET
+    match 'grant' => :grant_get, via: :GET
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses' do
