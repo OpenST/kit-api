@@ -302,3 +302,8 @@ invalid_staker_address:
   parameter: 'staker_address'
   code: 'invalid'
   message: 'Invalid staker_address'
+
+invalid_address:
+  parameter: 'address'
+  code: 'invalid'
+  message: 'Invalid address'

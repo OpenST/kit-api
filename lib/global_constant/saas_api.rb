@@ -40,6 +40,10 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/contracts/gateway-composer"
     end
 
+    def self.grant_eth_ost
+      "#{GlobalConstant::Environment.url_prefix}/internal/mint/grant"
+    end
+
   end
 
 end

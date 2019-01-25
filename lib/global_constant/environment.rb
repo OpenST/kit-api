@@ -19,6 +19,10 @@ module GlobalConstant
       'testnet'
     end
 
+    def self.production_environment
+      'production'
+    end
+
     def self.url_prefix
       GlobalConstant::Base.main_sub_environment? ? mainnet_url_prefix : testnet_url_prefix
     end

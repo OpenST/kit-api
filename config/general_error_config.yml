@@ -97,3 +97,8 @@ data_validation_failed:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
   message: "data validation failed."
+
+grant_limit_reached:
+  http_code: 422
+  code: "INVALID_REQUEST"
+  message: "Grant has been given to the address in last 24 hours. Please try after sometime"

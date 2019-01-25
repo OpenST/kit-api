@@ -75,6 +75,10 @@ module GlobalConstant
       @saas_api ||= fetch_config.fetch('saas_api', {}).with_indifferent_access
     end
 
+    def self.grant_timeout
+      86400 #24 hours
+    end
+
     private
 
     def self.fetch_config

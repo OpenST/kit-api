@@ -220,3 +220,8 @@
     - :client_id
     - :client_manager
   :optional:
+'TokenManagement::GrantEthOst':
+  :mandatory:
+    - :client_id
+    - :address
+  :optional:
