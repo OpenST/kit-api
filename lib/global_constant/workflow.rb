@@ -3,6 +3,7 @@ module GlobalConstant
   class Workflow
     class << self
 
+      # Workflow kind constants Start #
       def token_deploy
         'token_deploy'
       end
@@ -18,6 +19,12 @@ module GlobalConstant
       def st_prime_stake_and_mint
         'st_prime_stake_and_mint'
       end
+
+      def grant_eth_ost
+        'grant_eth_ost'
+      end
+
+      # Workflow kind constants End #
 
       def in_progress
         'inProgress'

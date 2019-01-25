@@ -53,6 +53,12 @@ module GlobalConstant
         }
       end
 
+      def token_mint_progress
+        {
+          by_screen_name: :token_mint_progress
+        }
+      end
+
       def identify_wf_goto(workflow)
         if workflow.kind == GlobalConstant::Workflow.token_deploy
           return token_deploy

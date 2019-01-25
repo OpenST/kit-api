@@ -20,8 +20,6 @@ module TokenManagement
       @client_manager = params[:client_manager]
 
       @api_response_data = {}
-      @token_id = nil
-      @workflows = {}
 
     end
 
@@ -39,13 +37,14 @@ module TokenManagement
 
         validate_and_sanitize
 
-        fetch_running_workflows
+        fetch_workflows
 
         fetch_and_validate_token
 
-        add_token_to_response
+        r = fetch_goto
+        return r unless r.success?
 
-        @token_id = @token[:id]
+        add_token_to_response
 
         fetch_addresses
 
@@ -72,7 +71,7 @@ module TokenManagement
       validate
     end
 
-    # Fetch workflows that are running. If token setup is running redirect.
+    # Fetch workflow
     #
     # * Author: Alpesh
     # * Date: 18/01/2018
@@ -80,24 +79,43 @@ module TokenManagement
     #
     # @return [Result::Base]
     #
-    def fetch_running_workflows
+    def fetch_workflows
       workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
-      @api_response_data[:workflows] = []
+      @api_response_data[:workflow] = []
 
       if workflows.present? && workflows[@client_id].present?
         workflows[@client_id].each do |wf|
-          if wf.kind == GlobalConstant::Workflow.token_deploy
-            return error_with_go_to('s_tm_m_1', 'invalid_api_params', GlobalConstant::GoTo.token_deploy)
+          if wf.status == GlobalConstant::Workflow.grant_eth_ost
+            @api_response_data[:workflow].push({id: wf.id, kind: wf.kind})
+          elsif wf.status == GlobalConstant::Workflow.token_deploy
+            @deployment_workflow ||= wf
+          elsif wf.status == GlobalConstant::Workflow.stake_and_mint
+            @mint_workflow ||= wf
           end
-          @api_response_data[:workflows].push(
-            {
-              id: wf.id,
-              kind: wf.kind
-            }) if wf.status == GlobalConstant::Workflow.in_progress
         end
       end
 
       success
+    end
+
+    # Fetch token details
+    #
+    # * Author: Shlok
+    # * Date: 21/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_goto
+
+      FetchGoToByEconomyState.new({
+                                    token: @token,
+                                    client_id: @client_id,
+                                    deployment_workflow: @deployment_workflow,
+                                    mint_workflow: @mint_workflow,
+                                    from_page: GlobalConstant::GoTo.token_mint
+                                  }).fetch_by_economy_state
+
     end
 
     # Fetch addresses details
@@ -109,12 +127,13 @@ module TokenManagement
     # @return [Result::Base]
     #
     def fetch_addresses
-      addresses_data = CacheManagement::TokenAddresses.new([@token_id]).fetch
+      token_id = @token[:id]
+      addresses_data = CacheManagement::TokenAddresses.new([token_id]).fetch
       addresses = {}
-      addresses[:whitelisted] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind] ||= []
-      addresses[:workers] = addresses_data[@token_id][GlobalConstant::TokenAddresses.worker_address_kind] ||= []
-      addresses[:owner] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind]
-      addresses[:admin] = addresses_data[@token_id][GlobalConstant::TokenAddresses.admin_address_kind]
+      addresses[:whitelisted] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind] ||= []
+      addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.worker_address_kind] ||= []
+      addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]
+      addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.admin_address_kind]
 
       @api_response_data[:origin_addresses] = addresses
       @api_response_data[:auxiliary_addresses] = addresses

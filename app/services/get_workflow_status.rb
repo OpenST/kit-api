@@ -9,6 +9,7 @@ class GetWorkflowStatus < ServicesBase
   # @params [Integer] parent_id (mandatory) - workflow parent Id
   #
   # @return [TokenSetup::SetupProgress]
+  #
   def initialize(params)
 
     super
@@ -26,6 +27,7 @@ class GetWorkflowStatus < ServicesBase
   # * Reviewed By:
   #
   # @return [Result::Base]
+  #
   def perform
     handle_errors_and_exceptions do
 

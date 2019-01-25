@@ -55,7 +55,7 @@ module Util
         return token_not_found_response("#{err_prefix}_1") if client_id.blank?
         token = CacheManagement::TokenDetails.new([client_id]).fetch[client_id]
         return token_not_found_response("#{err_prefix}_2") if token.blank?
-        token
+        success_with_data(token)
       end
 
       #TODO: Discuss about the following below private methods.
@@ -144,7 +144,7 @@ module Util
       # @return [Result::Base]
       #
       def token_not_found_response(err)
-        fail OstCustomError.new error_with_data(
+        error_with_data(
                                   err,
                                   'token_not_found',
                                   GlobalConstant::ErrorAction.default

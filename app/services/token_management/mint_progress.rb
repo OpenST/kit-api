@@ -33,11 +33,14 @@ module TokenManagement
 
         fetch_and_validate_token
 
+        fetch_workflows
+
+        r = fetch_goto
+        return r unless r.success?
+
         add_token_to_response
 
         @token_id = @token[:id]
-
-        fetch_workflow
 
         fetch_workflow_current_status
 
@@ -79,24 +82,48 @@ module TokenManagement
     #
     # @return [Result::Base]
     #
-    def fetch_workflow
+    def fetch_workflows
 
       workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
       @api_response_data[:workflow] = []
 
       if(workflows.present? && workflows[@client_id].present?)
         workflows[@client_id].each do |wf|
-          if wf.status == GlobalConstant::Workflow.in_progress
-            @api_response_data[:workflow] = {
-              id: wf.id,
-              kind: wf.kind
-            }
+          if wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
+            if wf.status == GlobalConstant::Workflow.in_progress
+              @api_response_data[:workflow] = {id: wf.id, kind: wf.kind}
+              @workflow_id = wf.id
+            end
+            @mint_workflow ||= wf
+
+          elsif wf.status == GlobalConstant::Workflow.token_deploy
+            @deployment_workflow ||= wf
           end
         end
       end
-      @workflow_id = @api_response_data[:workflow][0][:id]
 
       success
+    end
+
+
+    # Fetch token details
+    #
+    # * Author: Shlok
+    # * Date: 21/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_goto
+
+      FetchGoToByEconomyState.new({
+                                    token: @token,
+                                    client_id: @client_id,
+                                    deployment_workflow: @deployment_workflow,
+                                    mint_workflow: @mint_workflow,
+                                    from_page: GlobalConstant::GoTo.token_mint_progress
+                                  }).fetch_by_economy_state
+
     end
 
     # Fetch workflow current status

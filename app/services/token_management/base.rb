@@ -49,8 +49,13 @@ module TokenManagement
     #
     # @return [Result::Base]
     #
+    # Sets @token
+    #
     def fetch_and_validate_token
-      @token = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
+      return token_resp unless token_resp.success?
+
+      @token = token_resp.data
 
       success
     end
