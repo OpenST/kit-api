@@ -81,23 +81,21 @@ module TokenManagement
     #
     def fetch_workflow
 
-      cache_response_data = CacheManagement::WorkflowByClient.new([@client_id]).fetch
-
       workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
       @api_response_data[:workflow] = []
 
       if(workflows.present? && workflows[@client_id].present?)
         workflows[@client_id].each do |wf|
-          @api_response_data[:workflow].push(
-            {
+          if wf.status == GlobalConstant::Workflow.in_progress
+            @api_response_data[:workflow] = {
               id: wf.id,
               kind: wf.kind
-            }) if wf.status == GlobalConstant::Workflow.in_progress
+            }
+          end
         end
       end
       @workflow_id = @api_response_data[:workflow][0][:id]
 
-      Rails.logger.info("==========hdvetuqfcvwtcusxasioxod=======#{@api_response_data[:workflow][0][:id]}")
       success
     end
 
