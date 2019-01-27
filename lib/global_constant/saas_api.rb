@@ -41,7 +41,7 @@ module GlobalConstant
     end
 
     def self.grant_eth_ost
-      "#{GlobalConstant::Environment.url_prefix}/internal/mint/grant"
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/mint/grant"
     end
 
   end

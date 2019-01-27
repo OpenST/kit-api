@@ -186,7 +186,7 @@ module TokenManagement
       return saas_response unless saas_response.success?
 
       @api_response_data[:workflow] = {
-        id: saas_response.data[:id],
+        id: saas_response.data[:workflow_id],
         kind: GlobalConstant::Workflow.grant_eth_ost
       }
 
