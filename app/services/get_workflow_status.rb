@@ -97,7 +97,7 @@ class GetWorkflowStatus < ServicesBase
     }
 
 
-    cached_workflow_status_data = CacheManagement::WorkflowStatus.new([@workflow_id]).fetch
+    cached_workflow_status_data = KitSaasSharedCacheManagement::WorkflowStatus.new([@workflow_id]).fetch
 
     @api_response_data['workflow_current_step'] = {}
     if cached_workflow_status_data[@workflow_id][:current_step].present?

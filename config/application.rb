@@ -55,17 +55,7 @@ module CompanyApi
     config.log_level = :debug
     config.log_formatter = CustomLogFormatter.new
 
-    memcache_instance = GlobalConstant::Cache.memcached_instances
-
-    # NOTE: We are handling environment specific namespace in MemcacheKey file
-    # so let it be st_Rails.env
-    memcache_options = {
-      expires_in: 1.day,
-      compress: false,
-      down_retry_delay: 5,
-      socket_timeout: 1
-    }
-    config.cache_store = :dalli_store, memcache_instance, memcache_options
+    config.cache_store = :dalli_store, GlobalConstant::Cache.memcached_instances, GlobalConstant::Cache.memcached_config
 
   end
 

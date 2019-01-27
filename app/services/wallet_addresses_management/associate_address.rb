@@ -99,7 +99,7 @@ module WalletAddressesManagement
         )
       end
 
-      @token_details = CacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
+      @token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
 
       if @token_details.blank?
         return validation_error(

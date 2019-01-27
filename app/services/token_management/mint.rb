@@ -11,7 +11,7 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client_manager (optional) - Client manager hash
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::Mint]
     #
     def initialize(params)
 
@@ -128,7 +128,7 @@ module TokenManagement
     #
     def fetch_addresses
       token_id = @token[:id]
-      addresses_data = CacheManagement::TokenAddresses.new([token_id]).fetch
+      addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
       addresses = {}
       addresses[:whitelisted] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind] ||= []
       addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.worker_address_kind] ||= []

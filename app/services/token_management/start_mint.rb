@@ -10,7 +10,7 @@ module TokenManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::StartMint]
     #
     def initialize(params)
 
@@ -133,7 +133,7 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_workflow_data
 
-      cached_response_data = CacheManagement::WorkflowStatus.new([@workflow_id]).fetch
+      cached_response_data = KitSaasSharedCacheManagement::WorkflowStatus.new([@workflow_id]).fetch
       @api_response_data[:workflow_current_step] = cached_response_data[@workflow_id][:current_step]
 
       @api_response_data[:workflow_extended] = {
@@ -143,8 +143,8 @@ module TokenManagement
       }
 
       success
-    end
 
+    end
 
   end
 

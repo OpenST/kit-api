@@ -1,6 +1,6 @@
-module CacheManagement
+module KitSaasSharedCacheManagement
 
-  class ApiCredentials < CacheManagement::Base
+  class ApiCredentials < KitSaasSharedCacheManagement::Base
 
     # Fetch from cache and for cache misses call fetch_from_db
     #
@@ -55,16 +55,11 @@ module CacheManagement
     #
     def clear(affected_api_keys)
 
-      set_id_to_cache_key_map
-
-      @id_to_cache_key_map.each do |_, key|
-        # delete cache key set by rails which has list of all key / secret pairs
-        Memcache.delete(key)
-      end
+      super()
 
       affected_api_keys.each do |affected_api_key|
         # delete cache key set by saas which has secret key for given secret key
-        Memcache.delete("#{MemcacheKey.key_prefix(true)}_cs_#{affected_api_key.downcase}")
+        Memcache.delete_from_all_instances("#{MemcacheKey.saas_shared_key_prefix}_cs_#{affected_api_key.downcase}")
       end
 
       nil
@@ -132,14 +127,31 @@ module CacheManagement
     # Fetch cache key
     #
     # * Author: Puneet
-    # * Date: 21/01/2019
+    # * Date: 06/12/2018
     # * Reviewed By:
     #
     # @return [String]
     #
-    def get_cache_key(id)
-      # It uses shared cache key between company api and saas.
-      memcache_key_object.key_template % @options.merge(id: id)
+    def get_kit_cache_key(id)
+      memcache_key_object.key_template % @options.merge(
+          id: id,
+          prefix: memcache_key_object.kit_key_prefix
+      )
+    end
+
+    # Fetch saas cache key
+    #
+    # * Author: Puneet
+    # * Date: 06/12/2018
+    # * Reviewed By:
+    #
+    # @return [String]
+    #
+    def get_saas_cache_key(id)
+      memcache_key_object.key_template % @options.merge(
+          id: id,
+          prefix: memcache_key_object.saas_shared_key_prefix
+      )
     end
 
     # Fetch cache expiry (in seconds)

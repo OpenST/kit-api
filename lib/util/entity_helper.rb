@@ -53,7 +53,7 @@ module Util
       #
       def fetch_and_validate_token(client_id, err_prefix = 'u_eh_m')
         return token_not_found_response("#{err_prefix}_1") if client_id.blank?
-        token = CacheManagement::TokenDetails.new([client_id]).fetch[client_id]
+        token = KitSaasSharedCacheManagement::TokenDetails.new([client_id]).fetch[client_id]
         return token_not_found_response("#{err_prefix}_2") if token.blank?
         success_with_data(token)
       end

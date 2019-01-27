@@ -86,6 +86,14 @@ class Memcache
       return nil
     end
 
+    def delete_from_all_instances(key)
+      GlobalConstant::Cache.memcached_instances.each do |instance_url|
+        dc = Dalli::Client.new(instance_url, GlobalConstant::Cache.memcached_config)
+        Rails.logger.debug "MEMCACHE-DEBUG: delete #{key} from #{instance_url}"
+        dc.delete(key)
+      end
+    end
+
   end
 
 end

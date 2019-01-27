@@ -58,7 +58,7 @@ module CacheManagement
     # @return [String]
     #
     def get_cache_key
-      memcache_key_object.key_template % {}
+      memcache_key_object.key_template % {prefix: memcache_key_object.kit_key_prefix}
     end
 
     # Fetch cache expiry (in seconds)

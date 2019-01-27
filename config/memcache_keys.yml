@@ -22,7 +22,7 @@ client:
   api_credentials:
     key_template: 'c_ac_%{id}'
     expiry_in_seconds: 86400
-    used_in_shared_env: 1
+    shared_with_saas: 1
 
 client_manager:
   details:
@@ -33,13 +33,13 @@ token_management:
   details:
     key_template: 'c_tkn_%{client_id}'
     expiry_in_seconds: 86400
-    used_in_shared_env: 1
+    shared_with_saas: 1
 
 token_address:
   details:
     key_template: 'ta_%{token_id}'
     expiry_in_seconds: 86400
-    used_in_shared_env: 1
+    shared_with_saas: 1
 
 ost_price_points:
   default:
@@ -50,7 +50,7 @@ workflow_status:
   default:
     key_template: 'c_d_s_%{workflow_id}'
     expiry_in_seconds: 300
-    used_in_shared_env: 1
+    shared_with_saas: 1
 
 workflow:
   default:

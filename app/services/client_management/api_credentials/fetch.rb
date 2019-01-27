@@ -29,7 +29,7 @@ module ClientManagement
       #
       def perform
         success_with_data(
-          api_credentials: CacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
+          api_credentials: KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
         )
       end
 

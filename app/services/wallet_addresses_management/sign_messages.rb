@@ -7,7 +7,7 @@ module WalletAddressesManagement
     # * Date: 19/01/2019
     # * Reviewed By:
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::SignMessages]
     #
     def initialize()
 

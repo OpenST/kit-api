@@ -61,7 +61,7 @@ module ClientManagement
 
         @id_to_deactivate = @id_to_deactivate.to_i
 
-        api_credentials = CacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
+        api_credentials = KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
 
         # only one key is present, we can not deactivate it
         return validation_error(
@@ -96,7 +96,7 @@ module ClientManagement
 
         ApiCredential.where(id: @id_to_deactivate).update_all(expiry_timestamp: current_timestamp)
 
-        CacheManagement::ApiCredentials.new([@client_id]).clear([@deactivated_api_key])
+        KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).clear([@deactivated_api_key])
 
         success
 

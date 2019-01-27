@@ -75,7 +75,7 @@ module WalletAddressesManagement
         )
       end
 
-      @token_details = CacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
+      @token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
 
       if @token_details.blank?
         return validation_error(
@@ -93,7 +93,7 @@ module WalletAddressesManagement
 
     def fetch_addresses
       @token_id = @token_details[:id]
-      data_from_cache = CacheManagement::TokenAddresses.new([@token_id]).fetch
+      data_from_cache = KitSaasSharedCacheManagement::TokenAddresses.new([@token_id]).fetch
       success_with_data(data_from_cache)
     end
 

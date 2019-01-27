@@ -95,7 +95,7 @@ module ClientManagement
 
         ApiCredential.where(id: existing_row.id).update_all(expiry_timestamp: current_timestamp + @buffer_time * 60)
 
-        CacheManagement::ApiCredentials.new([@client_id]).clear([existing_row.api_key])
+        KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).clear([existing_row.api_key])
 
         success
 

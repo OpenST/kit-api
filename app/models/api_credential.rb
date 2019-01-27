@@ -27,7 +27,7 @@ class ApiCredential < DbConnection::KitSaasSubenv
   }
 
   def flush_cache
-    CacheManagement::ApiCredentials.new([client_id]).clear([api_key])
+    KitSaasSharedCacheManagement::ApiCredentials.new([client_id]).clear([api_key])
   end
 
 end

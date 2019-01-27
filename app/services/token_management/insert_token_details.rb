@@ -13,7 +13,7 @@ module TokenManagement
     # @params [String] symbol (mandatory) - Token symbol
     # @params [String] conversion_factor (mandatory) - Conversion factor
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::InsertTokenDetails]
     #
     def initialize(params)
 
@@ -143,7 +143,7 @@ module TokenManagement
 
       @token_details.save!
 
-      CacheManagement::TokenDetails.new([@client_id]).clear
+      KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).clear
 
       success
     end

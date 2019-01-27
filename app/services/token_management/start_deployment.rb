@@ -10,7 +10,7 @@ module TokenManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::StartDeployment]
     #
     def initialize(params)
 
@@ -86,7 +86,7 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_workflow_current_status
 
-      cached_response_data = CacheManagement::WorkflowStatus.new([@workflow_id]).fetch
+      cached_response_data = KitSaasSharedCacheManagement::WorkflowStatus.new([@workflow_id]).fetch
 
       workflow_current_step = {}
       if cached_response_data[@workflow_id].present?

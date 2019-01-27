@@ -10,7 +10,7 @@ module TokenManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::ResetDeployment]
     #
     def initialize(params)
 

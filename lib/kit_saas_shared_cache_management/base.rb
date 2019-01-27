@@ -1,4 +1,4 @@
-module CacheManagement
+module KitSaasSharedCacheManagement
 
   class Base
 
@@ -19,7 +19,6 @@ module CacheManagement
 
       @ids = ids
       @options = options
-      @options[:prefix] = memcache_key_object.kit_key_prefix
 
       @id_to_cache_key_map = {}
 
@@ -35,8 +34,9 @@ module CacheManagement
 
       set_id_to_cache_key_map
 
-      @id_to_cache_key_map.each do |_, key|
-        Memcache.delete(key)
+      @id_to_cache_key_map.each do |_, keys|
+        Memcache.delete(keys[:kit])
+        Memcache.delete_from_all_instances(keys[:saas])
       end
 
       nil
@@ -55,11 +55,16 @@ module CacheManagement
 
       set_id_to_cache_key_map
 
-      data_from_cache = Memcache.read_multi(@id_to_cache_key_map.values)
+      cache_keys_to_fetch = []
+      @id_to_cache_key_map.each do |_, keys|
+        cache_keys_to_fetch.push(keys[:kit])
+      end
+
+      data_from_cache = Memcache.read_multi(cache_keys_to_fetch)
 
       ids_for_cache_miss = []
       @ids.each do |id|
-        ids_for_cache_miss << id if data_from_cache[@id_to_cache_key_map[id]].nil?
+        ids_for_cache_miss << id if data_from_cache[@id_to_cache_key_map[id][:kit]].nil?
       end
 
       if ids_for_cache_miss.any?
@@ -70,7 +75,7 @@ module CacheManagement
 
         # to ensure we do not always query DB for invalid ids being cached, we would set {} in cache against such ids
         @ids.each do |id|
-          data_to_set[id] = {} if data_from_cache[@id_to_cache_key_map[id]].nil? && data_to_set[id].nil?
+          data_to_set[id] = {} if data_from_cache[@id_to_cache_key_map[id][:kit]].nil? && data_to_set[id].nil?
         end
 
         set_cache(data_to_set) if fetch_data_rsp.success?
@@ -78,7 +83,7 @@ module CacheManagement
       end
 
       @ids.inject({}) do |data, id|
-        data[id] = data_from_cache[@id_to_cache_key_map[id]] || data_to_set[id]
+        data[id] = data_from_cache[@id_to_cache_key_map[id][:kit]] || data_to_set[id]
         data
       end
 
@@ -98,18 +103,7 @@ module CacheManagement
       fail 'sub class to implement'
     end
 
-    #
-    # * Author: Puneet
-    # * Date: 06/12/2018
-    # * Reviewed By:
-    #
-    # @return [MemcacheKey]
-    #
-    def memcache_key_object
-      fail 'sub class to implement'
-    end
-
-    # Fetch cache key
+    # Fetch cache key in Kit
     #
     # * Author: Puneet
     # * Date: 06/12/2018
@@ -117,7 +111,19 @@ module CacheManagement
     #
     # @return [String]
     #
-    def get_cache_key(id)
+    def get_kit_cache_key(id)
+      fail 'sub class to implement'
+    end
+
+    # Fetch cache key in Saas (only used to flush for Saas)
+    #
+    # * Author: Puneet
+    # * Date: 06/12/2018
+    # * Reviewed By:
+    #
+    # @return [String]
+    #
+    def get_saas_cache_key(id)
       fail 'sub class to implement'
     end
 
@@ -141,11 +147,14 @@ module CacheManagement
     #
     def set_id_to_cache_key_map
       @ids.each do |id|
-        @id_to_cache_key_map[id] = get_cache_key(id)
+        @id_to_cache_key_map[id] = {
+          kit: get_kit_cache_key(id),
+          saas: get_saas_cache_key(id)
+        }
       end
     end
 
-    # set cache using data provided (data is indexed by id)
+    # set cache (in Kit's key) using data provided (data is indexed by id)
     #
     # * Author: Puneet
     # * Date: 06/12/2018
@@ -153,7 +162,7 @@ module CacheManagement
     #
     def set_cache(cache_data)
       cache_data.each do |id, data|
-        Memcache.write(@id_to_cache_key_map[id], data, get_cache_expiry)
+        Memcache.write(@id_to_cache_key_map[id][:kit], data, get_cache_expiry)
       end
     end
 

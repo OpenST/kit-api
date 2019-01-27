@@ -11,7 +11,7 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Object] client_manager(optional) - Client manager
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::GetTokenDetails]
     #
     def initialize(params)
 
@@ -71,7 +71,7 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_token_details
-      @token = CacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
+      @token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
 
       @api_response_data[:token] = @token
 

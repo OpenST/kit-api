@@ -36,7 +36,7 @@ class Token < DbConnection::KitSaasSubenv
 # * Reviewed By:
 #
   def flush_cache
-    CacheManagement::TokenDetails.new([client_id]).clear
+    KitSaasSharedCacheManagement::TokenDetails.new([client_id]).clear
   end
 
 

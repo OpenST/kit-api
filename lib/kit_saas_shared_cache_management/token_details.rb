@@ -1,6 +1,6 @@
-module CacheManagement
+module KitSaasSharedCacheManagement
 
-  class TokenDetails < CacheManagement::Base
+  class TokenDetails < KitSaasSharedCacheManagement::Base
 
     # Fetch from db
     #
@@ -38,8 +38,26 @@ module CacheManagement
     #
     # @return [String]
     #
-    def get_cache_key(client_id)
-      memcache_key_object.key_template % @options.merge(client_id: client_id)
+    def get_kit_cache_key(client_id)
+      memcache_key_object.key_template % @options.merge(
+        client_id: client_id,
+        prefix: memcache_key_object.kit_key_prefix
+      )
+    end
+
+    # Fetch saas cache key
+    #
+    # * Author: Puneet
+    # * Date: 06/12/2018
+    # * Reviewed By:
+    #
+    # @return [String]
+    #
+    def get_saas_cache_key(client_id)
+      memcache_key_object.key_template % @options.merge(
+          client_id: client_id,
+          prefix: memcache_key_object.saas_shared_key_prefix
+      )
     end
 
     # Fetch cache expiry (in seconds)
@@ -55,4 +73,5 @@ module CacheManagement
     end
 
   end
+
 end
