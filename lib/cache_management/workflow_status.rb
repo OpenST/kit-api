@@ -31,7 +31,7 @@ module CacheManagement
     # @return [MemcacheKey]
     #
     def memcache_key_object
-      @m_k_o ||= MemcacheKey.new('deployment_status.default')
+      @m_k_o ||= MemcacheKey.new('workflow_status.default')
     end
 
     # Fetch cache key
