@@ -45,6 +45,7 @@ ost_price_points:
   default:
     key_template: 'c_oppd_def'
     expiry_in_seconds: 300
+    shared_with_saas: 1
 
 workflow_status:
   default:

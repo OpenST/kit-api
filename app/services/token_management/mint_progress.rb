@@ -161,8 +161,7 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_default_price_points
-      @api_response_data[:price_points] = CacheManagement::OstPricePointsDefault.new.fetch
-
+      @api_response_data[:price_points] = KitSaasSharedCacheManagement::OstPricePointsDefault.new.fetch
       success
     end
 

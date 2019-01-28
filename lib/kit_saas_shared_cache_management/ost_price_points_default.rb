@@ -1,4 +1,4 @@
-module CacheManagement
+module KitSaasSharedCacheManagement
 
   class OstPricePointsDefault
 
@@ -13,11 +13,9 @@ module CacheManagement
     # @return [Result::Base]
     #
     def fetch
-
-      Memcache.get_set_memcached(get_cache_key, get_cache_expiry) do
+      Memcache.get_set_memcached(get_kit_cache_key, get_cache_expiry) do
         fetch_from_db
       end
-
     end
 
     # Fetch from db
@@ -29,19 +27,13 @@ module CacheManagement
     # @return [Result::Base]
     #
     def fetch_from_db
-
       record = ::CurrencyConversionRate.where(["status = ? AND quote_currency = ?", 1, 1]).order('timestamp desc').first
-
       data_to_cache = {}
       if record
         data_to_cache[record.base_currency] = {}
         data_to_cache[record.base_currency][record.quote_currency] = record.conversion_rate.to_s
       end
-
-      Rails.logger.info("data_to_cache----#{data_to_cache.inspect}")
-
       data_to_cache
-
     end
 
     # * Author: Ankit
@@ -62,9 +54,20 @@ module CacheManagement
     #
     # @return [String]
     #
-    def get_cache_key()
-      # It uses shared cache key between company api and saas.
-      memcache_key_object.key_template % {}
+    def get_kit_cache_key
+      memcache_key_object.key_template % {prefix: memcache_key_object.kit_key_prefix}
+    end
+
+    # Fetch cache key
+    #
+    # * Author: Puneet
+    # * Date: 01/02/2018
+    # * Reviewed By:
+    #
+    # @return [String]
+    #
+    def get_saas_cache_key
+      memcache_key_object.key_template % {prefix: memcache_key_object.saas_shared_key_prefix}
     end
 
     # Fetch cache expiry (in seconds)
@@ -88,8 +91,10 @@ module CacheManagement
     # @return [Result::Base]
     #
     def clear
-      Memcache.delete(get_cache_key)
+      Memcache.delete(get_kit_cache_key)
+      Memcache.delete_from_all_instances(get_saas_cache_key)
     end
 
   end
+
 end
