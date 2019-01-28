@@ -89,7 +89,7 @@ module TokenManagement
             @api_response_data[:workflow].push({id: wf.id, kind: wf.kind})
           elsif wf.status == GlobalConstant::Workflow.token_deploy
             @deployment_workflow ||= wf
-          elsif wf.status == GlobalConstant::Workflow.stake_and_mint
+          elsif wf.status == GlobalConstant::Workflow.bt_stake_and_mint
             @mint_workflow ||= wf
           end
         end
