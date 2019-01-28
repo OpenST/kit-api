@@ -4,7 +4,7 @@ module Util
     
     REGEX_EMAIL = /\A[A-Z0-9]+[A-Z0-9_%+-]*(\.[A-Z0-9_%+-]{1,})*@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
     REGEX_EMAIL_DOMAIN = /\A@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
-    REGEX_TOKEN = /^[ \w\/=+%-].*$/mi
+    REGEX_TOKEN = /^([a-z0-9=\-]*)$/i
 
     # Check for integer-ness of an input
     #

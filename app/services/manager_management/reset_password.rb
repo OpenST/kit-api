@@ -81,10 +81,9 @@ module ManagerManagement
 
       validation_errors = []
 
+      validation_errors << 'invalid_r_t' if @r_t.blank? || !Util::CommonValidator.is_valid_token?(@r_t)
       validation_errors << 'password_invalid' unless Util::CommonValidator.is_valid_password?(@password)
       validation_errors << 'confirm_password_invalid' if @confirm_password != @password
-
-      validation_errors << 'invalid_r_t' if @r_t.blank?
 
       fail OstCustomError.new validation_error(
           'mm_rp_1',
