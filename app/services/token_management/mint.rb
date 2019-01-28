@@ -85,11 +85,11 @@ module TokenManagement
 
       if workflows.present? && workflows[@client_id].present?
         workflows[@client_id].each do |wf|
-          if wf.status == GlobalConstant::Workflow.grant_eth_ost
+          if wf.kind == GlobalConstant::Workflow.grant_eth_ost
             @api_response_data[:workflow].push({id: wf.id, kind: wf.kind})
-          elsif wf.status == GlobalConstant::Workflow.token_deploy
+          elsif wf.kind == GlobalConstant::Workflow.token_deploy
             @deployment_workflow ||= wf
-          elsif wf.status == GlobalConstant::Workflow.bt_stake_and_mint
+          elsif wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
             @mint_workflow ||= wf
           end
         end

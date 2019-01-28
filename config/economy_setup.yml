@@ -1,28 +1,28 @@
 step_config:
   - kind: <%= GlobalConstant::WorkflowStep.economy_setup_init_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.generate_token_addresses_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_funder_addr_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_funder_addr_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_admin_addr_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_admin_addr_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_worker_addr_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_worker_addr_kind%>
     weight: 3
-    group: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_token_organization_kind%>
     weight: 3
     group: 0
@@ -125,6 +125,9 @@ group_config:
   7:
     display_text: 'Token Setup Completed'
     name: 'Completed'
+  8:
+    display_text: 'Initializing'
+    name: 'Funding addresses'
 
 
 

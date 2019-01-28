@@ -57,6 +57,7 @@ workflow:
   default:
     key_template: 'c_w_f_%{id}'
     expiry_in_seconds: 300
+    shared_with_saas: 1
   by_client:
     key_template: 'c_w_f_bc_%{client_id}'
     expiry_in_seconds: 300
