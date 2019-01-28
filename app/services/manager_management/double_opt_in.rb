@@ -8,10 +8,11 @@ module ManagerManagement
     # * Date: 16/01/2018
     # * Reviewed By:
     #
-    # @params [String] r_t (mandatory) - token for double opt in
-    # @params [Integer] manager_id (mandatory) - manager id
     # @params [Hash] client (mandatory) - client to which this manager is associated
     # @params [Boolean] is_multi_auth_cookie_valid (optional)
+    # @params [Boolean] is_logged_in_manager (optional) - is logged in manager
+    # @params [Integer] manager_id (optional) - manager id
+    # @params [String] r_t (optional) - token for double opt in
     #
     # @return [ManagerManagement::DoubleOptIn]
     #
@@ -19,10 +20,11 @@ module ManagerManagement
 
       super
 
-      @r_t = @params[:r_t]
-      @manager_id = @params[:manager_id]
       @client = @params[:client]
       @is_multi_auth_cookie_valid = @params[:is_multi_auth_cookie_valid]
+      @is_logged_in_manager = @params[:is_logged_in_manager]
+      @r_t = @params[:r_t]
+      @manager_id = @params[:manager_id]
 
       @token = nil
       @manager_validation_hash_id = nil
@@ -43,16 +45,20 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
-
         fetch_logged_in_manager
 
-        if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
-          return success_with_data({}, fetch_go_to)
-        elsif @r_t.blank?
-          return success_with_data({manager: @manager_obj.formated_cache_data})
+        if is_logged_in_manager
+          if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+            return success_with_data({}, fetch_go_to)
+          elsif @r_t.blank?
+            return success_with_data({manager: @manager_obj.formated_cache_data})
+          end
+        else
+          return success_with_data({}) if @r_t.blank?
         end
 
+        validate_and_sanitize
+        
         fetch_manager_validation_record
 
         validate_double_opt_token
@@ -63,7 +69,11 @@ module ManagerManagement
 
         mark_manager_verified
 
-        success_with_data({}, fetch_go_to)
+        if is_logged_in_manager
+          success_with_data({}, fetch_go_to)
+        else
+          success_with_data({})
+        end
         
       end
 
@@ -103,8 +113,6 @@ module ManagerManagement
 
       @manager_validation_hash_id = splited_reset_token[0].to_i
 
-      @manager_id = @manager_id.to_i
-
       success
 
     end
@@ -119,12 +127,14 @@ module ManagerManagement
     #
     def fetch_logged_in_manager
 
+      return success unless is_logged_in_manager
+
       @manager_obj = Manager.where(id: @manager_id).first
 
       fail OstCustomError.new validation_error(
         'mm_doi_4',
         'invalid_api_params',
-        ['invalid_user_id'],
+        ['invalid_manager_id'],
         GlobalConstant::ErrorAction.default
       ) if @manager_obj.blank? || @manager_obj[:status] != GlobalConstant::Manager.active_status
 
@@ -164,8 +174,12 @@ module ManagerManagement
 
       invalid_url_error('mm_doi_9') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.double_optin_kind
 
-      fail OstCustomError.new unauthorized_access_response('mm_doi_10') if @manager_validation_hash_obj.manager_id != @manager_id
+      if is_logged_in_manager
+        fail OstCustomError.new unauthorized_access_response('mm_doi_10') if @manager_validation_hash_obj.manager_id != @manager_id
+      end
 
+      @manager_obj = Manager.where(id: @manager_validation_hash_obj.manager_id).first
+      
       success
 
     end
@@ -268,6 +282,10 @@ module ManagerManagement
                         client: @client,
                         manager: @manager_obj.formated_cache_data
                     }).fetch_by_manager_state
+    end
+    
+    def is_logged_in_manager
+      @is_logged_in_manager == 1
     end
 
   end

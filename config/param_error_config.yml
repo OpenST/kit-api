@@ -188,6 +188,11 @@ missing_manager_id:
   code: 'missing'
   message: 'missing manager_id'
 
+invalid_manager_id:
+  parameter: 'manager_id'
+  code: 'invalid'
+  message: 'invalid manager_id'
+
 missing_client_id:
   parameter: 'client_id'
   code: 'missing'

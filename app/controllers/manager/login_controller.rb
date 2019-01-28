@@ -9,11 +9,10 @@ class Manager::LoginController < Manager::BaseController
     :list_admins
   ]
 
-  before_action :verify_password_cookie, only: [
+  before_action :mandatory_verify_password_cookie, only: [
     :multi_factor_auth,
     :mfa,
-    :send_verify_email_link,
-    :verify_email
+    :send_verify_email_link
   ]
 
   # Sign up page load get request (to fetch dynamic data in signup page. for ex. invite related data)
@@ -194,8 +193,13 @@ class Manager::LoginController < Manager::BaseController
   # * Reviewed By:
   #
   def verify_email
+
+    cookie_verify_response = optional_verify_password_cookie
+    params[:is_logged_in_manager] = cookie_verify_response.success? ? 1 : 0
+
     service_response = ManagerManagement::DoubleOptIn.new(params).perform
     render_api_response(service_response)
+
   end
 
   # Send Email Verification Link

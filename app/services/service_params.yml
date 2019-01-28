@@ -57,10 +57,12 @@
   :optional:
 'ManagerManagement::DoubleOptIn':
   :mandatory:
-    - :manager_id
-    - :client
+    - :is_logged_in_manager
   :optional:
     - :r_t
+    - :client
+    - :manager_id
+    - :is_multi_auth_cookie_valid
 'ManagerManagement::SendResetPasswordLink':
   :mandatory:
     - :email

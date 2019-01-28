@@ -57,86 +57,114 @@ class WebController < ApplicationController
 
   private
 
-  # Authenticate request - verifies Password Auth cookie
+  # Authenticate request - verifies Password Auth cookie. if invalid log user out
   #
   # * Author: Puneet
   # * Date: 07/12/2018
   # * Reviewed By:
+  #
+  def mandatory_verify_password_cookie
+
+    cookie_verify_rsp = verify_password_cookie
+
+    unless cookie_verify_rsp.success?
+
+      # Clear cookie
+      delete_cookie(GlobalConstant::Cookie.user_cookie_name)
+      # Set 401 header
+      cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
+      cookie_verify_rsp.go_to = GlobalConstant::GoTo.login
+      render_api_response(cookie_verify_rsp)
+
+    end
+
+  end
+
+  # Authenticate request - verifies Password Auth cookie. if valid set vars accordingly else do nothing. DO NOT return error
+  #
+  # * Author: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By:
+  #
+  def optional_verify_password_cookie
+    verify_password_cookie
+  end
+
+  # Check if Password cookie is valid
+  #
+  # * Author: Puneet
+  # * Date: 08/12/2018
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
   #
   def verify_password_cookie
 
     # We firstly verify the password cookie. If password cookie is present, we return.
     cookie_value = cookies[GlobalConstant::Cookie.user_cookie_name.to_sym]
 
-    password_cookie_verify_rsp = ManagerManagement::VerifyCookie::PasswordAuth.new(
+    cookie_verify_rsp = ManagerManagement::VerifyCookie::PasswordAuth.new(
         cookie_value: cookie_value,
         browser_user_agent: http_user_agent
     ).perform
 
-    if password_cookie_verify_rsp.success?
+    if cookie_verify_rsp.success?
 
       # Update Cookie, if required
-      extended_cookie_value = password_cookie_verify_rsp.data[:extended_cookie_value]
+      extended_cookie_value = cookie_verify_rsp.data[:extended_cookie_value]
       set_cookie(
           GlobalConstant::Cookie.user_cookie_name,
           extended_cookie_value,
           GlobalConstant::Cookie.password_auth_expiry.from_now
       ) if extended_cookie_value.present?
 
-      params[:manager_id] = password_cookie_verify_rsp.data[:manager_id]
-      params[:manager] = password_cookie_verify_rsp.data[:manager]
-      params[:client_id] = password_cookie_verify_rsp.data[:client_id]
-      params[:client] = password_cookie_verify_rsp.data[:client]
-      params[:client_manager] = password_cookie_verify_rsp.data[:client_manager]
+      params[:manager_id] = cookie_verify_rsp.data[:manager_id]
+      params[:manager] = cookie_verify_rsp.data[:manager]
+      params[:client_id] = cookie_verify_rsp.data[:client_id]
+      params[:client] = cookie_verify_rsp.data[:client]
+      params[:client_manager] = cookie_verify_rsp.data[:client_manager]
       params[:is_multi_auth_cookie_valid] = false
       params[:is_password_auth_cookie_valid] = true
 
       # Remove sensitive data
-      password_cookie_verify_rsp.data = {}
+      cookie_verify_rsp.data = {}
 
-    # If password cookie is not present, we check for MFA cookie. We do this because sometimes a higher authenticated
-    # manager might try to re-visit some page which only needs a password cookie. That manager won't have a password
-    # cookie but would have a MFA cookie.
+      # If password cookie is not present, we check for MFA cookie. We do this because sometimes a higher authenticated
+      # manager might try to re-visit some page which only needs a password cookie. That manager won't have a password
+      # cookie but would have a MFA cookie.
     else
 
-      mfa_cookie_verify_rsp = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
+      cookie_verify_rsp = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
           cookie_value: cookie_value,
           browser_user_agent: http_user_agent
       ).perform
 
-      if mfa_cookie_verify_rsp.success?
+      if cookie_verify_rsp.success?
 
         # Update Cookie, if required
-        extended_cookie_value = mfa_cookie_verify_rsp.data[:extended_cookie_value]
+        extended_cookie_value = cookie_verify_rsp.data[:extended_cookie_value]
         set_cookie(
             GlobalConstant::Cookie.user_cookie_name,
             extended_cookie_value,
             GlobalConstant::Cookie.mfa_auth_expiry.from_now
         ) if extended_cookie_value.present?
 
-        params[:manager_id] = mfa_cookie_verify_rsp.data[:manager_id]
-        params[:manager] = mfa_cookie_verify_rsp.data[:manager]
-        params[:client_id] = mfa_cookie_verify_rsp.data[:client_id]
-        params[:client] = mfa_cookie_verify_rsp.data[:client]
-        params[:client_manager] = mfa_cookie_verify_rsp.data[:client_manager]
+        params[:manager_id] = cookie_verify_rsp.data[:manager_id]
+        params[:manager] = cookie_verify_rsp.data[:manager]
+        params[:client_id] = cookie_verify_rsp.data[:client_id]
+        params[:client] = cookie_verify_rsp.data[:client]
+        params[:client_manager] = cookie_verify_rsp.data[:client_manager]
         params[:is_multi_auth_cookie_valid] = true
         params[:is_password_auth_cookie_valid] = true
 
         # Remove sensitive data
-        mfa_cookie_verify_rsp.data = {}
-
-      else
-
-        # Clear cookie
-        delete_cookie(GlobalConstant::Cookie.user_cookie_name)
-        # Set 401 header
-        password_cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
-        password_cookie_verify_rsp.go_to = GlobalConstant::GoTo.login
-        render_api_response(password_cookie_verify_rsp)
+        cookie_verify_rsp.data = {}
 
       end
 
     end
+
+    cookie_verify_rsp
 
   end
 
