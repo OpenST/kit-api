@@ -8,14 +8,14 @@ class EmailTokenEncryptor
 
   def encrypt(string, token_type)
     handle_exception('encrypt', token_type) do
-      ciphertext_blob = client.encrypt_and_sign(string)
+      ciphertext_blob = Base64.urlsafe_encode64(client.encrypt_and_sign(string))
       success_with_data(ciphertext_blob: ciphertext_blob)
     end
   end
 
   def decrypt(encrypted_text, token_type)
     handle_exception('decrypt', token_type) do
-      plaintext = client.decrypt_and_verify(encrypted_text)
+      plaintext = client.decrypt_and_verify(Base64.urlsafe_decode64(encrypted_text))
       success_with_data(plaintext: plaintext)
     end
   end
