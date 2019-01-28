@@ -24,9 +24,8 @@ class MemcacheKey
       memcache_config = YAML.load_file(GlobalConstant::Cache.keys_config_file)
       memcache_config.inject({}) do |formatted_memcache_config, (group, group_config)|
         group_config.each do |entity, config|
-          prefix = kit_key_prefix(config['shared_with_saas'] == 1)
           formatted_memcache_config["#{group}.#{entity}".to_sym] = {
-              key_template: "#{prefix}_#{config['key_template']}",
+              key_template: "%{prefix}_#{config['key_template']}",
               kit_key_prefix: kit_key_prefix(config['shared_with_saas'] == 1),
               saas_shared_key_prefix: saas_shared_key_prefix,
               expiry: config['expiry_in_seconds'].to_i,
