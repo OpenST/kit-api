@@ -272,6 +272,7 @@ module ManagerManagement
       def fetch_go_to
         FetchGoTo.new({
                           is_password_auth_cookie_valid: true,
+                          is_multi_auth_cookie_valid: false,
                           client: @client,
                           manager: @manager_obj.formated_cache_data
                       }).fetch_by_manager_state

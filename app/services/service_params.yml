@@ -114,6 +114,13 @@
     - :manager_id
     - :is_super_admin
   :optional:
+'ManagerManagement::Team':
+   :mandatory:
+     - :client_id
+     - :manager
+     - :client
+     - :client_manager
+   :optional:
 'AdminManagement::Whitelist::Client':
   :mandatory:
     - :email
@@ -121,6 +128,7 @@
 'FetchGoTo':
   :mandatory:
     - :is_password_auth_cookie_valid
+    - :is_multi_auth_cookie_valid
     - :client
     - :manager
   :optional:

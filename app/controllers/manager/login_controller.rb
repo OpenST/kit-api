@@ -5,6 +5,7 @@ class Manager::LoginController < Manager::BaseController
   before_action :verify_recaptcha, only: [:password_auth, :send_reset_password_link]
 
   before_action :verify_mfa_cookie, only: [
+    :team,
     :get_details,
     :list_admins
   ]
@@ -99,17 +100,36 @@ class Manager::LoginController < Manager::BaseController
   # * Reviewed By:
   #
   def get_details
-    service_response = success_with_data({
-           manager: params[:manager],
-           client: params[:client],
-           client_manager: params[:client_manager]
-       },
-       FetchGoTo.new({
-           is_password_auth_cookie_valid: true,
-           client: params[:client],
-           manager: params[:manager]
-         }).fetch_by_manager_state
-       )
+    go_to = FetchGoTo.new({
+                    is_password_auth_cookie_valid: true,
+                    is_multi_auth_cookie_valid: true,
+                    client: params[:client],
+                    manager: params[:manager]
+                  }).fetch_by_manager_state
+
+    if go_to
+      service_response = error_with_go_to('a_c_m_lc_1', 'data_validation_failed', go_to)
+    else
+      service_response = success_with_data(
+        {
+          manager: params[:manager],
+          client: params[:client],
+          client_manager: params[:client_manager]
+        }
+      )
+    end
+
+    render_api_response(service_response)
+  end
+
+  # Get Manager's details
+  #
+  # * Author: Puneet
+  # * Date: 08/12/2018
+  # * Reviewed By:
+  #
+  def team
+    service_response = ManagerManagement::Team.new(params).perform
     render_api_response(service_response)
   end
 
