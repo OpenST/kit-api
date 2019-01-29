@@ -125,6 +125,8 @@
   :mandatory:
     - :email
   :optional:
+    - :token_users_shard_number
+    - :config_group_id
 'FetchGoTo':
   :mandatory:
     - :is_password_auth_cookie_valid

@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   scope 'admin/api', controller: 'admin/whitelist' do
-    match 'whitelist' => :whitelist, via: :GET
+    # DO NOT enable this route as we need Dev control to decide if dedicated resources are needed
+    # match 'whitelist' => :whitelist, via: :GET
   end
 
   scope 'api/manager', controller: 'manager/login' do

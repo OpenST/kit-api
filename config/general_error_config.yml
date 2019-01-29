@@ -8,6 +8,11 @@ unauthorized_access_response:
   code: "UNAUTHORIZED"
   message: "Unauthorized"
 
+unauthorized_to_access_main_env:
+  http_code: 401
+  code: "UNAUTHORIZED"
+  message: "Unauthorized to access Main ENV"
+
 api_under_maintenance:
   http_code: 502
   code: "SERVICE_UNAVAILABLE"

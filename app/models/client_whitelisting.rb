@@ -12,7 +12,7 @@ class ClientWhitelisting < DbConnection::KitSaasSubenv
   #
   def formated_cache_data
     {
-      client_id: client_id
+      id: id
     }
   end
 
