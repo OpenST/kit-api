@@ -142,7 +142,8 @@ module ContractManagement
         gateway_contract: saas_response_data['gateway_contract_address'],
         gas_price: '0',
         gas_limit: '0',
-        staker_gateway_nonce: saas_response_data['staker_gateway_nonce']
+        staker_gateway_nonce: saas_response_data['staker_gateway_nonce'],
+        stake_and_mint_beneficiary: saas_response_data['stake_and_mint_beneficiary']
       }
 
       success
