@@ -35,7 +35,6 @@ Rails.application.routes.draw do
     match '' => :token_details_post, via: :POST
     match 'deploy' => :deploy_get, via: :GET
     match 'deploy' => :deploy_post, via: :POST
-    match 'reset-deployment' => :reset_deployment, via: :POST
     match 'mint-progress' => :mint_progress, via: :GET
   end
 
