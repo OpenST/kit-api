@@ -18,6 +18,7 @@ module TokenManagement
 
       @approve_tx_hash = params[:approve_transaction_hash]
       @request_stake_tx_hash = params[:request_stake_transaction_hash]
+      @staker_address = params[:staker_address]
 
       @api_response_data = {}
       @token_id = nil
@@ -59,8 +60,9 @@ module TokenManagement
       # Santize
       @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)
       @request_stake_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@request_stake_tx_hash)
+      @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
 
-      validation_errors = validate_transaction_hashes
+      validation_errors = validate_input_params
 
       if validation_errors.present?
         return validation_error(
@@ -76,7 +78,7 @@ module TokenManagement
       success
     end
 
-    # Validate transaction hashes
+    # Validate input params
     #
     # * Author: Ankit
     # * Date: 18/01/2019
@@ -84,7 +86,7 @@ module TokenManagement
     #
     # @return [Result::Base]
     #
-    def validate_transaction_hashes
+    def validate_input_params
       validation_errors = []
 
       unless Util::CommonValidator.is_transaction_hash?(@approve_tx_hash)
@@ -93,6 +95,10 @@ module TokenManagement
 
       unless Util::CommonValidator.is_transaction_hash?(@request_stake_tx_hash)
         validation_errors.push('invalid_request_stake_transaction_hash')
+      end
+
+      unless Util::CommonValidator.is_ethereum_address?(@staker_address)
+        validation_errors.push('invalid_staker_address')
       end
 
       validation_errors

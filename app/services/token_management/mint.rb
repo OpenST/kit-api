@@ -82,12 +82,12 @@ module TokenManagement
     #
     def fetch_workflows
       workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
-      @api_response_data[:workflow] = []
+      @api_response_data[:workflow] = {}
 
       if workflows.present? && workflows[@client_id].present?
         workflows[@client_id].each do |wf|
           if wf.kind == GlobalConstant::Workflow.grant_eth_ost
-            @api_response_data[:workflow].push({id: wf.id, kind: wf.kind})
+            @api_response_data[:workflow] = {id: wf.id, kind: wf.kind}
           elsif wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
             @mint_workflow ||= wf
           end
@@ -127,14 +127,24 @@ module TokenManagement
     def fetch_addresses
       token_id = @token[:id]
       addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
-      addresses = {}
-      addresses[:whitelisted] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind] ||= []
-      addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.worker_address_kind] ||= []
-      addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]
-      addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.admin_address_kind]
 
-      @api_response_data[:origin_addresses] = addresses
-      @api_response_data[:auxiliary_addresses] = addresses
+      origin_addresses = {}
+      ownerAddress = [addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]]
+
+      origin_addresses[:whitelisted] = ownerAddress
+      origin_addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.origin_worker_address_kind] ||= []
+      origin_addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]
+      origin_addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.origin_admin_address_kind]
+
+
+      aux_addresses = {}
+      aux_addresses[:whitelisted] = ownerAddress
+      aux_addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.aux_worker_address_kind] ||= []
+      aux_addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]
+      aux_addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.aux_admin_address_kind]
+
+      @api_response_data[:origin_addresses] = origin_addresses
+      @api_response_data[:auxiliary_addresses] = aux_addresses
 
       success
     end

@@ -45,12 +45,24 @@ module GlobalConstant
         'owner_address_kind'
       end
 
-      def admin_address_kind
-        'admin_address_kind'
+      def origin_admin_address_kind
+        'origin_admin_address_kind'
       end
 
-      def worker_address_kind
-        'worker_address_kind'
+      def aux_admin_address_kind
+        'aux_admin_address_kind'
+      end
+
+      def origin_worker_address_kind
+        'origin_worker_address_kind'
+      end
+
+      def aux_worker_address_kind
+        'aux_worker_address_kind'
+      end
+
+      def aux_funder_address_kind
+        'aux_funder_address_kind'
       end
 
       def white_listed_address_kind
@@ -88,15 +100,18 @@ module GlobalConstant
       def unique_kinds
         [
           self.owner_address_kind,
-          self.admin_address_kind,
+          self.origin_admin_address_kind,
+          self.aux_admin_address_kind,
           self.origin_organization_contract,
           self.aux_organization_contract,
           self.branded_token_contract,
           self.utility_branded_token_contract,
           self.token_gateway_contract,
           self.token_co_gateway_contract,
-          self.simple_stake_contract
+          self.simple_stake_contract,
+          self.aux_funder_address_kind
            ]
+
       end
 
     end

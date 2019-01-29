@@ -86,7 +86,7 @@ module TokenManagement
     def fetch_workflows
 
       workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
-      @api_response_data[:workflow] = []
+      @api_response_data[:workflow] = {}
 
       if(workflows.present? && workflows[@client_id].present?)
         workflows[@client_id].each do |wf|

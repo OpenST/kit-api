@@ -5,9 +5,12 @@ class TokenAddresses < DbConnection::KitSaasSubenv
   enum kind: {
 
     GlobalConstant::TokenAddresses.owner_address_kind => 1,
-    GlobalConstant::TokenAddresses.admin_address_kind => 2,
-    GlobalConstant::TokenAddresses.worker_address_kind => 3,
-    GlobalConstant::TokenAddresses.white_listed_address_kind => 4,
+    GlobalConstant::TokenAddresses.origin_admin_address_kind => 2,
+    GlobalConstant::TokenAddresses.aux_admin_address_kind => 3,
+    GlobalConstant::TokenAddresses.origin_worker_address_kind => 4,
+    GlobalConstant::TokenAddresses.aux_worker_address_kind => 5,
+    GlobalConstant::TokenAddresses.aux_funder_address_kind => 6,
+    GlobalConstant::TokenAddresses.white_listed_address_kind => 7,
 
     #contract kinds
     GlobalConstant::TokenAddresses.origin_organization_contract => 51,
