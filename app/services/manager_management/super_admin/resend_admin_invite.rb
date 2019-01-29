@@ -99,14 +99,14 @@ module ManagerManagement
       #
       def validate_invitee_manager_exists
 
-        @invitee_manager = Manager.where(id: @to_update_client_manager.manager_id).first
+        @invitee_manager = CacheManagement::Manager.new([@to_update_client_manager.manager_id]).fetch[@to_update_client_manager.manager_id]
 
         # If invitee_manager is present, that is an error.
         if @invitee_manager.present?
 
           # If invitee_manager is associated with the current client, two conditions are possible.
           # Either the invitee_manager was previously associated with the client, or is currently associated with the client.
-          if @invitee_manager.current_client_id == @client_id
+          if @invitee_manager[:current_client_id] == @client_id
 
             privileges = ClientManager.get_bits_set_for_privileges(@to_update_client_manager.privileges)
 
@@ -173,7 +173,7 @@ module ManagerManagement
         )
 
         db_row = ManagerValidationHash.create!(
-          manager_id: @invitee_manager.id,
+          manager_id: @invitee_manager[:id],
           client_id: @client_id,
           kind: GlobalConstant::ManagerValidationHash.manager_invite_kind,
           validation_hash: invite_token_d,
@@ -208,7 +208,7 @@ module ManagerManagement
         BackgroundJob.enqueue(
             InviteJob,
             {
-                manager_id: @invitee_manager.id,
+                manager_id: @invitee_manager[:id],
                 invite_token: @invite_token
             }
         )

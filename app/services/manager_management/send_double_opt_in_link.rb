@@ -18,6 +18,7 @@ module ManagerManagement
       @manager_id = @params[:manager_id]
 
       @manager = nil
+      @manager_s = nil
       @double_optin_token = nil
 
     end
@@ -56,27 +57,28 @@ module ManagerManagement
     # * Date: 15/01/2018
     # * Reviewed By:
     #
-    # Sets @manager
+    # Sets @manager, @manager_s
     #
     # @return [Result::Base]
     #
     def fetch_manager
 
-      @manager = Manager.where(id: @manager_id).first
+      @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
+      @manager_s = CacheManagement::ManagerSecure.new([@manager_id]).fetch[@manager_id]
 
       fail OstCustomError.new validation_error(
           'um_doil_1',
           'invalid_api_params',
           ['unrecognized_email'],
           GlobalConstant::ErrorAction.default
-      ) unless @manager.present? && (@manager.status == GlobalConstant::Manager.active_status)
+      ) unless @manager.present? && @manager[:status] == GlobalConstant::Manager.active_status
 
       fail OstCustomError.new validation_error(
           'um_doil_2',
           'invalid_api_params',
           ['already_verified_email'],
           GlobalConstant::ErrorAction.default
-      ) if @manager.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+      ) if @manager[:properties].include?(GlobalConstant::Manager.has_verified_email_property)
 
       success
 
@@ -95,10 +97,10 @@ module ManagerManagement
     def create_double_opt_in_token
 
       double_opt_in_token = LocalCipher.get_sha_hashed_text(
-          "#{@manager.id}::#{@manager.password}::#{Time.now.to_i}::double_optin::#{rand}"
+          "#{@manager[:id]}::#{@manager_s[:password]}::#{current_timestamp}::double_optin::#{rand}"
       )
       db_row = ManagerValidationHash.create!(
-          manager_id: @manager.id,
+          manager_id: @manager[:id],
           kind: GlobalConstant::ManagerValidationHash.double_optin_kind,
           validation_hash: double_opt_in_token,
           status: GlobalConstant::ManagerValidationHash.active_status
@@ -123,7 +125,7 @@ module ManagerManagement
     #
     def send_double_optin_email
       Email::HookCreator::SendTransactionalMail.new(
-          email: @manager.email,
+          email: @manager[:email],
           template_name: GlobalConstant::PepoCampaigns.double_opt_in_template,
           template_vars: {
               double_opt_in_token: CGI.escape(@double_optin_token),

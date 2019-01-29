@@ -37,7 +37,7 @@ module ManagerManagement
 
         validate
 
-        fetch_user
+        fetch_manager
 
         create_reset_password_token
 
@@ -61,7 +61,7 @@ module ManagerManagement
     #
     # @return [Result::Base]
     #
-    def fetch_user
+    def fetch_manager
 
       @manager = Manager.where(email: @email).first
 
@@ -71,27 +71,6 @@ module ManagerManagement
       elsif !@manager.is_eligible_for_reset_password?
         error_key = 'email_inactive'
       end
-
-      # TODO: Does the below comment make sense?
-      # Check client_manager entry only if no error found previously. No need to waste an extra query.
-      if error_key.length == 0
-
-        # Fetch client_manager to check if the manager is deleted or not.
-        @client_manager = ClientManager.where(manager_id: @manager.id).first
-
-        # If client_manager is present, check for privileges.
-        if @client_manager.present? && @client_manager.privileges.present?
-
-          privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges)
-
-          # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
-          # previously associated with the client.
-          error_key = 'email_inactive' if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
-
-        end
-
-      end
-
 
       fail OstCustomError.new validation_error(
           'um_srpl_1',
@@ -117,7 +96,7 @@ module ManagerManagement
     def create_reset_password_token
 
       reset_token = LocalCipher.get_sha_hashed_text(
-          "#{@manager.id}::#{@manager.password}::#{Time.now.to_i}::reset_password::#{rand}"
+          "#{@manager.id}::#{@manager.password}::#{current_timestamp}::reset_password::#{rand}"
       )
 
       db_row = ManagerValidationHash.create!(

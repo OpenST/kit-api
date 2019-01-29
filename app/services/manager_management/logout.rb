@@ -81,9 +81,9 @@ module ManagerManagement
     #
     def logout_manager
 
-      manager = Manager.where(id: @manager_id).first
-      manager.last_session_updated_at = current_timestamp
-      manager.save!
+      Manager.where(id: @manager_id).update_all(last_session_updated_at: current_timestamp)
+
+      CacheManagement::ManagerSecure.new([@manager_id]).clear
 
       success
 
