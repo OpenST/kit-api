@@ -6,49 +6,73 @@ step_config:
     weight: 5
     group: 0
   - kind: <%= GlobalConstant::WorkflowStep.staker_request_stake_trx%>
-    weight: 10
+    weight: 5
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.check_gc_allowance%>
-    weight: 10
+    weight: 5
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fetch_stake_request_hash%>
-    weight: 10
+    weight: 5
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.accept_stake%>
-    weight: 10
+    weight: 5
     group: 1
-  - kind: <%=GlobalConstant::WorkflowStep.check_approve_status%>
-    weight: 10
-    group: 2
   - kind: <%=GlobalConstant::WorkflowStep.check_stake_status%>
-    weight: 10
+    weight: 5
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.fetch_stake_intent_message_hash%>
+    weight: 5
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.commit_state_root%>
+    weight: 5
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.update_committed_state_root_info%>
+    weight: 5
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.prove_gateway_on_co_gateway%>
+    weight: 5
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.check_prove_gateway_status%>
-    weight: 10
+    weight: 5
+    group: 2
+  - kind: <%=GlobalConstant::WorkflowStep.confirm_stake_intent%>
+    weight: 5
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.check_confirm_stake_status%>
-    weight: 10
+    weight: 5
+    group: 3
+  - kind: <%=GlobalConstant::WorkflowStep.progress_stake%>
+    weight: 6
     group: 3
   - kind: <%=GlobalConstant::WorkflowStep.check_progress_stake_status%>
-    weight: 10
+    weight: 6
+    group: 3
+  - kind: <%=GlobalConstant::WorkflowStep.progress_mint%>
+    weight: 6
     group: 3
   - kind: <%=GlobalConstant::WorkflowStep.check_progress_mint_status%>
-    weight: 10
+    weight: 6
     group: 3
   - kind: <%=GlobalConstant::WorkflowStep.mark_success%>
-    weight: 10
+    weight: 6
     group: 3
 
 group_config:
   0:
-    display_text: 'Starting stake and mint'
-    name: "S&M Start"
+    display_text: 'Approve gateway contract to stake OST'
+    name: "Approve"
   1:
-    display_text: 'Deploying organization'
-    name: 'Organization Deployment'
+    display_text: 'Checking stake status'
+    name: 'stake status'
   2:
-    display_text: 'Deploying Gateway and Co-gateway'
-    name: 'Gateway, CoGateway Deployment'
+    display_text: 'Finalize the stake transaction on auxiliary chain'
+    name: 'Stake transaction finalization'
   3:
-    display_text: 'Set gateway and co-gateway'
-    name: 'Set Gateway, Co-Gateway'
+    display_text: 'Verifying the gateway contract on auxiliary chain'
+    name: 'verifying gateway contract '
+  4:
+    display_text: 'Locking the tokens declared on origin chain'
+    name: 'Locking tokens'
+  5:
+    display_text: 'Minting tokens'
+    name: 'Minting tokens'
