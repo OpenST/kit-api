@@ -222,6 +222,7 @@ module ManagerManagement
     # * Reviewed By:
     #
     def update_password
+      @manager_obj.last_session_updated_at = current_timestamp
       @manager_obj.password = @new_e_password
       if GlobalConstant::Manager.auto_blocked_status == @manager_obj.status
         # if we had blocked a user for more than a threshhold failed login attemps we set status to blocked
