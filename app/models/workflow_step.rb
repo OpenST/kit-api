@@ -49,7 +49,13 @@ class WorkflowStep < DbConnection::KitSaasSubenv
       GlobalConstant::WorkflowStep.check_progress_mint_status => 85,
 
       GlobalConstant::WorkflowStep.mark_success => 101,
-      GlobalConstant::WorkflowStep.mark_failure => 102
+      GlobalConstant::WorkflowStep.mark_failure => 102,
+
+      GlobalConstant::WorkflowStep.grant_eth_ost_init => 171,
+      GlobalConstant::WorkflowStep.grant_eth => 172,
+      GlobalConstant::WorkflowStep.verify_grant_eth => 173,
+      GlobalConstant::WorkflowStep.grant_ost => 174,
+      GlobalConstant::WorkflowStep.verify_grant_ost => 175
 
   }
 

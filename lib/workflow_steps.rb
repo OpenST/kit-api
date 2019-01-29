@@ -57,6 +57,9 @@ class WorkflowSteps
     when GlobalConstant::Workflow.bt_stake_and_mint
       @step_config = GlobalConstant::WorkflowStatus.bt_stake_and_mint_step_config
       @group_config = GlobalConstant::WorkflowStatus.bt_stake_and_mint_group_config
+    when GlobalConstant::Workflow.grant_eth_ost
+      @step_config = GlobalConstant::WorkflowStatus.grant_eth_ost_step_config
+      @group_config = GlobalConstant::WorkflowStatus.grant_eth_ost_group_config
     else
       return error_with_data('l_ws_1',
                              'something_went_wrong',

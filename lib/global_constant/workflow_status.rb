@@ -25,6 +25,14 @@ module GlobalConstant
         bt_stake_and_mint_config['group_config']
       end
 
+      def grant_eth_ost_step_config
+        grant_eth_ost_config['step_config']
+      end
+
+      def grant_eth_ost_group_config
+        grant_eth_ost_config['group_config']
+      end
+
 
       private_class_method
 
@@ -38,6 +46,13 @@ module GlobalConstant
       def bt_stake_and_mint_config
         @btsnmcnf ||= begin
           template = ERB.new File.new("#{Rails.root}/config/bt_stake_and_mint.yml").read
+          YAML.load(template.result(binding))
+        end
+      end
+
+      def grant_eth_ost_config
+        @grantethost ||= begin
+          template = ERB.new File.new("#{Rails.root}/config/grant_eth_ost.yml").read
           YAML.load(template.result(binding))
         end
       end

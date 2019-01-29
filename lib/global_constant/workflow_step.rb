@@ -258,6 +258,28 @@ module GlobalConstant
 
       # Bt stake and mint steps: finish
 
+      # Grant Eth Ost steps: start
+      def grant_eth_ost_init
+        'grant_eth_ost_init'
+      end
+
+      def grant_eth
+        'grant_eth'
+      end
+
+      def verify_grant_eth
+        'verify_grant_eth'
+      end
+
+      def grant_ost
+        'grant_ost'
+      end
+
+      def verify_grant_ost
+        'verify_grant_ost'
+      end
+
+      # Grant Eth Ost steps: finish
 
       # Common Steps start
 

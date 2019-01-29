@@ -1,0 +1,27 @@
+step_config:
+  - kind: <%= GlobalConstant::WorkflowStep.grant_eth_ost_init%>
+    weight: 20
+    group: 0
+  - kind: <%= GlobalConstant::WorkflowStep.grant_eth%>
+    weight: 20
+    group: 1
+  - kind: <%= GlobalConstant::WorkflowStep.verify_grant_eth%>
+    weight: 20
+    group: 1
+  - kind: <%= GlobalConstant::WorkflowStep.grant_ost%>
+    weight: 20
+    group: 2
+  - kind: <%= GlobalConstant::WorkflowStep.verify_grant_ost%>
+    weight: 20
+    group: 2
+
+group_config:
+  0:
+    display_text: 'Starting grant Eth'
+    name: "S&M Start"
+  1:
+    display_text: 'Grant eth started'
+    name: 'Eth started'
+  2:
+    display_text: 'Grant ost started'
+    name: 'ost started'
