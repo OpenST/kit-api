@@ -18,7 +18,7 @@ module TokenManagement
       super
 
       @client_id = params[:client_id]
-      @address = params[:address]
+      @address = params[:staker_address]
 
       @api_response_data = {}
 

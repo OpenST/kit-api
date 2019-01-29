@@ -231,5 +231,5 @@
 'TokenManagement::GrantEthOst':
   :mandatory:
     - :client_id
-    - :address
+    - :staker_address
   :optional:
