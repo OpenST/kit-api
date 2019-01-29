@@ -114,13 +114,9 @@
     - :manager_id
     - :is_super_admin
   :optional:
-'AdminManagement::Whitelist::Email':
+'AdminManagement::Whitelist::Client':
   :mandatory:
     - :email
-  :optional:
-'AdminManagement::Whitelist::Domain':
-  :mandatory:
-    - :email_domain
   :optional:
 'FetchGoTo':
   :mandatory:
@@ -204,6 +200,10 @@
   :mandatory:
     - :client_id
     - :id_to_deactivate
+  :optional:
+'ClientManagement::IsWhitelistedForMainEnv':
+  :mandatory:
+    - :client_id
   :optional:
 'TokenManagement::Mint':
   :mandatory:

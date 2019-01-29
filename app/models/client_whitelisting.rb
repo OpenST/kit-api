@@ -1,11 +1,20 @@
-class ClientWhitelisting < DbConnection::KitClient
-
-  enum kind: {
-      GlobalConstant::ClientWhitelisting.domain_kind => 1,
-      GlobalConstant::ClientWhitelisting.email_kind => 2
-  }
+class ClientWhitelisting < DbConnection::KitSaasSubenv
 
   after_commit :flush_cache
+
+  # Format data to a format which goes into cache
+  #
+  # * Author: Puneet
+  # * Date: 01/02/2018
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
+  def formated_cache_data
+    {
+      client_id: client_id
+    }
+  end
 
   # Flush memcache
   #
@@ -14,16 +23,11 @@ class ClientWhitelisting < DbConnection::KitClient
   # * Reviewed By:
   #
   def flush_cache
+    KitSaasSharedCacheManagement::ClientWhitelisting.new([client_id]).clear
+  end
 
-    case self.kind
-    when GlobalConstant::ClientWhitelisting.domain_kind
-      CacheManagement::ClientWhitelistedDomains.new().clear
-    when GlobalConstant::ClientWhitelisting.email_kind
-      CacheManagement::ClientWhitelistedEmails.new().clear
-    else
-      fail "unsupported #{self.kind}"
-    end
-
+  def self.applicable_sub_environments
+    [GlobalConstant::Environment.main_sub_environment]
   end
 
 end

@@ -51,6 +51,7 @@ module ManagerManagement
 
           success_with_data(
             client: @client,
+            token: KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id],
             inviter_manager: {
               email: Util::CommonSanitizer.secure_email(@inviter_manager[:email])
             },

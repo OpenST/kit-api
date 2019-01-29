@@ -68,11 +68,6 @@ missing_email:
   code: 'missing'
   message: 'email missing'
 
-invalid_email_domain:
-  parameter: 'domain'
-  code: 'invalid'
-  message: 'The email domain you entered is not valid.'
-
 invalid_email:
   parameter: 'email'
   code: 'invalid'

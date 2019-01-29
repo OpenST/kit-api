@@ -25,8 +25,6 @@ module ClientManagement
       # * Date: 21/01/2019
       # * Reviewed By:
       #
-      # @param [Hash] client_id (mandatory) - client_id
-      #
       def perform
 
         r = generate_api_key_salt

@@ -78,7 +78,6 @@ module ManagerManagement
 
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
-        validation_errors.push('email_not_allowed_for_dev_program') unless Util::CommonValidator.is_whitelisted_email?(@email)
 
         fail OstCustomError.new validation_error(
                                   'm_su_1',

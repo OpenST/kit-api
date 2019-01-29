@@ -13,12 +13,10 @@ client:
   secure_details:
     key_template: 'c_sd_%{id}'
     expiry_in_seconds: 86400
-  whitelisted_emails:
-    key_template: 'c_whtie_emls'
+  whitelisting:
+    key_template: 'c_wlsting_%{id}'
     expiry_in_seconds: 86400
-  whitelisted_domains:
-    key_template: 'c_whtie_dmns'
-    expiry_in_seconds: 86400
+    shared_with_saas: 1
   api_credentials:
     key_template: 'c_ac_%{id}'
     expiry_in_seconds: 86400

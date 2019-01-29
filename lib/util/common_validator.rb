@@ -3,7 +3,6 @@ module Util
   class CommonValidator
     
     REGEX_EMAIL = /\A[A-Z0-9]+[A-Z0-9_%+-]*(\.[A-Z0-9_%+-]{1,})*@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
-    REGEX_EMAIL_DOMAIN = /\A@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
     REGEX_TOKEN = /^([a-z0-9=\-]*)$/i
 
     # Check for integer-ness of an input
@@ -123,18 +122,6 @@ module Util
       email =~ REGEX_EMAIL
     end
 
-    # Is the Email Domain valid
-    #
-    # * Author: Shlok
-    # * Date: 14/09/2018
-    # * Reviewed By:
-    #
-    # @return [Boolean] returns a boolean
-    #
-    def self.is_valid_email_domain?(domain)
-      domain =~ REGEX_EMAIL_DOMAIN
-    end
-
     # Is the Invite token valid
     #
     # * Author: Shlok
@@ -145,58 +132,6 @@ module Util
     #
     def self.is_valid_token?(token)
       token =~ REGEX_TOKEN
-    end
-
-    # Is the Email a Valid Email
-    #
-    # * Author: Puneet
-    # * Date: 06/04/2017
-    # * Reviewed By:
-    #
-    # @return [Boolean] returns a boolean
-    #
-    def self.is_whitelisted_email?(email)
-      downcased_email = email.strip.downcase
-      is_valid_email?(email) &&
-          (is_email_from_allowed_domains?(downcased_email) || whitelisted_emails.include?(downcased_email))
-    end
-
-    # list of whitelisted emails
-    #
-    # * Author: Puneet
-    # * Date: 06/04/2017
-    # * Reviewed By:
-    #
-    # @return [Arrray]
-    #
-    def self.whitelisted_emails
-      r = CacheManagement::ClientWhitelistedEmails.new().fetch
-      r[:emails] || []
-    end
-
-    # Is the Email a OST Email
-    #
-    # * Author: Puneet
-    # * Date: 06/04/2017
-    # * Reviewed By:
-    #
-    # @return [Boolean] returns a boolean
-    #
-    def self.is_email_from_allowed_domains?(email)
-      /w*@(#{allowed_domains.join('|')})$/.match(email).present?
-    end
-
-    # List of Domains which we need to support
-    #
-    # * Author: Puneet
-    # * Date: 06/04/2017
-    # * Reviewed By:
-    #
-    # @return [Array] returns a boolean
-    #
-    def self.allowed_domains
-      r = CacheManagement::ClientWhitelistedDomains.new().fetch
-      r[:domains] || []
     end
 
     # Does password contains allowed characters and size
