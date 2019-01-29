@@ -173,8 +173,9 @@ module TokenManagement
         }
       }
 
-      @api_response_data[:min_ost_in_wei] = saas_response.data["minimum_eth_required"]
-      @api_response_data[:min_eth_in_wei] = saas_response.data["minimum_ost_required"]
+
+      @api_response_data[:min_ost_in_wei] = saas_response.data["minimum_ost_required"]
+      @api_response_data[:min_eth_in_wei] = saas_response.data["minimum_eth_required"]
 
       @api_response_data[:gas_price] = saas_response.data["gas_price"]
 
