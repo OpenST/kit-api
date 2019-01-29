@@ -169,6 +169,7 @@
   :mandatory:
     - :approve_transaction_hash
     - :request_stake_transaction_hash
+    - :staker_address
     - :client_id
 'WalletAddressesManagement::GetAddresses':
   :mandatory:
