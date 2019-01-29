@@ -16,13 +16,9 @@ class FetchGoToByEconomyState < ServicesBase
 
     @token = params[:token]
     @client_id = params[:client_id]
-    @deployment_workflow = params[:deployment_workflow]
     @from_page = params[:from_page]
     @mint_workflow = params[:mint_workflow]
 
-    if @client_id == 10027
-      #binding.pry
-    end
     @go_to = {}
   end
 
@@ -65,11 +61,20 @@ class FetchGoToByEconomyState < ServicesBase
   #
   def check_token_deployment
 
-    if @token.blank? || @deployment_workflow.blank? || @token[:status] == GlobalConstant::ClientToken.not_deployed
+    if @token.blank? || @token[:status] == GlobalConstant::ClientToken.not_deployed
 
       @go_to = GlobalConstant::GoTo.token_setup
 
-    elsif @token[:status] == GlobalConstant::ClientToken.deployment_started || @token[:status] == GlobalConstant::ClientToken.deployment_failed
+    elsif @token[:status] == GlobalConstant::ClientToken.deployment_started
+
+      if @from_page[:by_screen_name] != GlobalConstant::GoTo.team[:by_screen_name] &&
+        @from_page[:by_screen_name] != GlobalConstant::GoTo.developer[:by_screen_name]
+
+        @go_to = GlobalConstant::GoTo.token_deploy
+
+      end
+
+    elsif @token[:status] == GlobalConstant::ClientToken.deployment_failed
 
       @go_to = GlobalConstant::GoTo.token_deploy
 

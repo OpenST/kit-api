@@ -125,18 +125,15 @@
 'FetchGoTo':
   :mandatory:
     - :is_password_auth_cookie_valid
-    - :is_multi_auth_cookie_valid
     - :client
     - :manager
   :optional:
     - :client_manager
     - :token
-    - :deployment_workflow
 'FetchGoToByEconomyState':
   :mandatory:
     - :token
     - :client_id
-    - :deployment_workflow
     - :from_page
   :optional:
       - :mint_workflow

@@ -29,6 +29,18 @@ module GlobalConstant
         }
       end
 
+      def team
+        {
+          by_screen_name: :team
+        }
+      end
+
+      def developer
+        {
+          by_screen_name: :developer
+        }
+      end
+
       def token_setup
         {
             by_screen_name: :token_setup

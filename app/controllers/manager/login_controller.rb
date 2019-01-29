@@ -106,7 +106,6 @@ class Manager::LoginController < Manager::BaseController
        },
        FetchGoTo.new({
            is_password_auth_cookie_valid: true,
-           is_multi_auth_cookie_valid: true,
            client: params[:client],
            manager: params[:manager]
          }).fetch_by_manager_state

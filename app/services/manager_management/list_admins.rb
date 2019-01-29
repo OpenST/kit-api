@@ -26,6 +26,7 @@ module ManagerManagement
       @api_response_data[:meta] = {}
       @api_response_data[:meta][:next_page_payload] = {}
       @api_response_data[:result_type] = 'client_managers'
+      @mint_workflow = nil
 
     end
 
@@ -42,6 +43,13 @@ module ManagerManagement
       handle_errors_and_exceptions do
 
       validate_and_sanitize
+
+      fetch_workflows
+
+      fetch_and_validate_token
+
+      r = fetch_goto
+      return r unless r.success?
 
       fetch_admins
 
@@ -83,6 +91,67 @@ module ManagerManagement
                               ) unless Util::CommonValidator.is_numeric?(@page_no)
 
       @page_no = @page_no.to_i # Convert to integer if string is passed.
+
+    end
+
+    # Fetch workflow
+    #
+    # * Author: Alpesh
+    # * Date: 18/01/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_workflows
+      workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
+
+      if workflows.present? && workflows[@client_id].present?
+        workflows[@client_id].each do |wf|
+          if wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
+            @mint_workflow ||= wf
+            break
+          end
+        end
+      end
+
+      success
+    end
+
+    # Find & validate client
+    #
+    # * Author: Shlok
+    # * Date: 21/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    # Sets @token
+    #
+    def fetch_and_validate_token
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
+      return token_resp unless token_resp.success?
+
+      @token = token_resp.data
+
+      success
+    end
+
+    # Fetch token details
+    #
+    # * Author: Shlok
+    # * Date: 21/01/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_goto
+
+      FetchGoToByEconomyState.new({
+                                    token: @token,
+                                    client_id: @client_id,
+                                    mint_workflow: @mint_workflow,
+                                    from_page: GlobalConstant::GoTo.team
+                                  }).fetch_by_economy_state
 
     end
 

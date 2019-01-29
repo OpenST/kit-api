@@ -20,6 +20,7 @@ module TokenManagement
       @client_manager = params[:client_manager]
 
       @api_response_data = {}
+      @mint_workflow = nil
 
     end
 
@@ -87,8 +88,6 @@ module TokenManagement
         workflows[@client_id].each do |wf|
           if wf.kind == GlobalConstant::Workflow.grant_eth_ost
             @api_response_data[:workflow].push({id: wf.id, kind: wf.kind})
-          elsif wf.kind == GlobalConstant::Workflow.token_deploy
-            @deployment_workflow ||= wf
           elsif wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
             @mint_workflow ||= wf
           end
@@ -111,7 +110,6 @@ module TokenManagement
       FetchGoToByEconomyState.new({
                                     token: @token,
                                     client_id: @client_id,
-                                    deployment_workflow: @deployment_workflow,
                                     mint_workflow: @mint_workflow,
                                     from_page: GlobalConstant::GoTo.token_mint
                                   }).fetch_by_economy_state

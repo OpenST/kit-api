@@ -14,6 +14,7 @@ module TokenManagement
       super
       @client_manager = params[:client_manager]
       @api_response_data = {}
+      @mint_workflow = nil
     end
 
 
@@ -95,9 +96,6 @@ module TokenManagement
               @workflow_id = wf.id
             end
             @mint_workflow ||= wf
-
-          elsif wf.status == GlobalConstant::Workflow.token_deploy
-            @deployment_workflow ||= wf
           end
         end
       end
@@ -119,7 +117,6 @@ module TokenManagement
       FetchGoToByEconomyState.new({
                                     token: @token,
                                     client_id: @client_id,
-                                    deployment_workflow: @deployment_workflow,
                                     mint_workflow: @mint_workflow,
                                     from_page: GlobalConstant::GoTo.token_mint_progress
                                   }).fetch_by_economy_state

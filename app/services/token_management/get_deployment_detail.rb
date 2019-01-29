@@ -18,7 +18,7 @@ module TokenManagement
 
       @api_response_data = {}
       @token_id = nil
-      @workflow_id = nil
+      @deployment_workflow = nil
 
     end
 
@@ -82,7 +82,6 @@ module TokenManagement
       FetchGoToByEconomyState.new({
                                     token: @token,
                                     client_id: @client_id,
-                                    deployment_workflow: @deployment_workflow,
                                     from_page: GlobalConstant::GoTo.token_deploy
                                   }).fetch_by_economy_state
 

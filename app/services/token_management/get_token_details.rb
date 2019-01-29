@@ -39,8 +39,6 @@ module TokenManagement
 
         fetch_token_details
 
-        fetch_workflow
-
         r = fetch_goto
         return r unless r.success?
 
@@ -78,23 +76,6 @@ module TokenManagement
       success
     end
 
-    # Fetch workflow details
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_workflow
-      @deployment_workflow = Workflow.where({
-                                   client_id: @client_id,
-                                   kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
-                                 })
-                    .order('id DESC')
-                    .limit(1).first
-    end
-
     # Fetch token details
     #
     # * Author: Shlok
@@ -108,7 +89,6 @@ module TokenManagement
       FetchGoToByEconomyState.new({
                                     token: @token,
                                     client_id: @client_id,
-                                    deployment_workflow: @deployment_workflow,
                                     from_page: GlobalConstant::GoTo.token_setup
                                   }).fetch_by_economy_state
 
