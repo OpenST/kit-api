@@ -111,12 +111,13 @@ module ManagerManagement
         # @return [Result::Base]
         #
         def set_double_auth_cookie_value
+
           @double_auth_cookie_value = Manager.get_cookie_value(
               manager_id: @manager_obj.id,
               current_client_id: @manager_obj.current_client_id,
               token_s: @manager_obj.mfa_token,
               browser_user_agent: @browser_user_agent,
-              last_session_updated_at: @manager_obj.last_session_updated_at,
+              last_session_updated_at: '', #@manager_obj.last_session_updated_at,
               auth_level: GlobalConstant::Cookie.mfa_auth_prefix
           )
 
