@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     match 'deploy' => :deploy_get, via: :GET
     match 'deploy' => :deploy_post, via: :POST
     match 'mint-progress' => :mint_progress, via: :GET
+    match 'whitelisting' => :whitelisting, via: :POST
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/mint", controller: 'token/mint' do
@@ -51,8 +52,8 @@ Rails.application.routes.draw do
     match 'sign-messages' => :token_addresses_sign_messages, via: :GET
   end
 
-  scope "#{GlobalConstant::Environment.url_prefix}/api/contracts", controller: 'contracts' do
-    match 'gateway-composer' => :gateway_composer_get, via: :GET
+  scope "#{GlobalConstant::Environment.url_prefix}/api/contracts", controller: 'contracts/gateway_composer' do
+    match 'gateway-composer' => :get, via: :GET
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/workflow/:workflow_id", controller: 'workflow' do
