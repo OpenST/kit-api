@@ -38,7 +38,7 @@ class FetchGoTo < ServicesBase
 
       return GlobalConstant::GoTo.verify_email if @manager[:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
 
-      if @is_password_auth_cookie_valid
+      if @is_multi_auth_cookie_valid
 
         fetch_by_economy_state
 
