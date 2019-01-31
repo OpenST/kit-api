@@ -1,5 +1,7 @@
 class Token::SetupController < WebController
 
+  before_action :is_client_whitelisted, :only => [:token_details_get]
+
   # Get token details
   #
   # * Author: Ankit
@@ -8,6 +10,14 @@ class Token::SetupController < WebController
   #
   def token_details_get
     service_response = TokenManagement::GetTokenDetails.new(params).perform
+
+    # set last used env cookie
+    set_cookie(
+      GlobalConstant::Cookie.last_used_env_cookie_name,
+      GlobalConstant::Base.main_sub_environment? ? GlobalConstant::Cookie.mainnet_env : GlobalConstant::Cookie.sandbox_env,
+      GlobalConstant::Cookie.last_used_env_cookie_expiry
+    )
+
     render_api_response(service_response)
   end
 
@@ -55,4 +65,34 @@ class Token::SetupController < WebController
     render_api_response(service_response)
   end
 
+  # Whitelisting
+  #
+  # * Author: Ankit
+  # * Date: 30/01/2019
+  # * Reviewed By:
+  #
+  def request_whitelist
+    service_response = TokenManagement::RequestWhitelist.new(params).perform
+    render_api_response(service_response)
+  end
+
+
+  private
+
+  def is_client_whitelisted
+    if GlobalConstant::Base.main_sub_environment?
+      client_env_statuses = params[:client][:mainnet_statuses]
+      env_whitelisted_status = GlobalConstant::Client.mainnet_whitelisted_status
+      res_go_to = GlobalConstant::GoTo.sandbox_token_setup
+    else
+      client_env_statuses = params[:client][:sandbox_statuses]
+      env_whitelisted_status = GlobalConstant::Client.sandbox_whitelisted_status
+      res_go_to = GlobalConstant::GoTo.mainnet_token_setup
+    end
+
+    if !client_env_statuses.include?(env_whitelisted_status)
+      service_response = error_with_go_to('a_c_t_sc_1', 'data_validation_failed', res_go_to)
+      render_api_response(service_response)
+    end
+  end
 end

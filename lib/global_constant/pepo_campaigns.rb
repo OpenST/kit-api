@@ -125,6 +125,11 @@ module GlobalConstant
         'ost_kit_invite_manager'
       end
 
+      # Request mainnet  - sent when client requests to get whitelisted for mainnet
+      def mainnet_whitelisting_request
+        'mainnet_whitelisting_request'
+      end
+
       # All possible templates integrated with email service
       #
       # * Author: Puneet
@@ -137,7 +142,8 @@ module GlobalConstant
         [
           double_opt_in_template,
           forgot_password_template,
-          invite_manager_template
+          invite_manager_template,
+          mainnet_whitelisting_request
         ]
       end
 

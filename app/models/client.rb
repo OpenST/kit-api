@@ -8,15 +8,15 @@ class Client < DbConnection::KitClient
 
   def self.mainnet_statuses_config
     @c_m_statuses ||= {
-        GlobalConstant::Client.mainnet_active_status => 1,
-        GlobalConstant::Client.mainnet_inactive_status => 2
+        GlobalConstant::Client.mainnet_whitelisted_status => 1,
+        GlobalConstant::Client.mainnet_whitelist_requested_status => 2
     }
   end
 
   def self.sandox_statuses_config
     @c_s_statuses ||= {
-        GlobalConstant::Client.sandbox_active_status => 1,
-        GlobalConstant::Client.sandbox_inactive_status => 2
+        GlobalConstant::Client.sandbox_whitelisted_status => 1,
+        GlobalConstant::Client.sandbox_whitelist_requested_status => 2
     }
   end
 

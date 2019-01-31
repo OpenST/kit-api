@@ -153,6 +153,7 @@ class Manager::LoginController < Manager::BaseController
   #
   def multi_factor_auth
     params[:cookie_value] = cookies[GlobalConstant::Cookie.user_cookie_name.to_sym]
+    params[:luse_cookie_value] = cookies[GlobalConstant::Cookie.last_used_env_cookie_name.to_sym]
     service_response = ManagerManagement::Login::MultiFactor::Authenticate.new(params).perform
 
     if service_response.success?

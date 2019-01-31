@@ -44,6 +44,8 @@ module AdminManagement
 
           find_or_create_client_whitelisting
 
+          mark_client_as_whitelisted_for_mainnet
+
           success
 
         end
@@ -170,6 +172,20 @@ module AdminManagement
 
         success
 
+      end
+
+      # Whitelist the client in client table
+      # * Author: Ankit
+      # * Date: 30/01/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      def mark_client_as_whitelisted_for_mainnet
+
+        client_obj = Client.where(id: @client_id).first
+
+        client_obj.send("set_#{GlobalConstant::Client.mainnet_whitelisted_status}")
+        client_obj.save!
       end
 
     end

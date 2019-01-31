@@ -237,3 +237,7 @@
     - :client_id
     - :staker_address
   :optional:
+'TokenManagement::RequestWhitelist':
+  :mandatory:
+    - :client_id
+  :optional:

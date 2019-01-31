@@ -27,6 +27,7 @@ module ManagerManagement
           @client = @params[:client]
           @browser_user_agent = @params[:browser_user_agent]
           @otp = @params[:otp].to_s
+          @luse_cookie_value = @params[:luse_cookie_value]
 
           @double_auth_cookie_value = nil
 
@@ -133,7 +134,17 @@ module ManagerManagement
         # @return [Hash]
         #
         def fetch_go_to
-          GlobalConstant::GoTo.token_setup
+          #check the cookie value here and redirect accordingly
+          if @luse_cookie_value == GlobalConstant::Cookie.mainnet_env
+            #redirect to mainnet token setup
+            GlobalConstant::GoTo.mainnet_token_setup
+          elsif @luse_cookie_value == GlobalConstant::Cookie.sandbox_env
+            #redirect to testnet token setup
+            GlobalConstant::GoTo.sandbox_token_setup
+          else
+            #redirect to token setup
+            GlobalConstant::GoTo.token_setup
+          end
         end
 
       end

@@ -47,6 +47,18 @@ module GlobalConstant
         }
       end
 
+      def mainnet_token_setup
+        {
+          by_screen_name: :mainnet_token_setup
+        }
+      end
+
+      def sandbox_token_setup
+        {
+          by_screen_name: :sandbox_token_setup
+        }
+      end
+
       def token_deploy
         {
           by_screen_name: :token_deploy

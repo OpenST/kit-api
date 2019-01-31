@@ -19,6 +19,10 @@ module GlobalConstant
       @cookie_domain ||= fetch_config.fetch('cookie_domain')
     end
 
+    def self.support_email
+      @support_email ||= fetch_config.fetch('support_email', '')
+    end
+
     def self.main_sub_environment?
       sub_environment_name == GlobalConstant::Environment.main_sub_environment
     end

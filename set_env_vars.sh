@@ -86,3 +86,6 @@ export KA_CW_DOMAIN='developmentost.com'
 # OST Explorer Apis
 export KA_EXPLORER_BASE_URL='http://view.developmentost.com:7000/'
 export KA_EXPLORER_SECRET_KEY='6p5BkI0uGHI1JPrAKP3eB1Zm88KZ84a9Th9o4syhwZhxlv0oe0'
+
+# Support email
+export KA_SUPPORT_EMAIL='support@ost.com'

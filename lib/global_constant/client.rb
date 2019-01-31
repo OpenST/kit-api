@@ -7,20 +7,20 @@ module GlobalConstant
 
       ### Status Start ###
 
-      def sandbox_active_status
-        'sandbox_active'
+      def sandbox_whitelisted_status
+        'sandbox_whitelisted_status'
       end
 
-      def sandbox_inactive_status
-        'sandbox_inactive'
+      def sandbox_whitelist_requested_status
+        'sandbox_whitelist_requested_status'
       end
 
-      def mainnet_active_status
-        'mainnet_active'
+      def mainnet_whitelisted_status
+        'mainnet_whitelisted_status'
       end
 
-      def mainnet_inactive_status
-        'mainnet_inactive'
+      def mainnet_whitelist_requested_status
+        'mainnet_whitelist_requested_status'
       end
 
       ### Status End ###

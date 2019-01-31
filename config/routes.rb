@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     match 'deploy' => :deploy_get, via: :GET
     match 'deploy' => :deploy_post, via: :POST
     match 'mint-progress' => :mint_progress, via: :GET
-    match 'whitelisting' => :whitelisting, via: :POST
+    match 'request-whitelist' => :request_whitelist, via: :POST
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/mint", controller: 'token/mint' do

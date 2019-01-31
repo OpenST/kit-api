@@ -17,14 +17,9 @@ module Util
       # @return [Hash]
       #
       def fetch_and_validate_client(client_id, err_prefix = 'u_eh_c')
-        client_not_found_response("#{err_prefix}_1") if client_id.blank?
+        client_not_found_response("#{err_prefix}:l_u_eh_fvc_1") if client_id.blank?
         client = CacheManagement::Client.new([client_id]).fetch[client_id]
-        client_not_found_response("#{err_prefix}_2") if client.blank?
-        if Util::CommonValidator.is_mainnet_env?
-          client_inactive_response("#{err_prefix}_3") if client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_inactive_status)
-        else
-          client_inactive_response("#{err_prefix}_4") if client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_inactive_status)
-        end
+        client_not_found_response("#{err_prefix}:l_u_eh_fvc_2") if client.blank?
         client
       end
 
@@ -37,9 +32,9 @@ module Util
       # @return [Hash]
       #
       def fetch_and_validate_manager(manager_id, err_prefix = 'u_eh_m')
-        return manager_not_found_response("#{err_prefix}_1") if manager_id.blank?
+        return manager_not_found_response("#{err_prefix}:l_u_eh_fvm_1") if manager_id.blank?
         manager = CacheManagement::Manager.new([manager_id]).fetch[manager_id]
-        return manager_not_found_response("#{err_prefix}_2") if manager[:status] != GlobalConstant::Manager.active_status
+        return manager_not_found_response("#{err_prefix}:l_u_eh_fvm_2") if manager[:status] != GlobalConstant::Manager.active_status
         manager
       end
 
@@ -52,9 +47,9 @@ module Util
       # @return [Hash]
       #
       def fetch_and_validate_token(client_id, err_prefix = 'u_eh_m')
-        return token_not_found_response("#{err_prefix}_1") if client_id.blank?
+        return token_not_found_response("#{err_prefix}:l_u_eh_fvt_1") if client_id.blank?
         token = KitSaasSharedCacheManagement::TokenDetails.new([client_id]).fetch[client_id]
-        return token_not_found_response("#{err_prefix}_2") if token.blank?
+        return token_not_found_response("#{err_prefix}:l_u_eh_fvt_2") if token.blank?
         success_with_data(token)
       end
 
