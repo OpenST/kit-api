@@ -157,7 +157,7 @@ module AdminManagement
       #
       def find_or_create_client_preprovisioning
 
-        wd = ClientPreProvisoning.where(client_id: @client_id).first
+        wd = ClientPreProvisioning.where(client_id: @client_id).first
 
         if wd.present?
           wd.config['config_group_id'] = @config_group_id if @config_group_id.present?
@@ -167,7 +167,7 @@ module AdminManagement
           config = {}
           config['config_group_id'] = @config_group_id if @config_group_id.present?
           config['token_users_shard_number'] = @token_users_shard_number if @token_users_shard_number.present?
-          ClientPreProvisoning.create!(client_id: @client_id, config: config)
+          ClientPreProvisioning.create!(client_id: @client_id, config: config)
         end
 
         success

@@ -1,4 +1,4 @@
-class ClientPreProvisoning < DbConnection::KitSaasSubenv
+class ClientPreProvisioning < DbConnection::KitSaasSubenv
 
   serialize :config, JSON
 
