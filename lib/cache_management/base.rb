@@ -18,8 +18,8 @@ module CacheManagement
     def initialize(ids, options = {})
 
       @ids = ids
-      @options = options
-      @options[:prefix] = memcache_key_object.kit_key_prefix
+      @options = options.merge(GlobalConstant::Cache.key_prefixes_template_vars)
+      @options[:code_prefix] = GlobalConstant::Cache.kit_key_prefix
 
       @id_to_cache_key_map = {}
 

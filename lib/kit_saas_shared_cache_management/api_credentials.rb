@@ -59,7 +59,7 @@ module KitSaasSharedCacheManagement
 
       affected_api_keys.each do |affected_api_key|
         # delete cache key set by saas which has secret key for given secret key
-        Memcache.delete_from_all_instances("#{MemcacheKey.saas_shared_key_prefix}_cs_#{affected_api_key.downcase}")
+        Memcache.delete_from_all_instances("#{GlobalConstant::Cache.saas_key_prefix}_#{GlobalConstant::Cache.key_prefixes_template_vars[:saas_subenv]}_cs_#{affected_api_key.downcase}")
       end
 
       nil
@@ -133,10 +133,7 @@ module KitSaasSharedCacheManagement
     # @return [String]
     #
     def get_kit_cache_key(id)
-      memcache_key_object.key_template % @options.merge(
-          id: id,
-          prefix: memcache_key_object.kit_key_prefix
-      )
+      generate_kit_cache_key @options.merge(id: id)
     end
 
     # Fetch saas cache key
@@ -148,10 +145,7 @@ module KitSaasSharedCacheManagement
     # @return [String]
     #
     def get_saas_cache_key(id)
-      memcache_key_object.key_template % @options.merge(
-          id: id,
-          prefix: memcache_key_object.saas_shared_key_prefix
-      )
+      nil # generate_saas_cache_key @options.merge(id: id)
     end
 
     # Fetch cache expiry (in seconds)

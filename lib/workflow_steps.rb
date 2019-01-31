@@ -92,7 +92,7 @@ class WorkflowSteps
   end
 
   def fetch_workflow_data
-    @workflow_data_map = CacheManagement::Workflow.new(@workflow_steps_data_map.keys).fetch
+    @workflow_data_map = KitSaasSharedCacheManagement::Workflow.new(@workflow_steps_data_map.keys).fetch
     success
   end
 

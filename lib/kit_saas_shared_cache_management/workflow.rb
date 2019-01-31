@@ -1,6 +1,6 @@
-module CacheManagement
+module KitSaasSharedCacheManagement
 
-  class Workflow < CacheManagement::Base
+  class Workflow < KitSaasSharedCacheManagement::Base
 
     # Fetch from db
     #
@@ -38,8 +38,20 @@ module CacheManagement
     #
     # @return [String]
     #
-    def get_cache_key(id)
-      memcache_key_object.key_template % @options.merge(id: id)
+    def get_kit_cache_key(workflow_id)
+      generate_kit_cache_key @options.merge(id: workflow_id)
+    end
+
+    # Fetch saas cache key
+    #
+    # * Author: Puneet
+    # * Date: 06/12/2018
+    # * Reviewed By:
+    #
+    # @return [String]
+    #
+    def get_saas_cache_key(workflow_id)
+      generate_saas_cache_key @options.merge(id: workflow_id)
     end
 
     # Fetch cache expiry (in seconds)

@@ -80,7 +80,7 @@ class GetWorkflowStatus < ServicesBase
   #
   def fetch_data
 
-    cached_workflow_data = CacheManagement::Workflow.new([@workflow_id]).fetch
+    cached_workflow_data = KitSaasSharedCacheManagement::Workflow.new([@workflow_id]).fetch
 
     if cached_workflow_data[@workflow_id].blank?
        fail OstCustomError.new validation_error(

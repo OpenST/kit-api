@@ -117,7 +117,7 @@ module ManagerManagement
             current_client_id: @manager[:current_client_id],
             token_s: token_s,
             browser_user_agent: @browser_user_agent,
-            last_session_updated_at: '', #@manager_s[:last_session_updated_at],
+            last_session_updated_at: @manager_s[:last_session_updated_at],
             cookie_creation_time: @created_ts,
             auth_level: auth_level
         )
@@ -183,7 +183,7 @@ module ManagerManagement
             current_client_id: @manager[:current_client_id],
             token_s: token_s,
             browser_user_agent: @browser_user_agent,
-            last_session_updated_at: '', #@manager_s[:last_session_updated_at],
+            last_session_updated_at: @manager_s[:last_session_updated_at],
             auth_level: auth_level
         )
       end

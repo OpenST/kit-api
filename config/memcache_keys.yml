@@ -1,61 +1,79 @@
-manager:
-  details:
-    key_template: 'm_d_%{id}'
-    expiry_in_seconds: 86400
-  secure_details:
-    key_template: 'm_sd_%{id}'
-    expiry_in_seconds: 86400
+prefixes:
+  kit_saas: &kit_saas
+    prefix: '%{kit_saas}_'
+  kit: &kit
+    prefix: '%{kit}_'
+  saas: &saas
+    prefix: '%{saas}_'
+  kit_subenv: &kit_subenv
+    prefix: '%{kit_subenv}_'
+  saas_subenv: &saas_subenv
+    prefix: '%{saas_subenv}_'
+  kit_saas_subenv: &kit_saas_subenv
+      prefix: '%{kit_saas_subenv}_'
 
-client:
-  details:
-    key_template: 'c_d_%{id}'
-    expiry_in_seconds: 86400
-  secure_details:
-    key_template: 'c_sd_%{id}'
-    expiry_in_seconds: 86400
-  whitelisting:
-    key_template: 'c_wlsting_%{id}'
-    expiry_in_seconds: 86400
-    shared_with_saas: 1
-  api_credentials:
-    key_template: 'c_ac_%{id}'
-    expiry_in_seconds: 86400
-    shared_with_saas: 1
+keys:
 
-client_manager:
-  details:
-    key_template: 'c_md_%{client_id}_%{manager_id}'
-    expiry_in_seconds: 86400
+  manager:
+    details:
+      key_template: 'm_d_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit
+    secure_details:
+      key_template: 'm_sd_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit
 
-token_management:
-  details:
-    key_template: 'c_tkn_%{client_id}'
-    expiry_in_seconds: 86400
-    shared_with_saas: 1
+  client:
+    details:
+      key_template: 'c_d_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit
+    whitelisting:
+      key_template: 'c_wlsting_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
+    api_credentials:
+      key_template: 'c_ac_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
 
-token_address:
-  details:
-    key_template: 'ta_%{token_id}'
-    expiry_in_seconds: 86400
-    shared_with_saas: 1
+  client_manager:
+    details:
+      key_template: 'c_md_%{client_id}_%{manager_id}'
+      expiry_in_seconds: 86400
+      <<: *kit
 
-ost_price_points:
-  default:
-    key_template: 'c_oppd_def'
-    expiry_in_seconds: 300
-    shared_with_saas: 1
+  token_management:
+    details:
+      key_template: 'c_tkn_%{client_id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
 
-workflow_status:
-  default:
-    key_template: 'c_d_s_%{workflow_id}'
-    expiry_in_seconds: 300
-    shared_with_saas: 1
+  token_address:
+    details:
+      key_template: 'ta_%{token_id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
 
-workflow:
-  default:
-    key_template: 'c_w_f_%{id}'
-    expiry_in_seconds: 300
-    shared_with_saas: 1
-  by_client:
-    key_template: 'c_w_f_bc_%{client_id}'
-    expiry_in_seconds: 300
+  ost_price_points:
+    default:
+      key_template: 'c_oppd_def'
+      expiry_in_seconds: 300
+      <<: *kit_saas_subenv
+
+  workflow_status:
+    default:
+      key_template: 'c_d_s_%{workflow_id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
+
+  workflow:
+    default:
+      key_template: 'c_w_f_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
+    by_client:
+      key_template: 'c_w_f_bc_%{client_id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv

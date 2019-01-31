@@ -36,10 +36,7 @@ module KitSaasSharedCacheManagement
     # @return [String]
     #
     def get_kit_cache_key(token_id)
-      memcache_key_object.key_template % @options.merge(
-          token_id: token_id,
-          prefix: memcache_key_object.kit_key_prefix
-      )
+      generate_kit_cache_key @options.merge(token_id: token_id)
     end
 
     # Fetch saas cache key
@@ -51,10 +48,7 @@ module KitSaasSharedCacheManagement
     # @return [String]
     #
     def get_saas_cache_key(token_id)
-      memcache_key_object.key_template % @options.merge(
-          token_id: token_id,
-          prefix: memcache_key_object.saas_shared_key_prefix
-      )
+      generate_saas_cache_key @options.merge(token_id: token_id)
     end
 
     # Fetch cache expiry (in seconds)

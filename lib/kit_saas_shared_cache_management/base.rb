@@ -18,7 +18,7 @@ module KitSaasSharedCacheManagement
     def initialize(ids, options = {})
 
       @ids = ids
-      @options = options
+      @options = options.merge(GlobalConstant::Cache.key_prefixes_template_vars)
 
       @id_to_cache_key_map = {}
 
@@ -164,6 +164,14 @@ module KitSaasSharedCacheManagement
       cache_data.each do |id, data|
         Memcache.write(@id_to_cache_key_map[id][:kit], data, get_cache_expiry)
       end
+    end
+
+    def generate_kit_cache_key(options)
+      memcache_key_object.key_template % options.merge(code_prefix: GlobalConstant::Cache.kit_key_prefix)
+    end
+
+    def generate_saas_cache_key(options)
+      memcache_key_object.key_template % options.merge(code_prefix: GlobalConstant::Cache.saas_key_prefix)
     end
 
   end
