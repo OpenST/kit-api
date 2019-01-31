@@ -124,6 +124,14 @@ module Email
               GlobalConstant::ErrorAction.default
           ) if @template_vars[:invite_token].blank?
 
+        elsif GlobalConstant::PepoCampaigns.is_mainnet_whitelisting_template?(@template_name)
+
+          return error_with_data(
+            'e_hc_stm_7',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+          ) if @template_vars[:manager_email_id].blank?
+
         end
 
         success

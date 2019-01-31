@@ -15,6 +15,9 @@ module TokenManagement
       super
 
       @client_id = params[:client_id]
+      @sandbox_token_name = params[:sandbox_token_name] |= nil
+      @sandbox_token_symbol = params[:sandbox_token_symbol] |= nil
+      @manager_obj = params[:manager]
 
       @api_response_data = {}
 
@@ -66,11 +69,13 @@ module TokenManagement
                               ) if GlobalConstant::Base.sandbox_sub_environment?
 
       @client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
+
       fail OstCustomError.new error_with_data(
                                 'a_tm_rw_2',
                                 'client_not_found',
                                 GlobalConstant::ErrorAction.default
                               ) if @client.blank?
+
 
       success
     end
@@ -104,13 +109,27 @@ module TokenManagement
     # @return [Result::Base]
     #
     def send_email
+
+      manager_email_id = @manager_obj.email
+
+      template_vars =  {
+        client_id: @client_id, # Email, Sandbox Token Name, Sandbox Symbol
+        manager_email_id: manager_email_id,
+        company_web_domain: GlobalConstant::CompanyWeb.domain
+      }
+
+      if @sandbox_token_name.present?
+        template_vars[:sandbox_token_name] = @sandbox_token_name
+      end
+
+      if @sandbox_token_symbol.present?
+        template_vars[:sandbox_token_symbol] = @sandbox_token_symbol
+      end
+
       Email::HookCreator::SendTransactionalMail.new(
         email: GlobalConstant::Base.support_email,
-        template_name: GlobalConstant::PepoCampaigns.mainnet_whitelisting_request,
-        template_vars: {
-          client_id: @client_id # Email, Sandbox Token Name, Sandbox Symbol
-        }
-      ).perform
+        template_name: GlobalConstant::PepoCampaigns.mainnet_whitelisting_request_template,
+        template_vars: template_vars).perform
     end
 
     # set whitelisting requested flag

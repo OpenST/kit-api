@@ -240,4 +240,5 @@
 'TokenManagement::RequestWhitelist':
   :mandatory:
     - :client_id
+    - :manager
   :optional:

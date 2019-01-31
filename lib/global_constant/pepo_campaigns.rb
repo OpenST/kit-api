@@ -126,7 +126,7 @@ module GlobalConstant
       end
 
       # Request mainnet  - sent when client requests to get whitelisted for mainnet
-      def mainnet_whitelisting_request
+      def mainnet_whitelisting_request_template
         'mainnet_whitelisting_request'
       end
 
@@ -143,7 +143,7 @@ module GlobalConstant
           double_opt_in_template,
           forgot_password_template,
           invite_manager_template,
-          mainnet_whitelisting_request
+          mainnet_whitelisting_request_template
         ]
       end
 
@@ -186,6 +186,20 @@ module GlobalConstant
       def is_manager_invite_template?(template_name)
         [
             GlobalConstant::PepoCampaigns.invite_manager_template
+        ].include?(template_name)
+      end
+
+      # Is this template of whitelist request
+      #
+      # * Author: Puneet
+      # * Date: 12/01/2018
+      # * Reviewed By:
+      #
+      # @return [Boolean]
+      #
+      def is_mainnet_whitelisting_template?(template_name)
+        [
+          GlobalConstant::PepoCampaigns.mainnet_whitelisting_request_template
         ].include?(template_name)
       end
 
