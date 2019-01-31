@@ -137,7 +137,7 @@ module WalletAddressesManagement
       return r unless r.success?
 
       @signed_by_address = r.data[:signer]
-
+      @signed_by_address = sanitize_address(@signed_by_address)
       success
     end
 
