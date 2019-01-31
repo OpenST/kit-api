@@ -1,6 +1,6 @@
 module KitSaasSharedCacheManagement
 
-  class OstPricePointsDefault
+  class OstPricePointsDefault < KitSaasSharedCacheManagement::Base
 
     include Util::ResultHelper
 
