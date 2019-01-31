@@ -27,7 +27,7 @@ class SubEnvPayload
     return r unless r.success?
 
     success_with_data({
-                        sub_env_payload: @sub_env_payload
+                        sub_env_payloads: @sub_env_payload
                       })
 
   end

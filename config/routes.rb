@@ -53,7 +53,7 @@ Rails.application.routes.draw do
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/contracts", controller: 'contracts/gateway_composer' do
-    match 'gateway-composer' => :get, via: :GET
+    match 'gateway-composer' => :get_details, via: :GET
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/workflow/:workflow_id", controller: 'workflow' do
