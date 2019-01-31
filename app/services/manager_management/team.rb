@@ -43,8 +43,6 @@ module ManagerManagement
 
         fetch_and_validate_token
 
-        r = fetch_goto
-        return r unless r.success?
 
         success_with_data(
           {
@@ -90,24 +88,6 @@ module ManagerManagement
       @token = token_resp.data
 
       success
-    end
-
-    # Fetch token details
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_goto
-
-      FetchGoToByEconomyState.new({
-                                    token: @token,
-                                    client_id: @client_id,
-                                    from_page: GlobalConstant::GoTo.team
-                                  }).fetch_by_economy_state
-
     end
 
   end

@@ -48,9 +48,6 @@ module ManagerManagement
 
       fetch_and_validate_token
 
-      r = fetch_goto
-      return r unless r.success?
-
       fetch_admins
 
       fetch_admin_email_ids
@@ -136,24 +133,6 @@ module ManagerManagement
       success
     end
 
-    # Fetch token details
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_goto
-
-      FetchGoToByEconomyState.new({
-                                    token: @token,
-                                    client_id: @client_id,
-                                    mint_workflow: @mint_workflow,
-                                    from_page: GlobalConstant::GoTo.team
-                                  }).fetch_by_economy_state
-
-    end
 
     # Fetch client manager details
     #

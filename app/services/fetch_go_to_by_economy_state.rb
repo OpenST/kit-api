@@ -67,8 +67,7 @@ class FetchGoToByEconomyState < ServicesBase
 
     elsif @token[:status] == GlobalConstant::ClientToken.deployment_started
 
-      if @from_page[:by_screen_name] != GlobalConstant::GoTo.team[:by_screen_name] &&
-        @from_page[:by_screen_name] != GlobalConstant::GoTo.developer[:by_screen_name]
+      if @from_page[:by_screen_name] != GlobalConstant::GoTo.developer[:by_screen_name]
 
         @go_to = GlobalConstant::GoTo.token_deploy
 
