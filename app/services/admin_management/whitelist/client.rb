@@ -182,7 +182,7 @@ module AdminManagement
       # @return [Result::Base]
       def mark_client_as_whitelisted_for_mainnet
 
-        client_obj = Client.where(id: @client_id).first
+        client_obj = ::Client.where(id: @client_id).first
 
         client_obj.send("set_#{GlobalConstant::Client.mainnet_whitelisted_status}")
         client_obj.save!
