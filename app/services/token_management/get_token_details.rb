@@ -41,20 +41,21 @@ module TokenManagement
 
         r = fetch_goto
         return r unless r.success?
-
-        # TODO: Open this functionality when economy setup is functional
-        #r = fetch_token_details_from_saas
-        #return r unless r.success?
-
+        
         fetch_default_price_points
 
-        append_logged_in_manager_details
-
-        @api_response_data[:sign_messages] = {
+        @sign_message = {
           wallet_association: GlobalConstant::MessageToSign.wallet_association
         }
 
-        success_with_data(@api_response_data)
+        success_with_data(
+          {
+            token: @token,
+            sign_messages: @sign_message,
+            client_manager: @client_manager,
+            price_points: @price_points
+          }
+        )
 
       end
 
@@ -70,8 +71,6 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_token_details
       @token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
-
-      @api_response_data[:token] = @token
 
       success
     end
@@ -92,44 +91,6 @@ module TokenManagement
                                     from_page: GlobalConstant::GoTo.token_setup
                                   }).fetch_by_economy_state
 
-    end
-
-    # Append logged in manager details
-    #
-    # * Author: Santhosh
-    # * Date: 04/01/2019
-    # * Reviewed By: Kedar
-    #
-    # @return [Result::Base]
-    #
-    def append_logged_in_manager_details
-      return success unless @client_manager.present?
-
-      @api_response_data[:client_manager] = @client_manager
-
-      success
-    end
-
-    #private
-
-    # Fetch token details from Saas
-    #
-    #
-    # * Author: Santhosh
-    # * Date: 07/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    def fetch_token_details_from_saas
-      params = {
-          chain_id: 12345,
-          contract_address: '0x0x0x0x00x0x0x31280931hdfad32193as34as1dsad2',
-          client_id: @client_id
-      }
-      saas_response = SaasApi::Token::FetchDetails.new.perform(params) # TODO: Pass params appropriately
-      return saas_response unless saas_response.success?
-
-      @api_response_data[:token].merge!(saas_response.data)
     end
 
   end

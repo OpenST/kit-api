@@ -105,10 +105,15 @@ module TokenManagement
         @api_response_data['workflow_current_step'] = cached_response_data[@deployment_workflow.id][:current_step]
       end
 
-      @api_response_data['workflow'] = {
-        id: @deployment_workflow.id,
-        kind: GlobalConstant::Workflow.token_deploy
-      }
+      if @deployment_workflow.status == GlobalConstant::Workflow.in_progress ||
+        @deployment_workflow.status == GlobalConstant::Workflow.failed
+
+        @api_response_data['workflow'] = {
+          id: @deployment_workflow.id,
+          kind: GlobalConstant::Workflow.token_deploy,
+          status: @deployment_workflow.status
+        }
+      end
 
       success
     end

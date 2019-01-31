@@ -108,7 +108,8 @@ class FetchGoToByEconomyState < ServicesBase
     return success if @from_page[:by_screen_name] != GlobalConstant::GoTo.token_mint[:by_screen_name] &&
       @from_page[:by_screen_name] != GlobalConstant::GoTo.token_mint_progress[:by_screen_name]
 
-    if @mint_workflow.present? && @mint_workflow.status == GlobalConstant::Workflow.in_progress
+    if @mint_workflow.present? &&
+      (@mint_workflow.status == GlobalConstant::Workflow.in_progress || @mint_workflow.status == GlobalConstant::Workflow.failed)
 
       @go_to = GlobalConstant::GoTo.token_mint_progress
 

@@ -86,7 +86,7 @@ module TokenManagement
 
       if workflows.present? && workflows[@client_id].present?
         workflows[@client_id].each do |wf|
-          if wf.kind == GlobalConstant::Workflow.grant_eth_ost
+          if wf.kind == GlobalConstant::Workflow.grant_eth_ost && wf.status == GlobalConstant::Workflow.in_progress
             @api_response_data[:workflow] = {id: wf.id, kind: wf.kind}
           elsif wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
             @mint_workflow ||= wf

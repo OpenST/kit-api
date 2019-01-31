@@ -91,7 +91,7 @@ module TokenManagement
       if(workflows.present? && workflows[@client_id].present?)
         workflows[@client_id].each do |wf|
           if wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
-            if wf.status == GlobalConstant::Workflow.in_progress
+            if wf.status == GlobalConstant::Workflow.in_progress || wf.status == GlobalConstant::Workflow.failed
               @api_response_data[:workflow] = {id: wf.id, kind: wf.kind}
               @workflow_id = wf.id
             end
