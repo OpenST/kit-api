@@ -54,8 +54,6 @@ module TokenManagement
           wallet_association: GlobalConstant::MessageToSign.wallet_association
         }
 
-        Rails.logger.info("===api response==========#{@api_response_data}")
-
         success_with_data(@api_response_data)
 
       end
