@@ -90,7 +90,7 @@ module Google
     # @return [Object] ROTP
     #
     def client
-      env_name = Rails.env.production? ? '' :  " - #{Rails.env}"
+      env_name = Rails.env.production? ? '' :  " - #{GlobalConstant::Base.environment_name}"
       @client ||= ROTP::TOTP.new(@secret, issuer: "OST Kit #{env_name}")
     end
 
