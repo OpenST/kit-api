@@ -172,7 +172,12 @@ module TokenManagement
         simple_token: {
           abi: GlobalConstant::ContractDetails::SimpleToken.abi,
           gas: GlobalConstant::ContractDetails::SimpleToken.gas,
-          address: saas_response.data["contract_address"]["simple_token"]["address"]
+          address: saas_response.data["contract_address"]["simple_token"]
+        },
+        branded_token: {
+          abi: GlobalConstant::ContractDetails::BrandedToken.abi,
+          gas: GlobalConstant::ContractDetails::BrandedToken.gas,
+          address: saas_response.data["contract_address"]["branded_token"]
         }
       }
 

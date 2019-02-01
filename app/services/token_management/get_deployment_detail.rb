@@ -100,9 +100,11 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_workflow_current_status
 
-      cached_response_data = KitSaasSharedCacheManagement::WorkflowStatus.new([@deployment_workflow.id]).fetch
-
       @api_response_data['workflow_current_step'] = {}
+      @api_response_data['workflow'] = {}
+      return success if @deployment_workflow.blank?
+
+      cached_response_data = KitSaasSharedCacheManagement::WorkflowStatus.new([@deployment_workflow.id]).fetch
 
       if cached_response_data[@deployment_workflow.id].present?
         @api_response_data['workflow_current_step'] = cached_response_data[@deployment_workflow.id][:current_step]
