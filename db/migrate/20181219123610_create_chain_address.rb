@@ -2,6 +2,7 @@ class CreateChainAddress < DbMigrationConnection
 
   def up
 
+    # TODO: Migrate chain_addresses
     run_migration_for_db(DbConnection::SaasSubenv) do
 
       create_table :chain_addresses do |t|
