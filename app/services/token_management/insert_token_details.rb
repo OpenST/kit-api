@@ -37,11 +37,14 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        insert_update_token_details
+        r = insert_update_token_details
+        return r unless r.success?
 
-        delete_old_addresses
+        r = delete_old_addresses
+        return r unless r.success?
 
         success_with_data({token: @token_details.formated_cache_data})
 
