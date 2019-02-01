@@ -39,6 +39,9 @@ module TokenManagement
 
         fetch_token_details
 
+        r = fetch_sub_env_payloads
+        return r unless r.success?
+
         r = fetch_goto
         return r unless r.success?
         
@@ -53,7 +56,8 @@ module TokenManagement
             token: @token,
             sign_messages: @sign_message,
             client_manager: @client_manager,
-            price_points: @price_points
+            price_points: @price_points,
+            sub_env_payloads: @sub_env_payload_data
           }
         )
 
@@ -91,6 +95,23 @@ module TokenManagement
                                     from_page: GlobalConstant::GoTo.token_setup
                                   }).fetch_by_economy_state
 
+    end
+
+    # fetch the sub env response data entity
+    #
+    # * Author: Ankit
+    # * Date: 01/02/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_sub_env_payloads
+      r = SubEnvPayload.new({client_id:@client_id}).perform
+      return r unless r.success?
+
+      @sub_env_payload_data = r.data[:sub_env_payloads]
+
+      success
     end
 
   end
