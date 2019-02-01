@@ -4,7 +4,7 @@ module GlobalConstant
 
       def self.gas
         return {
-          approve: 1000
+          approve: '0xC350' #50000
         }
       end
 

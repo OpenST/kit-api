@@ -59,6 +59,8 @@ module TokenManagement
 
     def validate_and_sanitize
 
+      validate
+
       # Santize
       @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)
       @request_stake_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@request_stake_tx_hash)
@@ -74,8 +76,6 @@ module TokenManagement
           GlobalConstant::ErrorAction.default
         )
       end
-
-      validate
 
       success
     end
@@ -118,6 +118,7 @@ module TokenManagement
       params_for_saas_api = {
         approve_transaction_hash: @approve_tx_hash,
         request_stake_transaction_hash:@request_stake_tx_hash,
+        staker_address: @staker_address,
         token_id: @token_id,
         client_id: @client_id,
         fe_ost_to_stake: @fe_ost_to_stake,

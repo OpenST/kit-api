@@ -4,49 +4,53 @@ module GlobalConstant
 
       def self.gas
         return {
-          stakeRequests: 1000
+          requestStake: '0x41EB0'# 270000
         }
       end
 
       def self.abi
         return [
           {
-            "constant": true,
+            "name": "requestStake",
+            "constant": false,
             "inputs": [
               {
-                "name": "",
+                "name": "_stakeVT",
+                "type": "uint256"
+              },
+              {
+                "name": "_mintBT",
+                "type": "uint256"
+              },
+              {
+                "name": "_gateway",
+                "type": "address"
+              },
+              {
+                "name": "_beneficiary",
+                "type": "address"
+              },
+              {
+                "name": "_gasPrice",
+                "type": "uint256"
+              },
+              {
+                "name": "_gasLimit",
+                "type": "uint256"
+              },
+              {
+                "name": "_nonce",
+                "type": "uint256"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "requestStakeHash_",
                 "type": "bytes32"
               }
             ],
-            "name": "stakeRequests",
-            "outputs": [
-              {
-                "name": "stakeVT",
-                "type": "uint256"
-              },
-              {
-                "name": "gateway",
-                "type": "address"
-              },
-              {
-                "name": "beneficiary",
-                "type": "address"
-              },
-              {
-                "name": "gasPrice",
-                "type": "uint256"
-              },
-              {
-                "name": "gasLimit",
-                "type": "uint256"
-              },
-              {
-                "name": "nonce",
-                "type": "uint256"
-              }
-            ],
             "payable": false,
-            "stateMutability": "view",
+            "stateMutability": "nonpayable",
             "type": "function"
           }
         ]
