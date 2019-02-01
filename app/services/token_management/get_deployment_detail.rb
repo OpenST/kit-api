@@ -47,6 +47,9 @@ module TokenManagement
 
         fetch_workflow_current_status
 
+        r = fetch_sub_env_payloads
+        return r unless r.success?
+
         success_with_data(@api_response_data)
 
       end
@@ -114,6 +117,23 @@ module TokenManagement
           status: @deployment_workflow.status
         }
       end
+
+      success
+    end
+
+    # fetch the sub env response data entity
+    #
+    # * Author: Ankit
+    # * Date: 01/02/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_sub_env_payloads
+      r = SubEnvPayload.new({client_id:@client_id}).perform
+      return r unless r.success?
+
+      @api_response_data['sub_env_payloads'] = r.data[:sub_env_payloads]
 
       success
     end
