@@ -143,10 +143,10 @@ module TokenManagement
         workflow_current_step = cached_response_data[@workflow_id][:current_step]
       end
       @api_response_data['workflow_current_step'] = workflow_current_step
-      #{@api_response_data['workflow'] = {
-      #  id: @workflow_id,
-      #  kind: GlobalConstant::Workflow.bt_stake_and_mint
-      #}}"
+
+      cached_workflow_data = KitSaasSharedCacheManagement::Workflow.new([@workflow_id]).fetch
+
+      @api_response_data['workflow_payload'] = Oj.load(cached_workflow_data[@workflow_id][:response_data], {})
 
       success
     end

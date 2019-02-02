@@ -97,7 +97,7 @@ class GetWorkflowStatus < ServicesBase
     }
 
     begin
-      @api_response_data['workflow_payload'] = Oj.load(cached_workflow_data[@workflow_id][:response_data])
+      @api_response_data['workflow_payload'] = Oj.load(cached_workflow_data[@workflow_id][:response_data], {})
     rescue => e
       @api_response_data['workflow_payload'] = {}
     end
