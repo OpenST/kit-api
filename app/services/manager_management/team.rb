@@ -43,12 +43,15 @@ module ManagerManagement
 
         fetch_and_validate_token
 
+        r = fetch_sub_env_payloads
+        return r unless r.success?
 
         success_with_data(
           {
             manager: @manager,
             client: @client,
-            client_manager: @client_manager
+            client_manager: @client_manager,
+            sub_env_payloads: @sub_env_payloads
           })
 
       end
@@ -86,6 +89,23 @@ module ManagerManagement
       return token_resp unless token_resp.success?
 
       @token = token_resp.data
+
+      success
+    end
+
+    # fetch the sub env response data entity
+    #
+    # * Author: Ankit
+    # * Date: 01/02/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_sub_env_payloads
+      r = SubEnvPayload.new({client_id:@client_id}).perform
+      return r unless r.success?
+
+      @sub_env_payloads = r.data[:sub_env_payloads]
 
       success
     end
