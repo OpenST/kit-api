@@ -110,7 +110,7 @@ module TokenManagement
     #
     def send_email
 
-      manager_email_id = @manager_obj.email
+      manager_email_id = @manager_obj[:email]
 
       template_vars =  {
         client_id: @client_id, # Email, Sandbox Token Name, Sandbox Symbol
