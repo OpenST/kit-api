@@ -162,8 +162,10 @@ module TokenManagement
     # @sets @api_response_data[:contract_details], @api_response_data[:gas_price]
     #
     def get_details_from_saas
+      total_gas_for_mint = GlobalConstant::ContractDetails::SimpleToken.gas[:approve].to_i(16) + GlobalConstant::ContractDetails::GatewayComposer.gas[:requestStake].to_i(16)
       params = {
-        client_id: @client_id
+        client_id: @client_id,
+        total_gas_for_mint: total_gas_for_mint
       }
       saas_response = SaasApi::Token::MintDetails.new.perform(params)
       return saas_response unless saas_response.success?
