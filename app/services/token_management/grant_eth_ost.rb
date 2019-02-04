@@ -94,7 +94,7 @@ module TokenManagement
     # @return
     def check_environment_validation
       #check if env is non production
-      if GlobalConstant::Base.main_sub_environment? && GlobalConstant::Base.environment_name == GlobalConstant::Environment.production_environment
+      if GlobalConstant::Base.main_sub_environment?
         return validation_error(
           'a_s_tm_g_2',
           'unauthorized_access_response',
