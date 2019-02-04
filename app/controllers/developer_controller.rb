@@ -7,7 +7,7 @@ class DeveloperController < WebController
   # * Reviewed By:
   #
   def developer_get
-    service_response = ClientManagement::ApiCredentials::Fetch.new(params).perform
+    service_response = DeveloperManagement::FetchDetails.new(params).perform
     render_api_response(service_response)
   end
 

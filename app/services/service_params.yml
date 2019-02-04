@@ -242,3 +242,7 @@
     - :client_id
     - :manager
   :optional:
+'DeveloperManagement::FetchDetails':
+  :mandatory:
+    - :client_id
+    - :client_manager
