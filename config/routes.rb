@@ -30,6 +30,10 @@ Rails.application.routes.draw do
     match 'update-super-admin-role' => :update_super_admin_role, via: :POST
   end
 
+  scope '#{GlobalConstant::Environment.url_prefix}/developer', controller: 'developer' do
+    match '' => :developer_get, via: :GET
+  end
+
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup' do
     match '' => :token_details_get, via: :GET
     match '' => :token_details_post, via: :POST

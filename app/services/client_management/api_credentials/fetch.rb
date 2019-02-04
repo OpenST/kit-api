@@ -28,8 +28,9 @@ module ClientManagement
       # @return [Result::Base]
       #
       def perform
-        success_with_data(
-          api_credentials: KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
+        #temporary changes to unblock FE. 4Feb19
+        success_with_data({}
+          #api_credentials: KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
         )
       end
 
