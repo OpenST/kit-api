@@ -23,13 +23,12 @@ module KitSaasSharedCacheManagement
 
         api_credentials.each do |api_credential|
 
-          r = encryptor_obj.decrypt(api_credential[:api_secret])
+          r = encryptor_obj.decrypt(api_credential[:secret])
 
           if r.success?
             decrypted_api_credentials.push(
-              id: api_credential[:id],
-              api_secret: r.data[:plaintext],
-              api_key: api_credential[:api_key],
+              secret: r.data[:plaintext],
+              key: api_credential[:key],
               expiry_timestamp: api_credential[:expiry_timestamp]
             )
           else
@@ -82,7 +81,7 @@ module KitSaasSharedCacheManagement
 
       cache_miss_ids.each do |client_id|
 
-        get_credentials_rsp = FetchDecryptedApiCredentials.new(client_id: client_id).perform
+        get_credentials_rsp = ::ApiCredentials::FetchDecrypted.new(client_id: client_id).perform
         return get_credentials_rsp unless get_credentials_rsp.success?
 
         api_credentials = get_credentials_rsp.data[:api_credentials]
@@ -96,10 +95,9 @@ module KitSaasSharedCacheManagement
 
           cache_data.push(
               {
-                  id: api_credential[:id],
-                  api_key: api_credential[:api_key],
-                  api_secret: encrypt_rsp.data[:ciphertext_blob],
-                  expiry_timestamp: api_credential[:expiry_timestamp]
+                  key: api_credential[:api_key],
+                  secret: encrypt_rsp.data[:ciphertext_blob],
+                  expiry_timestamp: api_credential[:expiry_timestamp].present? ? api_credential[:expiry_timestamp] : 0
               }
           )
 

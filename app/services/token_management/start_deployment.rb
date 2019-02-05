@@ -47,6 +47,8 @@ module TokenManagement
 
         fetch_workflow_current_status
 
+        enqueue_job
+
         success_with_data(@api_response_data)
 
       end
@@ -101,6 +103,24 @@ module TokenManagement
       success
     end
 
+    # Enqueue Job
+    #
+    # * Author: Ankit
+    # * Date: 05/02/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def enqueue_job
+
+      BackgroundJob.enqueue(
+        CreateApiCredentialsJob,
+        {
+          client_id: @client_id
+        }
+      )
+
+    end
 
   end
 

@@ -23,7 +23,7 @@ class ApiCredential < DbConnection::KitSaasSubenv
   end
 
   scope :non_expired_for_client, ->(client_id) {
-    where('client_id = ? AND expiry_timestamp > ?', client_id, Time.now.to_i)
+    where('client_id = ? AND (expiry_timestamp > ? OR expiry_timestamp IS NULL)', client_id, Time.now.to_i)
   }
 
   def flush_cache

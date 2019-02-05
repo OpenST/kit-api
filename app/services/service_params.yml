@@ -200,10 +200,6 @@
   :mandatory:
     - :client_id
   :optional:
-'ClientManagement::ApiCredentials::Create':
-  :mandatory:
-    - :client_id
-  :optional:
 'ClientManagement::ApiCredentials::Rotate':
   :mandatory:
     - :client_id
@@ -212,7 +208,6 @@
 'ClientManagement::ApiCredentials::Deactivate':
   :mandatory:
     - :client_id
-    - :id_to_deactivate
   :optional:
 'ClientManagement::IsWhitelistedForMainEnv':
   :mandatory:

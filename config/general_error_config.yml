@@ -107,3 +107,8 @@ grant_limit_reached:
   http_code: 422
   code: "INVALID_REQUEST"
   message: "Grant has been given to the address in last 24 hours. Please try after sometime"
+
+request_not_xhr:
+  http_code: 422
+  code: "INVALID_REQUEST"
+  message: "Request should be xhr"

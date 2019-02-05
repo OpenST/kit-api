@@ -10,8 +10,8 @@ module ClientManagement
       # * Date: 21/01/2018
       # * Reviewed By:
       #
-      # @param [Integer] client_id (mandatory) -  client id
-      # @param [Integer] buffer_time (mandatory) - in minutes time till which old keys could still be used
+      # @params [Integer] client_id (mandatory) -  client id
+      # @params [Integer] buffer_time (optional) - in minutes time till which old keys could still be used
       #
       # @return [ClientManagement::ApiCredentials::Rotate]
       #
@@ -27,17 +27,23 @@ module ClientManagement
       # * Date: 21/01/2019
       # * Reviewed By:
       #
-      # @param [Hash] client_id (mandatory) - client_id
       #
       def perform
 
-        r = validate_and_sanitize
-        return r unless r.success?
+        handle_errors_and_exceptions do
 
-        r = handle_existing_keys
-        return r unless r.success?
+          r = validate_and_sanitize
+          return r unless r.success?
 
-        ClientManagement::ApiCredentials::Create.new(client_id: @client_id).perform
+          r = handle_existing_keys
+          return r unless r.success?
+
+          r = create_new_keys
+          return r unless r.success?
+
+          ClientManagement::ApiCredentials::Fetch.new(client_id:@client_id).perform
+
+        end
 
       end
 
@@ -53,6 +59,9 @@ module ClientManagement
       #
       def validate_and_sanitize
 
+        r = validate
+        return r unless r.success?
+
         if @buffer_time.present?
           return validation_error(
               's_cm_ac_r_1',
@@ -62,7 +71,7 @@ module ClientManagement
           ) unless Util::CommonValidator.is_integer?(@buffer_time)
           @buffer_time = @buffer_time.to_i
         else
-          @buffer_time = 24 * 60 # 1 day
+          @buffer_time = GlobalConstant::ApiCredentials.buffer_time_in_minutes # 1 day
         end
 
         success
@@ -85,7 +94,7 @@ module ClientManagement
           return success
         elsif existing_rows.length > 1
           return error_with_data(
-              's_cm_ac_r_2',
+              's_cm_ac_r_5',
               'client_already_initiated_rotate',
               GlobalConstant::ErrorAction.default
           )
@@ -93,12 +102,24 @@ module ClientManagement
 
         existing_row = existing_rows.first
 
-        ApiCredential.where(id: existing_row.id).update_all(expiry_timestamp: current_timestamp + @buffer_time * 60)
+        ApiCredential.where(id: existing_row.id).where('expiry_timestamp IS NULL').update_all(expiry_timestamp: current_timestamp + @buffer_time * 60)
 
         KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).clear([existing_row.api_key])
 
         success
 
+      end
+
+      # Create new keys
+      #
+      # * Author: Puneet
+      # * Date: 21/01/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def create_new_keys
+        ::ApiCredentials::Create.new(client_id: @client_id).create_and_insert_new_keys
       end
 
     end

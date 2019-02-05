@@ -265,4 +265,37 @@ class WebController < ApplicationController
     params[:authenticity_token] ||= request.headers.env['HTTP_X_CSRF_TOKEN']
   end
 
+
+  private
+
+  # Verifies if the request is xhr
+  #
+  # * Author: Ankit
+  # * Date: 05/02/2019
+  # * Reviewed By:
+  #
+  def verify_is_xhr
+
+    if request.xhr?.nil?
+      error_response = error_with_data(
+        'a_c_dc_1',
+        'request_not_xhr',
+        GlobalConstant::ErrorAction.default
+      )
+      render_api_response(error_response)
+    end
+
+  end
+
+  # Check if Super Admin role
+  #
+  # * Author: Puneet
+  # * Date: 11/12/2018
+  # * Reviewed By:
+  #
+  def verify_super_admin_role
+    service_response = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(params).perform
+    render_api_response(service_response) unless service_response.success?
+  end
+
 end

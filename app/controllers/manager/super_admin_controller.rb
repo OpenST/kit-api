@@ -57,17 +57,4 @@ class Manager::SuperAdminController < Manager::BaseController
     render_api_response(service_response)
   end
 
-  private
-
-  # Check if Super Admin role
-  #
-  # * Author: Puneet
-  # * Date: 11/12/2018
-  # * Reviewed By:
-  #
-  def verify_super_admin_role
-    service_response = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(params).perform
-    render_api_response(service_response) unless service_response.success?
-  end
-
 end
