@@ -6,6 +6,7 @@ class CreateTableTokenExtxWorkerProcesses < DbMigrationConnection
         t.column :tx_cron_process_id, :integer, null: true
         t.column :token_address_id, :integer, null: false
         t.column :properties, :tinyint, limit: 2, null: false
+        t.timestamps
       end
 
       add_index :token_extx_worker_processes, [:token_id, :tx_cron_process_id], name: "token_cron_process_uniq", unique:true
