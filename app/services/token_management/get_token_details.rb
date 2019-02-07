@@ -35,9 +35,11 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        validate
+        r = validate
+        return r unless r.success?
 
-        fetch_token_details
+        r = fetch_token_details
+        return r unless r.success?
 
         r = fetch_sub_env_payloads
         return r unless r.success?
@@ -45,7 +47,8 @@ module TokenManagement
         r = fetch_goto
         return r unless r.success?
         
-        fetch_default_price_points
+        r = fetch_default_price_points
+        return r unless r.success?
 
         @sign_message = {
           wallet_association: GlobalConstant::MessageToSign.wallet_association

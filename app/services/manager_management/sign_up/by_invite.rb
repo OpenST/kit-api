@@ -10,10 +10,10 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [String] i_t (mandatory) - token if this user is signing up from via a manager invite link
-      # @param [String] password (mandatory) - user password
-      # @param [String] confirm_password (mandatory) - user password
-      # @param [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] i_t (mandatory) - token if this user is signing up from via a manager invite link
+      # @params [String] password (mandatory) - user password
+      # @params [String] confirm_password (mandatory) - user password
+      # @params [String] browser_user_agent (mandatory) - browser user agent
       #
       # @return [ManagerManagement::SignUp::ByInvite]
       #
@@ -40,32 +40,44 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
           # 1. decode i_t to determine email and client to which invite is for
           # 2. find manager & client record
 
-          decrypt_invite_token
+          r = decrypt_invite_token
+          return r unless r.success?
 
-          validate_invite_token
+          r = validate_invite_token
+          return r unless r.success?
 
-          fetch_and_validate_invited_manager
+          r = fetch_and_validate_invited_manager
+          return r unless r.success?
 
-          fetch_and_validate_client
+          r = fetch_and_validate_client
+          return r unless r.success?
 
-          fetch_and_validate_inviter_manager
+          r = fetch_and_validate_inviter_manager
+          return r unless r.success?
 
-          decrypt_login_salt
+          r = decrypt_login_salt
+          return r unless r.success?
 
-          update_manager
+          r = update_manager
+          return r unless r.success?
 
-          update_client_manager
+          r = update_client_manager
+          return r unless r.success?
 
-          update_invite_token
+          r = update_invite_token
+          return r unless r.success?
 
-          set_cookie_value
+          r = set_cookie_value
+          return r unless r.success?
 
-          enqueue_job
+          r = enqueue_job
+          return r unless r.success?
 
           success_with_data(
           {cookie_value: @cookie_value},
@@ -88,6 +100,9 @@ module ManagerManagement
       #
       def validate_and_sanitize
 
+        r = validate
+        return r unless r.success?
+
         validation_errors = []
 
         validation_errors.push('password_incorrect') unless Util::CommonValidator.is_valid_password?(@password)
@@ -107,7 +122,7 @@ module ManagerManagement
 
         end
 
-        fail OstCustomError.new validation_error(
+        return validation_error(
                                     'mm_su_bi_2',
                                     'invalid_api_params',
                                     validation_errors,
@@ -115,7 +130,7 @@ module ManagerManagement
                                 ) if validation_errors.present?
 
         # NOTE: To be on safe side, check for generic errors as well
-        validate
+        success
 
       end
 
@@ -132,7 +147,7 @@ module ManagerManagement
       def decrypt_login_salt
 
         r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).decrypt(@manager_obj.authentication_salt)
-        fail r unless r.success?
+        return r unless r.success?
 
         @login_salt_d = r.data[:plaintext]
 
@@ -156,6 +171,8 @@ module ManagerManagement
         @manager_obj.status = GlobalConstant::Manager.active_status
         @manager_obj.last_session_updated_at = current_timestamp
         @manager_obj.save
+
+        success
 
       end
 
@@ -212,6 +229,7 @@ module ManagerManagement
 
         @client_manager_obj.save!
 
+        success
       end
 
       # Get goto for next page

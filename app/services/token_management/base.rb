@@ -24,23 +24,6 @@ module TokenManagement
 
     private
 
-    # Invalid Request Response
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def invalid_url_error(code)
-      fail OstCustomError.new validation_error(
-                                  code,
-                                  'invalid_api_params',
-                                  ['invalid_client_id'],
-                                  GlobalConstant::ErrorAction.default
-                              )
-    end
-
     # Find & validate client
     #
     # * Author: Shlok

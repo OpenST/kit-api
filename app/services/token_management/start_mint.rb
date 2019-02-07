@@ -40,17 +40,22 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        fetch_and_validate_token
+        r = fetch_and_validate_token
+        return r unless r.success?
 
-        add_token_to_response
+        r = add_token_to_response
+        return r unless r.success?
 
         @token_id = @token[:id]
 
-        direct_request_to_saas_api
+        r = direct_request_to_saas_api
+        return r unless r.success?
 
-        fetch_workflow_data
+        r = fetch_workflow_data
+        return r unless r.success?
 
         success_with_data(@api_response_data)
 
@@ -59,7 +64,8 @@ module TokenManagement
 
     def validate_and_sanitize
 
-      validate
+      r = validate
+      return r unless r.success?
 
       # Santize
       @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)

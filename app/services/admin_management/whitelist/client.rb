@@ -10,9 +10,9 @@ module AdminManagement
       # * Date: 14/09/2018
       # * Reviewed By:
       #
-      # @param [String] email (mandatory) - Email
-      # @param [Integer] token_users_shard_number (optional) - shard number for token
-      # @param [Integer] config_group_id (optional) - config group id
+      # @params [String] email (mandatory) - Email
+      # @params [Integer] token_users_shard_number (optional) - shard number for token
+      # @params [Integer] config_group_id (optional) - config group id
       #
       # @return [AdminManagement::Whitelist::Client]
       #
@@ -36,15 +36,20 @@ module AdminManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
-          fetch_client
+          r = fetch_client
+          return r unless r.success?
 
-          find_or_create_client_preprovisioning
+          r = find_or_create_client_preprovisioning
+          return r unless r.success?
 
-          find_or_create_client_whitelisting
+          r = find_or_create_client_whitelisting
+          return r unless r.success?
 
-          mark_client_as_whitelisted_for_mainnet
+          r = mark_client_as_whitelisted_for_mainnet
+          return r unless r.success?
 
           success
 
@@ -64,33 +69,35 @@ module AdminManagement
       #
       def validate_and_sanitize
 
-        validate
+        r = validate
+        return r unless r.success?
 
         if GlobalConstant::Base.sandbox_sub_environment?
-          fail OstCustomError.new validation_error(
-                                      'um_w_d_1',
-                                      'unauthorized_to_access_main_env',
-                                      [],
-                                      GlobalConstant::ErrorAction.default
-                                  )
+          return validation_error(
+            'um_w_d_1',
+            'unauthorized_to_access_main_env',
+            [],
+            GlobalConstant::ErrorAction.default
+          )
         end
 
-        fetch_client
+        r = fetch_client
+        return r unless r.success?
 
         token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
         if token_details.present? && token_details[:status] != GlobalConstant::ClientToken.not_deployed
-          fail OstCustomError.new validation_error(
-                                      'um_w_d_2',
-                                      'data_validation_failed',
-                                      [],
-                                      GlobalConstant::ErrorAction.default
-                                  )
+          return validation_error(
+            'um_w_d_2',
+            'data_validation_failed',
+            [],
+            GlobalConstant::ErrorAction.default
+          )
         end
 
         @email = @email.downcase.strip
 
         unless Util::CommonValidator.is_valid_email?(@email)
-          fail OstCustomError.new validation_error(
+          return validation_error(
             'um_w_d_3',
             'invalid_api_params',
             ['invalid_email'],
@@ -116,15 +123,18 @@ module AdminManagement
 
         manager = Manager.where(email: @email).select(:current_client_id).first
 
-        fail OstCustomError.new validation_error(
-                                    'um_w_d_4',
-                                    'invalid_api_params',
-                                    ['invalid_email'],
-                                    GlobalConstant::ErrorAction.default
-                                ) if manager.blank?
+        if manager.blank?
+          return validation_error(
+            'um_w_d_4',
+            'invalid_api_params',
+            ['invalid_email'],
+            GlobalConstant::ErrorAction.default
+          )
+        end
 
         @client_id = manager.current_client_id
 
+        success
       end
 
       # Find or create record
@@ -186,6 +196,8 @@ module AdminManagement
 
         client_obj.send("set_#{GlobalConstant::Client.mainnet_whitelisted_status}")
         client_obj.save!
+
+        success
       end
 
     end

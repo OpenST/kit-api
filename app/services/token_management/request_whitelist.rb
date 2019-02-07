@@ -60,22 +60,22 @@ module TokenManagement
     # @return [Result::Base]
     #
     def validate_and_sanitize
-      validate
+      r = validate
+      return r unless r.success?
 
-      fail OstCustomError.new error_with_data(
-                                'a_tm_rw_1',
-                                'invalid_api_params',
-                                GlobalConstant::ErrorAction.default
-                              ) if GlobalConstant::Base.sandbox_sub_environment?
+      return error_with_data(
+        'a_tm_rw_1',
+        'invalid_api_params',
+        GlobalConstant::ErrorAction.default
+      ) if GlobalConstant::Base.sandbox_sub_environment?
 
       @client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
 
-      fail OstCustomError.new error_with_data(
-                                'a_tm_rw_2',
-                                'client_not_found',
-                                GlobalConstant::ErrorAction.default
-                              ) if @client.blank?
-
+      return error_with_data(
+        'a_tm_rw_2',
+        'client_not_found',
+        GlobalConstant::ErrorAction.default
+      ) if @client.blank?
 
       success
     end
@@ -93,8 +93,11 @@ module TokenManagement
 
       unless @client[:mainnet_statuses].include? GlobalConstant::Client.mainnet_whitelist_requested_status
         #request whitelisting
-        send_email
-        set_whitelisting_requested_flag
+        r = send_email
+        return r unless r.success?
+
+        r = set_whitelisting_requested_flag
+        return r unless r.success?
       end
 
       success
@@ -126,10 +129,13 @@ module TokenManagement
         template_vars[:sandbox_token_symbol] = @sandbox_token_symbol
       end
 
-      Email::HookCreator::SendTransactionalMail.new(
+      r = Email::HookCreator::SendTransactionalMail.new(
         email: GlobalConstant::Base.support_email,
         template_name: GlobalConstant::PepoCampaigns.mainnet_whitelisting_request_template,
         template_vars: template_vars).perform
+      return r unless r.success?
+
+      success
     end
 
     # set whitelisting requested flag
@@ -145,6 +151,8 @@ module TokenManagement
 
       client_obj.send("set_#{GlobalConstant::Client.mainnet_whitelist_requested_status}")
       client_obj.save!
+
+      success
     end
 
     # fetch the sub env response data entity

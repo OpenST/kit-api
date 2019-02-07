@@ -43,17 +43,23 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate
+          r = validate
+          return r unless r.success?
 
-          set_parts
+          r = set_parts
+          return r unless r.success?
 
-          validate_token
+          r = validate_token
+          return r unless r.success?
 
-          validate_client
+          r = validate_client
+          return r unless r.success?
 
-          validate_client_manager
+          r = validate_client_manager
+          return r unless r.success?
 
-          set_extended_cookie_value
+          r = set_extended_cookie_value
+          return r unless r.success?
 
           success_with_data(
             extended_cookie_value: @extended_cookie_value,
@@ -82,14 +88,14 @@ module ManagerManagement
       #
       def set_parts
         parts = @cookie_value.split(':')
-        unauthorized_access_response('am_vc_1') unless parts.length == 4
-        unauthorized_access_response('am_vc_2') unless parts[2] == auth_level
+        return unauthorized_access_response('am_vc_1') unless parts.length == 4
+        return unauthorized_access_response('am_vc_2') unless parts[2] == auth_level
 
         @manager_id = parts[0].to_i
-        unauthorized_access_response('am_vc_3') unless @manager_id > 0
+        return unauthorized_access_response('am_vc_3') unless @manager_id > 0
 
         @created_ts = parts[1].to_i
-        unauthorized_access_response('am_vc_4') unless @created_ts + valid_upto >= current_timestamp
+        return unauthorized_access_response('am_vc_4') unless @created_ts + valid_upto >= current_timestamp
 
         @token = parts[3]
 
@@ -109,7 +115,7 @@ module ManagerManagement
         @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
         @manager_s = CacheManagement::ManagerSecure.new([@manager_id]).fetch[@manager_id]
 
-        unauthorized_access_response('am_vc_5') unless @manager.present? &&
+        return unauthorized_access_response('am_vc_5') unless @manager.present? &&
             (@manager[:status] == GlobalConstant::Manager.active_status)
 
         evaluated_token = Manager.get_cookie_token(
@@ -122,7 +128,7 @@ module ManagerManagement
             auth_level: auth_level
         )
 
-        unauthorized_access_response('am_vc_6') unless (evaluated_token == @token)
+        return unauthorized_access_response('am_vc_6') unless (evaluated_token == @token)
 
         success
 
@@ -155,7 +161,7 @@ module ManagerManagement
       def validate_client_manager
 
         @client_manager = CacheManagement::ClientManager.new([@manager_id], {client_id: @manager[:current_client_id]}).fetch[@manager_id]
-        client_manager_not_associated_response('am_vc_11') if @client_manager.blank?
+        return client_manager_not_associated_response('am_vc_11') if @client_manager.blank?
 
         privileges = @client_manager[:privileges]
 
@@ -163,7 +169,7 @@ module ManagerManagement
           (privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
             privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
 
-        client_manager_not_associated_response('am_vc_12') unless is_client_manager_active
+        return client_manager_not_associated_response('am_vc_12') unless is_client_manager_active
 
         success
 
@@ -186,6 +192,8 @@ module ManagerManagement
             last_session_updated_at: @manager_s[:last_session_updated_at],
             auth_level: auth_level
         )
+
+        success
       end
 
       # Unauthorized access response
@@ -199,11 +207,11 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def unauthorized_access_response(err)
-        fail OstCustomError.new error_with_data(
-                                    err,
-                                    'unauthorized_access_response',
-                                    GlobalConstant::ErrorAction.default
-                                )
+        error_with_data(
+          err,
+          'unauthorized_access_response',
+          GlobalConstant::ErrorAction.default
+        )
       end
 
       # no client associated response
@@ -217,11 +225,11 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def no_client_associated_response(err)
-        fail OstCustomError.new error_with_data(
-                                    err,
-                                    'no_client_associated',
-                                    GlobalConstant::ErrorAction.default
-                                )
+        error_with_data(
+          err,
+          'no_client_associated',
+          GlobalConstant::ErrorAction.default
+        )
       end
 
       #  client manager not associated response
@@ -235,11 +243,11 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def client_manager_not_associated_response(err)
-        fail OstCustomError.new error_with_data(
-                                    err,
-                                    'client_manager_inactive',
-                                    GlobalConstant::ErrorAction.default
-                                )
+        error_with_data(
+          err,
+          'client_manager_inactive',
+          GlobalConstant::ErrorAction.default
+        )
       end
 
       # Secure Token

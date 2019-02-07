@@ -35,13 +35,17 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        validate
+        r = validate
+        return r unless r.success?
 
-        fetch_manager
+        r = fetch_manager
+        return r unless r.success?
 
-        create_reset_password_token
+        r = create_reset_password_token
+        return r unless r.success?
 
-        send_forgot_password_mail
+        r = send_forgot_password_mail
+        return r unless r.success?
 
         success
 
@@ -72,11 +76,11 @@ module ManagerManagement
         error_key = 'email_inactive'
       end
 
-      fail OstCustomError.new validation_error(
-          'um_srpl_1',
-          'invalid_api_params',
-          [error_key],
-          GlobalConstant::ErrorAction.default
+      return validation_error(
+        'um_srpl_1',
+        'invalid_api_params',
+        [error_key],
+        GlobalConstant::ErrorAction.default
       ) if error_key.present?
 
       success
@@ -109,7 +113,7 @@ module ManagerManagement
       reset_pass_token_str = "#{db_row.id.to_s}:#{reset_token}"
       encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
       r = encryptor_obj.encrypt(reset_pass_token_str, GlobalConstant::ManagerValidationHash::reset_password_kind)
-      fail OstCustomError.new(r) unless r.success?
+      return r unless r.success?
 
       @reset_password_token = r.data[:ciphertext_blob]
 
@@ -132,6 +136,8 @@ module ManagerManagement
               company_web_domain: GlobalConstant::CompanyWeb.domain
           }
       ).perform
+
+      success
     end
 
   end

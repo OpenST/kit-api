@@ -1,4 +1,5 @@
 class ApiCredential < DbConnection::KitSaasSubenv
+  include Util::ResultHelper
 
   after_commit :flush_cache
 
@@ -10,9 +11,9 @@ class ApiCredential < DbConnection::KitSaasSubenv
 
       encryptor_obj = LocalCipher.new(salt)
       r = encryptor_obj.encrypt(api_secret)
-      fail(r) unless r.success?
+      return r unless r.success?
 
-      r.data[:ciphertext_blob]
+      success_with_data(r.data[:ciphertext_blob])
 
     end
 

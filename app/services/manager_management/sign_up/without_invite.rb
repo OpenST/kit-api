@@ -10,10 +10,10 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [String] password (mandatory) - user password
-      # @param [String] browser_user_agent (mandatory) - browser user agent
-      # @param [String] email (mandatory) - the email of the user which is to be signed up
-      # @param [String] agreed_terms_of_service (mandatory) - if terms of service was accepted
+      # @params [String] password (mandatory) - user password
+      # @params [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] email (mandatory) - the email of the user which is to be signed up
+      # @params [String] agreed_terms_of_service (mandatory) - if terms of service was accepted
       #
       # @return [ManagerManagement::SignUp::WithoutInvite]
       #
@@ -41,19 +41,26 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
-          create_manager
+          r = create_manager
+          return r unless r.success?
 
-          create_client
+          r = create_client
+          return r unless r.success?
 
-          update_manager
+          r = update_manager
+          return r unless r.success?
 
-          create_client_manager
+          r = create_client_manager
+          return r unless r.success?
 
-          set_cookie_value
+          r = set_cookie_value
+          return r unless r.success?
 
-          enqueue_job
+          r = enqueue_job
+          return r unless r.success?
 
           success_with_data(
               {cookie_value: @cookie_value},
@@ -76,6 +83,10 @@ module ManagerManagement
       #
       def validate_and_sanitize
 
+        # NOTE: To be on safe side, check for generic errors as well
+        r = validate
+        return r unless r.success?
+
         validation_errors = []
 
         validation_errors.push('password_incorrect') unless Util::CommonValidator.is_valid_password?(@password)
@@ -84,15 +95,14 @@ module ManagerManagement
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
 
-        fail OstCustomError.new validation_error(
-                                    'm_su_1',
-                                    'invalid_api_params',
-                                    validation_errors,
-                                    GlobalConstant::ErrorAction.default
-                                ) if validation_errors.present?
+        return validation_error(
+          'm_su_1',
+          'invalid_api_params',
+           validation_errors,
+           GlobalConstant::ErrorAction.default
+        ) if validation_errors.present?
 
-        # NOTE: To be on safe side, check for generic errors as well
-        validate
+        success
 
       end
 
@@ -112,25 +122,26 @@ module ManagerManagement
 
           if @manager_obj.status == GlobalConstant::Manager.invited_status
 
-            fail OstCustomError.new validation_error(
-                                      'mm_su_wi_1',
-                                      'invalid_api_params',
-                                      ['already_associated_email'],
-                                      GlobalConstant::ErrorAction.default
-                                    )
+            return validation_error(
+              'mm_su_wi_1',
+              'invalid_api_params',
+              ['already_associated_email'],
+              GlobalConstant::ErrorAction.default
+            )
 
           end
 
-          fail OstCustomError.new validation_error(
-                                      'mm_su_wi_2',
-                                      'invalid_api_params',
-                                      ['already_registered_email'],
-                                      GlobalConstant::ErrorAction.default
-                                  )
+          return validation_error(
+              'mm_su_wi_2',
+              'invalid_api_params',
+              ['already_registered_email'],
+              GlobalConstant::ErrorAction.default
+          )
 
         else
 
-          generate_login_salt
+          r = generate_login_salt
+          return r unless r.success?
 
           @manager_obj = Manager.new(
               email: @email,
@@ -172,6 +183,7 @@ module ManagerManagement
 
         @client = client.formated_cache_data
 
+        success
       end
 
       # modify invited manager object
@@ -187,6 +199,7 @@ module ManagerManagement
         @manager_obj.current_client_id = @client_id
         @manager_obj.save
 
+        success
       end
 
       # Generate login salt
@@ -201,7 +214,7 @@ module ManagerManagement
       #
       def generate_login_salt
         r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).generate_data_key
-        fail OstCustomError.new r unless r.success?
+        return r unless r.success?
 
         @authentication_salt_hash = r.data
         @authentication_salt_d = @authentication_salt_hash[:plaintext]
@@ -246,6 +259,8 @@ module ManagerManagement
         @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
 
         @client_manager_obj.save!
+
+        success
 
       end
 

@@ -64,6 +64,9 @@ module TokenManagement
     #
     def validate_and_sanitize
 
+      r = validate
+      return r unless r.success?
+
       @name = @name.to_s.strip
       @symbol = @symbol.to_s.strip
 
@@ -77,8 +80,6 @@ module TokenManagement
           GlobalConstant::ErrorAction.default
         )
       end
-
-      validate
 
       success
 
@@ -151,7 +152,6 @@ module TokenManagement
       success
     end
 
-    # TODO: <VERY IMPORTANT> Need to check if the deployment is completed or initiated. If yes then there should not be any modification
     # Delete old addresses which were present in wallet_addresses and token_addresses table
     #
     #

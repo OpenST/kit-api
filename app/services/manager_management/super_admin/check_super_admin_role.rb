@@ -33,9 +33,10 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          verify_super_admin_role
+          r = verify_super_admin_role
+          return r unless r.success?
 
-          success_with_data({})
+          success
 
         end
 
@@ -53,23 +54,23 @@ module ManagerManagement
       #
       def verify_super_admin_role
 
-        fail OstCustomError.new error_with_data(
-                                  'mm_sa_vsa_1',
-                                  'unauthorized_access_response',
-                                  GlobalConstant::ErrorAction.default
-                                ) if @client_manager.blank?
+        return error_with_data(
+          'mm_sa_vsa_1',
+          'unauthorized_access_response',
+          GlobalConstant::ErrorAction.default
+        ) if @client_manager.blank?
 
-        fail OstCustomError.new error_with_data(
-                                  'mm_sa_vsa_2',
-                                  'email_inactive',
-                                  GlobalConstant::ErrorAction.default
-                                ) if @client_manager[:privileges].include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
+        return error_with_data(
+          'mm_sa_vsa_2',
+          'email_inactive',
+          GlobalConstant::ErrorAction.default
+        ) if @client_manager[:privileges].include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
-        fail OstCustomError.new error_with_data(
-                                  'mm_sa_vsa_3',
-                                  'unauthorized_access_response',
-                                  GlobalConstant::ErrorAction.default
-                                ) if @client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
+        return error_with_data(
+          'mm_sa_vsa_3',
+          'unauthorized_access_response',
+          GlobalConstant::ErrorAction.default
+        ) if @client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
 
         success
 

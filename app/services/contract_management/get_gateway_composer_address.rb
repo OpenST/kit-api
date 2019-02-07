@@ -35,11 +35,11 @@ module ContractManagement
 
       handle_errors_and_exceptions do
 
-        validate
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        validate_and_sanitize
-
-        fetch_and_set_token_id
+        r = fetch_and_set_token_id
+        return r unless r.success?
 
         r = direct_request_to_saas_api
         return r unless r.success?
@@ -61,15 +61,16 @@ module ContractManagement
     #
     def validate_and_sanitize
 
-      validate
+      r = validate
+      return r unless r.success?
 
       unless Util::CommonValidator.is_ethereum_address?(@staker_address)
-        fail OstCustomError.new validation_error(
-                                  'a_s_cm_ggca_1',
-                                  'invalid_api_params',
-                                  ['invalid_staker_address'],
-                                  GlobalConstant::ErrorAction.default
-                                )
+        return validation_error(
+          'a_s_cm_ggca_1',
+          'invalid_api_params',
+          ['invalid_staker_address'],
+          GlobalConstant::ErrorAction.default
+        )
       end
 
       unless Util::CommonValidator.is_integer?(@client_id)
@@ -80,6 +81,8 @@ module ContractManagement
           GlobalConstant::ErrorAction.default
         )
       end
+
+      @client_id = @client_id.to_i
 
       @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
 

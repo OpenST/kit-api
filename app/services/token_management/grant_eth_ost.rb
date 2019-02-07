@@ -66,7 +66,9 @@ module TokenManagement
     # @return [Result::Base]
     #
     def validate_and_sanitize
-      validate
+
+      r = validate
+      return r unless r.success?
 
       # sanitize
       @address = sanitize_address(@address)

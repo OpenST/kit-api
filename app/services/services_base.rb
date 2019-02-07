@@ -79,7 +79,7 @@ class ServicesBase
       missing_mandatory_params_errors << "missing_#{mandatory_param}" if @params[mandatory_param].to_s.blank?
     end if service_params_list[:mandatory].present?
 
-    fail OstCustomError.new validation_error(
+    return validation_error(
         'sb_1',
         'invalid_api_params',
         missing_mandatory_params_errors,

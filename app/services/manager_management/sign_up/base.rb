@@ -50,7 +50,7 @@ module ManagerManagement
       def decrypt_invite_token
         decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
         r = decryptor_obj.decrypt(@invite_token, GlobalConstant::ManagerValidationHash::manager_invite_kind)
-        invalid_url_error('mm_su_b_9') unless r.success?
+        return invalid_url_error('mm_su_b_9') unless r.success?
         @decrypted_invite_token = r.data[:plaintext]
         success
       end
@@ -68,26 +68,26 @@ module ManagerManagement
       def validate_invite_token
 
         splited_reset_token = @decrypted_invite_token.split(ManagerValidationHash.token_delimitter)
-        invalid_url_error('mm_su_b_1') if splited_reset_token.length != 2
+        return invalid_url_error('mm_su_b_1') if splited_reset_token.length != 2
 
         validation_hash = splited_reset_token[1]
         manager_validation_hash_id = splited_reset_token[0]
 
-        invalid_url_error('mm_su_b_3') unless Util::CommonValidator.is_numeric?(manager_validation_hash_id)
+        return invalid_url_error('mm_su_b_3') unless Util::CommonValidator.is_numeric?(manager_validation_hash_id)
 
-        invalid_url_error('mm_su_b_4') unless Util::CommonValidator.is_alphanumeric?(validation_hash)
+        return invalid_url_error('mm_su_b_4') unless Util::CommonValidator.is_alphanumeric?(validation_hash)
 
         @manager_validation_hash = ManagerValidationHash.where(id: manager_validation_hash_id.to_i).first
 
-        invalid_url_error('mm_su_b_4') if @manager_validation_hash.blank?
+        return invalid_url_error('mm_su_b_4') if @manager_validation_hash.blank?
 
-        invalid_url_error('mm_su_b_5') if @manager_validation_hash.validation_hash != validation_hash
+        return invalid_url_error('mm_su_b_5') if @manager_validation_hash.validation_hash != validation_hash
 
-        invalid_url_error('mm_su_b_6') if @manager_validation_hash.status != GlobalConstant::ManagerValidationHash.active_status
+        return invalid_url_error('mm_su_b_6') if @manager_validation_hash.status != GlobalConstant::ManagerValidationHash.active_status
 
-        invalid_url_error('mm_su_b_7') if @manager_validation_hash.is_expired?
+        return invalid_url_error('mm_su_b_7') if @manager_validation_hash.is_expired?
 
-        invalid_url_error('mm_su_b_8') if @manager_validation_hash.kind != GlobalConstant::ManagerValidationHash.manager_invite_kind
+        return invalid_url_error('mm_su_b_8') if @manager_validation_hash.kind != GlobalConstant::ManagerValidationHash.manager_invite_kind
 
         @client_id = @manager_validation_hash.client_id
         @manager_id = @manager_validation_hash.manager_id
@@ -107,12 +107,12 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def invalid_url_error(code)
-        fail OstCustomError.new validation_error(
-                                    code,
-                                    'invalid_api_params',
-                                    ['invalid_i_t'],
-                                    GlobalConstant::ErrorAction.default
-                                )
+        validation_error(
+          code,
+          'invalid_api_params',
+          ['invalid_i_t'],
+          GlobalConstant::ErrorAction.default
+        )
       end
 
       # Find & validate invited manager
@@ -127,9 +127,9 @@ module ManagerManagement
 
         @manager_obj = Manager.where(id: @manager_id).first
 
-        invalid_url_error('mm_su_b_9') if @manager_obj.blank?
+        return invalid_url_error('mm_su_b_9') if @manager_obj.blank?
 
-        invalid_url_error('mm_su_b_10') if @manager_obj.status != GlobalConstant::Manager.invited_status
+        return invalid_url_error('mm_su_b_10') if @manager_obj.status != GlobalConstant::Manager.invited_status
 
         success
 
@@ -147,7 +147,7 @@ module ManagerManagement
         begin
           @client = Util::EntityHelper.fetch_and_validate_client(@client_id, 'um_rp')
         rescue OstCustomError => ose
-          invalid_url_error(ose.internal_id)
+          return invalid_url_error(ose.internal_id)
         end
         success
       end
@@ -165,11 +165,11 @@ module ManagerManagement
         begin
           @inviter_manager = Util::EntityHelper.fetch_and_validate_manager(@inviter_manager_id, 'um_rp')
         rescue OstCustomError => ose
-          invalid_url_error(ose.internal_id)
+          return invalid_url_error(ose.internal_id)
         end
 
         client_manager = CacheManagement::ClientManager.new([@inviter_manager_id], {client_id: @client_id}).fetch[@inviter_manager_id]
-        invalid_url_error('mm_su_b_15') if client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
+        return invalid_url_error('mm_su_b_15') if client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)
 
         success
 
@@ -223,6 +223,8 @@ module ManagerManagement
                 manager_id: @manager_obj.id
             }
         )
+
+        success
 
       end
 

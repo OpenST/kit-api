@@ -50,9 +50,9 @@ module ManagerManagement
 
           @manager_obj = Manager.where(id: @manager_id).first
 
-          fail OstCustomError.new unauthorized_access_response('am_l_ma_b_2') unless @manager_obj.present?
+          return unauthorized_access_response('am_l_ma_b_2') unless @manager_obj.present?
 
-          fail OstCustomError.new error_with_go_to(
+          return error_with_go_to(
                                       'am_l_ma_b_3',
                                       'unauthorized_access_response',
                                       GlobalConstant::GoTo.verify_email
@@ -75,10 +75,10 @@ module ManagerManagement
         def decrypt_authentication_salt
 
           authentication_salt_e = @manager_obj.authentication_salt
-          fail OstCustomError.new unauthorized_access_response('am_l_ma_b_4') unless authentication_salt_e.present?
+          return unauthorized_access_response('am_l_ma_b_4') unless authentication_salt_e.present?
 
           r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).decrypt(authentication_salt_e)
-          fail OstCustomError.new unauthorized_access_response('am_l_ma_b_5') unless r.success?
+          return unauthorized_access_response('am_l_ma_b_5') unless r.success?
 
           @authentication_salt_d = r.data[:plaintext]
 
@@ -100,7 +100,7 @@ module ManagerManagement
           decryptor_obj = LocalCipher.new(@authentication_salt_d)
 
           resp = decryptor_obj.decrypt(@manager_obj.mfa_token)
-          fail OstCustomError.new unauthorized_access_response('am_l_ma_b_6') unless resp.success?
+          return unauthorized_access_response('am_l_ma_b_6') unless resp.success?
 
           @ga_secret_d = resp.data[:plaintext]
 
@@ -118,7 +118,7 @@ module ManagerManagement
         # @return [Result::Base]
         #
         def unauthorized_access_response(err)
-          fail OstCustomError.new error_with_data(
+          error_with_data(
               err,
               'unauthorized_access_response',
               GlobalConstant::ErrorAction.default
@@ -148,13 +148,15 @@ module ManagerManagement
                               manager: @manager_obj.formated_cache_data
                           }).fetch_by_economy_state
 
-            fail OstCustomError.new error_with_go_to(
-                                        'am_l_ma_b_7',
-                                        'unauthorized_access_response',
-                                        go_to
-                                    )
+            return error_with_go_to(
+              'am_l_ma_b_7',
+              'unauthorized_access_response',
+              go_to
+            )
 
           end
+
+          success
 
         end
 

@@ -58,7 +58,10 @@ module ClientManagement
       #
       def validate_and_sanitize
 
-        validate
+        r = validate
+        return r unless r.success?
+
+        success
 
       end
 

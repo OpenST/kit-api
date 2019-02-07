@@ -39,9 +39,11 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        fetch_and_validate_token
+        r = fetch_and_validate_token
+        return r unless r.success?
 
         r = fetch_sub_env_payloads
         return r unless r.success?
@@ -70,7 +72,10 @@ module ManagerManagement
     #
     def validate_and_sanitize
 
-      validate
+      r = validate
+      return r unless r.success?
+
+      success
 
     end
 

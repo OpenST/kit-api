@@ -45,7 +45,8 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        fetch_logged_in_manager
+        r = fetch_logged_in_manager
+        return r unless r.success?
 
         if is_logged_in_manager
           if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
@@ -57,17 +58,23 @@ module ManagerManagement
           return success_with_data({}) if @r_t.blank?
         end
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
         
-        fetch_manager_validation_record
+        r = fetch_manager_validation_record
+        return r unless r.success?
 
-        validate_double_opt_token
+        r = validate_double_opt_token
+        return r unless r.success?
 
-        update_user_validation_hashes_status
+        r = update_user_validation_hashes_status
+        return r unless r.success?
 
-        create_update_contact_email_service_hook
+        r = create_update_contact_email_service_hook
+        return r unless r.success?
 
-        mark_manager_verified
+        r = mark_manager_verified
+        return r unless r.success?
 
         if is_logged_in_manager
           success_with_data({}, fetch_go_to)
@@ -93,21 +100,22 @@ module ManagerManagement
     #
     def validate_and_sanitize
 
-      validate
+      r = validate
+      return r unless r.success?
 
-      return if @r_t.blank?
+      return invalid_url_error('mm_doi_11') if @r_t.blank?
 
-      invalid_url_error('mm_doi_2') unless Util::CommonValidator.is_valid_token?(@r_t)
+      return invalid_url_error('mm_doi_2') unless Util::CommonValidator.is_valid_token?(@r_t)
 
       decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
       r = decryptor_obj.decrypt(@r_t, GlobalConstant::ManagerValidationHash::double_optin_kind)
-      fail OstCustomError.new r unless r.success?
+      return r unless r.success?
 
       decrypted_t = r.data[:plaintext]
 
       splited_reset_token = decrypted_t.split(':')
 
-      invalid_url_error('mm_doi_3') if splited_reset_token.length != 2
+      return invalid_url_error('mm_doi_3') if splited_reset_token.length != 2
 
       @token = splited_reset_token[1].to_s
 
@@ -131,7 +139,7 @@ module ManagerManagement
 
       @manager_obj = Manager.where(id: @manager_id).first
 
-      fail OstCustomError.new validation_error(
+      return validation_error(
         'mm_doi_4',
         'invalid_api_params',
         ['invalid_manager_id'],
@@ -152,6 +160,7 @@ module ManagerManagement
     #
     def fetch_manager_validation_record
       @manager_validation_hash_obj = ManagerValidationHash.where(id: @manager_validation_hash_id).first
+      success
     end
 
     # Validate Manager Validation hash
@@ -164,18 +173,18 @@ module ManagerManagement
     #
     def validate_double_opt_token
 
-      invalid_url_error('mm_doi_5') if @manager_validation_hash_obj.blank?
+      return invalid_url_error('mm_doi_5') if @manager_validation_hash_obj.blank?
 
-      invalid_url_error('mm_doi_6') if @manager_validation_hash_obj.validation_hash != @token
+      return invalid_url_error('mm_doi_6') if @manager_validation_hash_obj.validation_hash != @token
 
-      invalid_url_error('mm_doi_7') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
+      return invalid_url_error('mm_doi_7') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
 
-      invalid_url_error('mm_doi_8') if @manager_validation_hash_obj.is_expired?
+      return invalid_url_error('mm_doi_8') if @manager_validation_hash_obj.is_expired?
 
-      invalid_url_error('mm_doi_9') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.double_optin_kind
+      return invalid_url_error('mm_doi_9') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.double_optin_kind
 
       if is_logged_in_manager
-        fail OstCustomError.new unauthorized_access_response('mm_doi_10') if @manager_validation_hash_obj.manager_id != @manager_id
+        return unauthorized_access_response('mm_doi_10') if @manager_validation_hash_obj.manager_id != @manager_id
       end
 
       @manager_obj = Manager.where(id: @manager_validation_hash_obj.manager_id).first
@@ -200,6 +209,8 @@ module ManagerManagement
           GlobalConstant::PepoCampaigns.double_opt_in_status_user_setting => GlobalConstant::PepoCampaigns.verified_value
         }
       ).perform
+
+      success
     end
 
     # Mark user as verified.
@@ -211,6 +222,8 @@ module ManagerManagement
     def mark_manager_verified
       @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
       @manager_obj.save!
+
+      success
     end
 
     # Update Manager Validation hash used for double opt in and make all others inactive.

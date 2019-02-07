@@ -10,7 +10,7 @@ module ClientManagement
       # * Date: 21/01/2019
       # * Reviewed By:
       #
-      # @param [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
+      # @params [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
       #
       # @return [ClientManagement::ApiCredentials::Fetch]
       #
@@ -53,7 +53,10 @@ module ClientManagement
       #
       def validate_and_sanitize
 
-        validate
+        r = validate
+        return r unless r.success?
+
+        success
 
       end
 

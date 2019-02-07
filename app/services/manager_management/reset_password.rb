@@ -41,23 +41,31 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        fetch_user_validation_record
+        r = fetch_user_validation_record
+        return r unless r.success?
 
-        validate_reset_token
+        r = validate_reset_token
+        return r unless r.success?
 
-        fetch_manager
+        r = fetch_manager
+        return r unless r.success?
 
-        decrypt_login_salt
+        r = decrypt_login_salt
+        return r unless r.success?
 
         @new_e_password = Manager.get_encrypted_password(@password, @login_salt_d)
 
-        validate_previous_password
+        r = validate_previous_password
+        return r unless r.success?
 
-        update_password
+        r = update_password
+        return r unless r.success?
 
-        update_user_validation_hashes_status
+        r = update_user_validation_hashes_status
+        return r unless r.success?
 
         success
 
@@ -79,31 +87,32 @@ module ManagerManagement
     #
     def validate_and_sanitize
 
+      # NOTE: To be on safe side, check for generic errors as well
+      r = validate
+      return r unless r.success?
+
       validation_errors = []
 
       validation_errors << 'invalid_r_t' if @r_t.blank? || !Util::CommonValidator.is_valid_token?(@r_t)
       validation_errors << 'password_invalid' unless Util::CommonValidator.is_valid_password?(@password)
       validation_errors << 'confirm_password_invalid' if @confirm_password != @password
 
-      fail OstCustomError.new validation_error(
-          'mm_rp_1',
-          'invalid_api_params',
-          validation_errors,
-          GlobalConstant::ErrorAction.default
+      return validation_error(
+        'mm_rp_1',
+        'invalid_api_params',
+        validation_errors,
+        GlobalConstant::ErrorAction.default
       ) if validation_errors.present?
-
-      # NOTE: To be on safe side, check for generic errors as well
-      validate
 
       decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
       r = decryptor_obj.decrypt(@r_t, GlobalConstant::ManagerValidationHash::reset_password_kind)
-      fail OstCustomError.new r unless r.success?
+      return r unless r.success?
 
       decrypted_t = r.data[:plaintext]
 
       splitted_reset_token = decrypted_t.split(':')
 
-      invalid_url_error('mm_rp_2') if splitted_reset_token.length != 2
+      return invalid_url_error('mm_rp_2') if splitted_reset_token.length != 2
 
       @reset_token = splitted_reset_token[1].to_s
 
@@ -124,6 +133,7 @@ module ManagerManagement
       if @manager_validation_hash_id > 0
         @manager_validation_hash_obj = ManagerValidationHash.where(id: @manager_validation_hash_id).first
       end
+      success
     end
 
     # Validate Manager Validation hash
@@ -136,15 +146,15 @@ module ManagerManagement
     #
     def validate_reset_token
 
-      invalid_url_error('mm_rp_3') if @manager_validation_hash_obj.blank?
+      return invalid_url_error('mm_rp_3') if @manager_validation_hash_obj.blank?
 
-      invalid_url_error('mm_rp_4') if @manager_validation_hash_obj.validation_hash != @reset_token
+      return invalid_url_error('mm_rp_4') if @manager_validation_hash_obj.validation_hash != @reset_token
 
-      invalid_url_error('mm_rp_5') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
+      return invalid_url_error('mm_rp_5') if @manager_validation_hash_obj.status != GlobalConstant::ManagerValidationHash.active_status
 
-      invalid_url_error('mm_rp_6') if @manager_validation_hash_obj.is_expired?
+      return invalid_url_error('mm_rp_6') if @manager_validation_hash_obj.is_expired?
 
-      invalid_url_error('mm_rp_7') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.reset_password_kind
+      return invalid_url_error('mm_rp_7') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.reset_password_kind
 
       success
 
@@ -164,7 +174,7 @@ module ManagerManagement
 
       @manager_obj = Manager.where(id: @manager_validation_hash_obj.manager_id).first
 
-      fail OstCustomError.new validation_error(
+      return validation_error(
           'mm_rp_8',
           'invalid_api_params',
           ['invalid_r_t'],
@@ -187,7 +197,7 @@ module ManagerManagement
     #
     def decrypt_login_salt
       r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).decrypt(@manager_obj.authentication_salt)
-      fail OstCustomError.new r unless r.success?
+      return r unless r.success?
 
       @login_salt_d = r.data[:plaintext]
 
@@ -204,11 +214,11 @@ module ManagerManagement
     #
     def validate_previous_password
 
-      fail OstCustomError.new validation_error(
-          'mm_rp_9',
-          'invalid_api_params',
-          ['password_same'],
-          GlobalConstant::ErrorAction.default
+      return validation_error(
+        'mm_rp_9',
+        'invalid_api_params',
+        ['password_same'],
+        GlobalConstant::ErrorAction.default
       ) if @manager_obj.password == @new_e_password
 
       success
@@ -231,6 +241,8 @@ module ManagerManagement
         @manager_obj.failed_login_attempt_count = 0
       end
       @manager_obj.save!
+
+      success
     end
 
     # Update Manager Validation hash used in resetting password and make all others inactive.
@@ -264,7 +276,7 @@ module ManagerManagement
     # @return [Result::Base]
     #
     def invalid_url_error(code)
-      fail OstCustomError.new validation_error(
+      validation_error(
           code,
           'invalid_api_params',
           ['invalid_r_t'],

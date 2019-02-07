@@ -104,13 +104,16 @@ module ApiCredentials
 
       r = generate_api_key_salt
       return r unless r.success?
-
       api_salt = r.data
+
+      r = ApiCredential.generate_encrypted_secret_key(api_salt[:plaintext])
+      return r unless r.success?
+      api_secret = r.data
 
       api_credential = ApiCredential.new(
         client_id: @client_id,
         api_key: ApiCredential.generate_api_key,
-        api_secret: ApiCredential.generate_encrypted_secret_key(api_salt[:plaintext]),
+        api_secret: api_secret,
         api_salt: api_salt[:ciphertext_blob]
       )
 

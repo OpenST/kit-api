@@ -35,13 +35,17 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        validate
+        r = validate
+        return r unless r.success?
 
-        fetch_manager
+        r = fetch_manager
+        return r unless r.success?
 
-        create_double_opt_in_token
+        r = create_double_opt_in_token
+        return r unless r.success?
 
-        send_double_optin_email
+        r = send_double_optin_email
+        return r unless r.success?
 
         success
 
@@ -66,14 +70,14 @@ module ManagerManagement
       @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
       @manager_s = CacheManagement::ManagerSecure.new([@manager_id]).fetch[@manager_id]
 
-      fail OstCustomError.new validation_error(
+      return validation_error(
           'um_doil_1',
           'invalid_api_params',
           ['unrecognized_email'],
           GlobalConstant::ErrorAction.default
       ) unless @manager.present? && @manager[:status] == GlobalConstant::Manager.active_status
 
-      fail OstCustomError.new validation_error(
+      return validation_error(
           'um_doil_2',
           'invalid_api_params',
           ['already_verified_email'],
@@ -109,7 +113,7 @@ module ManagerManagement
       double_opt_in_token_str = "#{db_row.id.to_s}:#{double_opt_in_token}"
       encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
       r = encryptor_obj.encrypt(double_opt_in_token_str, GlobalConstant::ManagerValidationHash::double_optin_kind)
-      fail OstCustomError.new r unless r.success?
+      return r unless r.success?
 
       @double_optin_token = r.data[:ciphertext_blob]
 
@@ -132,6 +136,8 @@ module ManagerManagement
               company_web_domain: GlobalConstant::CompanyWeb.domain
           }
       ).perform
+
+      success
     end
 
   end
