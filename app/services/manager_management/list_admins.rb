@@ -48,9 +48,6 @@ module ManagerManagement
       r = fetch_workflows
       return r unless r.success?
 
-      r = fetch_and_validate_token
-      return r unless r.success?
-
       r = fetch_admins
       return r unless r.success?
 
@@ -122,26 +119,6 @@ module ManagerManagement
 
       success
     end
-
-    # Find & validate client
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    # Sets @token
-    #
-    def fetch_and_validate_token
-      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
-      return token_resp unless token_resp.success?
-
-      @token = token_resp.data
-
-      success
-    end
-
 
     # Fetch client manager details
     #

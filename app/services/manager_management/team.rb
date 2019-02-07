@@ -23,7 +23,6 @@ module ManagerManagement
       @client_manager = @params[:client_manager]
 
       @api_response_data = {}
-      @token = nil
 
     end
 
