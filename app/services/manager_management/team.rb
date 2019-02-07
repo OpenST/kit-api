@@ -42,9 +42,6 @@ module ManagerManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        r = fetch_and_validate_token
-        return r unless r.success?
-
         r = fetch_sub_env_payloads
         return r unless r.success?
 
@@ -79,24 +76,6 @@ module ManagerManagement
 
     end
 
-    # Find & validate client
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    # Sets @token
-    #
-    def fetch_and_validate_token
-      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
-      return token_resp unless token_resp.success?
-
-      @token = token_resp.data
-
-      success
-    end
 
     # fetch the sub env response data entity
     #
