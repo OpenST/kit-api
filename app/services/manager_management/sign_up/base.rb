@@ -10,9 +10,9 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [String] password (mandatory) - user password
-      # @param [String] confirm_password (mandatory) - user password
-      # @param [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] password (mandatory) - user password
+      # @params [String] confirm_password (mandatory) - user password
+      # @params [String] browser_user_agent (mandatory) - browser user agent
       #
       # @return [ManagerManagement::SignUp::ByInvite]
       #
