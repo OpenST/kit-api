@@ -36,20 +36,20 @@ module Google
         if verified_at_timestamp.present?
           return success_with_data(verified_at_timestamp: verified_at_timestamp)
         else
-          fail OstCustomError.new error_with_data(
-                                      'r_t_1',
-                                      'something_went_wrong',
-                                      GlobalConstant::ErrorAction.default,
-                                      {}
-                                  )
+          return validation_error(
+            'r_t_1',
+            'invalid_api_params',
+            ['invalid_otp'],
+            GlobalConstant::ErrorAction.default
+          )
         end
       rescue StandardError
-        fail OstCustomError.new validation_error(
-                                    'r_t_2',
-                                    'invalid_api_params',
-                                    ['invalid_otp'],
-                                    GlobalConstant::ErrorAction.default
-                                )
+        return validation_error(
+          'r_t_2',
+          'invalid_api_params',
+          ['invalid_otp'],
+          GlobalConstant::ErrorAction.default
+        )
       end
     end
 
@@ -68,13 +68,13 @@ module Google
         otpauth = client.provisioning_uri(name)
         return success_with_data(otpauth: otpauth)
       rescue => e
-        fail OstCustomError.new exception_with_data(
-            e,
-            'r_t_3',
-            GlobalConstant::ErrorAction.default,
-            {
-                name: name
-            }
+        return exception_with_data(
+          e,
+          'r_t_3',
+          GlobalConstant::ErrorAction.default,
+          {
+            name: name
+          }
         )
       end
     end

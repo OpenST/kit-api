@@ -8,8 +8,8 @@ module ManagerManagement
     # * Date: 21/09/2018
     # * Reviewed By:
     #
-    # @param [String] cookie_value (mandatory) -  cookie
-    # @param [String] browser_user_agent (mandatory) - browser user agent
+    # @params [String] cookie_value (mandatory) -  cookie
+    # @params [String] browser_user_agent (mandatory) - browser user agent
     #
     # @return [ManagerManagement::Logout]
     #
@@ -21,7 +21,6 @@ module ManagerManagement
       @browser_user_agent = @params[:browser_user_agent]
 
       @manager_id = nil
-      
     end
 
     # Perform
@@ -34,9 +33,11 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-        verify_mfa_cookie
+        r = verify_mfa_cookie
+        return r unless r.success?
 
-        logout_manager
+        r = logout_manager
+        return r unless r.success?
 
         success
 
@@ -64,7 +65,7 @@ module ManagerManagement
           cookie_value: @cookie_value,
           browser_user_agent: @browser_user_agent
         ).perform
-        fail OstCustomError.new r unless r.success?
+       return r unless r.success?
       end
 
       @manager_id = r.data[:manager_id]

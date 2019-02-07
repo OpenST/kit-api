@@ -10,7 +10,7 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [String] i_t (mandatory) - token if this user is signing up from via a manager invite link
+      # @params [String] i_t (mandatory) - token if this user is signing up from via a manager invite link
       #
       # @return [ManagerManagement::SignUp::GetDetails]
       #
@@ -37,17 +37,23 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
-          decrypt_invite_token
+          r = decrypt_invite_token
+          return r unless r.success?
 
-          validate_invite_token
+          r = validate_invite_token
+          return r unless r.success?
 
-          fetch_and_validate_invited_manager
+          r = fetch_and_validate_invited_manager
+          return r unless r.success?
 
-          fetch_and_validate_client
+          r = fetch_and_validate_client
+          return r unless r.success?
 
-          fetch_and_validate_inviter_manager
+          r = fetch_and_validate_inviter_manager
+          return r unless r.success?
 
           success_with_data(
             client: @client,
@@ -76,25 +82,27 @@ module ManagerManagement
       #
       def validate_and_sanitize
 
+        # NOTE: To be on safe side, check for generic errors as well
+        r = validate
+        return r unless r.success?
+
         if @invite_token.present?
 
           @invite_token = @invite_token.to_s.strip
 
           unless Util::CommonValidator.is_valid_token?(@invite_token)
 
-            fail OstCustomError.new validation_error(
-                                      'mm_su_gd_1',
-                                      'invalid_api_params',
-                                      ['invalid_i_t'],
-                                      GlobalConstant::ErrorAction.default
-                                    )
+            return validation_error(
+              'mm_su_gd_1',
+              'invalid_api_params',
+              ['invalid_i_t'],
+              GlobalConstant::ErrorAction.default
+            )
           end
 
         end
 
-        # NOTE: To be on safe side, check for generic errors as well
-        validate
-
+        success
       end
 
     end

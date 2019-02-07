@@ -10,9 +10,9 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
-      # @param [Integer] client_id (mandatory) - id of the client who is deleting this admin
-      # @param [Integer] to_update_client_manager_id (mandatory) - id of the client_manager which is to be deleted
+      # @params [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
+      # @params [Integer] client_id (mandatory) - id of the client who is deleting this admin
+      # @params [Integer] to_update_client_manager_id (mandatory) - id of the client_manager which is to be deleted
       #
       # @return [ManagerManagement::SuperAdmin::DeleteAdmin]
       #
@@ -41,17 +41,25 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
-          fetch_client_manager
+          r = fetch_client_manager
+          return r unless r.success?
 
-          fetch_manager_to_be_deleted
+          r = fetch_manager_to_be_deleted
+          return r unless r.success?
 
-          reject_invites if @manager_to_be_deleted_obj.status == GlobalConstant::Manager.invited_status
+          if @manager_to_be_deleted_obj.status == GlobalConstant::Manager.invited_status
+            r = reject_invites
+            return r unless r.success?
+          end
 
-          update_client_manager
+          r = update_client_manager
+          return r unless r.success?
 
-          update_manager
+          r = update_manager
+          return r unless r.success?
 
           success_with_data({
             result_type: result_type,
@@ -80,8 +88,10 @@ module ManagerManagement
       def validate_and_sanitize
 
         # NOTE: To be on safe side, check for generic errors as well
-        validate
+        r = validate
+        return r unless r.success?
 
+        success
       end
 
       # Fetch client manager
@@ -96,19 +106,19 @@ module ManagerManagement
 
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
-        fail OstCustomError.new validation_error(
-                                    'mm_su_da_1',
-                                    'resource_not_found',
-                                    [],
-                                    GlobalConstant::ErrorAction.default
-                                ) if @to_update_client_manager.blank?
+        return validation_error(
+          'mm_su_da_1',
+          'resource_not_found',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @to_update_client_manager.blank?
 
-        fail OstCustomError.new validation_error(
-                                    'mm_su_da_2',
-                                    'unauthorized_access_response',
-                                    [],
-                                    GlobalConstant::ErrorAction.default
-                                ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id
+        return validation_error(
+          'mm_su_da_2',
+          'unauthorized_access_response',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id
 
         success
 
@@ -126,13 +136,14 @@ module ManagerManagement
 
         @manager_to_be_deleted_obj = Manager.where(id: @to_update_client_manager.manager_id).first
 
-        fail OstCustomError.new validation_error(
-                                    'mm_su_da_3',
-                                    'resource_not_found',
-                                    [],
-                                    GlobalConstant::ErrorAction.default
-                                ) if @manager_to_be_deleted_obj.blank?
+        return validation_error(
+          'mm_su_da_3',
+          'resource_not_found',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @manager_to_be_deleted_obj.blank?
 
+        success
       end
 
       # Reject invite tokens for the manager if its status is invited.

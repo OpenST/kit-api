@@ -83,12 +83,12 @@ class GetWorkflowStatus < ServicesBase
     cached_workflow_data = KitSaasSharedCacheManagement::Workflow.new([@workflow_id]).fetch
 
     if cached_workflow_data[@workflow_id].blank?
-       fail OstCustomError.new validation_error(
-                                'a_s_gws_2',
-                                'invalid_api_params',
-                                ['workflow_id'],
-                                GlobalConstant::ErrorAction.default
-                              )
+       return validation_error(
+          'a_s_gws_2',
+          'invalid_api_params',
+          ['workflow_id'],
+          GlobalConstant::ErrorAction.default
+       )
     end
 
     @api_response_data['workflow'] = {
@@ -102,8 +102,6 @@ class GetWorkflowStatus < ServicesBase
       @api_response_data['workflow_payload'] = {}
     end
 
-
-
     cached_workflow_status_data = KitSaasSharedCacheManagement::WorkflowStatus.new([@workflow_id]).fetch
 
     @api_response_data['workflow_current_step'] = {}
@@ -111,7 +109,7 @@ class GetWorkflowStatus < ServicesBase
       @api_response_data['workflow_current_step'] = cached_workflow_status_data[@workflow_id][:current_step]
     end
 
-    success_with_data(@api_response_data)
+    success
   end
 
 end

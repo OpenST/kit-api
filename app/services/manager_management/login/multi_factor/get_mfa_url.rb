@@ -35,28 +35,38 @@ module ManagerManagement
 
           handle_errors_and_exceptions do
 
-            validate
+            r = validate
+            return r unless r.success?
 
-            fetch_manager
+            r = fetch_manager
+            return r unless r.success?
 
-            handle_go_to
+            r = handle_go_to
+            return r unless r.success?
 
             if @manager_obj.mfa_token.present?
               if @manager_obj.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
-                # If manager already setup MFA fail
+                # If manager already setup MFA
                 return success_response
               else
                 # case when QR Code URL was once generated but manager never submitted valid OTP against it to setup MFA
-                decrypt_authentication_salt
-                decrypt_ga_secret
+                r = decrypt_authentication_salt
+                return r unless r.success?
+
+                r = decrypt_ga_secret
+                return r unless r.success?
               end
             else
               # Set up a new one
-              decrypt_authentication_salt
-              setup_ga_secret
+              r = decrypt_authentication_salt
+              return r unless r.success?
+
+              r = setup_ga_secret
+              return r unless r.success?
             end
 
-            set_ga_secret_auth
+            r = set_ga_secret_auth
+            return r unless r.success?
 
             success_response
 
@@ -82,7 +92,7 @@ module ManagerManagement
 
           #get encrypted_ga_secret
           r = encryptor_obj.encrypt(@ga_secret_d)
-          fail OstCustomError.new r unless r.success?
+          return r unless r.success?
 
           @manager_obj.mfa_token = r.data[:ciphertext_blob]
           @manager_obj.save
@@ -102,13 +112,15 @@ module ManagerManagement
 
           rotp_client = Google::Authenticator.new(@ga_secret_d)
           r = rotp_client.provisioning_uri("#{@manager_obj.email}")
-          fail OstCustomError.new r unless r.success?
+          return r unless r.success?
 
           otpauth = r.data[:otpauth]
           escaped_otpauth = CGI.escape(otpauth)
 
           # @qr_code_url = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{escaped_otpauth}"
           @qr_code_url ="https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{escaped_otpauth}"
+
+          success
         end
 
         # Set success output format

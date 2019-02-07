@@ -10,9 +10,9 @@ class ApiCredential < DbConnection::KitSaasSubenv
 
       encryptor_obj = LocalCipher.new(salt)
       r = encryptor_obj.encrypt(api_secret)
-      fail(r) unless r.success?
+      return r unless r.success?
 
-      r.data[:ciphertext_blob]
+      Result::Base.success(data: r.data[:ciphertext_blob])
 
     end
 

@@ -45,21 +45,28 @@ module ManagerManagement
 
           handle_errors_and_exceptions do
 
-            validate
+            r = validate
+            return r unless r.success?
 
-            fetch_manager
+            r = fetch_manager
+            return r unless r.success?
 
-            fail OstCustomError.new unauthorized_access_response('am_l_ma_b_3') if @manager_obj.mfa_token.blank?
+            return unauthorized_access_response('am_l_ma_b_3') if @manager_obj.mfa_token.blank?
 
-            handle_go_to
+            r = handle_go_to
+            return r unless r.success?
 
-            decrypt_authentication_salt
+            r = decrypt_authentication_salt
+            return r unless r.success?
 
-            decrypt_ga_secret
+            r = decrypt_ga_secret
+            return r unless r.success?
 
-            validate_otp
+            r = validate_otp
+            return r unless r.success?
 
-            set_double_auth_cookie_value
+            r = set_double_auth_cookie_value
+            return r unless r.success?
 
             success_with_data(
                 {double_auth_cookie_value: @double_auth_cookie_value},
@@ -85,12 +92,14 @@ module ManagerManagement
           rotp_obj = Google::Authenticator.new(@ga_secret_d)
           r = rotp_obj.verify_with_drift_and_prior(@otp)
 
-          fail OstCustomError.new error_with_data(
-                                      'am_l_ma_7',
-                                      'something_went_wrong',
-                                      GlobalConstant::ErrorAction.default,
-                                      {}
-                                  ) unless r.success?
+          return r unless r.success?
+
+          # return error_with_data(
+          #   'am_l_ma_7',
+          #   'something_went_wrong',
+          #   GlobalConstant::ErrorAction.default,
+          #   {}
+          # ) unless r.success?
 
           # Update last_otp_at
           @manager_obj.last_session_updated_at = r.data[:verified_at_timestamp]

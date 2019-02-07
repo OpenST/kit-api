@@ -42,15 +42,20 @@ module ManagerManagement
 
       handle_errors_and_exceptions do
 
-      validate_and_sanitize
+      r = validate_and_sanitize
+      return r unless r.success?
 
-      fetch_workflows
+      r = fetch_workflows
+      return r unless r.success?
 
-      fetch_and_validate_token
+      r = fetch_and_validate_token
+      return r unless r.success?
 
-      fetch_admins
+      r = fetch_admins
+      return r unless r.success?
 
-      fetch_admin_email_ids
+      r = fetch_admin_email_ids
+      return r unless r.success?
 
       success_with_data(@api_response_data)
 
@@ -70,9 +75,11 @@ module ManagerManagement
     #
     def validate_and_sanitize
 
-      validate
+      r = validate
+      return r unless r.success?
 
-      validate_page_no
+      r = validate_page_no
+      return r unless r.success?
 
       success
 
@@ -80,14 +87,16 @@ module ManagerManagement
 
     def validate_page_no
 
-      fail OstCustomError.new validation_error(
-                                'mm_su_i_1',
-                                'invalid_api_params',
-                                'invalid_page_no',
-                                GlobalConstant::ErrorAction.default
-                              ) unless Util::CommonValidator.is_numeric?(@page_no)
+      return validation_error(
+        'mm_su_i_1',
+        'invalid_api_params',
+        'invalid_page_no',
+        GlobalConstant::ErrorAction.default
+      ) unless Util::CommonValidator.is_numeric?(@page_no)
 
       @page_no = @page_no.to_i # Convert to integer if string is passed.
+
+      success
 
     end
 
@@ -175,6 +184,8 @@ module ManagerManagement
 
       @api_response_data[@api_response_data[:result_type]] = client_managers_info
 
+      success
+
     end
 
     # Fetch manager details
@@ -190,6 +201,8 @@ module ManagerManagement
       managers_data = CacheManagement::Manager.new(@manager_ids).fetch
 
       @api_response_data[:managers] = managers_data
+
+      success
 
     end
 

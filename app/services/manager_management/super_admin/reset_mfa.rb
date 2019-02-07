@@ -10,9 +10,9 @@ module ManagerManagement
       # * Date: 03/05/2018
       # * Reviewed By:
       #
-      # @param [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
-      # @param [Integer] client_id (mandatory) - id of the client who is deleting this admin
-      # @param [Integer] to_update_client_manager_id (mandatory) - id of manager whose MFA has to be set
+      # @params [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
+      # @params [Integer] client_id (mandatory) - id of the client who is deleting this admin
+      # @params [Integer] to_update_client_manager_id (mandatory) - id of manager whose MFA has to be set
       #
       # @return [ManagerManagement::SuperAdmin::ResetMfa]
       #
@@ -37,13 +37,17 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
-          fetch_client_manager
+          r = fetch_client_manager
+          return r unless r.success?
 
-          fetch_manager
+          r = fetch_manager
+          return r unless r.success?
 
-          reset_mfa
+          r = reset_mfa
+          return r unless r.success?
 
           success_with_data({
             result_type: result_type,
@@ -70,7 +74,10 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def validate_and_sanitize
-        validate
+        r = validate
+        return r unless r.success?
+
+        success
       end
 
       # Fetch client manager
@@ -85,19 +92,19 @@ module ManagerManagement
 
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
-        fail OstCustomError.new validation_error(
-                                    'mm_su_rm_2',
-                                    'resource_not_found',
-                                    [],
-                                    GlobalConstant::ErrorAction.default
-                                ) if @to_update_client_manager.blank?
+        return validation_error(
+          'mm_su_rm_2',
+          'resource_not_found',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @to_update_client_manager.blank?
 
-        fail OstCustomError.new validation_error(
-                                    'mm_su_rm_3',
-                                    'unauthorized_access_response',
-                                    [],
-                                    GlobalConstant::ErrorAction.default
-                                ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id
+        return validation_error(
+          'mm_su_rm_3',
+          'unauthorized_access_response',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @to_update_client_manager.client_id != @client_id || @to_update_client_manager.manager_id == @manager_id
 
         success
 
@@ -114,7 +121,13 @@ module ManagerManagement
       def fetch_manager
 
         @to_update_manager_obj = Manager.where(id: @to_update_client_manager.manager_id).first
-        fail OstCustomError.new unauthorized_access_response('mm_sa_rm_2') if @to_update_manager_obj.blank?
+        return validation_error(
+          'mm_sa_rm_2',
+          'unauthorized_access_response',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @to_update_manager_obj.blank?
+
         success
 
       end

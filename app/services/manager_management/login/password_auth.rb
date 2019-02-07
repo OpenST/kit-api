@@ -10,8 +10,8 @@ module ManagerManagement
       # * Date: 15/01/2018
       # * Reviewed By:
       #
-      # @param [String] email (mandatory) - the email of the user which is to be signed up
-      # @param [String] password (mandatory) - user password
+      # @params [String] email (mandatory) - the email of the user which is to be signed up
+      # @params [String] password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
       #
       # @return [ManagerManagement::Login::PasswordAuth]
@@ -42,21 +42,28 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
-          fetch_manager
+          r = fetch_manager
+          return r unless r.success?
 
-          fetch_client
+          r = fetch_client
+          return r unless r.success?
 
-          fetch_client_manager
+          r = fetch_client_manager
+          return r unless r.success?
 
-          decrypt_login_salt
+          r = decrypt_login_salt
+          return r unless r.success?
 
-          validate_password
+          r = validate_password
+          return r unless r.success?
 
-          update_manager
+          r = update_manager
+          return r unless r.success?
 
-          set_cookie_value  
+          set_cookie_value
           
         end
 
@@ -74,20 +81,24 @@ module ManagerManagement
       #
       def validate_and_sanitize
 
+        r = validate
+        return r unless r.success?
+
         validation_errors = []
 
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
 
-        fail OstCustomError.new validation_error(
-                                  'm_su_1',
-                                  'invalid_api_params',
-                                  validation_errors,
-                                  GlobalConstant::ErrorAction.default
-                                ) if validation_errors.present?
+        return validation_error(
+          'm_su_1',
+          'invalid_api_params',
+          validation_errors,
+          GlobalConstant::ErrorAction.default
+        ) if validation_errors.present?
 
         # NOTE: To be on safe side, check for generic errors as well
-        validate
+
+        success
 
       end
 
@@ -105,21 +116,21 @@ module ManagerManagement
 
         @manager_obj = Manager.where(email: @email).first
 
-        fail OstCustomError.new validation_error(
+        return validation_error(
             'mm_l_pa_1',
             'invalid_api_params',
             ['email_not_registered'],
             GlobalConstant::ErrorAction.default
         ) if !@manager_obj.present? || !@manager_obj.password.present? || !@manager_obj.authentication_salt.present?
 
-        fail OstCustomError.new validation_error(
+        return validation_error(
             'mm_l_pa_2',
             'invalid_api_params',
             ['email_auto_blocked'],
             GlobalConstant::ErrorAction.default
         ) if @manager_obj.status == GlobalConstant::Manager.auto_blocked_status
 
-        fail OstCustomError.new validation_error(
+        return validation_error(
             'mm_l_pa_3',
             'invalid_api_params',
             ['email_inactive'],
@@ -142,6 +153,7 @@ module ManagerManagement
       #
       def fetch_client
         @client = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'mm_l_pa')
+        success
       end
 
       # Fetch client manager
@@ -168,6 +180,8 @@ module ManagerManagement
           privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
 
         Util::EntityHelper.client_manager_not_associated_response('mm_l_pa_5') unless is_client_manager_active
+
+        success
 
       end
 
@@ -208,7 +222,7 @@ module ManagerManagement
           manager.failed_login_attempt_count = manager.failed_login_attempt_count + 1
           manager.status = GlobalConstant::Manager.auto_blocked_status if manager.failed_login_attempt_count >= 5
           manager.save
-          fail OstCustomError.new validation_error(
+          return validation_error(
               'mm_l_pa_7',
               'invalid_api_params',
               ['password_incorrect'],

@@ -36,24 +36,32 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        validate_and_sanitize
+        r = validate_and_sanitize
+        return r unless r.success?
 
-        fetch_workflows
+        r = fetch_workflows
+        return r unless r.success?
 
-        fetch_and_validate_token
+        r = fetch_and_validate_token
+        return r unless r.success?
 
         r = fetch_goto
         return r unless r.success?
 
-        add_token_to_response
+        r = add_token_to_response
+        return r unless r.success?
 
-        fetch_addresses
+        r = fetch_addresses
+        return r unless r.success?
 
-        get_details_from_saas
+        r = get_details_from_saas
+        return r unless r.success?
 
-        fetch_default_price_points
+        r = fetch_default_price_points
+        return r unless r.success?
 
-        append_logged_in_manager_details
+        r = append_logged_in_manager_details
+        return r unless r.success?
 
         r = fetch_sub_env_payloads
         return r unless r.success?
@@ -72,7 +80,10 @@ module TokenManagement
     # @return [Result::Base]
     #
     def validate_and_sanitize
-      validate
+      r = validate
+      return r unless r.success?
+
+      success
     end
 
     # Fetch workflow

@@ -34,7 +34,8 @@ module DeveloperManagement
 
       handle_errors_and_exceptions do
 
-        validate
+        r = validate_and_sanitize
+        return r unless r.success?
 
         r = fetch_token_details
         return r unless r.success?
@@ -57,6 +58,23 @@ module DeveloperManagement
       end
     end
 
+    # Validate and sanitize
+    #
+    # * Author: Shlok
+    # * Date: 14/09/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def validate_and_sanitize
+
+      r = validate
+      return r unless r.success?
+
+      success
+
+    end
+
     # Fetch token details
     #
     #
@@ -66,8 +84,18 @@ module DeveloperManagement
     #
     # @return [Result::Base]
     def fetch_token_details
-      @token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
+      token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
 
+      if token.blank?
+        return validation_error(
+          'a_s_dm_fd_1',
+          'invalid_api_params',
+          ['invalid_client_id'],
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      @token = token
       success
     end
 
@@ -80,7 +108,17 @@ module DeveloperManagement
     #
     # @return [Result::Base]
     def fetch_default_price_points
-      @price_points = KitSaasSharedCacheManagement::OstPricePointsDefault.new.fetch
+      price_points = KitSaasSharedCacheManagement::OstPricePointsDefault.new.fetch
+
+      if price_points.blank?
+        return error_with_data(
+          'a_s_dm_fd_2',
+          'something_went_wrong',
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      @price_points = price_points
 
       success
     end

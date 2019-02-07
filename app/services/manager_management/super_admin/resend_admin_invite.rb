@@ -10,9 +10,9 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
-      # @param [Integer] client_id (mandatory) - id of the client to which invite is for
-      # @param [String] to_update_client_manager_id (mandatory) - id of the client_manager which is to be re-invited.
+      # @params [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
+      # @params [Integer] client_id (mandatory) - id of the client to which invite is for
+      # @params [String] to_update_client_manager_id (mandatory) - id of the client_manager which is to be re-invited.
       #
       # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
@@ -41,15 +41,20 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate
+          r = validate
+          return r unless r.success?
 
-          fetch_client_manager
+          r = fetch_client_manager
+          return r unless r.success?
 
-          validate_invitee_manager_exists
+          r = validate_invitee_manager_exists
+          return r unless r.success?
 
-          create_invite_token
+          r = create_invite_token
+          return r unless r.success?
 
-          enqueue_job
+          r = enqueue_job
+          return r unless r.success?
 
           success
 
@@ -71,19 +76,19 @@ module ManagerManagement
 
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
-        fail OstCustomError.new validation_error(
-                                  'mm_su_rai_1',
-                                  'manager_not_invited',
-                                  [],
-                                  GlobalConstant::ErrorAction.default
-                                ) if @to_update_client_manager.blank?
+        return validation_error(
+          'mm_su_rai_1',
+          'manager_not_invited',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @to_update_client_manager.blank?
 
-        fail OstCustomError.new validation_error(
-                                  'mm_su_rai_2',
-                                  'unauthorized_access_response',
-                                  [],
-                                  GlobalConstant::ErrorAction.default
-                                ) if @to_update_client_manager.manager_id == @manager_id
+        return validation_error(
+          'mm_su_rai_2',
+          'unauthorized_access_response',
+          [],
+          GlobalConstant::ErrorAction.default
+        ) if @to_update_client_manager.manager_id == @manager_id
 
         success
 
@@ -112,12 +117,12 @@ module ManagerManagement
 
             # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
             # previously associated with the client.
-            fail OstCustomError.new validation_error(
-                                      'mm_su_rai_3',
-                                      'invalid_api_params',
-                                      ['was_current_client_associated_deleted_manager'],
-                                      GlobalConstant::ErrorAction.default
-                                    ) if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
+            return validation_error(
+              'mm_su_rai_3',
+              'invalid_api_params',
+              ['was_current_client_associated_deleted_manager'],
+              GlobalConstant::ErrorAction.default
+            ) if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
 
             # Check whether the admin is active or not.
@@ -125,12 +130,12 @@ module ManagerManagement
               privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
 
             # The invitee_manager IS currently associated with the client and active.
-            fail OstCustomError.new validation_error(
-                                      'mm_su_rai_4',
-                                      'invalid_api_params',
-                                      ['is_active_current_client_associated_manager'],
-                                      GlobalConstant::ErrorAction.default
-                                    ) if is_client_manager_active
+            return validation_error(
+              'mm_su_rai_4',
+              'invalid_api_params',
+              ['is_active_current_client_associated_manager'],
+              GlobalConstant::ErrorAction.default
+            ) if is_client_manager_active
 
             # Decide the privilege for the new invite.
             if privileges.include?(GlobalConstant::ClientManager.is_admin_invited_privilege)
@@ -144,14 +149,16 @@ module ManagerManagement
         else
 
           # The clientId is invalid.
-          fail OstCustomError.new validation_error(
-                                    'mm_su_rai_5',
-                                    'invalid_api_params',
-                                    ['already_client_associated_manager'],
-                                    GlobalConstant::ErrorAction.default
-                                  )
+          return validation_error(
+            'mm_su_rai_5',
+            'invalid_api_params',
+            ['already_client_associated_manager'],
+            GlobalConstant::ErrorAction.default
+          )
 
         end
+
+        success
 
       end
 
@@ -190,9 +197,11 @@ module ManagerManagement
         # encrypt it again to send it over in email
         encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
         r = encryptor_obj.encrypt(invite_token_str, GlobalConstant::ManagerValidationHash::manager_invite_kind)
-        fail OstCustomError.new(r) unless r.success?
+        return r unless r.success?
 
         @invite_token = r.data[:ciphertext_blob]
+
+        success
 
       end
 
@@ -212,6 +221,8 @@ module ManagerManagement
                 invite_token: @invite_token
             }
         )
+
+        success
       end
 
     end

@@ -10,10 +10,10 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # @param [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
-      # @param [Integer] client_id (mandatory) - id of the client to which invite is for
-      # @param [String] email (mandatory) - the email of the user which is to be invited
-      # @param [Integer] is_super_admin (mandatory) - the privilege of the admin once the invite is accepted. 1 => super_admin, 0 => admin
+      # @params [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
+      # @params [Integer] client_id (mandatory) - id of the client to which invite is for
+      # @params [String] email (mandatory) - the email of the user which is to be invited
+      # @params [Integer] is_super_admin (mandatory) - the privilege of the admin once the invite is accepted. 1 => super_admin, 0 => admin
       #
       # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
@@ -45,15 +45,20 @@ module ManagerManagement
 
         handle_errors_and_exceptions do
 
-          validate_and_sanitize
+          r = validate_and_sanitize
+          return r unless r.success?
 
-          create_manager_for_invitee
+          r = create_manager_for_invitee
+          return r unless r.success?
 
-          create_invite_token
+          r = create_invite_token
+          return r unless r.success?
 
-          create_client_manager
+          r = create_client_manager
+          return r unless r.success?
 
-          enqueue_job
+          r = enqueue_job
+          return r unless r.success?
 
           success_with_data({
                                 result_type: result_type,
@@ -81,21 +86,24 @@ module ManagerManagement
       #
       def validate_and_sanitize
 
+        # NOTE: To be on safe side, check for generic errors as well
+        r = validate
+        return r unless r.success?
+
         validation_errors = []
 
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
         validation_errors.push('invalid_is_super_admin') unless Util::CommonValidator.is_boolean_string?(@is_super_admin)
 
-        fail OstCustomError.new validation_error(
-                                  'mm_su_ia_1',
-                                  'invalid_api_params',
-                                  validation_errors,
-                                  GlobalConstant::ErrorAction.default
-                                ) if validation_errors.present?
+        return validation_error(
+          'mm_su_ia_1',
+          'invalid_api_params',
+          validation_errors,
+          GlobalConstant::ErrorAction.default
+        ) if validation_errors.present?
 
-        # NOTE: To be on safe side, check for generic errors as well
-        validate
+        success
 
       end
 
@@ -130,12 +138,12 @@ module ManagerManagement
               # previously associated with the client.
               if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
-                fail OstCustomError.new validation_error(
-                                          'mm_su_ia_2',
-                                          'invalid_api_params',
-                                          ['was_current_client_associated_email'],
-                                          GlobalConstant::ErrorAction.default
-                                        )
+                return validation_error(
+                  'mm_su_ia_2',
+                  'invalid_api_params',
+                  ['was_current_client_associated_email'],
+                  GlobalConstant::ErrorAction.default
+                )
                 # If privileges excludes has_been_deleted_privilege, display error message that the admin IS
                 # currently associated with the client. We don't handle that error condition here because it is handled
                 # in the previous if block.
@@ -145,27 +153,28 @@ module ManagerManagement
             end
 
             # The invitee_manager IS currently associated with the client.
-            fail OstCustomError.new validation_error(
-                                      'mm_su_ia_3',
-                                      'invalid_api_params',
-                                      ['is_current_client_associated_email'],
-                                      GlobalConstant::ErrorAction.default
-                                    )
+            return validation_error(
+              'mm_su_ia_3',
+              'invalid_api_params',
+              ['is_current_client_associated_email'],
+              GlobalConstant::ErrorAction.default
+            )
           else
 
           # The invitee_manager is associated to some other client.
-          fail OstCustomError.new validation_error(
-                                    'mm_su_ia_4',
-                                    'invalid_api_params',
-                                    ['already_client_associated_email'],
-                                    GlobalConstant::ErrorAction.default
-                                  )
+          return validation_error(
+            'mm_su_ia_4',
+            'invalid_api_params',
+            ['already_client_associated_email'],
+            GlobalConstant::ErrorAction.default
+          )
 
           end
 
         end
 
-        generate_login_salt
+        r = generate_login_salt
+        return r unless r.success?
 
         @invitee_manager = Manager.new(
           email: @email,
@@ -192,7 +201,7 @@ module ManagerManagement
       #
       def generate_login_salt
         r = Aws::Kms.new(GlobalConstant::Kms.login_purpose, GlobalConstant::Kms.user_role).generate_data_key
-        fail OstCustomError.new r unless r.success?
+        return r unless r.success?
 
         @authentication_salt_hash = r.data
 
@@ -238,9 +247,11 @@ module ManagerManagement
         # encrypt it again to send it over in email
         encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
         r = encryptor_obj.encrypt(invite_token_str, GlobalConstant::ManagerValidationHash::manager_invite_kind)
-        fail OstCustomError.new(r) unless r.success?
+        return r unless r.success?
 
         @invite_token = r.data[:ciphertext_blob]
+
+        success
 
       end
 
@@ -256,13 +267,13 @@ module ManagerManagement
 
         if @client_manager.present? && @client_manager.privileges.present?
           privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges) - [GlobalConstant::ClientManager.is_admin_invited_privilege] - [GlobalConstant::ClientManager.is_super_admin_invited_privilege]
-          # if any other privilege was set other than invite, either invite was already accepted or rejected. fail this request
-          fail OstCustomError.new validation_error(
-                                      'mm_su_ia_5',
-                                      'invalid_api_params',
-                                      ['already_registered_email'],
-                                      GlobalConstant::ErrorAction.default
-                                  ) if privileges.any?
+          # if any other privilege was set other than invite, either invite was already accepted or rejected.
+          return validation_error(
+            'mm_su_ia_5',
+            'invalid_api_params',
+            ['already_registered_email'],
+            GlobalConstant::ErrorAction.default
+          ) if privileges.any?
         end
 
         @client_manager ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
@@ -295,6 +306,7 @@ module ManagerManagement
                 invite_token: @invite_token
             }
         )
+        success
       end
 
       def result_type

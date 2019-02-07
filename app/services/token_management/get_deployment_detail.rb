@@ -34,18 +34,23 @@ module TokenManagement
 
       handle_errors_and_exceptions do
 
-        validate
+        r = validate
+        return r unless r.success?
 
-        fetch_and_validate_token
+        r = fetch_and_validate_token
+        return r unless r.success?
 
-        add_token_to_response
+        r = add_token_to_response
+        return r unless r.success?
 
-        fetch_workflow
+        r = fetch_workflow
+        return r unless r.success?
 
         r = fetch_goto
         return r unless r.success?
 
-        fetch_workflow_current_status
+        r = fetch_workflow_current_status
+        return r unless r.success?
 
         r = fetch_sub_env_payloads
         return r unless r.success?
@@ -70,6 +75,9 @@ module TokenManagement
                                  })
                     .order('id DESC')
                     .limit(1).first
+
+      success
+
     end
 
     # Fetch token details

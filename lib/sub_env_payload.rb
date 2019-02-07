@@ -43,11 +43,11 @@ class SubEnvPayload
   def prepare_sub_env_payload
     client_data = CacheManagement::Client.new([@client_id]).fetch[@client_id]
 
-    fail OstCustomError.new error_with_data(
-                                     'l_sep_1',
-                                     'client_not_found',
-                                     GlobalConstant::ErrorAction.default
-                                   ) if client_data.blank?
+    return error_with_data(
+      'l_sep_1',
+      'client_not_found',
+      GlobalConstant::ErrorAction.default
+    ) if client_data.blank?
 
     m_statuses = client_data[:mainnet_statuses]
     s_statuses = client_data[:sandbox_statuses]
