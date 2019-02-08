@@ -150,7 +150,57 @@ module GlobalConstant
       def verify_set_internal_actor_for_owner_in_ubt
         'verifySetInternalActorForOwnerInUBT'
       end
-
+      def assignShards
+        'assignShards'
+      end
+      def deployTokenRules
+        'deployTokenRules'
+      end
+      def saveTokenRules
+        'saveTokenRules'
+      end
+      def deployTokenHolderMasterCopy
+        'deployTokenHolderMasterCopy'
+      end
+      def saveTokenHolderMasterCopy
+        'saveTokenHolderMasterCopy'
+      end
+      def deployUserWalletFactory
+        'deployUserWalletFactory'
+      end
+      def saveUserWalletFactory
+        'saveUserWalletFactory'
+      end
+      def deployGnosisSafeMultiSigMasterCopy
+        'deployGnosisSafeMultiSigMasterCopy'
+      end
+      def saveGnosisSafeMultiSigMasterCopy
+        'saveGnosisSafeMultiSigMasterCopy'
+      end
+      def deployPricerRule
+        'deployPricerRule'
+      end
+      def savePricerRule
+        'savePricerRule'
+      end
+      def registerPricerRule
+        'registerPricerRule'
+      end
+      def verifyRegisterPricerRule
+        'verifyRegisterPricerRule'
+      end
+      def addPriceOracleInPricerRule
+        'addPriceOracleInPricerRule'
+      end
+      def verifyAddPriceOracleInPricerRule
+        'verifyAddPriceOracleInPricerRule'
+      end
+      def setAcceptedMarginInPricerRule
+        'setAcceptedMarginInPricerRule'
+      end
+      def verifySetAcceptedMarginInPricerRule
+        'verifySetAcceptedMarginInPricerRule'
+      end
       def verify_economy_setup
         'verifyEconomySetup'
       end
