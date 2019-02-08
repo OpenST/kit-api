@@ -86,13 +86,13 @@ module DeveloperManagement
     def fetch_token_details
       token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
 
-      if token.blank?
-        return validation_error(
+
+      if token.blank? || token[:status] == GlobalConstant::ClientToken.not_deployed
+        @go_to = GlobalConstant::GoTo.token_setup
+        return error_with_go_to(
           'a_s_dm_fd_1',
-          'invalid_api_params',
-          ['invalid_client_id'],
-          GlobalConstant::ErrorAction.default
-        )
+          'data_validation_failed',
+          @go_to)
       end
 
       @token = token
