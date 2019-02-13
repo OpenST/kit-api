@@ -120,29 +120,53 @@ step_config:
     weight: 2
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.savePricerRule%>
-    weight: 2
+    weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.registerPricerRule%>
-    weight: 2
+    weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.verifyRegisterPricerRule%>
-    weight: 2
+    weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.addPriceOracleInPricerRule%>
-    weight: 2
+    weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.verifyAddPriceOracleInPricerRule%>
-    weight: 2
+    weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.setAcceptedMarginInPricerRule%>
     weight: 2
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.verifySetAcceptedMarginInPricerRule%>
-    weight: 2
+    weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.verify_economy_setup%>
-    weight: 3
+    weight: 1
     group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.assignShards%>
+    weight: 1
+    group: 6
+  - kind: <%= GlobalConstant::WorkflowStep.deployProxyFactory%>
+    weight: 1
+    group: 10
+  - kind: <%= GlobalConstant::WorkflowStep.saveProxyFactory%>
+    weight: 1
+    group: 10
+  - kind: <%= GlobalConstant::WorkflowStep.initializeCompanyTokenHolderInDb%>
+    weight: 1
+    group: 10
+  - kind: <%= GlobalConstant::WorkflowStep.createCompanyWallet%>
+    weight: 1
+    group: 10
+  - kind: <%= GlobalConstant::WorkflowStep.verifyCreateCompanyWallet%>
+    weight: 1
+    group: 10
+  - kind: <%= GlobalConstant::WorkflowStep.setInternalActorForCompanyTHInUBT%>
+    weight: 1
+    group: 10
+  - kind: <%= GlobalConstant::WorkflowStep.verifySetInternalActorForCompanyTHInUBT%>
+    weight: 1
+    group: 10
   - kind: <%= GlobalConstant::WorkflowStep.mark_success%>
     weight: 3
     group: 7
@@ -177,10 +201,8 @@ group_config:
     display_text: 'Initializing'
     name: 'Funding addresses'
   9:
-    display_text: 'Setting up basic token rules'
+    display_text: 'Setting up basic Token Rules'
     name: 'Token Rules Deployment'
-
-
-
-
-
+  10:
+    display_text: 'Setting up Company Token Holder'
+    name: 'Company Token Holder Deployment'

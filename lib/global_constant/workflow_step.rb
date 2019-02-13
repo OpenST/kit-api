@@ -201,6 +201,27 @@ module GlobalConstant
       def verifySetAcceptedMarginInPricerRule
         'verifySetAcceptedMarginInPricerRule'
       end
+      def deployProxyFactory
+        'deployProxyFactory'
+      end
+      def saveProxyFactory
+        'saveProxyFactory'
+      end
+      def initializeCompanyTokenHolderInDb
+        'initializeCompanyTokenHolderInDb'
+      end
+      def createCompanyWallet
+        'createCompanyWallet'
+      end
+      def verifyCreateCompanyWallet
+        'verifyCreateCompanyWallet'
+      end
+      def setInternalActorForCompanyTHInUBT
+        'setInternalActorForCompanyTHInUBT'
+      end
+      def verifySetInternalActorForCompanyTHInUBT
+        'verifySetInternalActorForCompanyTHInUBT'
+      end
       def verify_economy_setup
         'verifyEconomySetup'
       end

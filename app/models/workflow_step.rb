@@ -35,6 +35,7 @@ class WorkflowStep < DbConnection::KitSaasSubenv
       GlobalConstant::WorkflowStep.verify_economy_setup => 32,
 
       GlobalConstant::WorkflowStep.assignShards => 33,
+      
       GlobalConstant::WorkflowStep.deployTokenRules => 34,
       GlobalConstant::WorkflowStep.saveTokenRules => 35,
       GlobalConstant::WorkflowStep.deployTokenHolderMasterCopy => 36,
@@ -51,6 +52,14 @@ class WorkflowStep < DbConnection::KitSaasSubenv
       GlobalConstant::WorkflowStep.verifyAddPriceOracleInPricerRule => 47,
       GlobalConstant::WorkflowStep.setAcceptedMarginInPricerRule => 48,
       GlobalConstant::WorkflowStep.verifySetAcceptedMarginInPricerRule => 49,
+      
+      GlobalConstant::WorkflowStep.deployProxyFactory => 52,
+      GlobalConstant::WorkflowStep.saveProxyFactory => 53,
+      GlobalConstant::WorkflowStep.initializeCompanyTokenHolderInDb => 54,
+      GlobalConstant::WorkflowStep.createCompanyWallet => 55,
+      GlobalConstant::WorkflowStep.verifyCreateCompanyWallet => 56,
+      GlobalConstant::WorkflowStep.setInternalActorForCompanyTHInUBT => 57,
+      GlobalConstant::WorkflowStep.verifySetInternalActorForCompanyTHInUBT => 58,
 
       GlobalConstant::WorkflowStep.st_prime_stake_and_mint_init => 60,
       GlobalConstant::WorkflowStep.st_prime_approve => 61,
