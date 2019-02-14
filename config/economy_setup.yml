@@ -18,10 +18,16 @@ step_config:
     weight: 2
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_worker_addr_kind%>
-    weight: 2
+    weight: 1
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_worker_addr_kind%>
-    weight: 2
+    weight: 1
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.fund_token_user_ops_worker%>
+    weight: 1
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.verify_fund_token_user_ops_worker%>
+    weight: 1
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_token_organization_kind%>
     weight: 2
@@ -92,81 +98,87 @@ step_config:
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_owner_in_ubt%>
     weight: 2
     group: 6
-  - kind: <%= GlobalConstant::WorkflowStep.deployTokenRules%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.saveTokenRules%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.deployTokenHolderMasterCopy%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.saveTokenHolderMasterCopy%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.deployUserWalletFactory%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.saveUserWalletFactory%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.deployGnosisSafeMultiSigMasterCopy%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.saveGnosisSafeMultiSigMasterCopy%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.deployPricerRule%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.savePricerRule%>
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_token_rules%>
     weight: 1
     group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.registerPricerRule%>
+  - kind: <%= GlobalConstant::WorkflowStep.save_token_rules%>
     weight: 1
     group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.verifyRegisterPricerRule%>
-    weight: 1
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.addPriceOracleInPricerRule%>
-    weight: 1
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.verifyAddPriceOracleInPricerRule%>
-    weight: 1
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.setAcceptedMarginInPricerRule%>
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_token_holder_master_copy%>
     weight: 2
     group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.verifySetAcceptedMarginInPricerRule%>
+  - kind: <%= GlobalConstant::WorkflowStep.save_token_holder_master_copy%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_user_wallet_factory%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.save_user_wallet_factory%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_gnosis_safe_multi_sig_master_copy%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.save_gnosis_safe_multi_sig_master_copy%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_pricer_rule%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.save_pricer_rule%>
+    weight: 1
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.register_pricer_rule%>
+    weight: 1
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.verify_register_pricer_rule%>
+    weight: 1
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.add_price_oracle_in_pricer_rule%>
+    weight: 1
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.verify_add_price_oracle_in_pricer_rule%>
+    weight: 1
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.set_accepted_margin_in_pricer_rule%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_accepted_margin_in_pricer_rule%>
     weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.verify_economy_setup%>
     weight: 1
     group: 6
-  - kind: <%= GlobalConstant::WorkflowStep.assignShards%>
+  - kind: <%= GlobalConstant::WorkflowStep.assign_shards%>
     weight: 1
     group: 6
-  - kind: <%= GlobalConstant::WorkflowStep.deployProxyFactory%>
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_proxy_factory%>
     weight: 1
     group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.saveProxyFactory%>
+  - kind: <%= GlobalConstant::WorkflowStep.save_proxy_factory%>
     weight: 1
     group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.initializeCompanyTokenHolderInDb%>
+  - kind: <%= GlobalConstant::WorkflowStep.initialize_company_token_holder_in_db%>
     weight: 1
     group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.createCompanyWallet%>
+  - kind: <%= GlobalConstant::WorkflowStep.create_company_wallet%>
     weight: 1
     group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.verifyCreateCompanyWallet%>
+  - kind: <%= GlobalConstant::WorkflowStep.verify_create_company_wallet%>
     weight: 1
     group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.setInternalActorForCompanyTHInUBT%>
+  - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_companyTH_in_UBT%>
     weight: 1
     group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.verifySetInternalActorForCompanyTHInUBT%>
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_companyTH_in_UBT%>
     weight: 1
     group: 10
+  - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_TR_in_UBT%>
+    weight: 1
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_TR_in_UBT%>
+    weight: 1
+    group: 9
   - kind: <%= GlobalConstant::WorkflowStep.mark_success%>
     weight: 3
     group: 7

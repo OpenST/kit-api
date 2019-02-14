@@ -59,6 +59,14 @@ module GlobalConstant
         'verifyFundAuxWorkerAddress'
       end
 
+      def fund_token_user_ops_worker
+        'fundTokenUserOpsWorker'
+      end
+      
+      def verify_fund_token_user_ops_worker
+        'verifyFundTokenUserOpsWorker'
+      end
+
       def deploy_origin_token_organization_kind
         'deployOriginTokenOrganization'
       end
@@ -150,78 +158,98 @@ module GlobalConstant
       def verify_set_internal_actor_for_owner_in_ubt
         'verifySetInternalActorForOwnerInUBT'
       end
-      def assignShards
+      
+      def assign_shards
         'assignShards'
       end
-      def deployTokenRules
+      
+      def deploy_token_rules
         'deployTokenRules'
       end
-      def saveTokenRules
+      def save_token_rules
         'saveTokenRules'
       end
-      def deployTokenHolderMasterCopy
+      
+      def deploy_token_holder_master_copy
         'deployTokenHolderMasterCopy'
       end
-      def saveTokenHolderMasterCopy
+      def save_token_holder_master_copy
         'saveTokenHolderMasterCopy'
       end
-      def deployUserWalletFactory
+      
+      def deploy_user_wallet_factory
         'deployUserWalletFactory'
       end
-      def saveUserWalletFactory
+      def save_user_wallet_factory
         'saveUserWalletFactory'
       end
-      def deployGnosisSafeMultiSigMasterCopy
+      
+      def deploy_gnosis_safe_multi_sig_master_copy
         'deployGnosisSafeMultiSigMasterCopy'
       end
-      def saveGnosisSafeMultiSigMasterCopy
+      def save_gnosis_safe_multi_sig_master_copy
         'saveGnosisSafeMultiSigMasterCopy'
       end
-      def deployPricerRule
+      
+      def deploy_pricer_rule
         'deployPricerRule'
       end
-      def savePricerRule
+      def save_pricer_rule
         'savePricerRule'
       end
-      def registerPricerRule
+      
+      def register_pricer_rule
         'registerPricerRule'
       end
-      def verifyRegisterPricerRule
+      def verify_register_pricer_rule
         'verifyRegisterPricerRule'
       end
-      def addPriceOracleInPricerRule
+      
+      def add_price_oracle_in_pricer_rule
         'addPriceOracleInPricerRule'
       end
-      def verifyAddPriceOracleInPricerRule
+      def verify_add_price_oracle_in_pricer_rule
         'verifyAddPriceOracleInPricerRule'
       end
-      def setAcceptedMarginInPricerRule
+      
+      def set_accepted_margin_in_pricer_rule
         'setAcceptedMarginInPricerRule'
       end
-      def verifySetAcceptedMarginInPricerRule
+      def verify_set_accepted_margin_in_pricer_rule
         'verifySetAcceptedMarginInPricerRule'
       end
-      def deployProxyFactory
+      
+      def deploy_proxy_factory
         'deployProxyFactory'
       end
-      def saveProxyFactory
+      def save_proxy_factory
         'saveProxyFactory'
       end
-      def initializeCompanyTokenHolderInDb
+      def initialize_company_token_holder_in_db
         'initializeCompanyTokenHolderInDb'
       end
-      def createCompanyWallet
+      
+      def create_company_wallet
         'createCompanyWallet'
       end
-      def verifyCreateCompanyWallet
+      def verify_create_company_wallet
         'verifyCreateCompanyWallet'
       end
-      def setInternalActorForCompanyTHInUBT
+      
+      def set_internal_actor_for_companyTH_in_UBT
         'setInternalActorForCompanyTHInUBT'
       end
-      def verifySetInternalActorForCompanyTHInUBT
+      def verify_set_internal_actor_for_companyTH_in_UBT
         'verifySetInternalActorForCompanyTHInUBT'
       end
+      
+      def set_internal_actor_for_TR_in_UBT
+        'setInternalActorForTRInUBT'
+      end
+      def verify_set_internal_actor_for_TR_in_UBT
+        'verifySetInternalActorForTRInUBT'
+      end
+      
       def verify_economy_setup
         'verifyEconomySetup'
       end
