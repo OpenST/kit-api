@@ -35,12 +35,20 @@ module GlobalConstant
         'generateTokenAddresses'
       end
 
+      def generate_tx_worker_addresses_kind
+        'generateTxWorkerAddresses'
+      end
+
       def fund_aux_funder_addr_kind
         'fundAuxFunderAddress'
       end
 
       def verify_fund_aux_funder_addr_kind
         'verifyFundAuxFunderAddress'
+      end
+
+      def fund_ex_tx_workers_kind
+        'fundExTxWorkers'
       end
 
       def fund_aux_admin_addr_kind

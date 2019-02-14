@@ -5,17 +5,23 @@ step_config:
   - kind: <%= GlobalConstant::WorkflowStep.generate_token_addresses_kind%>
     weight: 2
     group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.generate_tx_worker_addresses_kind%>
+    weight: 1
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_funder_addr_kind%>
     weight: 2
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_funder_addr_kind%>
     weight: 2
     group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.fund_ex_tx_workers_kind%>
+    weight: 1
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_admin_addr_kind%>
     weight: 2
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_admin_addr_kind%>
-    weight: 2
+    weight: 1
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_worker_addr_kind%>
     weight: 1
@@ -180,7 +186,7 @@ step_config:
     weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.mark_success%>
-    weight: 3
+    weight: 2
     group: 7
 
 
