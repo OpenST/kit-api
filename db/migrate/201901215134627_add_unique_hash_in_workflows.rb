@@ -9,7 +9,7 @@ class AddUniqueHashInWorkflows < DbMigrationConnection
   def down
     run_migration_for_db(DbConnection::KitSaasSubenv) do
       remove_column :workflows, :unique_hash
-      remove_index :workflow_steps, name: 'uk_uh'
+      remove_index :workflows, name: 'uk_uh'
     end
   end
 end
