@@ -18,6 +18,8 @@ class SignUpJob < ApplicationJob
 
     send_double_optin_link if @manager[:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
 
+    create_api_credentials
+
     notify_devs
 
   end
@@ -62,6 +64,18 @@ class SignUpJob < ApplicationJob
   def send_double_optin_link
     r = ManagerManagement::SendDoubleOptInLink.new(manager_id: @manager_id).perform
     @failed_logs[:send_double_opt_in_link] = r.to_hash unless r.success?
+  end
+
+  # Create API credentials and insert in database
+  #
+  # * Author: Ankit
+  # * Date: 05/02/2019
+  # * Reviewed By:
+  #
+  #
+  def create_api_credentials
+    r = ::ApiCredentials::Create.new({client_id: @manager[:current_client_id]}).perform
+    @failed_logs[:create_api_credentials] = r.to_hash unless r.success?
   end
 
   # Send mail
