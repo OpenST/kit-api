@@ -15,8 +15,8 @@ module TokenManagement
       super
 
       @client_id = params[:client_id]
-      @sandbox_token_name = params[:sandbox_token_name] |= nil
-      @sandbox_token_symbol = params[:sandbox_token_symbol] |= nil
+      @sandbox_token_name = params[:sandbox_token_name]
+      @sandbox_token_symbol = params[:sandbox_token_symbol]
       @manager_obj = params[:manager]
 
       @api_response_data = {}

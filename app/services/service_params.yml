@@ -237,6 +237,8 @@
     - :client_id
     - :manager
   :optional:
+    - :sandbox_token_name
+    - :sandbox_token_symbol
 'DeveloperManagement::FetchDetails':
   :mandatory:
     - :client_id
