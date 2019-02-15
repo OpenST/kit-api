@@ -51,10 +51,12 @@ module TokenManagement
         r = fetch_workflow_current_status
         return r unless r.success?
 
+        r = enqueue_job
+        return r unless r.success?
+
         success_with_data(@api_response_data)
 
       end
-
     end
 
 
@@ -102,6 +104,26 @@ module TokenManagement
         id: @workflow_id,
         kind: GlobalConstant::Workflow.token_deploy
       }
+
+      success
+    end
+
+    # Enqueue Job
+    #
+    # * Author: Ankit
+    # * Date: 05/02/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def enqueue_job
+
+      BackgroundJob.enqueue(
+        CreateApiCredentialsJob,
+        {
+          client_id: @client_id
+        }
+      )
 
       success
 
