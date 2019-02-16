@@ -188,7 +188,8 @@ module ManagerManagement
       end
 
       @manager_obj = Manager.where(id: @manager_validation_hash_obj.manager_id).first
-      
+      @manager_id = @manager_validation_hash_obj.manager_id
+
       success
 
     end

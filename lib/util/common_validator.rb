@@ -2,8 +2,8 @@ module Util
 
   class CommonValidator
     
-    REGEX_EMAIL = /\A[A-Z0-9]+[A-Z0-9_%+-]*(\.[A-Z0-9_%+-]{1,})*@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\Z/mi
-    REGEX_TOKEN = /^([a-z0-9=\-]*)$/i
+    REGEX_EMAIL = /\A[A-Z0-9]+[A-Z0-9_%+-]*(\.[A-Z0-9_%+-]{1,})*@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\z/mi
+    REGEX_TOKEN = /\A([a-z0-9=\-]*)\z/i
 
     # Check for integer-ness of an input
     #
@@ -156,7 +156,7 @@ module Util
     # @return [Boolean] returns a boolean
     #
     def self.is_alphanumeric?(name)
-      name =~ /\A[A-Z0-9]+\Z/i
+      name =~ /\A[A-Z0-9]+\z/i
     end
 
     # Should Email be send to this email & this env
