@@ -50,7 +50,7 @@ module ManagerManagement
       def decrypt_invite_token
         decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
         r = decryptor_obj.decrypt(@invite_token, GlobalConstant::ManagerValidationHash::manager_invite_kind)
-        return invalid_url_error('mm_su_b_9') unless r.success?
+        return invalid_url_error('mm_su_b_11') unless r.success?
         @decrypted_invite_token = r.data[:plaintext]
         success
       end

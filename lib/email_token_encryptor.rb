@@ -30,7 +30,7 @@ class EmailTokenEncryptor
     begin
       fail 'no code to execute' unless block_given?
       yield
-    rescue ActiveSupport::MessageEncryptor::InvalidMessage => e
+    rescue StandardError => se
       if token_type == GlobalConstant::ManagerValidationHash::manager_invite_kind
         error_identifier = 'invalid_i_t'
       else

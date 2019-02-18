@@ -10,6 +10,7 @@ module ManagerManagement
     #
     # @params [Hash] client (mandatory) - client to which this manager is associated
     # @params [Boolean] is_multi_auth_cookie_valid (optional)
+    # @params [Boolean] is_password_auth_cookie_valid (optional)
     # @params [Boolean] is_logged_in_manager (optional) - is logged in manager
     # @params [Integer] manager_id (optional) - manager id
     # @params [String] r_t (optional) - token for double opt in
@@ -21,6 +22,7 @@ module ManagerManagement
       super
 
       @client = @params[:client]
+      @is_password_auth_cookie_valid = @params[:is_password_auth_cookie_valid]
       @is_multi_auth_cookie_valid = @params[:is_multi_auth_cookie_valid]
       @is_logged_in_manager = @params[:is_logged_in_manager]
       @r_t = @params[:r_t]
@@ -55,7 +57,7 @@ module ManagerManagement
             return success_with_data({manager: @manager_obj.formated_cache_data})
           end
         else
-          return success_with_data({}) if @r_t.blank?
+          return success_with_data({}, fetch_go_to) if @r_t.blank?
         end
 
         r = validate_and_sanitize
@@ -291,10 +293,10 @@ module ManagerManagement
     #
     def fetch_go_to
       FetchGoTo.new({
-                        is_password_auth_cookie_valid: true,
+                        is_password_auth_cookie_valid: @is_password_auth_cookie_valid,
                         is_multi_auth_cookie_valid: @is_multi_auth_cookie_valid,
                         client: @client,
-                        manager: @manager_obj.formated_cache_data
+                        manager: @manager_obj.present? ? @manager_obj.formated_cache_data : nil
                     }).fetch_by_manager_state
     end
     

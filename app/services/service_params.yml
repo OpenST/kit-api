@@ -63,6 +63,7 @@
     - :client
     - :manager_id
     - :is_multi_auth_cookie_valid
+    - :is_password_auth_cookie_valid
 'ManagerManagement::SendResetPasswordLink':
   :mandatory:
     - :email
