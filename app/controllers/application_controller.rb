@@ -36,7 +36,7 @@ class ApplicationController < ActionController::API
   # ELB Health Checker
   #
   def health_checker
-    render plain: '', :status => 200, :content_type => 'text/html'
+    render plain: ''
   end
 
   private
