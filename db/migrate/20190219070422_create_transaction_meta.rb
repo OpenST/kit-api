@@ -13,7 +13,10 @@ class CreateTransactionMeta < DbMigrationConnection
         t.column :next_action_at, :integer, null: true
         t.column :lock_id, :decimal, :precision => 22, :scale => 10, null: true
         t.column :debug_params, :text
-        t.column :sender_details, :text
+        t.column :sender_address, :string, null: true
+        t.column :sender_nonce, :integer, null: true
+        t.column :session_address, :string, null: true
+        t.column :session_nonce, :integer, null: true
         t.timestamps
       end
 
