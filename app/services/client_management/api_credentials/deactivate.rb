@@ -110,7 +110,10 @@ module ClientManagement
       #
       def deactivate
 
-        ApiCredential.where(api_key: @deactivated_api_key).update_all(expiry_timestamp: current_timestamp)
+        ApiCredential.where(api_key: @deactivated_api_key).update_all(
+            expiry_timestamp: current_timestamp,
+            updated_at: current_time
+        )
 
         KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).clear([@deactivated_api_key])
 

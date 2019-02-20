@@ -58,7 +58,7 @@ module KitSaasSharedCacheManagement
 
       affected_api_keys.each do |affected_api_key|
         # delete cache key set by saas which has secret key for given secret key
-        Memcache.delete_from_all_instances("#{GlobalConstant::Cache.saas_key_prefix}_#{GlobalConstant::Cache.key_prefixes_template_vars[:saas_subenv]}_cs_#{affected_api_key.downcase}")
+        Memcache.delete_from_all_instances("#{GlobalConstant::Cache.saas_key_prefix}_#{GlobalConstant::Cache.key_prefixes_template_vars[:kit_saas_subenv]}_cs_#{affected_api_key.downcase}")
       end
 
       nil
