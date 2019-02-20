@@ -23,6 +23,7 @@ class CreateTransactionMeta < DbMigrationConnection
       add_index :transaction_meta, [:transaction_uuid], name: 'uniq_transaction_uuid', unique: true
       add_index :transaction_meta, [:transaction_hash, :associated_aux_chain_id], name: 'uniq_transaction_hash_chain_id', unique: true
       add_index :transaction_meta, [:lock_id], name: 'index_lock_id'
+      add_index :transaction_meta, [:session_address, :session_nonce], name: 'index_session_address_session_nonce'
 
       query = "CREATE TABLE transaction_meta_archive like transaction_meta;"
       DbConnection::SaasBigSubenv.connection.execute(query)
