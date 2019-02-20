@@ -11,7 +11,7 @@ class CreateTransactionMeta < DbMigrationConnection
         t.column :kind, :tinyint, limit: 1, null: false
         t.column :retry_count, :integer, null: true
         t.column :next_action_at, :integer, null: true
-        t.column :lock_id, :decimal, :precision => 22, :scale => 10, null: true
+        t.column :lock_id, :decimal, :precision => 22, :scale => 5, null: true
         t.column :debug_params, :text
         t.column :sender_address, :string, null: true
         t.column :sender_nonce, :integer, null: true
