@@ -205,7 +205,7 @@ module WalletAddressesManagement
     def create_entries
 
       #check if the same client has some address associated with it. Update the address if already present
-      clientWalletAddress = ClientWalletAddress.where('client_id = ?' , @client_id).first
+      clientWalletAddress = ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name).first
 
       if clientWalletAddress.present?
         #update the new address
@@ -226,7 +226,7 @@ module WalletAddressesManagement
       tokenAddresses = TokenAddresses.where('token_id = ?', token_id)
 
       if tokenAddresses.present?
-        TokenAddresses.where('token_id = ?',token_id).update_all(address:@owner_address)
+        TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).update_all(address:@owner_address)
       else
         TokenAddresses.create!(
           token_id: token_id,

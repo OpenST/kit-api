@@ -165,8 +165,8 @@ module TokenManagement
       # delete if any address present in token addresses table and client_wallet_addresses table
 
       token_id = @token_details.id
-      ClientWalletAddress.where('client_id = ?', @client_id).destroy_all
-      TokenAddresses.where('token_id = ?', token_id).destroy_all
+      ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name ).destroy_all
+      TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).destroy_all
 
       success
     end
