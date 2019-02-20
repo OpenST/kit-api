@@ -78,7 +78,7 @@ module TokenManagement
         return validation_error(
           'a_s_tm_g_1',
           'invalid_api_params',
-          ['invalid_address'],
+          ['invalid_staker_address'],
           GlobalConstant::ErrorAction.default
         )
       end
@@ -153,7 +153,7 @@ module TokenManagement
           return validation_error(
             'a_s_tm_g_4',
             'invalid_api_params',
-            ['invalid_client_id', 'invalid_address'],
+            ['invalid_client_id', 'invalid_staker_address'],
             GlobalConstant::ErrorAction.default
           )
         end
@@ -161,7 +161,7 @@ module TokenManagement
         return validation_error(
           'a_s_tm_g_5',
           'invalid_api_params',
-          ['invalid_address'],
+          ['invalid_staker_address'],
           GlobalConstant::ErrorAction.default
         )
       end
