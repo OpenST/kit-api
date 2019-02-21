@@ -21,6 +21,10 @@ module GlobalConstant
         'deploymentFailed'
       end
 
+      def delayed_recovery_interval
+        43200
+      end
+
     end
 
   end

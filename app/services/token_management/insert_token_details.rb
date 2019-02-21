@@ -144,6 +144,7 @@ module TokenManagement
       @token_details.name = @name
       @token_details.symbol = @symbol
       @token_details.conversion_factor = @conversion_factor
+      @token_details.delayed_recovery_interval = GlobalConstant::ClientToken.delayed_recovery_interval
 
       @token_details.save!
 
