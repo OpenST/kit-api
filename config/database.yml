@@ -48,6 +48,12 @@ kit_big_subenv_identifier: &kit_big_subenv
   username: <%= ENV['KA_KIT_BIG_SUBENV_MYSQL_USER']%>
   password: <%= ENV['KA_KIT_BIG_SUBENV_MYSQL_PASSWORD']%>
 
+kit_saas_big_subenv_identifier: &kit_saas_big_subenv
+  <<: *default
+  host: <%= ENV['KA_KIT_SAAS_BIG_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_SAAS_BIG_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_SAAS_BIG_SUBENV_MYSQL_PASSWORD']%>
+
 config_subenv_identifier: &config_subenv
   <<: *default
   host: <%= ENV['KA_CONFIG_SUBENV_MYSQL_HOST']%>
@@ -79,9 +85,9 @@ saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *saas_big_subenv
   database: saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
-kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *kit_big_subenv
-  database: kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+kit_saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *kit_saas_big_subenv
+  database: kit_saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
 config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_subenv
