@@ -1,6 +1,6 @@
 class DeveloperController < WebController
 
-  before_action :verify_super_admin_role , :except => [:developer_get]
+  before_action :verify_super_admin_role , :except => [:developer_get, :api_keys_get]
   before_action :verify_is_xhr , :except => [:developer_get]
 
   # Get developer's page data
