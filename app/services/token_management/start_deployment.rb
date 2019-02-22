@@ -9,12 +9,15 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Hash] client_manager (mandatory) - logged in client manager object
     #
     # @return [TokenManagement::StartDeployment]
     #
     def initialize(params)
 
       super
+
+      @client_manager = params[:client_manager]
 
       @api_response_data = {}
       @token_id = nil
@@ -57,6 +60,32 @@ module TokenManagement
         success_with_data(@api_response_data)
 
       end
+    end
+
+    # validate
+    #
+    # * Author: Kedar
+    # * Date: 22/02/2019
+    # * Reviewed By: Puneet
+    #
+    # @return [Result::Base]
+    #
+    def validate
+      r = super
+      return r unless r.success?
+
+      r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        {client_manager: @client_manager}).perform
+
+      unless r.success?
+        return error_with_data(
+          's_tm_sd_1',
+          'token_deploy_not_allowed',
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      success
     end
 
 

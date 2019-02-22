@@ -152,6 +152,7 @@
 'TokenManagement::InsertTokenDetails':
   :mandatory:
     - :client_id
+    - :client_manager
     - :name
     - :symbol
     - :conversion_factor
@@ -159,6 +160,7 @@
 'TokenManagement::StartDeployment':
   :mandatory:
     - :client_id
+    - :client_manager
   :optional:
 'TokenManagement::GetDeploymentDetail':
   :mandatory:
@@ -204,11 +206,13 @@
 'ClientManagement::ApiCredentials::Rotate':
   :mandatory:
     - :client_id
+    - :client_manager
   :optional:
     - :buffer_time
 'ClientManagement::ApiCredentials::Deactivate':
   :mandatory:
     - :client_id
+    - :client_manager
   :optional:
 'ClientManagement::IsWhitelistedForMainEnv':
   :mandatory:

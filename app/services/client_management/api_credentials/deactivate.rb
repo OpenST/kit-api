@@ -11,12 +11,14 @@ module ClientManagement
       # * Reviewed By:
       #
       # @params [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
+      # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
       # @return [ClientManagement::ApiCredentials::Deactivate]
       #
       def initialize(params)
         super
         @client_id = params[:client_id]
+        @client_manager = params[:client_manager]
 
         @deactivated_api_key = nil
       end
@@ -63,6 +65,32 @@ module ClientManagement
 
         success
 
+      end
+
+      # validate
+      #
+      # * Author: Kedar
+      # * Date: 22/02/2019
+      # * Reviewed By: Puneet
+      #
+      # @return [Result::Base]
+      #
+      def validate
+        r = super
+        return r unless r.success?
+
+        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+          {client_manager: @client_manager}).perform
+
+        unless r.success?
+          return error_with_data(
+            's_cm_ac_d_1',
+            'api_key_edit_not_allowed',
+            GlobalConstant::ErrorAction.default
+          )
+        end
+
+        success
       end
 
       # Fetch id to delete
