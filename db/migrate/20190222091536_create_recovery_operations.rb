@@ -6,7 +6,7 @@ class CreateRecoveryOperations < DbMigrationConnection
         t.column :token_id, :integer, null: false
         t.column :user_id, :string, null: false
         t.column :kind, :tinyint, null: false
-        t.column :workflow_id, :integer, null: false
+        t.column :workflow_id, :integer, null: false, default: 0
         t.column :delayed_recovery_at, :integer, null: false, default: 0
         t.column :status, :tinyint, null: false
         t.timestamps
