@@ -105,7 +105,7 @@ module TokenManagement
       unless r.success?
         return error_with_data(
           's_tm_itd_1',
-          'token_deploy_not_allowed',
+          'unauthorized_to_token_deploy',
           GlobalConstant::ErrorAction.default
         )
       end
