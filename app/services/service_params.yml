@@ -127,6 +127,7 @@
     - :email
   :optional:
     - :token_users_shard_number
+    - :balance_shard_number
     - :config_group_id
 'FetchGoTo':
   :mandatory:
