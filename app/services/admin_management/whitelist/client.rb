@@ -179,7 +179,7 @@ module AdminManagement
         else
           config = {}
           config['config_group_id'] = @config_group_id if @config_group_id.present?
-          wd.config['balance_shard_number'] = @balance_shard_number if @balance_shard_number.present?
+          config['balance_shard_number'] = @balance_shard_number if @balance_shard_number.present?
           config['token_users_shard_number'] = @token_users_shard_number if @token_users_shard_number.present?
           ClientPreProvisioning.create!(client_id: @client_id, config: config)
         end
