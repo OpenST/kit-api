@@ -100,7 +100,7 @@ module TokenManagement
       r = super
       return r unless r.success?
 
-      if @token[:name].blank? || @token[:symbol].blank? || @token[:conversion_factor].blank? || @token[:decimal].blank? || @token[:status] != GlobalConstant::Token.not_deployed
+      if @token[:name].blank? || @token[:symbol].blank? || @token[:conversion_factor].blank? || @token[:decimal].blank? || @token[:status] != GlobalConstant::ClientToken.not_deployed
         return error_with_data(
             's_tm_sd_2',
             'token_deploy_not_allowed',
