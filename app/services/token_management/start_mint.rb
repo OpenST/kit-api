@@ -9,6 +9,13 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Hash] client_manager (mandatory) - logged in client manager object
+    # @params [String] approve_transaction_hash (mandatory)
+    # @params [String] request_stake_transaction_hash (mandatory)
+    # @params [String] staker_address (mandatory)
+    # @params [String] fe_ost_to_stake (mandatory)
+    # @params [String] fe_bt_to_mint (mandatory)
+    #
     #
     # @return [TokenManagement::StartMint]
     #
@@ -16,6 +23,7 @@ module TokenManagement
 
       super
 
+      @client_manager = params[:client_manager]
       @approve_tx_hash = params[:approve_transaction_hash]
       @request_stake_tx_hash = params[:request_stake_transaction_hash]
       @staker_address = params[:staker_address]
@@ -79,6 +87,32 @@ module TokenManagement
           'tm_sm_1',
           'invalid_api_params',
           validation_errors,
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      success
+    end
+
+    # validate
+    #
+    # * Author: Kedar
+    # * Date: 22/02/2019
+    # * Reviewed By: Puneet
+    #
+    # @return [Result::Base]
+    #
+    def validate
+      r = super
+      return r unless r.success?
+
+      r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        {client_manager: @client_manager}).perform
+
+      unless r.success?
+        return error_with_data(
+          's_tm_sm_1',
+          'mint_not_allowed',
           GlobalConstant::ErrorAction.default
         )
       end
