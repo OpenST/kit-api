@@ -176,6 +176,7 @@
     - :request_stake_transaction_hash
     - :staker_address
     - :client_id
+    - :client_manager
     - :fe_ost_to_stake
     - :fe_bt_to_mint
 'WalletAddressesManagement::GetAddresses':
