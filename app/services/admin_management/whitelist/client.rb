@@ -12,6 +12,7 @@ module AdminManagement
       #
       # @params [String] email (mandatory) - Email
       # @params [Integer] token_users_shard_number (optional) - shard number for token
+      # @params [Integer] balance_shard_number (optional) -
       # @params [Integer] config_group_id (optional) - config group id
       #
       # @return [AdminManagement::Whitelist::Client]
@@ -20,6 +21,7 @@ module AdminManagement
         super
         @email = @params[:email]
         @token_users_shard_number = @params[:token_users_shard_number]
+        @balance_shard_number = @params[:balance_shard_number]
         @config_group_id = @params[:config_group_id]
         @client_id = nil
       end
@@ -172,10 +174,12 @@ module AdminManagement
         if wd.present?
           wd.config['config_group_id'] = @config_group_id if @config_group_id.present?
           wd.config['token_users_shard_number'] = @token_users_shard_number if @token_users_shard_number.present?
+          wd.config['balance_shard_number'] = @balance_shard_number if @balance_shard_number.present?
           wd.save!
         else
           config = {}
           config['config_group_id'] = @config_group_id if @config_group_id.present?
+          config['balance_shard_number'] = @balance_shard_number if @balance_shard_number.present?
           config['token_users_shard_number'] = @token_users_shard_number if @token_users_shard_number.present?
           ClientPreProvisioning.create!(client_id: @client_id, config: config)
         end

@@ -127,6 +127,7 @@
     - :email
   :optional:
     - :token_users_shard_number
+    - :balance_shard_number
     - :config_group_id
 'FetchGoTo':
   :mandatory:
@@ -152,6 +153,7 @@
 'TokenManagement::InsertTokenDetails':
   :mandatory:
     - :client_id
+    - :client_manager
     - :name
     - :symbol
     - :conversion_factor
@@ -159,6 +161,7 @@
 'TokenManagement::StartDeployment':
   :mandatory:
     - :client_id
+    - :client_manager
   :optional:
 'TokenManagement::GetDeploymentDetail':
   :mandatory:
@@ -174,6 +177,7 @@
     - :request_stake_transaction_hash
     - :staker_address
     - :client_id
+    - :client_manager
     - :fe_ost_to_stake
     - :fe_bt_to_mint
 'WalletAddressesManagement::GetAddresses':
@@ -204,11 +208,13 @@
 'ClientManagement::ApiCredentials::Rotate':
   :mandatory:
     - :client_id
+    - :client_manager
   :optional:
     - :buffer_time
 'ClientManagement::ApiCredentials::Deactivate':
   :mandatory:
     - :client_id
+    - :client_manager
   :optional:
 'ClientManagement::IsWhitelistedForMainEnv':
   :mandatory:

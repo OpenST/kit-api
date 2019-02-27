@@ -9,12 +9,15 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Hash] client_manager (mandatory) - logged in client manager object
     #
     # @return [TokenManagement::StartDeployment]
     #
     def initialize(params)
 
       super
+
+      @client_manager = params[:client_manager]
 
       @api_response_data = {}
       @token_id = nil
@@ -43,8 +46,6 @@ module TokenManagement
         r = add_token_to_response
         return r unless r.success?
 
-        @token_id = @token[:id]
-
         r = direct_request_to_saas_api
         return r unless r.success?
 
@@ -59,6 +60,71 @@ module TokenManagement
       end
     end
 
+    # validate
+    #
+    # * Author: Kedar
+    # * Date: 22/02/2019
+    # * Reviewed By: Puneet
+    #
+    # @return [Result::Base]
+    #
+    def validate
+      r = super
+      return r unless r.success?
+
+      r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        {client_manager: @client_manager}).perform
+
+      unless r.success?
+        return error_with_data(
+          's_tm_sd_1',
+          'unauthorized_to_token_deploy',
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      success
+
+    end
+
+    # validate token
+    #
+    # * Author: Puneet
+    # * Date: 22/02/2019
+    # * Reviewed By: Alpesh
+    #
+    # @return [Result::Base]
+    #
+    def fetch_and_validate_token
+
+      r = super
+      return r unless r.success?
+
+      if @token[:name].blank? || @token[:symbol].blank? || @token[:conversion_factor].blank? || @token[:decimal].blank? || @token[:status] != GlobalConstant::ClientToken.not_deployed
+        return error_with_data(
+            's_tm_sd_2',
+            'token_deploy_not_allowed',
+            GlobalConstant::ErrorAction.default
+        )
+      end
+
+      @token_id = @token[:id]
+
+      addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([@token_id]).fetch
+
+      owner_address = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind]
+
+      if owner_address.blank?
+        return error_with_data(
+            's_tm_sd_3',
+            'token_deploy_not_allowed',
+            GlobalConstant::ErrorAction.default
+        )
+      end
+
+      success
+
+    end
 
     # Direct request to saas api
     #

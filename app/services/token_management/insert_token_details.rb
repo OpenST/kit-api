@@ -12,6 +12,7 @@ module TokenManagement
     # @params [String] name (mandatory) - Token name
     # @params [String] symbol (mandatory) - Token symbol
     # @params [String] conversion_factor (mandatory) - Conversion factor
+    # @params [Hash] client_manager (mandatory) - logged in client manager object
     #
     # @return [TokenManagement::InsertTokenDetails]
     #
@@ -19,6 +20,7 @@ module TokenManagement
 
       super
 
+      @client_manager = params[:client_manager]
       @name = @params[:name]
       @symbol = @params[:symbol]
       @conversion_factor = @params[:conversion_factor]
@@ -83,6 +85,32 @@ module TokenManagement
 
       success
 
+    end
+
+    # validate
+    #
+    # * Author: Kedar
+    # * Date: 22/02/2019
+    # * Reviewed By: Puneet
+    #
+    # @return [Result::Base]
+    #
+    def validate
+      r = super
+      return r unless r.success?
+
+      r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        {client_manager: @client_manager}).perform
+
+      unless r.success?
+        return error_with_data(
+          's_tm_itd_1',
+          'unauthorized_to_token_deploy',
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      success
     end
 
 

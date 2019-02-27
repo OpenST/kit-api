@@ -177,7 +177,7 @@ module WalletAddressesManagement
       clientWalletAddress = ClientWalletAddress.where('address = ?' , @owner_address).first
 
       if clientWalletAddress.present?
-        if clientWalletAddress.client_id != @client_id
+        if clientWalletAddress.client_id != @client_id || clientWalletAddress.sub_environment != GlobalConstant::Base.sub_environment_name
           return validation_error(
             'cm_vea_4',
             'already_associated',

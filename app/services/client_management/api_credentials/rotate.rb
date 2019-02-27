@@ -12,12 +12,14 @@ module ClientManagement
       #
       # @params [Integer] client_id (mandatory) -  client id
       # @params [Integer] buffer_time (optional) - in minutes time till which old keys could still be used
+      # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
       # @return [ClientManagement::ApiCredentials::Rotate]
       #
       def initialize(params)
         super
         @client_id = @params[:client_id]
+        @client_manager = params[:client_manager]
         @buffer_time = @params[:buffer_time]
       end
 
@@ -76,6 +78,32 @@ module ClientManagement
 
         success
 
+      end
+
+      # validate
+      #
+      # * Author: Kedar
+      # * Date: 22/02/2019
+      # * Reviewed By: Puneet
+      #
+      # @return [Result::Base]
+      #
+      def validate
+        r = super
+        return r unless r.success?
+
+        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+          {client_manager: @client_manager}).perform
+
+        unless r.success?
+          return error_with_data(
+            's_cm_ac_r_1',
+            'api_key_edit_not_allowed',
+            GlobalConstant::ErrorAction.default
+          )
+        end
+
+        success
       end
 
       # Mark existing keys as to be expiring soon

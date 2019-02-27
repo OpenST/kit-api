@@ -5,6 +5,7 @@ module GlobalConstant
     class << self
 
       #Workflow step status: start
+
       def queued_status
         'queued'
       end
@@ -174,6 +175,7 @@ module GlobalConstant
       def deploy_token_rules
         'deployTokenRules'
       end
+
       def save_token_rules
         'saveTokenRules'
       end
@@ -181,6 +183,7 @@ module GlobalConstant
       def deploy_token_holder_master_copy
         'deployTokenHolderMasterCopy'
       end
+
       def save_token_holder_master_copy
         'saveTokenHolderMasterCopy'
       end
@@ -188,6 +191,7 @@ module GlobalConstant
       def deploy_user_wallet_factory
         'deployUserWalletFactory'
       end
+
       def save_user_wallet_factory
         'saveUserWalletFactory'
       end
@@ -195,6 +199,7 @@ module GlobalConstant
       def deploy_gnosis_safe_multi_sig_master_copy
         'deployGnosisSafeMultiSigMasterCopy'
       end
+
       def save_gnosis_safe_multi_sig_master_copy
         'saveGnosisSafeMultiSigMasterCopy'
       end
@@ -202,6 +207,7 @@ module GlobalConstant
       def deploy_pricer_rule
         'deployPricerRule'
       end
+
       def save_pricer_rule
         'savePricerRule'
       end
@@ -209,6 +215,7 @@ module GlobalConstant
       def register_pricer_rule
         'registerPricerRule'
       end
+
       def verify_register_pricer_rule
         'verifyRegisterPricerRule'
       end
@@ -216,6 +223,7 @@ module GlobalConstant
       def add_price_oracle_in_pricer_rule
         'addPriceOracleInPricerRule'
       end
+
       def verify_add_price_oracle_in_pricer_rule
         'verifyAddPriceOracleInPricerRule'
       end
@@ -223,16 +231,23 @@ module GlobalConstant
       def set_accepted_margin_in_pricer_rule
         'setAcceptedMarginInPricerRule'
       end
+
       def verify_set_accepted_margin_in_pricer_rule
         'verifySetAcceptedMarginInPricerRule'
+      end
+
+      def post_token_rules_deploy
+        'post_token_rules_deploy'
       end
       
       def deploy_proxy_factory
         'deployProxyFactory'
       end
+
       def save_proxy_factory
         'saveProxyFactory'
       end
+
       def initialize_company_token_holder_in_db
         'initializeCompanyTokenHolderInDb'
       end
@@ -240,6 +255,7 @@ module GlobalConstant
       def create_company_wallet
         'createCompanyWallet'
       end
+
       def verify_create_company_wallet
         'verifyCreateCompanyWallet'
       end
@@ -247,13 +263,23 @@ module GlobalConstant
       def set_internal_actor_for_companyTH_in_UBT
         'setInternalActorForCompanyTHInUBT'
       end
+
       def verify_set_internal_actor_for_companyTH_in_UBT
         'verifySetInternalActorForCompanyTHInUBT'
+      end
+
+      def generate_tx_worker_addresses
+        'generate_tx_worker_addresses'
+      end
+
+      def fund_ex_tx_workers
+        'fund_ex_tx_workers'
       end
       
       def set_internal_actor_for_TR_in_UBT
         'setInternalActorForTRInUBT'
       end
+
       def verify_set_internal_actor_for_TR_in_UBT
         'verifySetInternalActorForTRInUBT'
       end
