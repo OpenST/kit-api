@@ -8,10 +8,15 @@ unauthorized_access_response:
   code: "UNAUTHORIZED"
   message: "Unauthorized"
 
-token_deploy_not_allowed:
+unauthorized_to_token_deploy:
   http_code: 401
   code: "UNAUTHORIZED"
-  message: ""
+  message: "Not authorised to perform this action"
+
+token_deploy_not_allowed:
+  http_code: 422
+  code: "INVALID_REQUEST"
+  message: "Token Deployment prerequists not completed"
 
 api_key_edit_not_allowed:
   http_code: 401

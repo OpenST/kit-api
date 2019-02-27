@@ -2,6 +2,12 @@ class CreateEmailServiceApiCallHooksSaasShared < DbMigrationConnection
 
   def up
 
+    # Delete old table from kit_big database
+    run_migration_for_db(DbConnection::KitBigSubenv) do
+      drop_table :email_service_api_call_hooks
+    end
+
+     # Create new table in kit_saas_big database
     run_migration_for_db(DbConnection::KitSaasBigSubenv) do
 
       create_table :email_service_api_call_hooks do |t|

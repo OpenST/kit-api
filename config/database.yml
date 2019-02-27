@@ -89,6 +89,10 @@ kit_saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *kit_saas_big_subenv
   database: kit_saas_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
+kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *kit_big_subenv
+  database: kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
 config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_subenv
   database: config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>

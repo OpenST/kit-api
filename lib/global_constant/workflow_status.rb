@@ -38,21 +38,21 @@ module GlobalConstant
 
       def economy_setup_config
         @escnf ||= begin
-          template = ERB.new File.new("#{Rails.root}/config/economy_setup.yml").read
+          template = ERB.new File.new("#{Rails.root}/config/workflow_step/economy_setup.yml").read
           YAML.load(template.result(binding))
         end
       end
 
       def bt_stake_and_mint_config
         @btsnmcnf ||= begin
-          template = ERB.new File.new("#{Rails.root}/config/bt_stake_and_mint.yml").read
+          template = ERB.new File.new("#{Rails.root}/config/workflow_step/bt_stake_and_mint.yml").read
           YAML.load(template.result(binding))
         end
       end
 
       def grant_eth_ost_config
         @grantethost ||= begin
-          template = ERB.new File.new("#{Rails.root}/config/grant_eth_ost.yml").read
+          template = ERB.new File.new("#{Rails.root}/config/workflow_step/grant_eth_ost.yml").read
           YAML.load(template.result(binding))
         end
       end
