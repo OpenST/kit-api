@@ -9,7 +9,7 @@ class CreateTransactionMeta < DbMigrationConnection
         t.column :token_id, :integer, null: false
         t.column :status, :tinyint, limit: 1, null: false
         t.column :kind, :tinyint, limit: 1, null: false
-        t.column :retry_count, :integer, null: true
+        t.column :retry_count, :integer, default: 0
         t.column :next_action_at, :integer, null: true
         t.column :lock_id, :decimal, :precision => 22, :scale => 5, null: true
         t.column :debug_params, :text
