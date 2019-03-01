@@ -13,7 +13,7 @@ class CreateRecoveryOperations < DbMigrationConnection
       end
 
       add_index :recovery_operations, [:token_id, :user_id], name: 'tid_uid_indx'
-      add_index :recovery_operations, [:delayed_recovery_at], name: 'index_delayed_recovery_at'
+      add_index :recovery_operations, [:execute_after_blocks], name: 'index_execute_after_blocks'
     end
   end
 
