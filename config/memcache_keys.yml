@@ -56,6 +56,12 @@ keys:
       expiry_in_seconds: 86400
       <<: *kit_saas_subenv
 
+  token_company_users:
+      details:
+        key_template: 'tcu_%{token_id}'
+        expiry_in_seconds: 86400
+        <<: *kit_saas_subenv
+
   ost_price_points:
     default:
       key_template: 'c_oppd_def'

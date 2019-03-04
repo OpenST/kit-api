@@ -28,8 +28,8 @@ class TokenCompanyUser < DbConnection::KitSaasSubenv
   def fetch_all_uuids(params)
     @token_ids = params[:token_ids]
 
-    @return_data = []
-    company_uuids = TokenCompanyUsers.where(token_id: @token_ids).all
+    @return_data = {}
+    company_uuids = TokenCompanyUser.where(token_id: @token_ids).all
 
     company_uuids.each do |token_address_row|
       @return_data[token_address_row.token_id] ||= []
