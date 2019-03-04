@@ -56,18 +56,59 @@ class ChainAddresses < DbConnection::KitSaasSubenv
 
   # Format data to a format which goes into cache
   #
-  # * Author: Dhananjay
-  # * Date: 20/12/2018
+  # * Author: Shlok
+  # * Date: 04/03/2019
   # * Reviewed By:
   #
   # @return [Hash]
   #
   def formated_cache_data
     {
-      token_id: token_id,
+      deployed_chain_id: deployed_chain_id,
       kind: kind,
+      deployed_chain_kind: deployed_chain_kind,
       address: address,
       known_address_id: known_address_id
     }
+  end
+
+  # Fetch data from db.
+  #
+  # * Author: Dhananjay
+  # * Date: 20/12/2018
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
+  def fetch_chain_addresses(params)
+    @chain_id = params[:chain_id]
+
+    @return_data = {}
+    chain_addresses = ChainAddresses.where(associated_aux_chain_id: @chain_id, status: GlobalConstant::TokenAddresses.active_status).all
+
+    chain_addresses.each do |chain_address_row|
+
+      address_kind = chain_address_row.kind
+
+      formatted_data = {
+        deployedChainId: chain_address_row.deployed_chain_id,
+        deployedChainKind: chain_address_row.deployed_chain_kind,
+        address: chain_address_row.address,
+        knownAddressId: chain_address_row.known_address_id
+      }
+
+      if GlobalConstant::ChainAddresses.non_unique_kinds.include? address_kind
+        if !@return_data[address_kind]
+          @return_data[address_kind] = []
+        end
+        @return_data[address_kind].push(formatted_data)
+      end
+      @return_data[address_kind] = formatted_data
+
+    end
+
+    success_with_data(@return_data)
+
+
   end
 end

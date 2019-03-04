@@ -62,6 +62,12 @@ keys:
         expiry_in_seconds: 86400
         <<: *kit_saas_subenv
 
+  chain_addresses:
+      details:
+        key_template: 'ch_addr_%{chain_id}'
+        expiry_in_seconds: 86400
+        <<: *kit_saas_subenv
+
   staker_whitelisted_address:
       details:
         key_template: 'swa_%{token_id}'
