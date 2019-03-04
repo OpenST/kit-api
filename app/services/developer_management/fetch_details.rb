@@ -159,18 +159,18 @@ module DeveloperManagement
 
       token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
 
-      @addresses[:token_holder_address] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract] || ""
-      @addresses[:utility_branded_token_contract] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract] || ""
-      @addresses[:branded_token_contract] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.branded_token_contract] || ""
-      @addresses[:erc20_contract_address] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.simple_stake_contract] || ""
+      @addresses['token_holder_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract] || ""
+      @addresses['utility_branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract] || ""
+      @addresses['branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.branded_token_contract] || ""
+      @addresses['erc20_contract_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.simple_stake_contract] || ""
 
       company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
 
-      @addresses[:company_user_id] = company_user_ids[token_id].first || ""
+      @addresses['company_user_id'] = company_user_ids[token_id].first || ""
 
       staker_whitelisted_addresses = KitSaasSharedCacheManagement::StakerWhitelistedAddress.new([token_id]).fetch || {}
 
-      @addresses[:gateway_composer_address] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
+      @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
 
       success
 
