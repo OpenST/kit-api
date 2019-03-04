@@ -54,7 +54,7 @@ module DeveloperManagement
           price_points: @price_points,
           client_manager: @client_manager,
           sub_env_payloads: @sub_env_payload_data,
-          addresses: @addresses
+          developer_page_addresses: @addresses
         }
 
         success_with_data(@api_response_data)
