@@ -46,11 +46,15 @@ module DeveloperManagement
         r = fetch_sub_env_payloads
         return r unless r.success?
 
+        r = fetch_addresses
+        return r unless r.success?
+
         @api_response_data = {
           token: @token,
           price_points: @price_points,
           client_manager: @client_manager,
-          sub_env_payloads: @sub_env_payload_data
+          sub_env_payloads: @sub_env_payload_data,
+          addresses: @addresses
         }
 
         success_with_data(@api_response_data)
@@ -138,6 +142,38 @@ module DeveloperManagement
       @sub_env_payload_data = r.data[:sub_env_payloads]
 
       success
+    end
+
+    # Fetch the token addresses
+    #
+    # * Author: Shlok
+    # * Date: 04/03/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_addresses
+      token_id = @token[:id]
+
+      @addresses = {}
+
+      token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
+
+      @addresses[:token_holder_address] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract] || ""
+      @addresses[:utility_branded_token_contract] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract] || ""
+      @addresses[:branded_token_contract] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.branded_token_contract] || ""
+      @addresses[:erc20_contract_address] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.simple_stake_contract] || ""
+
+      company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
+
+      @addresses[:company_user_id] = company_user_ids[token_id].first || ""
+
+      staker_whitelisted_addresses = KitSaasSharedCacheManagement::StakerWhitelistedAddress.new([token_id]).fetch || {}
+
+      @addresses[:gateway_composer_address] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
+
+      success
+
     end
 
   end
