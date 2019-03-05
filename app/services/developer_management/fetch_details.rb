@@ -162,7 +162,11 @@ module DeveloperManagement
       @addresses = {}
 
       token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
-      aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
+      if token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].nil?
+        return success
+      else
+        aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
+      end
 
       @addresses['token_holder_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address] || ""
       @addresses['utility_branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address] || ""
