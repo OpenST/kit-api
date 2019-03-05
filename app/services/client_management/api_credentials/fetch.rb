@@ -8,7 +8,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @params [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
       #
@@ -23,7 +23,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -47,7 +47,7 @@ module ClientManagement
       #
       # * Author: Ankit
       # * Date: 05/02/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -64,7 +64,7 @@ module ClientManagement
       #
       # * Author: Ankit
       # * Date: 05/02/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #

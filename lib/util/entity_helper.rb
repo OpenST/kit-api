@@ -163,6 +163,24 @@ module Util
                                     GlobalConstant::ErrorAction.default
                                 )
       end
+
+      #  Fetch chain Id for token id.
+      #
+      # * Author: Shlok
+      # * Date: 05/03/2019
+      # * Reviewed By:
+      #
+      # @param [String] token_id (mandatory) - token id
+      #
+      # @return [Result::Base]
+      #
+      def fetch_chain_id_for_token_id(token_id)
+        return token_not_found_response("l_u_eh_fciti_1") if token_id.blank?
+        token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
+        aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
+        return token_not_found_response("l_u_eh_fciti_2") if aux_chain_id.blank?
+        aux_chain_id
+      end
       
     end
 

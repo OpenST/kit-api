@@ -21,7 +21,7 @@ class WebController < ApplicationController
   #
   # * Author: Puneet
   # * Date: 07/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   # @params [String] cookie_name (mandatory)
   # @params [String] value (mandatory)
@@ -42,7 +42,7 @@ class WebController < ApplicationController
   #
   # * Author: Puneet
   # * Date: 07/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   # @params [String] cookie_name (mandatory)
   #
@@ -259,20 +259,17 @@ class WebController < ApplicationController
   #
   # * Author: Puneet
   # * Date: 07/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def append_csrf_token_in_params
     params[:authenticity_token] ||= request.headers.env['HTTP_X_CSRF_TOKEN']
   end
 
-
-  private
-
   # Verifies if the request is xhr
   #
   # * Author: Ankit
   # * Date: 05/02/2019
-  # * Reviewed By:
+  # * Reviewed By: Puneet
   #
   def verify_is_xhr
 
@@ -285,17 +282,6 @@ class WebController < ApplicationController
       render_api_response(error_response)
     end
 
-  end
-
-  # Check if Super Admin role
-  #
-  # * Author: Puneet
-  # * Date: 11/12/2018
-  # * Reviewed By:
-  #
-  def verify_super_admin_role
-    service_response = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(params).perform
-    render_api_response(service_response) unless service_response.success?
   end
 
 end

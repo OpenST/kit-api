@@ -8,36 +8,36 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @params [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
       # @params [Integer] client_id (mandatory) - id of the client to which invite is for
       # @params [String] email (mandatory) - the email of the user which is to be invited
       # @params [Integer] is_super_admin (mandatory) - the privilege of the admin once the invite is accepted. 1 => super_admin, 0 => admin
+      # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
       # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
       def initialize(params)
-
         super
 
         @email = @params[:email]
         @inviter_manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
         @is_super_admin = @params[:is_super_admin].to_s
+        @client_manager = @params[:client_manager]
 
         @invitee_manager = nil
         @invitee_client_manager = nil
         @invite_token = nil
         @authentication_salt_hash = nil
-
       end
 
       # Perform
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -80,7 +80,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -97,7 +97,7 @@ module ManagerManagement
         validation_errors.push('invalid_is_super_admin') unless Util::CommonValidator.is_boolean_string?(@is_super_admin)
 
         return validation_error(
-          'mm_su_ia_1',
+          's_mm_sa_ia_1',
           'invalid_api_params',
           validation_errors,
           GlobalConstant::ErrorAction.default
@@ -107,11 +107,37 @@ module ManagerManagement
 
       end
 
+      # validate
+      #
+      # * Author: Kedar
+      # * Date: 22/02/2019
+      # * Reviewed By: Puneet
+      #
+      # @return [Result::Base]
+      #
+      def validate
+        r = super
+        return r unless r.success?
+
+        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+          {client_manager: @client_manager}).perform
+
+        unless r.success?
+          return error_with_data(
+            's_mm_sa_ia_2',
+            'team_edit_not_allowed',
+            GlobalConstant::ErrorAction.default
+          )
+        end
+
+        success
+      end
+
       # create manager
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -139,7 +165,7 @@ module ManagerManagement
               if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
                 return validation_error(
-                  'mm_su_ia_2',
+                  's_mm_sa_ia_3',
                   'invalid_api_params',
                   ['was_current_client_associated_email'],
                   GlobalConstant::ErrorAction.default
@@ -154,20 +180,20 @@ module ManagerManagement
 
             # The invitee_manager IS currently associated with the client.
             return validation_error(
-              'mm_su_ia_3',
+              's_mm_sa_ia_4',
               'invalid_api_params',
               ['is_current_client_associated_email'],
               GlobalConstant::ErrorAction.default
             )
           else
 
-          # The invitee_manager is associated to some other client.
-          return validation_error(
-            'mm_su_ia_4',
-            'invalid_api_params',
-            ['already_client_associated_email'],
-            GlobalConstant::ErrorAction.default
-          )
+            # The invitee_manager is associated to some other client.
+            return validation_error(
+              's_mm_sa_ia_5',
+              'invalid_api_params',
+              ['already_client_associated_email'],
+              GlobalConstant::ErrorAction.default
+            )
 
           end
 
@@ -193,7 +219,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # Sets @authentication_salt_hash
       #
@@ -212,7 +238,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # Sets @invite_token
       #
@@ -259,7 +285,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 08/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -294,7 +320,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 08/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -309,6 +335,14 @@ module ManagerManagement
         success
       end
 
+      # Result type
+      #
+      # * Author: Puneet
+      # * Date: 08/12/2018
+      # * Reviewed By: Sunil
+      #
+      # @return [Symbol]
+      #
       def result_type
         :client_managers
       end

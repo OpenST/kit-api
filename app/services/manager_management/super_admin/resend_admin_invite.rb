@@ -8,32 +8,34 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @params [Integer] manager_id (mandatory) - id of the manager who is sending an invite to below email
       # @params [Integer] client_id (mandatory) - id of the client to which invite is for
       # @params [String] to_update_client_manager_id (mandatory) - id of the client_manager which is to be re-invited.
+      # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
       # @return [ManagerManagement::SuperAdmin::InviteAdmin]
       #
       def initialize(params)
-
         super
 
         @to_update_client_manager_id = @params[:to_update_client_manager_id]
         @inviter_manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
+        @client_manager = @params[:client_manager]
 
         @invitee_manager = nil
         @invite_token = nil
-
+        @to_update_client_manager = nil
+        @admin_invite_privilege = nil
       end
 
       # Perform
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -68,7 +70,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -77,14 +79,14 @@ module ManagerManagement
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         return validation_error(
-          'mm_su_rai_1',
+          's_mm_sa_rai_1',
           'manager_not_invited',
           [],
           GlobalConstant::ErrorAction.default
         ) if @to_update_client_manager.blank?
 
         return validation_error(
-          'mm_su_rai_2',
+          's_mm_sa_rai_2',
           'unauthorized_access_response',
           [],
           GlobalConstant::ErrorAction.default
@@ -94,11 +96,37 @@ module ManagerManagement
 
       end
 
-      # Validate and sanitize
+      # validate
+      #
+      # * Author: Kedar
+      # * Date: 22/02/2019
+      # * Reviewed By: Puneet
+      #
+      # @return [Result::Base]
+      #
+      def validate
+        r = super
+        return r unless r.success?
+
+        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+          {client_manager: @client_manager}).perform
+
+        unless r.success?
+          return error_with_data(
+            's_mm_sa_rai_3',
+            'team_edit_not_allowed',
+            GlobalConstant::ErrorAction.default
+          )
+        end
+
+        success
+      end
+
+      # Validate invitee manager exists or not
       #
       # * Author: Shlok
       # * Date: 10/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -118,7 +146,7 @@ module ManagerManagement
             # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
             # previously associated with the client.
             return validation_error(
-              'mm_su_rai_3',
+              's_mm_sa_rai_4',
               'invalid_api_params',
               ['was_current_client_associated_deleted_manager'],
               GlobalConstant::ErrorAction.default
@@ -131,7 +159,7 @@ module ManagerManagement
 
             # The invitee_manager IS currently associated with the client and active.
             return validation_error(
-              'mm_su_rai_4',
+              's_mm_sa_rai_5',
               'invalid_api_params',
               ['is_active_current_client_associated_manager'],
               GlobalConstant::ErrorAction.default
@@ -150,7 +178,7 @@ module ManagerManagement
 
           # The clientId is invalid.
           return validation_error(
-            'mm_su_rai_5',
+            's_mm_sa_rai_6',
             'invalid_api_params',
             ['already_client_associated_manager'],
             GlobalConstant::ErrorAction.default
@@ -166,7 +194,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # Sets @invite_token
       #
@@ -209,7 +237,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 08/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #

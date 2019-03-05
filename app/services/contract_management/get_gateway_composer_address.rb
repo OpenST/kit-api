@@ -17,8 +17,8 @@ module ContractManagement
 
       @api_response_data = {}
 
-      @staker_address = params[:staker_address]
-      @client_id = params[:client_id]
+      @staker_address = @params[:staker_address]
+      @client_id = @params[:client_id]
 
 
     end

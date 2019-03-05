@@ -89,24 +89,28 @@
     - :client_id
     - :manager_id
     - :is_super_admin
+    - :client_manager
   :optional:
 'ManagerManagement::SuperAdmin::DeleteAdmin':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
     - :manager_id
+    - :client_manager
   :optional:
 'ManagerManagement::SuperAdmin::ResetMfa':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
     - :manager_id
+    - :client_manager
   :optional:
 'ManagerManagement::SuperAdmin::ResendAdminInvite':
   :mandatory:
     - :manager_id
     - :client_id
     - :to_update_client_manager_id
+    - :client_manager
   :optional:
 'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
   :mandatory:
@@ -114,6 +118,7 @@
     - :client_id
     - :manager_id
     - :is_super_admin
+    - :client_manager
   :optional:
 'ManagerManagement::Team':
    :mandatory:

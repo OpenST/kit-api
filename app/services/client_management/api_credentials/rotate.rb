@@ -8,7 +8,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @params [Integer] client_id (mandatory) -  client id
       # @params [Integer] buffer_time (optional) - in minutes time till which old keys could still be used
@@ -19,7 +19,7 @@ module ClientManagement
       def initialize(params)
         super
         @client_id = @params[:client_id]
-        @client_manager = params[:client_manager]
+        @client_manager = @params[:client_manager]
         @buffer_time = @params[:buffer_time]
       end
 
@@ -27,8 +27,9 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
+      # @return [Result::Base]
       #
       def perform
 
@@ -55,7 +56,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -110,7 +111,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -145,7 +146,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
