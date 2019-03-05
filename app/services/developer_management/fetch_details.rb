@@ -1,4 +1,5 @@
 module DeveloperManagement
+
   class FetchDetails < ServicesBase
 
     # Initialize
@@ -44,9 +45,6 @@ module DeveloperManagement
         r = fetch_token_details
         return r unless r.success?
 
-        r = fetch_default_price_points
-        return r unless r.success?
-
         r = fetch_sub_env_payloads
         return r unless r.success?
 
@@ -55,7 +53,6 @@ module DeveloperManagement
 
         @api_response_data = {
           token: @token,
-          price_points: @price_points,
           client_manager: @client_manager,
           sub_env_payloads: @sub_env_payload_data,
           developer_page_addresses: @addresses
@@ -104,30 +101,6 @@ module DeveloperManagement
       end
 
       @token = token
-      success
-    end
-
-    # Fetch default price points
-    #
-    #
-    # * Author: Ankit
-    # * Date: 04/02/2019
-    # * Reviewed By: Sunil
-    #
-    # @return [Result::Base]
-    def fetch_default_price_points
-      price_points = KitSaasSharedCacheManagement::OstPricePointsDefault.new.fetch
-
-      if price_points.blank?
-        return error_with_data(
-          'a_s_dm_fd_2',
-          'something_went_wrong',
-          GlobalConstant::ErrorAction.default
-        )
-      end
-
-      @price_points = price_points
-
       success
     end
 
@@ -185,7 +158,6 @@ module DeveloperManagement
       @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
 
       success
-
     end
 
   end
