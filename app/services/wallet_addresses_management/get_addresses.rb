@@ -127,16 +127,16 @@ module WalletAddressesManagement
 
     def format_response_data(addresses_data)
       origin_addresses = {}
-      origin_addresses[:whitelisted] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind] ||= []
-      origin_addresses[:workers] = addresses_data[@token_id][GlobalConstant::TokenAddresses.origin_worker_address_kind] ||= []
-      origin_addresses[:owner] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind]
-      origin_addresses[:admin] = addresses_data[@token_id][GlobalConstant::TokenAddresses.origin_admin_address_kind]
+      origin_addresses[:whitelisted] = [addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]] ||= []
+      origin_addresses[:workers] = addresses_data[@token_id][GlobalConstant::TokenAddresses.origin_worker_address_kind][:address] ||= []
+      origin_addresses[:owner] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]
+      origin_addresses[:admin] = addresses_data[@token_id][GlobalConstant::TokenAddresses.origin_admin_address_kind][:address]
 
       auxiliary_addresses = {}
-      auxiliary_addresses[:whitelisted] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind] ||= []
-      auxiliary_addresses[:workers] = addresses_data[@token_id][GlobalConstant::TokenAddresses.aux_worker_address_kind] ||= []
-      auxiliary_addresses[:owner] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind]
-      auxiliary_addresses[:admin] = addresses_data[@token_id][GlobalConstant::TokenAddresses.aux_admin_address_kind]
+      auxiliary_addresses[:whitelisted] = [addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]] ||= []
+      auxiliary_addresses[:workers] = addresses_data[@token_id][GlobalConstant::TokenAddresses.aux_worker_address_kind][:address] ||= []
+      auxiliary_addresses[:owner] = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]
+      auxiliary_addresses[:admin] = addresses_data[@token_id][GlobalConstant::TokenAddresses.aux_admin_address_kind][:address]
 
       sign_messages = {
         wallet_association: GlobalConstant::MessageToSign.wallet_association

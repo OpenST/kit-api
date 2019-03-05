@@ -62,7 +62,6 @@ class TokenAddresses < DbConnection::KitSaasSubenv
   #
   # @return [Hash]
   #
-
   def fetch_all_addresses(params)
     @token_ids = params[:token_ids]
 
@@ -71,12 +70,14 @@ class TokenAddresses < DbConnection::KitSaasSubenv
 
     token_addresses.each do |token_address_row|
       @return_data[token_address_row.token_id] ||= {}
+      @return_data[token_address_row.token_id][token_address_row.kind] ||= {}
       if GlobalConstant::TokenAddresses.unique_kinds.index(token_address_row.kind)
-        @return_data[token_address_row.token_id][token_address_row.kind] = token_address_row.address
+        @return_data[token_address_row.token_id][token_address_row.kind][:address] = token_address_row.address
       else
-        @return_data[token_address_row.token_id][token_address_row.kind] ||= []
-        @return_data[token_address_row.token_id][token_address_row.kind].push(token_address_row.address)
+        @return_data[token_address_row.token_id][token_address_row.kind][:address] ||= []
+        @return_data[token_address_row.token_id][token_address_row.kind][:address].push(token_address_row.address)
       end
+      @return_data[token_address_row.token_id][token_address_row.kind][:deployed_chain_id] = token_address_row.deployed_chain_id
     end
     success_with_data(@return_data)
   end
