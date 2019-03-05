@@ -8,34 +8,34 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @params [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
       # @params [Integer] client_id (mandatory) - id of the client who is deleting this admin
       # @params [String] to_update_client_manager_id (mandatory) - id of the client_manager who is to be updated
       # @params [Integer] is_super_admin (mandatory) - value to be set to. 1 => set, 0 => unset
+      # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
       # @return [ManagerManagement::SuperAdmin::UpdateSuperAdminRole]
       #
       def initialize(params)
-
         super
 
         @to_update_client_manager_id = @params[:to_update_client_manager_id]
         @manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
         @is_super_admin = @params[:is_super_admin]
+        @client_manager = @params[:client_manager]
 
         @manager_to_be_updated_obj = nil
         @to_update_client_manager = nil
-
       end
 
       # Perform
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -77,8 +77,8 @@ module ManagerManagement
       # Validate
       #
       # * Author: Puneet
-      # * Date: 15/01/2018
-      # * Reviewed By:
+      # * Date: 15/01/2019
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -93,7 +93,7 @@ module ManagerManagement
         validation_errors.push('invalid_is_super_admin') unless Util::CommonValidator.is_boolean_string?(@is_super_admin)
 
         return validation_error(
-          'mm_sa_usar_1',
+          's_mm_sa_usar_1',
           'invalid_api_params',
           validation_errors,
           GlobalConstant::ErrorAction.default
@@ -103,11 +103,37 @@ module ManagerManagement
 
       end
 
+      # validate
+      #
+      # * Author: Kedar
+      # * Date: 22/02/2019
+      # * Reviewed By: Puneet
+      #
+      # @return [Result::Base]
+      #
+      def validate
+        r = super
+        return r unless r.success?
+
+        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+          {client_manager: @client_manager}).perform
+
+        unless r.success?
+          return error_with_data(
+            's_mm_sa_usar_2',
+            'team_edit_not_allowed',
+            GlobalConstant::ErrorAction.default
+          )
+        end
+
+        success
+      end
+
       # Fetch manager to be deleted
       #
       # * Author: Puneet
-      # * Date: 15/01/2018
-      # * Reviewed By:
+      # * Date: 15/01/2019
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -116,14 +142,14 @@ module ManagerManagement
         @manager_to_be_updated_obj = Manager.where(id: @to_update_client_manager.manager_id).first
 
         return validation_error(
-            'mm_sa_usar_2',
+            's_mm_sa_usar_3',
             'resource_not_found',
             [],
             GlobalConstant::ErrorAction.default
         ) if @manager_to_be_updated_obj.blank?
 
         return validation_error(
-            'mm_sa_usar_3',
+            's_mm_sa_usar_4',
             'invalid_api_params',
             ['to_update_client_manager_id_inactive'],
             GlobalConstant::ErrorAction.default
@@ -137,7 +163,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -146,14 +172,14 @@ module ManagerManagement
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         return validation_error(
-          'mm_sa_usar_4',
+          's_mm_sa_usar_5',
           'resource_not_found',
           [],
           GlobalConstant::ErrorAction.default
         ) if @to_update_client_manager.blank?
 
         return validation_error(
-          'mm_sa_usar_5',
+          's_mm_sa_usar_6',
           'unauthorized_access_response',
           [],
           GlobalConstant::ErrorAction.default
@@ -167,7 +193,7 @@ module ManagerManagement
       #
       # * Author: Shlok
       # * Date: 09/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -178,7 +204,7 @@ module ManagerManagement
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
           # if trying to set a super admin as super admin.
           return validation_error(
-            'mm_sa_usar_6',
+            's_mm_sa_usar_7',
             'already_super_admin',
             [],
             GlobalConstant::ErrorAction.default
@@ -187,7 +213,7 @@ module ManagerManagement
         else
           # if trying to set an admin as admin.
           return validation_error(
-            'mm_sa_usar_7',
+            's_mm_sa_usar_8',
             'already_admin',
             [],
             GlobalConstant::ErrorAction.default
@@ -203,7 +229,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -223,6 +249,14 @@ module ManagerManagement
 
       end
 
+      # Result type
+      #
+      # * Author: Puneet
+      # * Date: 03/05/2018
+      # * Reviewed By: Sunil
+      #
+      # @return [Symbol]
+      #
       def result_type
         :client_managers
       end

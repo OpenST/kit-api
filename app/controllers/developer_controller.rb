@@ -6,7 +6,7 @@ class DeveloperController < WebController
   #
   # * Author: Ankit
   # * Date: 04/02/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def developer_get
     service_response = DeveloperManagement::FetchDetails.new(params).perform
@@ -17,20 +17,20 @@ class DeveloperController < WebController
   #
   # * Author: Ankit
   # * Date: 04/02/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def api_keys_get
     service_response = ClientManagement::ApiCredentials::Fetch.new(params).perform
     render_api_response(service_response)
   end
 
-  # Generate new api keys
+  # Generate new / Rotate api keys
   #
   # * Author: Ankit
   # * Date: 04/02/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
-  def api_keys_post
+  def api_keys_rotate
     service_response = ClientManagement::ApiCredentials::Rotate.new(params).perform
     render_api_response(service_response)
   end
@@ -39,9 +39,9 @@ class DeveloperController < WebController
   #
   # * Author: Ankit
   # * Date: 04/02/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
-  def api_keys_delete
+  def api_keys_deactivate
     service_response = ClientManagement::ApiCredentials::Deactivate.new(params).perform
     render_api_response(service_response)
   end

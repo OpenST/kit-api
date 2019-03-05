@@ -8,7 +8,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @params [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
       # @params [Hash] client_manager (mandatory) - logged in client manager object
@@ -17,8 +17,8 @@ module ClientManagement
       #
       def initialize(params)
         super
-        @client_id = params[:client_id]
-        @client_manager = params[:client_manager]
+        @client_id = @params[:client_id]
+        @client_manager = @params[:client_manager]
 
         @deactivated_api_key = nil
       end
@@ -27,7 +27,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -38,7 +38,7 @@ module ClientManagement
           r = validate_and_sanitize
           return r unless r.success?
 
-          r = fetch_id_to_delete
+          r = fetch_id_to_deactivate
           return r unless r.success?
 
           r = deactivate
@@ -54,7 +54,7 @@ module ClientManagement
       #
       # * Author: Puneet
       # * Date: 21/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -93,15 +93,15 @@ module ClientManagement
         success
       end
 
-      # Fetch id to delete
+      # Fetch id to deactivate
       #
       # * Author: Puneet
       # * Date: 05/02/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
-      def fetch_id_to_delete
+      def fetch_id_to_deactivate
         api_credentials = KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
 
         # only one key is present, we can not deactivate it

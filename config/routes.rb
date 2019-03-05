@@ -33,8 +33,8 @@ Rails.application.routes.draw do
   scope "#{GlobalConstant::Environment.url_prefix}/api/developer", controller: 'developer' do
     match '' => :developer_get, via: :GET
     match 'api-keys' => :api_keys_get, via: :GET
-    match 'api-keys' => :api_keys_post, via: :POST
-    match 'api-keys/delete' => :api_keys_delete, via: :POST
+    match 'api-keys' => :api_keys_rotate, via: :POST
+    match 'api-keys/delete' => :api_keys_deactivate, via: :POST
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup' do

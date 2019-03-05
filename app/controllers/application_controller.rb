@@ -17,7 +17,7 @@ class ApplicationController < ActionController::API
   #
   # * Author: Puneet
   # * Date: 11/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def not_found
 
@@ -47,7 +47,7 @@ class ApplicationController < ActionController::API
   #
   # * Author: Puneet
   # * Date: 01/02/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def check_service_statuses
 
@@ -89,7 +89,7 @@ class ApplicationController < ActionController::API
   #
   # * Author: Puneet
   # * Date: 07/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def render_api_response(service_response)
 
@@ -135,7 +135,7 @@ class ApplicationController < ActionController::API
   #
   # * Author: Puneet
   # * Date: 07/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def handle_exceptions_gracefully
 

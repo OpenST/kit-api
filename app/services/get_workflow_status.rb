@@ -4,11 +4,11 @@ class GetWorkflowStatus < ServicesBase
   #
   # * Author: Anagha
   # * Date: 15/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Puneet
   #
-  # @params [Integer] parent_id (mandatory) - workflow parent Id
+  # @params [Integer] workflow_id (mandatory) - workflow parent Id
   #
-  # @return [TokenSetup::SetupProgress]
+  # @return [GetWorkflowStatus]
   #
   def initialize(params)
 
@@ -24,7 +24,7 @@ class GetWorkflowStatus < ServicesBase
   #
   # * Author: Anagha
   # * Date: 15/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Puneet
   #
   # @return [Result::Base]
   #
@@ -47,7 +47,7 @@ class GetWorkflowStatus < ServicesBase
   #
   # * Author: Anagha
   # * Date: 15/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Puneet
   #
   # @return [Result::Base]
   #
@@ -74,7 +74,7 @@ class GetWorkflowStatus < ServicesBase
   #
   # * Author: Ankit
   # * Date: 15/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Puneet
   #
   # @return [Result::Base]
   #

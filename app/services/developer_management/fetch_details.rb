@@ -5,9 +5,10 @@ module DeveloperManagement
     #
     # * Author: Ankit
     # * Date: 04/02/2019
-    # * Reviewed By:
+    # * Reviewed By: Sunil
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Hash] client_manager (mandatory) - Client Manager
     #
     # @return [DeveloperManagement::FetchDetails]
     #
@@ -15,10 +16,13 @@ module DeveloperManagement
 
       super
 
-      @api_response_data = {}
+      @client_id = @params[:client_id]
+      @client_manager = @params[:client_manager]
 
-      @client_id = params[:client_id]
-      @client_manager = params[:client_manager]
+      @token = nil
+      @price_points = nil
+      @sub_env_payload_data = nil
+      @api_response_data = {}
 
     end
 
@@ -26,7 +30,7 @@ module DeveloperManagement
     #
     # * Author: Ankit
     # * Date: 04/02/2019
-    # * Reviewed By:
+    # * Reviewed By: Sunil
     #
     # @return [Result::Base]
     #
@@ -62,7 +66,7 @@ module DeveloperManagement
     #
     # * Author: Shlok
     # * Date: 14/09/2018
-    # * Reviewed By:
+    # * Reviewed By: Sunil
     #
     # @return [Result::Base]
     #
@@ -77,16 +81,16 @@ module DeveloperManagement
 
     # Fetch token details
     #
-    #
     # * Author: Ankit
     # * Date: 04/02/2019
-    # * Reviewed By:
+    # * Reviewed By: Sunil
     #
     # @return [Result::Base]
+    #
     def fetch_token_details
       token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
 
-
+      # Take user to token setup if not yet setup
       if token.blank? || token[:status] == GlobalConstant::ClientToken.not_deployed
         @go_to = GlobalConstant::GoTo.token_setup
         return error_with_go_to(
@@ -104,7 +108,7 @@ module DeveloperManagement
     #
     # * Author: Ankit
     # * Date: 04/02/2019
-    # * Reviewed By:
+    # * Reviewed By: Sunil
     #
     # @return [Result::Base]
     def fetch_default_price_points
@@ -127,7 +131,7 @@ module DeveloperManagement
     #
     # * Author: Ankit
     # * Date: 04/02/2019
-    # * Reviewed By:
+    # * Reviewed By: Sunil
     #
     # @return [Result::Base]
     #

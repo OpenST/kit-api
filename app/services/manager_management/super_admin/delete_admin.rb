@@ -8,32 +8,32 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @params [Integer] manager_id (mandatory) - id of the manager who is deleting this admin
       # @params [Integer] client_id (mandatory) - id of the client who is deleting this admin
       # @params [Integer] to_update_client_manager_id (mandatory) - id of the client_manager which is to be deleted
+      # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
       # @return [ManagerManagement::SuperAdmin::DeleteAdmin]
       #
       def initialize(params)
-
         super
 
         @to_update_client_manager_id = @params[:to_update_client_manager_id]
         @manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
+        @client_manager = @params[:client_manager]
 
         @manager_to_be_deleted_obj = nil
         @to_update_client_manager = nil
-
       end
 
       # Perform
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -81,7 +81,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 15/01/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -94,11 +94,37 @@ module ManagerManagement
         success
       end
 
+      # validate
+      #
+      # * Author: Kedar
+      # * Date: 22/02/2019
+      # * Reviewed By: Puneet
+      #
+      # @return [Result::Base]
+      #
+      def validate
+        r = super
+        return r unless r.success?
+
+        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+          {client_manager: @client_manager}).perform
+
+        unless r.success?
+          return error_with_data(
+            's_mm_sa_da_1',
+            'team_edit_not_allowed',
+            GlobalConstant::ErrorAction.default
+          )
+        end
+
+        success
+      end
+
       # Fetch client manager
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -107,14 +133,14 @@ module ManagerManagement
         @to_update_client_manager = ClientManager.where(id: @to_update_client_manager_id).first
 
         return validation_error(
-          'mm_su_da_1',
+          's_mm_sa_da_2',
           'resource_not_found',
           [],
           GlobalConstant::ErrorAction.default
         ) if @to_update_client_manager.blank?
 
         return validation_error(
-          'mm_su_da_2',
+          's_mm_sa_da_3',
           'unauthorized_access_response',
           [],
           GlobalConstant::ErrorAction.default
@@ -128,7 +154,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 15/01/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -137,7 +163,7 @@ module ManagerManagement
         @manager_to_be_deleted_obj = Manager.where(id: @to_update_client_manager.manager_id).first
 
         return validation_error(
-          'mm_su_da_3',
+          's_mm_sa_da_4',
           'resource_not_found',
           [],
           GlobalConstant::ErrorAction.default
@@ -150,7 +176,7 @@ module ManagerManagement
       #
       # * Author: Shlok
       # * Date: 08/01/2019
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -176,7 +202,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -199,7 +225,7 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
@@ -216,6 +242,14 @@ module ManagerManagement
 
       end
 
+      # Result type
+      #
+      # * Author: Puneet
+      # * Date: 03/05/2018
+      # * Reviewed By: Sunil
+      #
+      # @return [Symbol]
+      #
       def result_type
         :client_managers
       end
