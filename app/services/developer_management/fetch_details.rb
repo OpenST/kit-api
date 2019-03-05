@@ -170,7 +170,7 @@ module DeveloperManagement
 
       chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
 
-      @addresses['erc20_contract_address'] = chain_addresses_data[2000][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
+      @addresses['erc20_contract_address'] = chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
 
       company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
 
