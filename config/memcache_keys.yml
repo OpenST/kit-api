@@ -56,6 +56,24 @@ keys:
       expiry_in_seconds: 86400
       <<: *kit_saas_subenv
 
+  token_company_users:
+      details:
+        key_template: 'c_tcud_%{token_id}'
+        expiry_in_seconds: 86400
+        <<: *kit_saas_subenv
+
+  chain_addresses:
+      details:
+        key_template: 'ch_addr_%{chain_id}'
+        expiry_in_seconds: 86400
+        <<: *kit_saas_subenv
+
+  staker_whitelisted_address:
+      details:
+        key_template: 'c_swa_%{token_id}'
+        expiry_in_seconds: 86400
+        <<: *kit_saas_subenv
+
   ost_price_points:
     default:
       key_template: 'c_oppd_def'
