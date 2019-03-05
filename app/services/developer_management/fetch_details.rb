@@ -158,11 +158,15 @@ module DeveloperManagement
       @addresses = {}
 
       token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
+      aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
 
-      @addresses['token_holder_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract] || ""
-      @addresses['utility_branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract] || ""
-      @addresses['branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.branded_token_contract] || ""
-      @addresses['erc20_contract_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.simple_stake_contract] || ""
+      @addresses['token_holder_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address] || ""
+      @addresses['utility_branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address] || ""
+      @addresses['branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.branded_token_contract][:address] || ""
+
+      chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
+
+      @addresses['erc20_contract_address'] = chain_addresses_data[2000][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
 
       company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
 

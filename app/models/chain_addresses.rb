@@ -81,10 +81,10 @@ class ChainAddresses < DbConnection::KitSaasSubenv
   # @return [Hash]
   #
   def fetch_chain_addresses(params)
-    @chain_id = params[:chain_id]
+    chain_id = params[:chain_id]
 
-    @return_data = {}
-    chain_addresses = ChainAddresses.where(associated_aux_chain_id: @chain_id, status: GlobalConstant::TokenAddresses.active_status).all
+    return_data = {}
+    chain_addresses = ChainAddresses.where(associated_aux_chain_id: chain_id, status: GlobalConstant::ChainAddresses.active_status).all
 
     chain_addresses.each do |chain_address_row|
 
@@ -98,14 +98,16 @@ class ChainAddresses < DbConnection::KitSaasSubenv
       }
 
       if GlobalConstant::ChainAddresses.non_unique_kinds.include? address_kind
-        if !@return_data[address_kind]
-          @return_data[address_kind] = []
-        end
-        @return_data[address_kind].push(formatted_data)
+        return_data[address_kind] ||= []
+        return_data[address_kind].push(formatted_data)
+      else
+        return_data[address_kind] = formatted_data
       end
-      @return_data[address_kind] = formatted_data
 
     end
+
+    @return_data = {}
+    @return_data[chain_id] = return_data
 
     success_with_data(@return_data)
 

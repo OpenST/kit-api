@@ -5,20 +5,20 @@ module KitSaasSharedCacheManagement
     # Fetch from db
     #
     # * Author: Shlok
-    # * Date: /03/2019
+    # * Date: 04/03/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
     #
     def fetch_from_db(chain_id)
-      rsp = ::ChainAddresses.new.fetch_chain_addresses({chain_id: chain_id})
+      rsp = ::ChainAddresses.new.fetch_chain_addresses({chain_id: chain_id.first})
       data_to_cache = rsp.data
       success_with_data(data_to_cache)
     end
 
     #
     # * Author: Shlok
-    # * Date: /03/2019
+    # * Date: 04/03/2019
     # * Reviewed By:
     #
     # @return [MemcacheKey]
@@ -30,7 +30,7 @@ module KitSaasSharedCacheManagement
     # Fetch cache key
     #
     # * Author: Shlok
-    # * Date: /03/2019
+    # * Date: 04/03/2019
     # * Reviewed By:
     #
     # @return [String]
@@ -42,7 +42,7 @@ module KitSaasSharedCacheManagement
     # Fetch saas cache key
     #
     # * Author: Shlok
-    # * Date: /03/2019
+    # * Date: 04/03/2019
     # * Reviewed By:
     #
     # @return [String]
@@ -54,7 +54,7 @@ module KitSaasSharedCacheManagement
     # Fetch cache expiry (in seconds)
     #
     # * Author: Shlok
-    # * Date: /03/2019
+    # * Date: 04/03/2019
     # * Reviewed By:
     #
     # @return [Integer]
