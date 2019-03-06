@@ -143,19 +143,19 @@ module TokenManagement
       addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
 
       origin_addresses = {}
-      ownerAddress = [addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]]
+      owner_address = [addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]]
 
-      origin_addresses[:whitelisted] = ownerAddress
-      origin_addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.origin_worker_address_kind] ||= []
-      origin_addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]
-      origin_addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.origin_admin_address_kind]
+      origin_addresses[:whitelisted] = owner_address
+      origin_addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.origin_worker_address_kind][:address] ||= []
+      origin_addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]
+      origin_addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.origin_admin_address_kind][:address]
 
 
       aux_addresses = {}
-      aux_addresses[:whitelisted] = ownerAddress
-      aux_addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.aux_worker_address_kind] ||= []
-      aux_addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind]
-      aux_addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.aux_admin_address_kind]
+      aux_addresses[:whitelisted] = owner_address
+      aux_addresses[:workers] = addresses_data[token_id][GlobalConstant::TokenAddresses.aux_worker_address_kind][:address] ||= []
+      aux_addresses[:owner] = addresses_data[token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]
+      aux_addresses[:admin] = addresses_data[token_id][GlobalConstant::TokenAddresses.aux_admin_address_kind][:address]
 
       @api_response_data[:origin_addresses] = origin_addresses
       @api_response_data[:auxiliary_addresses] = aux_addresses

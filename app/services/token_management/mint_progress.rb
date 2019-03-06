@@ -161,20 +161,6 @@ module TokenManagement
       success
     end
 
-
-    # Fetch default price points
-    #
-    #
-    # * Author: Anagha
-    # * Date: 23/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    def fetch_default_price_points
-      @api_response_data[:price_points] = KitSaasSharedCacheManagement::OstPricePointsDefault.new.fetch
-      success
-    end
-
     # Append logged in manager details
     #
     # * Author: Anagha

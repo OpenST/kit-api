@@ -45,17 +45,16 @@ module TokenManagement
 
     # Fetch default price points
     #
-    #
     # * Author: Ankit
     # * Date: 19/01/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
     def fetch_default_price_points
-      @price_points = KitSaasSharedCacheManagement::OstPricePointsDefault.new.fetch
-
-      @api_response_data[:price_points] = @price_points
-
+      token_id = @token[:id]
+      aux_chain_id = Util::EntityHelper.fetch_chain_id_for_token_id(token_id)
+      price_points = KitSaasSharedCacheManagement::OstPricePoints.new([aux_chain_id]).fetch
+      @api_response_data[:price_points] = price_points[aux_chain_id]
       success
     end
 

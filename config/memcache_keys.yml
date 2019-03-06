@@ -44,6 +44,12 @@ keys:
       expiry_in_seconds: 86400
       <<: *kit
 
+  ost_price_points_default:
+      details:
+        key_template: 'c_oppd_def'
+        expiry_in_seconds: 600
+        <<: *kit
+
   token_management:
     details:
       key_template: 'c_tkn_%{client_id}'
@@ -75,9 +81,9 @@ keys:
         <<: *kit_saas_subenv
 
   ost_price_points:
-    default:
-      key_template: 'c_oppd_def'
-      expiry_in_seconds: 300
+    chain_specific:
+      key_template: 'c_ost_pp_%{chain_id}'
+      expiry_in_seconds: 86400
       <<: *kit_saas_subenv
 
   workflow_status:
