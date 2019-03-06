@@ -2,13 +2,9 @@ class Manager::LoginController < Manager::BaseController
 
   before_action :append_user_agent_to_params
   
-  before_action :verify_recaptcha, only: [:password_auth, :send_reset_password_link]
+  before_action :verify_recaptcha, only: [:password_auth, :send_reset_password_link, :sign_up_post]
 
-  before_action :verify_mfa_cookie, only: [
-    :team,
-    :get_details,
-    :list_admins
-  ]
+  before_action :verify_mfa_cookie, only: [:get_details]
 
   before_action :mandatory_verify_password_cookie, only: [
     :multi_factor_auth,
@@ -122,17 +118,6 @@ class Manager::LoginController < Manager::BaseController
     render_api_response(service_response)
   end
 
-  # Get Manager's details
-  #
-  # * Author: Puneet
-  # * Date: 08/12/2018
-  # * Reviewed By:
-  #
-  def team
-    service_response = ManagerManagement::Team.new(params).perform
-    render_api_response(service_response)
-  end
-
   # Get MFA Page details
   #
   # * Author: Puneet
@@ -230,17 +215,6 @@ class Manager::LoginController < Manager::BaseController
   #
   def send_verify_email_link
     service_response = ManagerManagement::SendDoubleOptInLink.new(params).perform
-    render_api_response(service_response)
-  end
-
-  # List Admins
-  #
-  # * Author: Puneet
-  # * Date: 15/02/2018
-  # * Reviewed By:
-  #
-  def list_admins
-    service_response = ManagerManagement::ListAdmins.new(params).perform
     render_api_response(service_response)
   end
 

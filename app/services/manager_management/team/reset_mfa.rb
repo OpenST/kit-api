@@ -1,6 +1,6 @@
 module ManagerManagement
 
-  module SuperAdmin
+  module Team
 
     class ResetMfa < ServicesBase
 
@@ -15,7 +15,7 @@ module ManagerManagement
       # @params [Integer] to_update_client_manager_id (mandatory) - id of manager whose MFA has to be set
       # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
-      # @return [ManagerManagement::SuperAdmin::ResetMfa]
+      # @return [ManagerManagement::Team::ResetMfa]
       #
       def initialize(params)
         super
@@ -96,7 +96,7 @@ module ManagerManagement
         r = super
         return r unless r.success?
 
-        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        r = ManagerManagement::Team::CheckSuperAdminRole.new(
           {client_manager: @client_manager}).perform
 
         unless r.success?

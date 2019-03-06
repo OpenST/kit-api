@@ -1,6 +1,6 @@
 module ManagerManagement
 
-  module SuperAdmin
+  module Team
 
     class CheckSuperAdminRole < ServicesBase
 
@@ -12,7 +12,7 @@ module ManagerManagement
       #
       # @params [Integer] client_manager (mandatory) - client manager object
       #
-      # @return [ManagerManagement::SuperAdmin::CheckSuperAdminRole]
+      # @return [ManagerManagement::Team::CheckSuperAdminRole]
       #
       def initialize(params)
         super

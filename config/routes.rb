@@ -17,12 +17,15 @@ Rails.application.routes.draw do
     match 'send-reset-password-link' => :send_reset_password_link, via: :POST
     match 'verify-email' => :verify_email, via: :GET
     match 'send-verify-email-link' => :send_verify_email_link, via: :POST
-    match 'list-admins' => :list_admins, via: :GET
     match '' => :get_details, via: :GET
-    match 'team' => :team, via: :GET
   end
 
-  scope 'api/manager/super_admin', controller: 'manager/super_admin' do
+  scope 'api/manager', controller: 'manager/team' do
+    match 'team' => :get, via: :GET
+    match 'list-admins' => :list_admins, via: :GET
+  end
+
+  scope 'api/manager/super_admin', controller: 'manager/team' do
     match 'reset-mfa' => :reset_mfa, via: :POST
     match 'invite-admin' => :invite_admin, via: :POST
     match 'delete-admin' => :delete_admin, via: :POST

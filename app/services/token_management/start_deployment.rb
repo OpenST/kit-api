@@ -72,7 +72,7 @@ module TokenManagement
       r = super
       return r unless r.success?
 
-      r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+      r = ManagerManagement::Team::CheckSuperAdminRole.new(
         {client_manager: @client_manager}).perform
 
       unless r.success?

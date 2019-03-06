@@ -74,16 +74,16 @@
     - :confirm_password
     - :r_t
   :optional:
-'ManagerManagement::ListAdmins':
+'ManagerManagement::Team::ListAdmins':
   :mandatory:
     - :client_id
   :optional:
     - :page_no
-'ManagerManagement::SuperAdmin::CheckSuperAdminRole':
+'ManagerManagement::Team::CheckSuperAdminRole':
   :mandatory:
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::InviteAdmin':
+'ManagerManagement::Team::InviteAdmin':
   :mandatory:
     - :email
     - :client_id
@@ -91,28 +91,28 @@
     - :is_super_admin
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::DeleteAdmin':
+'ManagerManagement::Team::DeleteAdmin':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
     - :manager_id
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::ResetMfa':
+'ManagerManagement::Team::ResetMfa':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
     - :manager_id
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::ResendAdminInvite':
+'ManagerManagement::Team::ResendAdminInvite':
   :mandatory:
     - :manager_id
     - :client_id
     - :to_update_client_manager_id
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
+'ManagerManagement::Team::UpdateSuperAdminRole':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
@@ -120,7 +120,7 @@
     - :is_super_admin
     - :client_manager
   :optional:
-'ManagerManagement::Team':
+'ManagerManagement::Team::Get':
    :mandatory:
      - :client_id
      - :manager

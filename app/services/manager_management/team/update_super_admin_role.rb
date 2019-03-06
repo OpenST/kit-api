@@ -1,6 +1,6 @@
 module ManagerManagement
 
-  module SuperAdmin
+  module Team
 
     class UpdateSuperAdminRole < ServicesBase
 
@@ -16,7 +16,7 @@ module ManagerManagement
       # @params [Integer] is_super_admin (mandatory) - value to be set to. 1 => set, 0 => unset
       # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
-      # @return [ManagerManagement::SuperAdmin::UpdateSuperAdminRole]
+      # @return [ManagerManagement::Team::UpdateSuperAdminRole]
       #
       def initialize(params)
         super
@@ -115,7 +115,7 @@ module ManagerManagement
         r = super
         return r unless r.success?
 
-        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        r = ManagerManagement::Team::CheckSuperAdminRole.new(
           {client_manager: @client_manager}).perform
 
         unless r.success?

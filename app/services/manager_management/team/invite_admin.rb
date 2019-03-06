@@ -1,6 +1,6 @@
 module ManagerManagement
 
-  module SuperAdmin
+  module Team
 
     class InviteAdmin < ServicesBase
 
@@ -16,7 +16,7 @@ module ManagerManagement
       # @params [Integer] is_super_admin (mandatory) - the privilege of the admin once the invite is accepted. 1 => super_admin, 0 => admin
       # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
-      # @return [ManagerManagement::SuperAdmin::InviteAdmin]
+      # @return [ManagerManagement::Team::InviteAdmin]
       #
       def initialize(params)
         super
@@ -119,7 +119,7 @@ module ManagerManagement
         r = super
         return r unless r.success?
 
-        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        r = ManagerManagement::Team::CheckSuperAdminRole.new(
           {client_manager: @client_manager}).perform
 
         unless r.success?
