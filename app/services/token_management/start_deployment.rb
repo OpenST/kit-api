@@ -112,7 +112,7 @@ module TokenManagement
 
       addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([@token_id]).fetch
 
-      owner_address = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind]
+      owner_address = addresses_data[@token_id][GlobalConstant::TokenAddresses.owner_address_kind][:address]
 
       if owner_address.blank?
         return error_with_data(

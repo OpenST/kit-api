@@ -54,6 +54,14 @@ class TokenAddresses < DbConnection::KitSaasSubenv
     }
   end
 
+  # Fetch data from db.
+  #
+  # * Author: Shlok
+  # * Date: 05/03/2019
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
   def fetch_all_addresses(params)
     @token_ids = params[:token_ids]
 

@@ -74,8 +74,8 @@ class ChainAddresses < DbConnection::KitSaasSubenv
 
   # Fetch data from db.
   #
-  # * Author: Dhananjay
-  # * Date: 20/12/2018
+  # * Author: Shlok
+  # * Date: 05/03/2019
   # * Reviewed By:
   #
   # @return [Hash]
