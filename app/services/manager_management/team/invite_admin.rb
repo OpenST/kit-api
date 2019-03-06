@@ -25,7 +25,7 @@ module ManagerManagement
         @inviter_manager_id = @params[:manager_id]
         @client_id = @params[:client_id]
         @is_super_admin = @params[:is_super_admin].to_s
-        @client_manager = @params[:client_manager]
+        @inviter_client_manager = @params[:client_manager]
 
         @invitee_manager = nil
         @invitee_client_manager = nil
@@ -120,7 +120,7 @@ module ManagerManagement
         return r unless r.success?
 
         r = ManagerManagement::Team::CheckSuperAdminRole.new(
-          {client_manager: @client_manager}).perform
+          {client_manager: @inviter_client_manager}).perform
 
         unless r.success?
           return error_with_data(
@@ -153,12 +153,12 @@ module ManagerManagement
           if @invitee_manager.current_client_id == @client_id
 
             # Fetch client_manager to check if the invitee_manager was previously associated with the client.
-            @client_manager = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
+            @invitee_client_manager = ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).first
 
             # If client_manager is present, check for privileges.
-            if @client_manager.present? && @client_manager.privileges.present?
+            if @invitee_client_manager.present? && @invitee_client_manager.privileges.present?
 
-              privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges)
+              privileges = ClientManager.get_bits_set_for_privileges(@invitee_client_manager.privileges)
 
               # If privileges includes has_been_deleted_privilege, display error message that the admin WAS
               # previously associated with the client.
@@ -291,8 +291,8 @@ module ManagerManagement
       #
       def create_client_manager
 
-        if @client_manager.present? && @client_manager.privileges.present?
-          privileges = ClientManager.get_bits_set_for_privileges(@client_manager.privileges) - [GlobalConstant::ClientManager.is_admin_invited_privilege] - [GlobalConstant::ClientManager.is_super_admin_invited_privilege]
+        if @invitee_client_manager.present? && @invitee_client_manager.privileges.present?
+          privileges = ClientManager.get_bits_set_for_privileges(@invitee_client_manager.privileges) - [GlobalConstant::ClientManager.is_admin_invited_privilege] - [GlobalConstant::ClientManager.is_super_admin_invited_privilege]
           # if any other privilege was set other than invite, either invite was already accepted or rejected.
           return validation_error(
             'mm_su_ia_5',
@@ -302,15 +302,13 @@ module ManagerManagement
           ) if privileges.any?
         end
 
-        @client_manager ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
+        @invitee_client_manager ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
 
         Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
-          @client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
-          : @client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
+          @invitee_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
+          : @invitee_client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
 
-        @client_manager.save! if @client_manager.changed?
-
-        @invitee_client_manager = @client_manager
+        @invitee_client_manager.save! if @invitee_client_manager.changed?
 
         success
 
