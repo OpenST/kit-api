@@ -19,8 +19,6 @@ module TokenManagement
 
       @client_manager = params[:client_manager]
 
-      @api_response_data = {}
-
     end
 
     # Perform
@@ -98,6 +96,20 @@ module TokenManagement
                                     from_page: GlobalConstant::GoTo.token_setup
                                   }).fetch_by_economy_state
 
+    end
+
+    # Fetch default price points. We have specifically added this method here because during token setup, a particular
+    # chain is not allocated to a token. So we simply display the latest price point for any chain.
+    #
+    # * Author: Shlok
+    # * Date: 05/03/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def fetch_default_price_points
+      @price_points = CacheManagement::OstPricePointsDefault.new.fetch
+
+      success
     end
 
     # fetch the sub env response data entity

@@ -45,7 +45,6 @@ module TokenManagement
 
     # Fetch default price points
     #
-    #
     # * Author: Ankit
     # * Date: 19/01/2019
     # * Reviewed By:

@@ -131,30 +131,41 @@ module DeveloperManagement
     #
     def fetch_addresses
       token_id = @token[:id]
-
       @addresses = {}
 
+      # Fetch token addresses.
       token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
-      if token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].nil?
+      token_addresses = token_addresses_data[token_id]
+
+      if token_addresses[GlobalConstant::TokenAddresses.branded_token_contract].nil?
         return success
       else
-        aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
+        @addresses['branded_token_contract'] = token_addresses[GlobalConstant::TokenAddresses.branded_token_contract][:address]
       end
 
-      @addresses['token_holder_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address] || ""
-      @addresses['utility_branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address] || ""
-      @addresses['branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.branded_token_contract][:address] || ""
+      if token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract].nil?
+        return success
+      else
+        @addresses['utility_branded_token_contract'] = token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract][:address]
+        aux_chain_id = token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
+      end
 
+      # Fetch chain addresses.
       chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
-
       @addresses['erc20_contract_address'] = chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
 
-      company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
+      if token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract].nil?
+        return success
+      else
+        @addresses['token_holder_address'] = token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address]
+      end
 
+      # Fetch company user uuid.
+      company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
       @addresses['company_user_id'] = company_user_ids[token_id].first || ""
 
+      # Fetch gateway composer address.
       staker_whitelisted_addresses = KitSaasSharedCacheManagement::StakerWhitelistedAddress.new([token_id]).fetch || {}
-
       @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
 
       success

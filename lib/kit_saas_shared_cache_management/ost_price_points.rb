@@ -24,7 +24,7 @@ module KitSaasSharedCacheManagement
     # @return [MemcacheKey]
     #
     def memcache_key_object
-      @m_k_o ||= MemcacheKey.new('ost_price_points.default')
+      @m_k_o ||= MemcacheKey.new('ost_price_points.chain_specific')
     end
 
     # Fetch cache key
