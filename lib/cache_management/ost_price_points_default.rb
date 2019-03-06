@@ -1,13 +1,14 @@
-module KitSaasSharedCacheManagement
+module CacheManagement
 
+  # This cache is never cleared specifically. It clears only on the basis of TTL.
   class OstPricePointsDefault
 
     include Util::ResultHelper
 
     # Fetch from db
     #
-    # * Author: Santosh
-    # * Date: 06/04/2018
+    # * Author: Shlok
+    # * Date: 05/03/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
@@ -20,8 +21,8 @@ module KitSaasSharedCacheManagement
 
     # Fetch from db
     #
-    # * Author: Puneet
-    # * Date: 19/01/2019
+    # * Author: Shlok
+    # * Date: 05/03/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
@@ -36,20 +37,20 @@ module KitSaasSharedCacheManagement
       data_to_cache
     end
 
-    # * Author: Ankit
-    # * Date: 01/02/2018
+    # * Author: Shlok
+    # * Date: 05/03/2019
     # * Reviewed By:
     #
     # @return [MemcacheKey]
     #
     def memcache_key_object
-      @m_k_o ||= MemcacheKey.new('ost_price_points.default')
+      @m_k_o ||= MemcacheKey.new('ost_price_points_default.details')
     end
 
     # Fetch cache key
     #
-    # * Author: Puneet
-    # * Date: 01/02/2018
+    # * Author: Shlok
+    # * Date: 05/03/2019
     # * Reviewed By:
     #
     # @return [String]
@@ -60,8 +61,8 @@ module KitSaasSharedCacheManagement
 
     # Fetch cache key
     #
-    # * Author: Puneet
-    # * Date: 01/02/2018
+    # * Author: Shlok
+    # * Date: 05/03/2019
     # * Reviewed By:
     #
     # @return [String]
@@ -72,8 +73,8 @@ module KitSaasSharedCacheManagement
 
     # Fetch cache expiry (in seconds)
     #
-    # * Author: Puneet
-    # * Date: 01/02/2018
+    # * Author: Shlok
+    # * Date: 05/03/2019
     # * Reviewed By:
     #
     # @return [Integer]
@@ -82,10 +83,10 @@ module KitSaasSharedCacheManagement
       memcache_key_object.expiry
     end
 
-    # clear cache
+    # Clear cache
     #
-    # * Author: Ankit
-    # * Date: 19/01/2019
+    # * Author: Shlok
+    # * Date: 05/03/2019
     # * Reviewed By:
     #
     # @return [Result::Base]

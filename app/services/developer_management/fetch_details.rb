@@ -1,4 +1,5 @@
 module DeveloperManagement
+
   class FetchDetails < ServicesBase
 
     # Initialize
@@ -44,9 +45,6 @@ module DeveloperManagement
         r = fetch_token_details
         return r unless r.success?
 
-        r = fetch_default_price_points
-        return r unless r.success?
-
         r = fetch_sub_env_payloads
         return r unless r.success?
 
@@ -55,7 +53,6 @@ module DeveloperManagement
 
         @api_response_data = {
           token: @token,
-          price_points: @price_points,
           client_manager: @client_manager,
           sub_env_payloads: @sub_env_payload_data,
           developer_page_addresses: @addresses
@@ -107,30 +104,6 @@ module DeveloperManagement
       success
     end
 
-    # Fetch default price points
-    #
-    #
-    # * Author: Ankit
-    # * Date: 04/02/2019
-    # * Reviewed By: Sunil
-    #
-    # @return [Result::Base]
-    def fetch_default_price_points
-      price_points = KitSaasSharedCacheManagement::OstPricePointsDefault.new.fetch
-
-      if price_points.blank?
-        return error_with_data(
-          'a_s_dm_fd_2',
-          'something_went_wrong',
-          GlobalConstant::ErrorAction.default
-        )
-      end
-
-      @price_points = price_points
-
-      success
-    end
-
     # fetch the sub env response data entity
     #
     # * Author: Ankit
@@ -158,34 +131,42 @@ module DeveloperManagement
     #
     def fetch_addresses
       token_id = @token[:id]
-
       @addresses = {}
 
+      # Fetch token addresses.
       token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
-      if token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].nil?
+      token_addresses = token_addresses_data[token_id]
+
+      if token_addresses[GlobalConstant::TokenAddresses.branded_token_contract].nil?
         return success
-      else
-        aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
       end
+      @addresses['branded_token_contract'] = token_addresses[GlobalConstant::TokenAddresses.branded_token_contract][:address]
 
-      @addresses['token_holder_address'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address] || ""
-      @addresses['utility_branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address] || ""
-      @addresses['branded_token_contract'] = token_addresses_data[token_id][GlobalConstant::TokenAddresses.branded_token_contract][:address] || ""
 
+      if token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract].nil?
+        return success
+      end
+      @addresses['utility_branded_token_contract'] = token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract][:address]
+      aux_chain_id = token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
+
+      # Fetch chain addresses.
       chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
-
       @addresses['erc20_contract_address'] = chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
 
-      company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
+      if token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract].nil?
+        return success
+      end
+      @addresses['token_holder_address'] = token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address]
 
+      # Fetch company user uuid.
+      company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
       @addresses['company_user_id'] = company_user_ids[token_id].first || ""
 
+      # Fetch gateway composer address.
       staker_whitelisted_addresses = KitSaasSharedCacheManagement::StakerWhitelistedAddress.new([token_id]).fetch || {}
-
       @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
 
       success
-
     end
 
   end

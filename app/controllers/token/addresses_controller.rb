@@ -1,15 +1,16 @@
 class Token::AddressesController < WebController
 
-  # Get Adresses
-  #
-  # * Author: Ankit
-  # * Date: 19/01/2019
-  # * Reviewed By:
-  #
-  def token_addresses_get
-    service_response = WalletAddressesManagement::GetAddresses.new(params).perform
-    render_api_response(service_response)
-  end
+  # TODO: Clean up later.
+  # # Get Adresses
+  # #
+  # # * Author: Ankit
+  # # * Date: 19/01/2019
+  # # * Reviewed By:
+  # #
+  # def token_addresses_get
+  #   service_response = WalletAddressesManagement::GetAddresses.new(params).perform
+  #   render_api_response(service_response)
+  # end
 
   # Set token details
   #
