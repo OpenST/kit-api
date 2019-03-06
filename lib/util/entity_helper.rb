@@ -146,6 +146,24 @@ module Util
                                 )
       end
 
+      # No token found
+      #
+      # * Author: Shlok
+      # * Date: 06/03/2019
+      # * Reviewed By:
+      #
+      # @param [String] err (mandatory) - err code
+      #
+      # @return [Result::Base]
+      #
+      def aux_chain_id_not_found_response(err)
+        error_with_data(
+          err,
+          'aux_chain_id_not_found',
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
       #  Client manager not associated response
       #
       # * Author: Puneet
@@ -178,7 +196,7 @@ module Util
         return token_not_found_response("l_u_eh_fciti_1") if token_id.blank?
         token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
         aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
-        return token_not_found_response("l_u_eh_fciti_2") if aux_chain_id.blank?
+        return aux_chain_id_not_found_response("l_u_eh_fciti_2") if aux_chain_id.blank?
         aux_chain_id
       end
       
