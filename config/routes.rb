@@ -37,6 +37,10 @@ Rails.application.routes.draw do
     match 'api-keys/delete' => :api_keys_deactivate, via: :POST
   end
 
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard", controller: 'dashboard' do
+    match '' => :get, via: :GET
+  end
+
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup' do
     match '' => :token_details_get, via: :GET
     match '' => :token_details_post, via: :POST

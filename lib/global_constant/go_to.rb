@@ -65,6 +65,12 @@ module GlobalConstant
         }
       end
 
+      def token_dashboard
+        {
+          by_screen_name: :token_dashboard
+        }
+      end
+
       def service_unavailable
         {
             by_screen_name: :service_unavailable

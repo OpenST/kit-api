@@ -255,3 +255,6 @@
   :mandatory:
     - :client_id
     - :client_manager
+'DashboardManagement::Get':
+  :mandatory:
+    - :client_id

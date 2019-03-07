@@ -173,9 +173,7 @@ module TokenManagement
       success
     end
 
-
     # Fetch workflow current status
-    #
     #
     # * Author: Ankit
     # * Date: 16/01/2019
