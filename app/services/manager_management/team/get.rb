@@ -13,7 +13,7 @@ module ManagerManagement
       # @params [Integer] client_id (mandatory) - Client Id
       # @params [Integer] page_no (optional) - Page no.
       #
-      # @return [ManagerManagement::ListAdmins]
+      # @return [ManagerManagement::Team::Get]
       #
       def initialize(params)
 

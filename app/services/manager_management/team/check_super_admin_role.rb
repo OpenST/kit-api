@@ -17,7 +17,7 @@ module ManagerManagement
       def initialize(params)
         super
 
-        @client_manager = params[:client_manager]
+        @client_manager = @params[:client_manager]
 
       end
 

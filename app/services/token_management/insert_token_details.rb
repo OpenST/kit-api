@@ -20,7 +20,7 @@ module TokenManagement
 
       super
 
-      @client_manager = params[:client_manager]
+      @client_manager = @params[:client_manager]
       @name = @params[:name]
       @symbol = @params[:symbol]
       @conversion_factor = @params[:conversion_factor]

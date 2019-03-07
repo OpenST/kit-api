@@ -14,7 +14,7 @@ module ManagerManagement
       # @params [String] confirm_password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
       #
-      # @return [ManagerManagement::SignUp::ByInvite]
+      # @return [ManagerManagement::SignUp::Base]
       #
       def initialize(params)
 

@@ -9,10 +9,11 @@ module TokenManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     #
+    # @return [TokenManagement::MintProgress]
     #
     def initialize(params)
       super
-      @client_manager = params[:client_manager]
+      @client_manager = @params[:client_manager]
       @api_response_data = {}
       @mint_workflow = nil
     end
