@@ -2,6 +2,7 @@ class AuthenticationController < ApplicationController
 
   before_action :set_authentication_params_to_nil
   before_action :authenticate_by_mfa_cookie
+  before_action :authenticate_sub_env_access
 
   private
 
@@ -164,6 +165,29 @@ class AuthenticationController < ApplicationController
 
     cookie_verify_rsp
 
+  end
+
+  # Check if client is white listed
+  #
+  # * Author: Ankit
+  # * Date: 30/01/2019
+  # * Reviewed By: Sunil
+  #
+  def authenticate_sub_env_access
+    if GlobalConstant::Base.main_sub_environment?
+      client_env_statuses = params[:client][:mainnet_statuses]
+      allowed_status = GlobalConstant::Client.mainnet_whitelisted_status
+      error_go_to = GlobalConstant::GoTo.sandbox_token_setup
+    else
+      client_env_statuses = params[:client][:sandbox_statuses]
+      allowed_status = GlobalConstant::Client.sandbox_whitelisted_status
+      error_go_to = GlobalConstant::GoTo.logout
+    end
+
+    if client_env_statuses.exclude?(allowed_status)
+      service_response = error_with_go_to('a_c_ac_1', 'unauthorized_to_perform_action', error_go_to)
+      render_api_response(service_response)
+    end
   end
 
   # Handle cookie validation success response

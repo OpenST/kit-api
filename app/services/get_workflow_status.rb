@@ -14,7 +14,7 @@ class GetWorkflowStatus < ServicesBase
 
     super
 
-    @workflow_id = params[:workflow_id]
+    @workflow_id = @params[:workflow_id]
 
     @api_response_data = {}
 

@@ -99,7 +99,7 @@ module ClientManagement
         unless r.success?
           return error_with_data(
             's_cm_ac_r_1',
-            'api_key_edit_not_allowed',
+            'unauthorized_to_perform_action',
             GlobalConstant::ErrorAction.default
           )
         end

@@ -17,7 +17,7 @@ module TokenManagement
 
       super
 
-      @client_manager = params[:client_manager]
+      @client_manager = @params[:client_manager]
 
       @api_response_data = {}
       @token_id = nil
@@ -78,7 +78,7 @@ module TokenManagement
       unless r.success?
         return error_with_data(
           's_tm_sd_1',
-          'unauthorized_to_token_deploy',
+          'unauthorized_to_perform_action',
           GlobalConstant::ErrorAction.default
         )
       end

@@ -1,7 +1,5 @@
 class Token::SetupController < AuthenticationController
 
-  before_action :is_client_whitelisted, :only => [:token_details_get]
-
   # Get token details
   #
   # * Author: Ankit
@@ -65,29 +63,4 @@ class Token::SetupController < AuthenticationController
     render_api_response(service_response)
   end
 
-
-  private
-
-  # Check if client is white listed
-  #
-  # * Author: Ankit
-  # * Date: 30/01/2019
-  # * Reviewed By: Sunil
-  #
-  def is_client_whitelisted
-    if GlobalConstant::Base.main_sub_environment?
-      client_env_statuses = params[:client][:mainnet_statuses]
-      env_whitelisted_status = GlobalConstant::Client.mainnet_whitelisted_status
-      res_go_to = GlobalConstant::GoTo.sandbox_token_setup
-    else
-      client_env_statuses = params[:client][:sandbox_statuses]
-      env_whitelisted_status = GlobalConstant::Client.sandbox_whitelisted_status
-      res_go_to = GlobalConstant::GoTo.mainnet_token_setup
-    end
-
-    if !client_env_statuses.include?(env_whitelisted_status)
-      service_response = error_with_go_to('a_c_t_sc_1', 'data_validation_failed', res_go_to)
-      render_api_response(service_response)
-    end
-  end
 end

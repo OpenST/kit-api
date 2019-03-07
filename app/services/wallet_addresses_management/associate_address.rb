@@ -8,16 +8,17 @@ module WalletAddressesManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Hash] client_manager (mandatory) - logged in client manager object
     # @params [String] owner_address (mandatory) - owner address
     # @params [String] personal_sign (mandatory) - Sign to verify
     #
     # @return [WalletAddressesManagement::AssociateAddress]
     #
     def initialize(params)
-
       super
 
       @client_id = @params[:client_id]
+      @client_manager = @params[:client_manager]
       @owner_address = @params[:owner]
       @personal_sign = @params[:personal_sign]
 
@@ -71,7 +72,7 @@ module WalletAddressesManagement
 
     end
 
-    #private
+    private
 
     # Validate and sanitize
     #
@@ -92,7 +93,7 @@ module WalletAddressesManagement
 
       unless Util::CommonValidator.is_ethereum_address?(@owner_address)
         return validation_error(
-          'cm_vea_1',
+          's_wam_aa_1',
           'invalid_api_params',
           ['invalid_owner_address'],
           GlobalConstant::ErrorAction.default
@@ -103,7 +104,7 @@ module WalletAddressesManagement
 
       if @token_details.blank?
         return validation_error(
-          'cm_vea_2',
+          's_wam_aa_2',
           'invalid_api_params',
           ['invalid_client_id'],
           GlobalConstant::ErrorAction.default
@@ -115,6 +116,32 @@ module WalletAddressesManagement
 
       success
 
+    end
+
+    # validate
+    #
+    # * Author: Kedar
+    # * Date: 22/02/2019
+    # * Reviewed By: Puneet
+    #
+    # @return [Result::Base]
+    #
+    def validate
+      r = super
+      return r unless r.success?
+
+      r = ManagerManagement::Team::CheckSuperAdminRole.new(
+        {client_manager: @client_manager}).perform
+
+      unless r.success?
+        return error_with_data(
+          's_wam_aa_3',
+          'unauthorized_to_perform_action',
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      success
     end
 
     # Redirect request to saas api
@@ -153,7 +180,7 @@ module WalletAddressesManagement
 
       if @signed_by_address != @owner_address
         return validation_error(
-          'cm_vea_3',
+          's_wam_aa_4',
           'unauthorized_access_response',
           ['invalid_signature'],
           GlobalConstant::ErrorAction.default
@@ -179,7 +206,7 @@ module WalletAddressesManagement
       if clientWalletAddress.present?
         if clientWalletAddress.client_id != @client_id || clientWalletAddress.sub_environment != GlobalConstant::Base.sub_environment_name
           return validation_error(
-            'cm_vea_4',
+            's_wam_aa_5',
             'already_associated',
             ['already_associated_address'],
             GlobalConstant::ErrorAction.default
