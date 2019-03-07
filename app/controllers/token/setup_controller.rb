@@ -1,5 +1,9 @@
 class Token::SetupController < AuthenticationController
 
+  skip_before_action :authenticate_sub_env_access, only: [
+    :request_whitelist
+  ]
+
   # Get token details
   #
   # * Author: Ankit
