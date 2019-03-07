@@ -1,4 +1,4 @@
-class DashboardController < WebController
+class DashboardController < AuthenticationController
 
   # Whitelisting
   #
