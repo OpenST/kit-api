@@ -1,4 +1,4 @@
-class Token::SetupController < WebController
+class Token::SetupController < AuthenticationController
 
   before_action :is_client_whitelisted, :only => [:token_details_get]
 
@@ -6,7 +6,7 @@ class Token::SetupController < WebController
   #
   # * Author: Ankit
   # * Date: 19/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def token_details_get
     service_response = TokenManagement::GetTokenDetails.new(params).perform
@@ -25,7 +25,7 @@ class Token::SetupController < WebController
   #
   # * Author: Ankit
   # * Date: 19/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def token_details_post
     service_response = TokenManagement::InsertTokenDetails.new(params).perform
@@ -36,7 +36,7 @@ class Token::SetupController < WebController
   #
   # * Author: Ankit
   # * Date: 19/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def deploy_post
     service_response = TokenManagement::StartDeployment.new(params).perform
@@ -47,21 +47,10 @@ class Token::SetupController < WebController
   #
   # * Author: Shlok
   # * Date: 21/01/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def deploy_get
     service_response = TokenManagement::GetDeploymentDetail.new(params).perform
-    render_api_response(service_response)
-  end
-
-  # Start token minting
-  #
-  # * Author: Anagha
-  # * Date: 23/01/2019
-  # * Reviewed By:
-  #
-  def mint_progress
-    service_response = TokenManagement::MintProgress.new(params).perform
     render_api_response(service_response)
   end
 
@@ -69,7 +58,7 @@ class Token::SetupController < WebController
   #
   # * Author: Ankit
   # * Date: 30/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def request_whitelist
     service_response = TokenManagement::RequestWhitelist.new(params).perform
@@ -79,6 +68,12 @@ class Token::SetupController < WebController
 
   private
 
+  # Check if client is white listed
+  #
+  # * Author: Ankit
+  # * Date: 30/01/2019
+  # * Reviewed By: Sunil
+  #
   def is_client_whitelisted
     if GlobalConstant::Base.main_sub_environment?
       client_env_statuses = params[:client][:mainnet_statuses]

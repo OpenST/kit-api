@@ -1,4 +1,4 @@
-class Manager::BaseController < WebController
+class Access::BaseController < ApplicationController
 
   private
 
@@ -6,13 +6,13 @@ class Manager::BaseController < WebController
   #
   # * Author: Puneet
   # * Date: 11/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def verify_recaptcha
 
     service_response = Google::Recaptcha.new({
-                                                 'response' => params['g-recaptcha-response'].to_s,
-                                                 'remoteip' => request.remote_ip.to_s
+                                               'response' => params['g-recaptcha-response'].to_s,
+                                               'remoteip' => ip_address
                                              }).perform
 
     unless service_response.success?
