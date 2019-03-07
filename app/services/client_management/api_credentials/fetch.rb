@@ -16,7 +16,7 @@ module ClientManagement
       #
       def initialize(params)
         super
-        @client_id = params[:client_id]
+        @client_id = @params[:client_id]
       end
 
       # Perform

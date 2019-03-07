@@ -8,18 +8,18 @@ class FetchGoTo < ServicesBase
   #
   # @param [Hash] params (mandatory)
   #
-  # @return [GoTo::ByManagerState]
+  # @return [FetchGoTo]
   #
   def initialize(params)
 
     super
 
-    @is_password_auth_cookie_valid = params[:is_password_auth_cookie_valid]
-    @is_multi_auth_cookie_valid = params[:is_multi_auth_cookie_valid]
-    @client = params[:client]
-    @manager = params[:manager]
-    @client_manager = params[:client_manager]
-    @token = params[:token]
+    @is_password_auth_cookie_valid = @params[:is_password_auth_cookie_valid]
+    @is_multi_auth_cookie_valid = @params[:is_multi_auth_cookie_valid]
+    @client = @params[:client]
+    @manager = @params[:manager]
+    @client_manager = @params[:client_manager]
+    @token = @params[:token]
   end
 
   # Perform

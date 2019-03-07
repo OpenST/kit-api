@@ -48,8 +48,7 @@
   :optional:
 'ManagerManagement::Logout':
   :mandatory:
-    - :cookie_value
-    - :browser_user_agent
+    - :manager_id
   :optional:
 'ManagerManagement::SendDoubleOptInLink':
   :mandatory:
@@ -74,16 +73,16 @@
     - :confirm_password
     - :r_t
   :optional:
-'ManagerManagement::ListAdmins':
+'ManagerManagement::Team::ListAdmins':
   :mandatory:
     - :client_id
   :optional:
     - :page_no
-'ManagerManagement::SuperAdmin::CheckSuperAdminRole':
+'ManagerManagement::Team::CheckSuperAdminRole':
   :mandatory:
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::InviteAdmin':
+'ManagerManagement::Team::InviteAdmin':
   :mandatory:
     - :email
     - :client_id
@@ -91,28 +90,28 @@
     - :is_super_admin
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::DeleteAdmin':
+'ManagerManagement::Team::DeleteAdmin':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
     - :manager_id
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::ResetMfa':
+'ManagerManagement::Team::ResetMfa':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
     - :manager_id
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::ResendAdminInvite':
+'ManagerManagement::Team::ResendAdminInvite':
   :mandatory:
     - :manager_id
     - :client_id
     - :to_update_client_manager_id
     - :client_manager
   :optional:
-'ManagerManagement::SuperAdmin::UpdateSuperAdminRole':
+'ManagerManagement::Team::UpdateSuperAdminRole':
   :mandatory:
     - :to_update_client_manager_id
     - :client_id
@@ -120,7 +119,7 @@
     - :is_super_admin
     - :client_manager
   :optional:
-'ManagerManagement::Team':
+'ManagerManagement::Team::Get':
    :mandatory:
      - :client_id
      - :manager
@@ -185,22 +184,12 @@
     - :client_manager
     - :fe_ost_to_stake
     - :fe_bt_to_mint
-'WalletAddressesManagement::GetAddresses':
-  :mandatory:
-  :optional:
-'WalletAddressesManagement::IsAddressAvailable':
-  :mandatory:
-    - :address
-    - :client_id
-  :optional:
 'WalletAddressesManagement::AssociateAddress':
   :mandatory:
     - :owner
     - :client_id
     - :personal_sign
-  :optional:
-'WalletAddressesManagement::SignMessages':
-  :mandatory:
+    - :client_manager
   :optional:
 'GetWorkflowStatus':
   :mandatory:
@@ -248,6 +237,7 @@
   :mandatory:
     - :client_id
     - :manager
+    - :client_manager
   :optional:
     - :sandbox_token_name
     - :sandbox_token_symbol

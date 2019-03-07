@@ -1,6 +1,6 @@
 module ManagerManagement
 
-  module SuperAdmin
+  module Team
 
     class DeleteAdmin < ServicesBase
 
@@ -15,7 +15,7 @@ module ManagerManagement
       # @params [Integer] to_update_client_manager_id (mandatory) - id of the client_manager which is to be deleted
       # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
-      # @return [ManagerManagement::SuperAdmin::DeleteAdmin]
+      # @return [ManagerManagement::Team::DeleteAdmin]
       #
       def initialize(params)
         super
@@ -106,13 +106,13 @@ module ManagerManagement
         r = super
         return r unless r.success?
 
-        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        r = ManagerManagement::Team::CheckSuperAdminRole.new(
           {client_manager: @client_manager}).perform
 
         unless r.success?
           return error_with_data(
             's_mm_sa_da_1',
-            'team_edit_not_allowed',
+            'unauthorized_to_perform_action',
             GlobalConstant::ErrorAction.default
           )
         end

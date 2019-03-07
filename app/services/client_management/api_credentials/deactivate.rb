@@ -79,13 +79,13 @@ module ClientManagement
         r = super
         return r unless r.success?
 
-        r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+        r = ManagerManagement::Team::CheckSuperAdminRole.new(
           {client_manager: @client_manager}).perform
 
         unless r.success?
           return error_with_data(
             's_cm_ac_d_1',
-            'api_key_edit_not_allowed',
+            'unauthorized_to_perform_action',
             GlobalConstant::ErrorAction.default
           )
         end

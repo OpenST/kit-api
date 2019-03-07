@@ -8,16 +8,16 @@ class FetchGoToByEconomyState < ServicesBase
   #
   # @param [Hash] params (mandatory)
   #
-  # @return [GoTo::FetchGoToByEconomyState]
+  # @return [FetchGoToByEconomyState]
   #
   def initialize(params)
 
     super
 
-    @token = params[:token]
-    @client_id = params[:client_id]
-    @from_page = params[:from_page]
-    @mint_workflow = params[:mint_workflow]
+    @token = @params[:token]
+    @client_id = @params[:client_id]
+    @from_page = @params[:from_page]
+    @mint_workflow = @params[:mint_workflow]
 
     @go_to = {}
   end

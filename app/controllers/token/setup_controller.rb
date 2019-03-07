@@ -1,12 +1,14 @@
-class Token::SetupController < WebController
+class Token::SetupController < AuthenticationController
 
-  before_action :is_client_whitelisted, :only => [:token_details_get]
+  skip_before_action :authenticate_sub_env_access, only: [
+    :request_whitelist
+  ]
 
   # Get token details
   #
   # * Author: Ankit
   # * Date: 19/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def token_details_get
     service_response = TokenManagement::GetTokenDetails.new(params).perform
@@ -25,7 +27,7 @@ class Token::SetupController < WebController
   #
   # * Author: Ankit
   # * Date: 19/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def token_details_post
     service_response = TokenManagement::InsertTokenDetails.new(params).perform
@@ -36,7 +38,7 @@ class Token::SetupController < WebController
   #
   # * Author: Ankit
   # * Date: 19/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def deploy_post
     service_response = TokenManagement::StartDeployment.new(params).perform
@@ -47,21 +49,10 @@ class Token::SetupController < WebController
   #
   # * Author: Shlok
   # * Date: 21/01/2018
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def deploy_get
     service_response = TokenManagement::GetDeploymentDetail.new(params).perform
-    render_api_response(service_response)
-  end
-
-  # Start token minting
-  #
-  # * Author: Anagha
-  # * Date: 23/01/2019
-  # * Reviewed By:
-  #
-  def mint_progress
-    service_response = TokenManagement::MintProgress.new(params).perform
     render_api_response(service_response)
   end
 
@@ -69,30 +60,11 @@ class Token::SetupController < WebController
   #
   # * Author: Ankit
   # * Date: 30/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def request_whitelist
     service_response = TokenManagement::RequestWhitelist.new(params).perform
     render_api_response(service_response)
   end
 
-
-  private
-
-  def is_client_whitelisted
-    if GlobalConstant::Base.main_sub_environment?
-      client_env_statuses = params[:client][:mainnet_statuses]
-      env_whitelisted_status = GlobalConstant::Client.mainnet_whitelisted_status
-      res_go_to = GlobalConstant::GoTo.sandbox_token_setup
-    else
-      client_env_statuses = params[:client][:sandbox_statuses]
-      env_whitelisted_status = GlobalConstant::Client.sandbox_whitelisted_status
-      res_go_to = GlobalConstant::GoTo.mainnet_token_setup
-    end
-
-    if !client_env_statuses.include?(env_whitelisted_status)
-      service_response = error_with_go_to('a_c_t_sc_1', 'data_validation_failed', res_go_to)
-      render_api_response(service_response)
-    end
-  end
 end
