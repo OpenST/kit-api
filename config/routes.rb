@@ -6,36 +6,32 @@ Rails.application.routes.draw do
     get '/health-checker' => :health_checker
   end
 
-  scope 'api/sign-up', controller: 'access/signup' do
+  scope 'api/sign-up', controller: 'access/login' do
     match '' => :sign_up_get, via: :GET
     match '' => :sign_up_post, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
-  scope 'api/verify-email', controller: 'manager/verify_email' do
+  scope 'api/verify-email', controller: 'access/verify_email' do
     match '' => :verify_email, via: :GET
     match 'request-link' => :send_verify_email_link, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope 'api/mfa', controller: 'access/mfa' do
+    match '' => :mfa, via: :GET, as: :mfa
+    match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
   end
 
   scope 'api/login', controller: 'access/login' do
     match '' => :password_auth, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
-  scope 'api/mfa', controller: 'manager/mfa' do
-    match '' => :mfa, via: :GET, as: :mfa
-    match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
-  end
-
-  scope 'api/reset-password', controller: 'access/reset_password' do
+  scope 'api/reset-password', controller: 'access/login' do
     match '' => :reset_password, via: :POST, constraints: lambda { |request| request.xhr? }
     match 'request-link' => :send_reset_password_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope 'api/logout', controller: 'manager/logout' do
     match '' => :logout, via: :GET
-  end
-
-  scope 'api/manager', controller: 'manager/detail' do
-    match '' => :get_details, via: :GET
   end
 
   scope 'api/setting/team', controller: 'setting/team' do
@@ -64,13 +60,7 @@ Rails.application.routes.draw do
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses' do
-    # TODO: Clean up later.
-    # match '' => :token_addresses_get, via: :GET
     match '' => :token_addresses_post, via: :POST, constraints: lambda { |request| request.xhr? }
-    # TODO: Clean up later.
-    #match 'is-available' => :token_addresses_is_available, via: :GET, constraints: lambda { |request| request.xhr? }
-    # TODO: Clean up later.
-    #match 'sign-messages' => :token_addresses_sign_messages, via: :GET, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/mint", controller: 'token/mint' do

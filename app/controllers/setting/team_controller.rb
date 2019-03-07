@@ -1,5 +1,7 @@
 class Setting::TeamController < AuthenticationController
 
+  skip_before_action :authenticate_sub_env_access
+
   # Get Manager's details to be shown on Team Page
   #
   # * Author: Puneet

@@ -184,22 +184,12 @@
     - :client_manager
     - :fe_ost_to_stake
     - :fe_bt_to_mint
-'WalletAddressesManagement::GetAddresses':
-  :mandatory:
-  :optional:
-'WalletAddressesManagement::IsAddressAvailable':
-  :mandatory:
-    - :address
-    - :client_id
-  :optional:
 'WalletAddressesManagement::AssociateAddress':
   :mandatory:
     - :owner
     - :client_id
     - :personal_sign
-  :optional:
-'WalletAddressesManagement::SignMessages':
-  :mandatory:
+    - :client_manager
   :optional:
 'GetWorkflowStatus':
   :mandatory:
@@ -247,6 +237,7 @@
   :mandatory:
     - :client_id
     - :manager
+    - :client_manager
   :optional:
     - :sandbox_token_name
     - :sandbox_token_symbol

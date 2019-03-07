@@ -112,7 +112,7 @@ module ManagerManagement
         unless r.success?
           return error_with_data(
             's_mm_sa_da_1',
-            'team_edit_not_allowed',
+            'unauthorized_to_perform_action',
             GlobalConstant::ErrorAction.default
           )
         end
