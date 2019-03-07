@@ -48,8 +48,7 @@
   :optional:
 'ManagerManagement::Logout':
   :mandatory:
-    - :cookie_value
-    - :browser_user_agent
+    - :manager_id
   :optional:
 'ManagerManagement::SendDoubleOptInLink':
   :mandatory:

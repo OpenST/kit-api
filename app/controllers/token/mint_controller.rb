@@ -1,6 +1,4 @@
-class Token::MintController < WebController
-
-  before_action :verify_is_xhr , :except => [:mint_get]
+class Token::MintController < AuthenticationController
 
   # token start mint
   #
@@ -24,14 +22,14 @@ class Token::MintController < WebController
     render_api_response(service_response)
   end
 
-  # Grant eth and ost
+  # Start token minting
   #
-  # * Author: Ankit
-  # * Date: 18/01/2019
+  # * Author: Anagha
+  # * Date: 23/01/2019
   # * Reviewed By: Sunil
   #
-  def grant_get
-    service_response = TokenManagement::GrantEthOst.new(params).perform
+  def mint_progress
+    service_response = TokenManagement::MintProgress.new(params).perform
     render_api_response(service_response)
   end
 end

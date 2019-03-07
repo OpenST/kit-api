@@ -1,8 +1,6 @@
-class Token::AddressesController < WebController
+class Token::AddressesController < AuthenticationController
 
-  before_action :verify_is_xhr , :except => [:token_addresses_get]
-
-  # Get Adresses
+  # Get Addresses
   #
   # * Author: Ankit
   # * Date: 19/01/2019

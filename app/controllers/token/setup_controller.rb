@@ -1,6 +1,4 @@
-class Token::SetupController < WebController
-
-  before_action :verify_is_xhr , :except => [:token_details_get, :deploy_get]
+class Token::SetupController < AuthenticationController
 
   before_action :is_client_whitelisted, :only => [:token_details_get]
 
@@ -53,17 +51,6 @@ class Token::SetupController < WebController
   #
   def deploy_get
     service_response = TokenManagement::GetDeploymentDetail.new(params).perform
-    render_api_response(service_response)
-  end
-
-  # Start token minting
-  #
-  # * Author: Anagha
-  # * Date: 23/01/2019
-  # * Reviewed By: Sunil
-  #
-  def mint_progress
-    service_response = TokenManagement::MintProgress.new(params).perform
     render_api_response(service_response)
   end
 

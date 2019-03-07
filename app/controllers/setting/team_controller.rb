@@ -1,6 +1,4 @@
-class Manager::TeamController < Manager::BaseController
-
-  before_action :verify_is_xhr , :except => [:get]
+class Setting::TeamController < AuthenticationController
 
   # Get Manager's details to be shown on Team Page
   #

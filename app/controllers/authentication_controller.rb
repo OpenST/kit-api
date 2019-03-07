@@ -1,62 +1,9 @@
-class WebController < ApplicationController
-
-  # Load extra libraries not present in API mode setup
-  [
-      ActionController::Cookies
-  ].each do |mdl|
-    include mdl
-  end
-
-  # Added CSRF token from header
-  before_action :append_csrf_token_in_params
-
-  # Check CSRF. Disable it for local postman testing.
-  include ActionController::RequestForgeryProtection
-  protect_from_forgery with: :exception
-  include CsrfTokenConcern
+class AuthenticationController < ApplicationController
 
   before_action :set_authentication_params_to_nil
-  before_action :verify_mfa_cookie
+  before_action :authenticate_by_mfa_cookie
 
   private
-
-  # Set cookie
-  #
-  # * Author: Puneet
-  # * Date: 07/12/2018
-  # * Reviewed By: Sunil
-  #
-  # @params [String] cookie_name (mandatory)
-  # @params [String] value (mandatory)
-  # @params [Time] expires (mandatory)
-  #
-  def set_cookie(cookie_name, value, expires)
-    cookies[cookie_name.to_sym] = {
-        value: value,
-        expires: expires,
-        domain: GlobalConstant::Base.cookie_domain,
-        http_only: true,
-        secure: Rails.env.production?,
-        same_site: :strict
-    }
-  end
-
-  # Delete cookie
-  #
-  # * Author: Puneet
-  # * Date: 07/12/2018
-  # * Reviewed By: Sunil
-  #
-  # @params [String] cookie_name (mandatory)
-  #
-  def delete_cookie(cookie_name)
-    cookies.delete(
-      cookie_name.to_sym,
-      domain: GlobalConstant::Base.cookie_domain,
-      secure: Rails.env.production?,
-      same_site: :strict
-    )
-  end
 
   # clear all authentication related params (as we don't want to respect these values if sent by FE)
   #
@@ -83,7 +30,7 @@ class WebController < ApplicationController
   # * Date: 07/12/2018
   # * Reviewed By: Sunil
   #
-  def mandatory_verify_password_cookie
+  def authenticate_by_password_cookie
 
     cookie_verify_rsp = verify_password_cookie
 
@@ -93,14 +40,20 @@ class WebController < ApplicationController
 
   end
 
-  # Authenticate request - verifies Password Auth cookie. if valid set vars accordingly else do nothing. DO NOT return error
+  # Authenticate request - verifies MFA Auth cookie. if invalid log user out
   #
   # * Author: Puneet
   # * Date: 07/12/2018
   # * Reviewed By: Sunil
   #
-  def optional_verify_password_cookie
-    verify_password_cookie
+  def authenticate_by_mfa_cookie
+
+    cookie_verify_rsp = verify_mfa_cookie
+
+    unless cookie_verify_rsp.success?
+      handle_cookie_validation_failure(cookie_verify_rsp)
+    end
+
   end
 
   # Check if Password cookie is valid
@@ -162,21 +115,19 @@ class WebController < ApplicationController
   #
   def verify_mfa_cookie
 
-    mfa_cookie_verify_rsp = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
+    cookie_verify_rsp = ManagerManagement::VerifyCookie::MultiFactorAuth.new(
       cookie_value: cookies[GlobalConstant::Cookie.user_cookie_name.to_sym],
       browser_user_agent: http_user_agent
     ).perform
 
-    if mfa_cookie_verify_rsp.success?
+    if cookie_verify_rsp.success?
 
-      handle_cookie_validation_success(mfa_cookie_verify_rsp, GlobalConstant::Cookie.mfa_auth_expiry.from_now)
+      handle_cookie_validation_success(cookie_verify_rsp, GlobalConstant::Cookie.mfa_auth_expiry.from_now)
 
       params[:is_multi_auth_cookie_valid] = true
       params[:is_password_auth_cookie_valid] = true
 
     else
-
-      handle_cookie_validation_failure(mfa_cookie_verify_rsp)
 
       # NOTE: Commenting this piece of code for now. Check with Sunil before opening this
 
@@ -205,11 +156,13 @@ class WebController < ApplicationController
       #
       # else
       #
-      #   handle_cookie_validation_failure(mfa_cookie_verify_rsp)
+      #   handle_cookie_validation_failure(cookie_verify_rsp)
       #
       # end
 
     end
+
+    cookie_verify_rsp
 
   end
 
@@ -265,35 +218,6 @@ class WebController < ApplicationController
     cookie_verify_rsp.data = {}
 
     render_api_response(cookie_verify_rsp)
-
-  end
-
-  # Try to assign authenticity_token from headers, if not sent in params
-  #
-  # * Author: Puneet
-  # * Date: 07/12/2018
-  # * Reviewed By: Sunil
-  #
-  def append_csrf_token_in_params
-    params[:authenticity_token] ||= request.headers.env['HTTP_X_CSRF_TOKEN']
-  end
-
-  # Verifies if the request is xhr
-  #
-  # * Author: Ankit
-  # * Date: 05/02/2019
-  # * Reviewed By: Puneet
-  #
-  def verify_is_xhr
-
-    if request.xhr?.nil?
-      error_response = error_with_data(
-        'a_c_dc_1',
-        'request_not_xhr',
-        GlobalConstant::ErrorAction.default
-      )
-      render_api_response(error_response)
-    end
 
   end
 
