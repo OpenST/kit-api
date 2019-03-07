@@ -8,8 +8,9 @@ module ContractManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [String] staker_address (mandatory) - Staker Address
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [ContractManagement::GetGatewayComposerAddress]
     #
     def initialize(params)
 

@@ -1,6 +1,4 @@
-class DeveloperController < WebController
-
-  before_action :verify_is_xhr , :except => [:developer_get]
+class DeveloperController < AuthenticationController
 
   # Get developer's page data
   #

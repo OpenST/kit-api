@@ -1,10 +1,10 @@
-class Token::MintController < WebController
+class Token::MintController < AuthenticationController
 
   # token start mint
   #
   # * Author: Alpesh
   # * Date: 19/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def mint_get
     service_response = TokenManagement::Mint.new(params).perform
@@ -15,23 +15,21 @@ class Token::MintController < WebController
   #
   # * Author: Ankit
   # * Date: 18/01/2019
-  # * Reviewed By:
+  # * Reviewed By: Sunil
   #
   def mint_post
     service_response = TokenManagement::StartMint.new(params).perform
     render_api_response(service_response)
   end
 
-  # Grant eth and ost
+  # Start token minting
   #
-  # * Author: Ankit
-  # * Date: 18/01/2019
-  # * Reviewed By:
+  # * Author: Anagha
+  # * Date: 23/01/2019
+  # * Reviewed By: Sunil
   #
-  def grant_get
-    service_response = TokenManagement::GrantEthOst.new(params).perform
+  def mint_progress
+    service_response = TokenManagement::MintProgress.new(params).perform
     render_api_response(service_response)
   end
-
-
 end

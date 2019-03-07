@@ -20,20 +20,18 @@ module TokenManagement
     # @return [TokenManagement::StartMint]
     #
     def initialize(params)
-
       super
 
-      @client_manager = params[:client_manager]
-      @approve_tx_hash = params[:approve_transaction_hash]
-      @request_stake_tx_hash = params[:request_stake_transaction_hash]
-      @staker_address = params[:staker_address]
-      @fe_ost_to_stake = params[:fe_ost_to_stake]
-      @fe_bt_to_mint = params[:fe_bt_to_mint]
+      @client_manager = @params[:client_manager]
+      @approve_tx_hash = @params[:approve_transaction_hash]
+      @request_stake_tx_hash = @params[:request_stake_transaction_hash]
+      @staker_address = @params[:staker_address]
+      @fe_ost_to_stake = @params[:fe_ost_to_stake]
+      @fe_bt_to_mint = @params[:fe_bt_to_mint]
 
       @api_response_data = {}
       @token_id = nil
       @workflow_id = nil
-
     end
 
     # Perform
@@ -84,7 +82,7 @@ module TokenManagement
 
       if validation_errors.present?
         return validation_error(
-          'tm_sm_1',
+          's_tm_sm_1',
           'invalid_api_params',
           validation_errors,
           GlobalConstant::ErrorAction.default
@@ -106,13 +104,13 @@ module TokenManagement
       r = super
       return r unless r.success?
 
-      r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+      r = ManagerManagement::Team::CheckSuperAdminRole.new(
         {client_manager: @client_manager}).perform
 
       unless r.success?
         return error_with_data(
-          's_tm_sm_1',
-          'mint_not_allowed',
+          's_tm_sm_2',
+          'unauthorized_to_perform_action',
           GlobalConstant::ErrorAction.default
         )
       end

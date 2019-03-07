@@ -3,10 +3,28 @@ class ApplicationController < ActionController::API
   # this is the top-most wrapper - to catch all the exceptions at any level
   prepend_around_action :handle_exceptions_gracefully
 
+  # Load extra libraries not present in API mode setup
+  [
+    ActionController::Cookies
+  ].each do |mdl|
+    include mdl
+  end
+
+  # Added CSRF token from header
+  before_action :append_csrf_token_in_params
+
+  # CSRF
+  include ActionController::RequestForgeryProtection
+  protect_from_forgery with: :exception
+  include CsrfTokenConcern
+
   # Sanitize URL params
   include Sanitizer
   include CookieConcern
   include Util::ResultHelper
+
+  # NOTE: Always append user agent params before sanitization happen
+  before_action :append_user_agent_to_params
 
   before_action :sanitize_params
   before_action :check_service_statuses
@@ -41,6 +59,16 @@ class ApplicationController < ActionController::API
 
   private
 
+  # Try to assign authenticity_token from headers, if not sent in params
+  #
+  # * Author: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By: Sunil
+  #
+  def append_csrf_token_in_params
+    params[:authenticity_token] ||= request.headers.env['HTTP_X_CSRF_TOKEN']
+  end
+
   #
   # Check if all services are up and running.
   # If not render Error Responses for all API's
@@ -67,22 +95,74 @@ class ApplicationController < ActionController::API
 
   end
 
+  # Sanitize params
+  #
   def sanitize_params
     sanitize_params_recursively(params)
   end
 
+  # Get User Agent Details
+  #
   def http_user_agent
     # User agent is required for cookie validation
     request.env['HTTP_USER_AGENT'].to_s
   end
 
+  # Set User Agent Details in Params
+  #
+  def append_user_agent_to_params
+    params[:browser_user_agent] = http_user_agent
+  end
+
+  # Get remote ip
+  #
   def ip_address
     request.remote_ip.to_s
   end
 
+  # Set response headers
+  #
   def set_response_headers
     response.headers["X-Robots-Tag"] = 'noindex, nofollow'
     response.headers["Content-Type"] = 'application/json; charset=utf-8'
+  end
+
+  # Set cookie
+  #
+  # * Author: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By: Sunil
+  #
+  # @params [String] cookie_name (mandatory)
+  # @params [String] value (mandatory)
+  # @params [Time] expires (mandatory)
+  #
+  def set_cookie(cookie_name, value, expires)
+    cookies[cookie_name.to_sym] = {
+      value: value,
+      expires: expires,
+      domain: GlobalConstant::Base.cookie_domain,
+      http_only: true,
+      secure: Rails.env.production?,
+      same_site: :strict
+    }
+  end
+
+  # Delete cookie
+  #
+  # * Author: Puneet
+  # * Date: 07/12/2018
+  # * Reviewed By: Sunil
+  #
+  # @params [String] cookie_name (mandatory)
+  #
+  def delete_cookie(cookie_name)
+    cookies.delete(
+      cookie_name.to_sym,
+      domain: GlobalConstant::Base.cookie_domain,
+      secure: Rails.env.production?,
+      same_site: :strict
+    )
   end
 
   # Render API response

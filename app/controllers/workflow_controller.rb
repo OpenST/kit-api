@@ -1,4 +1,4 @@
-class WorkflowController < WebController
+class WorkflowController < AuthenticationController
 
   # Get workflow status
   #

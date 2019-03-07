@@ -20,7 +20,7 @@ module TokenManagement
 
       super
 
-      @client_manager = params[:client_manager]
+      @client_manager = @params[:client_manager]
       @name = @params[:name]
       @symbol = @params[:symbol]
       @conversion_factor = @params[:conversion_factor]
@@ -99,13 +99,13 @@ module TokenManagement
       r = super
       return r unless r.success?
 
-      r = ManagerManagement::SuperAdmin::CheckSuperAdminRole.new(
+      r = ManagerManagement::Team::CheckSuperAdminRole.new(
         {client_manager: @client_manager}).perform
 
       unless r.success?
         return error_with_data(
           's_tm_itd_1',
-          'unauthorized_to_token_deploy',
+          'unauthorized_to_perform_action',
           GlobalConstant::ErrorAction.default
         )
       end

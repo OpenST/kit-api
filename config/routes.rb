@@ -6,35 +6,49 @@ Rails.application.routes.draw do
     get '/health-checker' => :health_checker
   end
 
-  scope 'api/manager', controller: 'manager/login' do
-    match 'sign-up' => :sign_up_get, via: :GET
-    match 'sign-up' => :sign_up_post, via: :POST
-    match 'mfa' => :mfa, via: :GET, as: :mfa
-    match 'mfa' => :multi_factor_auth, via: :POST, as: :multi_factor_auth
-    match 'login' => :password_auth, via: :POST
-    match 'logout' => :logout, via: :GET
-    match 'reset-password' => :reset_password, via: :POST
-    match 'send-reset-password-link' => :send_reset_password_link, via: :POST
-    match 'verify-email' => :verify_email, via: :GET
-    match 'send-verify-email-link' => :send_verify_email_link, via: :POST
-    match 'list-admins' => :list_admins, via: :GET
-    match '' => :get_details, via: :GET
-    match 'team' => :team, via: :GET
+  scope 'api/sign-up', controller: 'access/login' do
+    match '' => :sign_up_get, via: :GET
+    match '' => :sign_up_post, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
-  scope 'api/manager/super_admin', controller: 'manager/super_admin' do
-    match 'reset-mfa' => :reset_mfa, via: :POST
-    match 'invite-admin' => :invite_admin, via: :POST
-    match 'delete-admin' => :delete_admin, via: :POST
-    match 'resend-admin-invite' => :resend_admin_invite, via: :POST
-    match 'update-super-admin-role' => :update_super_admin_role, via: :POST
+  scope 'api/verify-email', controller: 'access/verify_email' do
+    match '' => :verify_email, via: :GET
+    match 'request-link' => :send_verify_email_link, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope 'api/mfa', controller: 'access/mfa' do
+    match '' => :mfa, via: :GET, as: :mfa
+    match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope 'api/login', controller: 'access/login' do
+    match '' => :password_auth, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope 'api/reset-password', controller: 'access/login' do
+    match '' => :reset_password, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'request-link' => :send_reset_password_link, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope 'api/logout', controller: 'manager/logout' do
+    match '' => :logout, via: :GET
+  end
+
+  scope 'api/setting/team', controller: 'setting/team' do
+    match '' => :get, via: :GET
+    match 'list' => :list_admins, via: :GET, constraints: lambda { |request| request.xhr? }
+    match 'reset-mfa' => :reset_mfa, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'invite-admin' => :invite_admin, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'delete-admin' => :delete_admin, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'resend-admin-invite' => :resend_admin_invite, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'update-super-admin-role' => :update_super_admin_role, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/developer", controller: 'developer' do
     match '' => :developer_get, via: :GET
-    match 'api-keys' => :api_keys_get, via: :GET
-    match 'api-keys' => :api_keys_rotate, via: :POST
-    match 'api-keys/delete' => :api_keys_deactivate, via: :POST
+    match 'api-keys' => :api_keys_get, via: :GET, constraints: lambda { |request| request.xhr? }
+    match 'api-keys' => :api_keys_rotate, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'api-keys/delete' => :api_keys_deactivate, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard", controller: 'dashboard' do
@@ -43,33 +57,32 @@ Rails.application.routes.draw do
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup' do
     match '' => :token_details_get, via: :GET
-    match '' => :token_details_post, via: :POST
+    match '' => :token_details_post, via: :POST, constraints: lambda { |request| request.xhr? }
     match 'deploy' => :deploy_get, via: :GET
-    match 'deploy' => :deploy_post, via: :POST
-    match 'mint-progress' => :mint_progress, via: :GET
-    match 'request-whitelist' => :request_whitelist, via: :POST
+    match 'deploy' => :deploy_post, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'request-whitelist' => :request_whitelist, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses' do
+    match '' => :token_addresses_post, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/mint", controller: 'token/mint' do
     match '' => :mint_get, via: :GET
-    match '' => :mint_post, via: :POST
-    match 'grant' => :grant_get, via: :GET
+    match '' => :mint_post, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'progress' => :mint_progress, via: :GET
   end
 
-  scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses' do
-    # TODO: Clean up later.
-    # match '' => :token_addresses_get, via: :GET
-    match '' => :token_addresses_post, via: :POST
-    match 'is-available' => :token_addresses_is_available, via: :GET
-    match 'sign-messages' => :token_addresses_sign_messages, via: :GET
+  scope "#{GlobalConstant::Environment.url_prefix}/api/grant", controller: 'grant' do
+    match '' => :get, via: :GET, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/contracts", controller: 'contracts/gateway_composer' do
-    match 'gateway-composer' => :get_details, via: :GET
+    match 'gateway-composer' => :get_details, via: :GET, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/workflow/:workflow_id", controller: 'workflow' do
-    match '' => :workflow_status, via: :GET
+    match '' => :workflow_status, via: :GET, constraints: lambda { |request| request.xhr? }
   end
 
   # Handle any other routes

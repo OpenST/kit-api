@@ -11,14 +11,14 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [String] address (mandatory) - Address
     #
-    # @return [TokenManagement::TokenDetails]
+    # @return [TokenManagement::GrantEthOst]
     #
     def initialize(params)
 
       super
 
-      @client_id = params[:client_id]
-      @address = params[:staker_address]
+      @client_id = @params[:client_id]
+      @address = @params[:staker_address]
 
       @api_response_data = {}
 
