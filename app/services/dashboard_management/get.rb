@@ -35,7 +35,7 @@ module DashboardManagement
         r = validate
         return r unless r.success?
 
-        r = fetch_and_validate_token
+        r = fetch_token
         return r unless r.success?
 
         r = fetch_workflow
@@ -65,7 +65,7 @@ module DashboardManagement
     #
     # Sets @token
     #
-    def fetch_and_validate_token
+    def fetch_token
 
       token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
       return error_with_go_to(
