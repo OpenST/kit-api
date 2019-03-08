@@ -182,7 +182,7 @@ module ManagerManagement
         return validation_error(
             'm_l_pa_6',
             'invalid_api_params',
-            ['client_manager_inactive'],
+            ['email_not_associated_with_client'],
             GlobalConstant::ErrorAction.default
         ) if @client_manager.blank?
 
@@ -195,7 +195,7 @@ module ManagerManagement
         return validation_error(
             'm_l_pa_7',
             'invalid_api_params',
-            ['client_manager_inactive'],
+            ['email_not_associated_with_client'],
             GlobalConstant::ErrorAction.default
         ) unless is_client_manager_active
 
