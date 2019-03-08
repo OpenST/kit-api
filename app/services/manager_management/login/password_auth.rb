@@ -90,7 +90,7 @@ module ManagerManagement
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
 
         return validation_error(
-          'm_su_1',
+          'm_l_pa_1',
           'invalid_api_params',
           validation_errors,
           GlobalConstant::ErrorAction.default
@@ -117,21 +117,21 @@ module ManagerManagement
         @manager_obj = Manager.where(email: @email).first
 
         return validation_error(
-            'mm_l_pa_1',
+            'm_l_pa_2',
             'invalid_api_params',
             ['email_not_registered'],
             GlobalConstant::ErrorAction.default
         ) if !@manager_obj.present? || !@manager_obj.password.present? || !@manager_obj.authentication_salt.present?
 
         return validation_error(
-            'mm_l_pa_2',
+            'm_l_pa_3',
             'invalid_api_params',
             ['email_auto_blocked'],
             GlobalConstant::ErrorAction.default
         ) if @manager_obj.status == GlobalConstant::Manager.auto_blocked_status
 
         return validation_error(
-            'mm_l_pa_3',
+            'm_l_pa_4',
             'invalid_api_params',
             ['email_inactive'],
             GlobalConstant::ErrorAction.default
@@ -152,7 +152,15 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def fetch_client
-        @client = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'mm_l_pa')
+        response = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'mm_l_pa')
+        return validation_error(
+            'm_l_pa_5',
+            'invalid_api_params',
+            ['email_not_associated_with_client'],
+            GlobalConstant::ErrorAction.default
+        ) unless response.success?
+
+        @client = response.data
         success
       end
 
@@ -171,7 +179,12 @@ module ManagerManagement
         @client_manager = CacheManagement::ClientManager.new([@manager_obj.id],
        {client_id: @manager_obj.current_client_id}).fetch[@manager_obj.id]
 
-        Util::EntityHelper.client_manager_not_associated_response('mm_l_pa_4') if @client_manager.blank?
+        return validation_error(
+            'm_l_pa_6',
+            'invalid_api_params',
+            ['client_manager_inactive'],
+            GlobalConstant::ErrorAction.default
+        ) if @client_manager.blank?
 
         privileges = @client_manager[:privileges]
 
@@ -179,7 +192,12 @@ module ManagerManagement
           (privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
           privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
 
-        Util::EntityHelper.client_manager_not_associated_response('mm_l_pa_5') unless is_client_manager_active
+        return validation_error(
+            'm_l_pa_7',
+            'invalid_api_params',
+            ['client_manager_inactive'],
+            GlobalConstant::ErrorAction.default
+        ) unless is_client_manager_active
 
         success
 

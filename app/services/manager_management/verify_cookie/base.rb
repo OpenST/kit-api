@@ -52,7 +52,7 @@ module ManagerManagement
           r = validate_token
           return r unless r.success?
 
-          r = validate_client
+          r = fetch_client
           return r unless r.success?
 
           r = validate_client_manager
@@ -134,20 +134,24 @@ module ManagerManagement
 
       end
 
-      # Validate client
+      # fetch client
       #
       # * Author: Puneet
       # * Date: 10/10/2017
-      # * Reviewed By:
+      # * Reviewed By: Sunil
       #
       # @return [Result::Base]
       #
-      def validate_client
+      def fetch_client
+        response = Util::EntityHelper.fetch_and_validate_client(@manager[:current_client_id], 'am_vc_')
+        return error_with_go_to(
+            response.internal_id,
+            response.general_error_identifier,
+            GlobalConstant::GoTo.logout
+        ) unless response.success?
 
-        @client = Util::EntityHelper.fetch_and_validate_client(@manager[:current_client_id], 'am_vc_')
-
+        @client = response.data
         success
-
       end
 
       # Validate client manager

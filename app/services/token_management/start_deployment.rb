@@ -40,7 +40,7 @@ module TokenManagement
         r = validate
         return r unless r.success?
 
-        r = fetch_and_validate_token
+        r = fetch_token
         return r unless r.success?
 
         r = add_token_to_response
@@ -87,7 +87,7 @@ module TokenManagement
 
     end
 
-    # validate token
+    # Fetch token
     #
     # * Author: Puneet
     # * Date: 22/02/2019
@@ -95,7 +95,7 @@ module TokenManagement
     #
     # @return [Result::Base]
     #
-    def fetch_and_validate_token
+    def fetch_token
 
       r = super
       return r unless r.success?
