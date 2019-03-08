@@ -48,6 +48,9 @@ module TokenManagement
         r = delete_old_addresses
         return r unless r.success?
 
+        r = create_api_credentials
+        return r unless r.success?
+
         success_with_data({token: @token_details.formated_cache_data})
 
       end
@@ -198,6 +201,18 @@ module TokenManagement
       TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).destroy_all
 
       success
+    end
+
+    # Create api credentials
+    #
+    #
+    # * Author: Santhosh
+    # * Date: 08/03/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def create_api_credentials
+      ::ApiCredentials::Create.new({client_id:@client_id}).perform
     end
 
   end
