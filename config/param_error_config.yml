@@ -312,3 +312,8 @@ invalid_address:
   parameter: 'address'
   code: 'invalid'
   message: 'Invalid address'
+
+cannot_deactivate_all_keys:
+  parameter: 'client_id'
+  code: 'invalid'
+  message: 'Atleast one API Key should be left as active'
