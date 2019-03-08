@@ -139,19 +139,19 @@ module DashboardManagement
     #
     def direct_request_to_saas_api
       params_for_saas_api = {
-        token_id: @token_id,
+        token_id: @token[:id],
         client_id: @client_id,
       }
 
-      # r = SaasApi::Dashboard::Get.new.perform(params_for_saas_api)
-      # return r unless r.success?
+      r = SaasApi::Dashboard::Get.new.perform(params_for_saas_api)
+      return r unless r.success?
 
-      @total_supply = '1234.12'#r.data['totalSupply']
-      @total_supply_dollar = '123'#r.data['totalSupplyDollar']
-      @circulating_supply = '2234.12'#r.data['circulatingSupply']
-      @circulating_supply_dollar = '223'#r.data['circulatingSupplyDollar']
-      @total_volume = '3234.12'#r.data['totalVolume']
-      @total_volume_dollar = '323'#r.data['totalVolumeDollar']
+      @total_supply = r.data['totalSupply']
+      @total_supply_dollar = r.data['totalSupplyDollar']
+      @circulating_supply = r.data['circulatingSupply']
+      @circulating_supply_dollar = r.data['circulatingSupplyDollar']
+      @total_volume = r.data['totalVolume']
+      @total_volume_dollar = r.data['totalVolumeDollar']
 
       success
     end
