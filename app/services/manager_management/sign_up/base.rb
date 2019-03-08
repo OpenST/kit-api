@@ -135,20 +135,21 @@ module ManagerManagement
 
       end
 
-      # Find & validate client
+      # fetch client
       #
       # * Author: Puneet
       # * Date: 06/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Sunil
+      #
+      # Sets @client
       #
       # @return [Result::Base]
       #
-      def fetch_and_validate_client
-        begin
-          @client = Util::EntityHelper.fetch_and_validate_client(@client_id, 'um_rp')
-        rescue OstCustomError => ose
-          return invalid_url_error(ose.internal_id)
-        end
+      def fetch_client
+        response = Util::EntityHelper.fetch_and_validate_client(@client_id, 'um_rp')
+        return invalid_url_error(response.internal_id) unless response.success?
+
+        @client = response.data
         success
       end
 
@@ -158,15 +159,16 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
+      # Set @inviter_manager
+      #
       # @return [Result::Base]
       #
       def fetch_and_validate_inviter_manager
 
-        begin
-          @inviter_manager = Util::EntityHelper.fetch_and_validate_manager(@inviter_manager_id, 'um_rp')
-        rescue OstCustomError => ose
-          return invalid_url_error(ose.internal_id)
-        end
+        response = Util::EntityHelper.fetch_and_validate_manager(@inviter_manager_id, 'um_rp')
+        return invalid_url_error(response.internal_id) unless response.success?
+
+        @inviter_manager = response.data
 
         client_manager = CacheManagement::ClientManager.new([@inviter_manager_id], {client_id: @client_id}).fetch[@inviter_manager_id]
         return invalid_url_error('mm_su_b_15') if client_manager[:privileges].exclude?(GlobalConstant::ClientManager.is_super_admin_privilege)

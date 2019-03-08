@@ -49,7 +49,7 @@ module TokenManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        r = fetch_and_validate_token
+        r = fetch_token
         return r unless r.success?
 
         r = add_token_to_response

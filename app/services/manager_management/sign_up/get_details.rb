@@ -49,7 +49,7 @@ module ManagerManagement
           r = fetch_and_validate_invited_manager
           return r unless r.success?
 
-          r = fetch_and_validate_client
+          r = fetch_client
           return r unless r.success?
 
           r = fetch_and_validate_inviter_manager

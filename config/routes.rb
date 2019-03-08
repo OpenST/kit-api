@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     match 'request-link' => :send_reset_password_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
-  scope 'api/logout', controller: 'manager/logout' do
+  scope 'api/logout', controller: 'access/logout' do
     match '' => :logout, via: :GET
   end
 

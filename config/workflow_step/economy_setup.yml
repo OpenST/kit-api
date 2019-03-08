@@ -1,226 +1,238 @@
 step_config:
   - kind: <%= GlobalConstant::WorkflowStep.economy_setup_init_kind%>
-    weight: 2
-    group: 8
+    weight: 0
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.generate_token_addresses_kind%>
-    weight: 2
-    group: 8
-  - kind: <%= GlobalConstant::WorkflowStep.generate_tx_worker_addresses_kind%>
     weight: 1
-    group: 8
+    group: 1
+  - kind: <%= GlobalConstant::WorkflowStep.generate_tx_worker_addresses_kind%>
+    weight: 0
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_funder_addr_kind%>
-    weight: 2
-    group: 8
+    weight: 1
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_funder_addr_kind%>
-    weight: 2
-    group: 8
+    weight: 0
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fund_ex_tx_workers_kind%>
     weight: 1
-    group: 8
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_admin_addr_kind%>
-    weight: 2
-    group: 8
-  - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_admin_addr_kind%>
     weight: 1
-    group: 8
+    group: 1
+  - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_admin_addr_kind%>
+    weight: 0
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fund_aux_worker_addr_kind%>
     weight: 1
-    group: 8
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_aux_worker_addr_kind%>
-    weight: 1
-    group: 8
+    weight: 0
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fund_token_user_ops_worker%>
     weight: 1
-    group: 8
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.verify_fund_token_user_ops_worker%>
-    weight: 1
-    group: 8
+    weight: 0
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_token_organization_kind%>
     weight: 2
-    group: 0
+    group: 2
   - kind: <%= GlobalConstant::WorkflowStep.save_origin_token_organization_kind%>
-    weight: 2
-    group: 0
+    weight: 0
+    group: 2
   - kind: <%= GlobalConstant::WorkflowStep.deploy_aux_token_organization_kind%>
-    weight: 2
-    group: 0
+    weight: 1
+    group: 2
   - kind: <%= GlobalConstant::WorkflowStep.save_aux_token_organization_kind%>
-    weight: 2
-    group: 0
+    weight: 0
+    group: 2
   - kind: <%= GlobalConstant::WorkflowStep.deploy_origin_branded_token_kind%>
-    weight: 2
-    group: 1
+    weight: 7
+    group: 3
   - kind: <%= GlobalConstant::WorkflowStep.save_origin_token_branded_token_kind%>
-    weight: 2
-    group: 1
+    weight: 0
+    group: 3
   - kind: <%= GlobalConstant::WorkflowStep.deploy_utility_branded_token_kind%>
-    weight: 2
-    group: 2
+    weight: 1
+    group: 4
   - kind: <%= GlobalConstant::WorkflowStep.save_utility_branded_token_kind%>
-    weight: 2
-    group: 2
+    weight: 0
+    group: 4
   - kind: <%= GlobalConstant::WorkflowStep.token_deploy_gateway_kind%>
-    weight: 2
-    group: 3
+    weight: 1
+    group: 5
   - kind: <%= GlobalConstant::WorkflowStep.save_token_gateway_kind%>
-    weight: 2
-    group: 3
+    weight: 0
+    group: 5
   - kind: <%= GlobalConstant::WorkflowStep.token_deploy_co_gateway_kind%>
-    weight: 2
-    group: 4
+    weight: 1
+    group: 6
   - kind: <%= GlobalConstant::WorkflowStep.save_token_co_gateway_kind%>
-    weight: 2
-    group: 4
+    weight: 0
+    group: 6
   - kind: <%= GlobalConstant::WorkflowStep.update_token_in_ost_view%>
-    weight: 2
-    group: 4
+    weight: 0
+    group: 6
   - kind: <%= GlobalConstant::WorkflowStep.activate_token_gateway_kind%>
     weight: 2
-    group: 5
+    group: 7
   - kind: <%= GlobalConstant::WorkflowStep.verify_activate_token_gateway%>
-    weight: 2
-    group: 5
+    weight: 0
+    group: 7
   - kind: <%= GlobalConstant::WorkflowStep.set_co_gateway_in_ubt_kind%>
-    weight: 2
-    group: 6
+    weight: 7
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_co_gateway_in_ubt%>
-    weight: 2
-    group: 6
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.set_gateway_in_bt_kind%>
-    weight: 2
-    group: 6
+    weight: 7
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_gateway_in_bt%>
-    weight: 2
-    group: 6
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.deploy_gateway_composer%>
-    weight: 2
-    group: 6
+    weight: 7
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_deploy_gateway_composer%>
-    weight: 2
-    group: 6
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_owner_in_ubt%>
-    weight: 2
-    group: 6
+    weight: 7
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_owner_in_ubt%>
-    weight: 2
-    group: 6
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.deploy_token_rules%>
-    weight: 1
-    group: 9
+    weight: 7
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.save_token_rules%>
-    weight: 1
-    group: 9
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.deploy_token_holder_master_copy%>
-    weight: 2
-    group: 9
+    weight: 7
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.save_token_holder_master_copy%>
-    weight: 2
-    group: 9
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.deploy_user_wallet_factory%>
-    weight: 2
-    group: 9
+    weight: 7
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.save_user_wallet_factory%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.deploy_gnosis_safe_multi_sig_master_copy%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.save_gnosis_safe_multi_sig_master_copy%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.deploy_pricer_rule%>
-    weight: 2
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.save_pricer_rule%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_delayed_recovery_master_copy%>
+    weight: 7
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.save_deploy_delayed_recovery_master_copy%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_create_and_add_modules%>
+    weight: 7
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.save_deploy_create_and_add_modules%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.fund_recovery_controller_address%>
     weight: 1
-    group: 9
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_gnosis_safe_multi_sig_master_copy%>
+    weight: 7
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.save_gnosis_safe_multi_sig_master_copy%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_pricer_rule%>
+    weight: 1
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.save_pricer_rule%>
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.register_pricer_rule%>
     weight: 1
-    group: 9
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_register_pricer_rule%>
-    weight: 1
-    group: 9
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.add_price_oracle_in_pricer_rule%>
     weight: 1
-    group: 9
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_add_price_oracle_in_pricer_rule%>
-    weight: 1
-    group: 9
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.set_accepted_margin_in_pricer_rule%>
-    weight: 2
-    group: 9
+    weight: 1
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_accepted_margin_in_pricer_rule%>
-    weight: 1
-    group: 9
-  - kind: <%= GlobalConstant::WorkflowStep.verify_economy_setup%>
-    weight: 1
-    group: 6
-  - kind: <%= GlobalConstant::WorkflowStep.assign_shards%>
-    weight: 1
-    group: 6
-  - kind: <%= GlobalConstant::WorkflowStep.deploy_proxy_factory%>
-    weight: 1
-    group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.save_proxy_factory%>
-    weight: 1
-    group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.initialize_company_token_holder_in_db%>
-    weight: 1
-    group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.create_company_wallet%>
-    weight: 1
-    group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.verify_create_company_wallet%>
-    weight: 1
-    group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_companyTH_in_UBT%>
-    weight: 1
-    group: 10
-  - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_companyTH_in_UBT%>
-    weight: 1
-    group: 10
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.post_token_rules_deploy%>
+    weight: 0
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_TR_in_UBT%>
     weight: 1
-    group: 9
+    group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_TR_in_UBT%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.assign_shards%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.deploy_proxy_factory%>
+    weight: 1
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.save_proxy_factory%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.initialize_company_token_holder_in_db%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.create_company_wallet%>
+    weight: 1
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.verify_create_company_wallet%>
+    weight: 0
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_companyTH_in_UBT%>
     weight: 1
     group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_companyTH_in_UBT%>
+    weight: 0
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.verify_economy_setup%>
+    weight: 0
+    group: 9
   - kind: <%= GlobalConstant::WorkflowStep.mark_success%>
-    weight: 2
-    group: 7
+    weight: 0
+    group: 9
 
 
 group_config:
-  0:
-    display_text: 'Deploying organization contracts'
-    name: "Organization Deployment"
   1:
-    display_text: 'Setting up conversion rate on origin chain'
-    name: 'Organization Deployment'
-  2:
-    display_text: 'Deploying utility branded token contract'
-    name: 'UBT Deployment'
-  3:
-    display_text: 'Deploying gateway contract on origin chain'
-    name: 'Gateway Deployment'
-  4:
-    display_text: 'Deploying co-gateway contract on auxiliary chain'
-    name: 'Co-Gateway Deployment'
-  5:
-    display_text: 'Linking gateways'
-    name: 'Gateway Link'
-  6:
-    display_text: 'Verifying and finalizing token setup'
-    name: 'Token Setup Finalization'
-  7:
-    display_text: 'Token Setup Completed'
-    name: 'Completed'
-  8:
     display_text: 'Initializing'
     name: 'Funding addresses'
-  9:
-    display_text: 'Setting up basic Token Rules'
-    name: 'Token Rules Deployment'
-  10:
-    display_text: 'Setting up Company Token Holder'
+  2:
+    display_text: 'Deploying organization contracts'
+    name: "Organization Deployment"
+  3:
+    display_text: 'Setting up conversion rate on origin chain'
+    name: 'Organization Deployment'
+  4:
+    display_text: 'Deploying utility branded token contract'
+    name: 'UBT Deployment'
+  5:
+    display_text: 'Deploying gateway contract on origin chain'
+    name: 'Gateway Deployment'
+  6:
+    display_text: 'Deploying co-gateway contract on auxiliary chain'
+    name: 'Co-Gateway Deployment'
+  7:
+    display_text: 'Linking gateways'
+    name: 'Gateway Link'
+  8:
+    display_text: 'Setting up company token holder'
     name: 'Company Token Holder Deployment'
+  9:
+    display_text: 'Verifying and finalizing token setup'
+    name: 'Token Setup Finalization'

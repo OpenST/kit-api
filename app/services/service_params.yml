@@ -149,7 +149,7 @@
     - :from_page
   :optional:
       - :mint_workflow
-'TokenManagement::GetTokenDetails':
+'TokenManagement::GetTokenDetailsBeforeSetup':
   :mandatory:
     - :client_id
   :optional:

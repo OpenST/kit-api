@@ -42,7 +42,7 @@ module TokenManagement
         r = fetch_workflows
         return r unless r.success?
 
-        r = fetch_and_validate_token
+        r = fetch_token
         return r unless r.success?
 
         r = fetch_goto
@@ -57,7 +57,7 @@ module TokenManagement
         r = get_details_from_saas
         return r unless r.success?
 
-        r = fetch_default_price_points
+        r = fetch_price_points
         return r unless r.success?
 
         r = append_logged_in_manager_details

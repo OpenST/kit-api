@@ -1,78 +1,72 @@
 step_config:
   - kind: <%= GlobalConstant::WorkflowStep.bt_stake_and_mint_init%>
-    weight: 5
-    group: 0
+    weight: 0
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.approve_gateway_composer_trx%>
-    weight: 5
-    group: 0
+    weight: 6
+    group: 1
   - kind: <%= GlobalConstant::WorkflowStep.staker_request_stake_trx%>
-    weight: 5
+    weight: 10
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.check_gc_allowance%>
-    weight: 5
+    weight: 0
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fetch_stake_request_hash%>
-    weight: 5
+    weight: 0
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.accept_stake%>
-    weight: 5
+    weight: 47
     group: 1
   - kind: <%=GlobalConstant::WorkflowStep.check_stake_status%>
-    weight: 5
-    group: 2
+    weight: 0
+    group: 1
   - kind: <%=GlobalConstant::WorkflowStep.fetch_stake_intent_message_hash%>
-    weight: 5
+    weight: 0
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.commit_state_root%>
-    weight: 5
+    weight: 7
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.update_committed_state_root_info%>
-    weight: 5
+    weight: 0
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.prove_gateway_on_co_gateway%>
-    weight: 5
+    weight: 8
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.check_prove_gateway_status%>
-    weight: 5
+    weight: 0
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.confirm_stake_intent%>
-    weight: 5
+    weight: 7
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.check_confirm_stake_status%>
-    weight: 5
-    group: 3
+    weight: 0
+    group: 2
   - kind: <%=GlobalConstant::WorkflowStep.progress_stake%>
-    weight: 6
+    weight: 7
     group: 3
   - kind: <%=GlobalConstant::WorkflowStep.check_progress_stake_status%>
-    weight: 6
+    weight: 0
     group: 3
   - kind: <%=GlobalConstant::WorkflowStep.progress_mint%>
-    weight: 6
-    group: 3
+    weight: 8
+    group: 4
   - kind: <%=GlobalConstant::WorkflowStep.check_progress_mint_status%>
-    weight: 6
-    group: 3
+    weight: 0
+    group: 4
   - kind: <%=GlobalConstant::WorkflowStep.mark_success%>
-    weight: 6
-    group: 3
+    weight: 0
+    group: 4
 
 group_config:
-  0:
-    display_text: 'Approve gateway contract to stake OST'
-    name: "Approve"
   1:
-    display_text: 'Checking stake status'
-    name: 'stake status'
+    display_text: 'Accepting stake request'
+    name: 'Accept stake'
   2:
-    display_text: 'Finalize the stake transaction on auxiliary chain'
+    display_text: 'Proving stake transaction on auxiliary chain'
     name: 'Stake transaction finalization'
   3:
-    display_text: 'Verifying the gateway contract on auxiliary chain'
-    name: 'verifying gateway contract '
-  4:
-    display_text: 'Locking the tokens declared on origin chain'
+    display_text: 'Locking the tokens staked on origin chain'
     name: 'Locking tokens'
-  5:
-    display_text: 'Minting tokens'
+  4:
+    display_text: 'Minting tokens on auxiliary chain'
     name: 'Minting tokens'
