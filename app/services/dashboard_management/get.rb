@@ -66,8 +66,13 @@ module DashboardManagement
     # Sets @token
     #
     def fetch_and_validate_token
+
       token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
-      return token_resp unless token_resp.success?
+      return error_with_go_to(
+          token_resp.internal_id,
+          token_resp.general_error_identifier,
+          GlobalConstant::GoTo.token_setup
+      ) unless token_resp.success?
 
       @token = token_resp.data
 
