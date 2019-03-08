@@ -203,6 +203,26 @@ module GlobalConstant
       def save_gnosis_safe_multi_sig_master_copy
         'saveGnosisSafeMultiSigMasterCopy'
       end
+
+      def deploy_delayed_recovery_master_copy
+        'deployDelayedRecoveryModuleMasterCopy'
+      end
+
+      def save_deploy_delayed_recovery_master_copy
+        'saveDelayedRecoveryModuleMasterCopy'
+      end
+
+      def deploy_create_and_add_modules
+        'deployCreateAndAddModules'
+      end
+
+      def save_deploy_create_and_add_modules
+        'saveCreateAndAddModules'
+      end
+
+      def fund_recovery_controller_address
+        'fundRecoveryControllerAddress'
+      end
       
       def deploy_pricer_rule
         'deployPricerRule'
@@ -273,7 +293,7 @@ module GlobalConstant
       end
 
       def fund_ex_tx_workers
-        'fund_ex_tx_workers'
+        'fundExTxWorkers'
       end
       
       def set_internal_actor_for_TR_in_UBT

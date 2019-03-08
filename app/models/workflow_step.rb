@@ -94,6 +94,12 @@ class WorkflowStep < DbConnection::KitSaasSubenv
     GlobalConstant::WorkflowStep.commit_state_root => 151,
     GlobalConstant::WorkflowStep.update_committed_state_root_info => 152,
 
+    GlobalConstant::WorkflowStep.deploy_delayed_recovery_master_copy => 131,
+    GlobalConstant::WorkflowStep.save_deploy_delayed_recovery_master_copy => 132,
+    GlobalConstant::WorkflowStep.deploy_create_and_add_modules => 133,
+    GlobalConstant::WorkflowStep.save_deploy_create_and_add_modules => 134,
+    GlobalConstant::WorkflowStep.fund_recovery_controller_address => 135,
+
 
     GlobalConstant::WorkflowStep.grant_eth_ost_init => 171,
     GlobalConstant::WorkflowStep.grant_eth => 172,
