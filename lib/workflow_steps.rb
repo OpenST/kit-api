@@ -127,8 +127,6 @@ class WorkflowSteps
           status: @workflow_data_map[workflow_id].status
         }
 
-        Rails.logger.info "===Kinds used in pc calc #{step['kind']} #{kind_to_data_map[step['kind']].inspect}"
-
         if kind_to_data_map[step['kind']]
           if kind_to_data_map[step['kind']].status == GlobalConstant::WorkflowStep.processed_status
             percentage_completed = percentage_completed + step['weight']

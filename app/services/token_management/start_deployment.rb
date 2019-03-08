@@ -40,7 +40,7 @@ module TokenManagement
         r = validate
         return r unless r.success?
 
-        r = fetch_and_validate_token
+        r = fetch_token
         return r unless r.success?
 
         r = add_token_to_response
@@ -50,9 +50,6 @@ module TokenManagement
         return r unless r.success?
 
         r = fetch_workflow_current_status
-        return r unless r.success?
-
-        r = enqueue_job
         return r unless r.success?
 
         success_with_data(@api_response_data)
@@ -87,7 +84,7 @@ module TokenManagement
 
     end
 
-    # validate token
+    # Fetch token
     #
     # * Author: Puneet
     # * Date: 22/02/2019
@@ -95,7 +92,7 @@ module TokenManagement
     #
     # @return [Result::Base]
     #
-    def fetch_and_validate_token
+    def fetch_token
 
       r = super
       return r unless r.success?
@@ -172,27 +169,6 @@ module TokenManagement
       }
 
       success
-    end
-
-    # Enqueue Job
-    #
-    # * Author: Ankit
-    # * Date: 05/02/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def enqueue_job
-
-      BackgroundJob.enqueue(
-        CreateApiCredentialsJob,
-        {
-          client_id: @client_id
-        }
-      )
-
-      success
-
     end
 
   end

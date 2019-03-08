@@ -1,6 +1,6 @@
 module TokenManagement
 
-  class GetTokenDetails < TokenManagement::Base
+  class GetTokenDetailsBeforeSetup < TokenManagement::Base
 
     # Initialize
     #
@@ -11,7 +11,7 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Object] client_manager(optional) - Client manager
     #
-    # @return [TokenManagement::GetTokenDetails]
+    # @return [TokenManagement::GetTokenDetailsBeforeSetup]
     #
     def initialize(params)
 

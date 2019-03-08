@@ -4,14 +4,14 @@ class Token::SetupController < AuthenticationController
     :request_whitelist
   ]
 
-  # Get token details
+  # Get token details before setup
   #
   # * Author: Ankit
   # * Date: 19/01/2019
   # * Reviewed By: Sunil
   #
   def token_details_get
-    service_response = TokenManagement::GetTokenDetails.new(params).perform
+    service_response = TokenManagement::GetTokenDetailsBeforeSetup.new(params).perform
 
     # set last used env cookie
     set_cookie(

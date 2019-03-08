@@ -108,7 +108,7 @@ module ClientManagement
         return validation_error(
           's_cm_ac_d_2',
           'invalid_api_params',
-          ['invalid_client_id'],
+          ['cannot_deactivate_all_keys'],
           GlobalConstant::ErrorAction.default
         ) if api_credentials.length <= 1
 
@@ -121,7 +121,7 @@ module ClientManagement
         return validation_error(
           's_cm_ac_d_3',
           'invalid_api_params',
-          ['invalid_client_id'],
+          ['cannot_deactivate_all_keys'],
           GlobalConstant::ErrorAction.default
         ) if @deactivated_api_key.blank?
 
