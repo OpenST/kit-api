@@ -58,6 +58,11 @@ email_inactive:
   code: 'invalid'
   message: 'The email address you provided is inactive. Please contact Support.'
 
+email_not_associated_with_client:
+  parameter: 'email'
+  code: 'invalid'
+  message: 'The email address you provided is not associated with any client. Please contact Support.'
+
 to_update_client_manager_id_inactive:
   parameter: 'to_update_client_manager_id'
   code: 'invalid'
@@ -307,3 +312,8 @@ invalid_address:
   parameter: 'address'
   code: 'invalid'
   message: 'Invalid address'
+
+cannot_deactivate_all_keys:
+  parameter: 'client_id'
+  code: 'invalid'
+  message: 'Atleast one API Key should be left as active'

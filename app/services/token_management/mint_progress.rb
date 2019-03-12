@@ -34,7 +34,7 @@ module TokenManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        r = fetch_and_validate_token
+        r = fetch_token
         return r unless r.success?
 
         r = fetch_workflows
@@ -51,7 +51,7 @@ module TokenManagement
         r = fetch_workflow_current_status
         return r unless r.success?
 
-        r = fetch_default_price_points
+        r = fetch_price_points
         return r unless r.success?
 
         r = append_logged_in_manager_details

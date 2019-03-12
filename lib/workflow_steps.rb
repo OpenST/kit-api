@@ -29,10 +29,10 @@ class WorkflowSteps
   # @return [Result::Base]
   def perform
 
-    r = fetch_workflow_steps
+    r = fetch_workflow_data
     return r unless r.success?
 
-    fetch_workflow_data
+    r = fetch_workflow_steps
     return r unless r.success?
 
     r = calculate_progress
@@ -81,6 +81,7 @@ class WorkflowSteps
   #
   # @return [Result::Base]
   #
+  # TODO: Should fetch from cache
   def fetch_workflow_steps
     @workflow_steps_data_map = {}
     workflow_step_data = WorkflowStep.where(workflow_id: @workflow_ids).order('id ASC').all
@@ -92,7 +93,7 @@ class WorkflowSteps
   end
 
   def fetch_workflow_data
-    @workflow_data_map = KitSaasSharedCacheManagement::Workflow.new(@workflow_steps_data_map.keys).fetch
+    @workflow_data_map = KitSaasSharedCacheManagement::Workflow.new(@workflow_ids).fetch
     success
   end
 
@@ -129,11 +130,10 @@ class WorkflowSteps
         if kind_to_data_map[step['kind']]
           if kind_to_data_map[step['kind']].status == GlobalConstant::WorkflowStep.processed_status
             percentage_completed = percentage_completed + step['weight']
-          elsif kind_to_data_map[step['kind']].status == GlobalConstant::WorkflowStep.queued_status || kind_to_data_map[step['kind']].status == GlobalConstant::WorkflowStep.pending_status
-
-            display_text = step_group_display_text
-            display_name = step_group_name
           end
+
+          display_text = step_group_display_text
+          display_name = step_group_name
         end
       end
 
