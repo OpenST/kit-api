@@ -4,7 +4,7 @@ class DashboardController < AuthenticationController
   #
   # * Author: Alpesh
   # * Date: 6/03/2019
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   def get
     service_response = DashboardManagement::Get.new(params).perform

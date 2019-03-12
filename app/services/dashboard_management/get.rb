@@ -6,7 +6,7 @@ module DashboardManagement
     #
     # * Author: Alpesh
     # * Date: 6/03/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @params [Integer] client_id (mandatory) - Client Id
     #
@@ -24,7 +24,7 @@ module DashboardManagement
     #
     # * Author: Alpesh
     # * Date: 6/03/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -36,9 +36,6 @@ module DashboardManagement
         return r unless r.success?
 
         r = fetch_token
-        return r unless r.success?
-
-        r = fetch_workflow
         return r unless r.success?
 
         r = fetch_goto
@@ -59,7 +56,7 @@ module DashboardManagement
     #
     # * Author: Alpesh
     # * Date: 6/03/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -79,31 +76,11 @@ module DashboardManagement
       success
     end
 
-    # Fetch workflow details
-    #
-    # * Author: Shlok
-    # * Date: 21/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def fetch_workflow
-      @deployment_workflow = Workflow.where({
-                                              client_id: @client_id,
-                                              kind: Workflow.kinds[GlobalConstant::Workflow.token_deploy]
-                                            })
-                               .order('id DESC')
-                               .limit(1).first
-
-      success
-
-    end
-
     # Fetch token details
     #
-    # * Author: Shlok
+    # * Author: Alpesh
     # * Date: 21/01/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -119,9 +96,9 @@ module DashboardManagement
 
     # fetch the sub env response data entity
     #
-    # * Author: Ankit
+    # * Author: Alpesh
     # * Date: 01/02/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -138,7 +115,7 @@ module DashboardManagement
     #
     # * Author: Alpesh
     # * Date: 6/03/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -165,7 +142,7 @@ module DashboardManagement
     #
     # * Author: Alpesh
     # * Date: 6/03/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
