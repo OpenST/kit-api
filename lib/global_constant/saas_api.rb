@@ -44,6 +44,10 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/token/mint/grant"
     end
 
+    def self.get_dashboard
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/get-dashboard"
+    end
+
   end
 
 end
