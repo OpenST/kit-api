@@ -1,6 +1,6 @@
 step_config:
   - kind: <%= GlobalConstant::WorkflowStep.bt_stake_and_mint_init%>
-    weight: 0
+    weight: 3
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.approve_gateway_composer_trx%>
     weight: 6
@@ -9,52 +9,52 @@ step_config:
     weight: 10
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.check_gc_allowance%>
-    weight: 0
+    weight: 1
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.fetch_stake_request_hash%>
-    weight: 0
+    weight: 1
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.accept_stake%>
-    weight: 47
+    weight: 34
     group: 1
   - kind: <%=GlobalConstant::WorkflowStep.check_stake_status%>
-    weight: 0
+    weight: 1
     group: 1
   - kind: <%=GlobalConstant::WorkflowStep.fetch_stake_intent_message_hash%>
-    weight: 0
+    weight: 1
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.commit_state_root%>
     weight: 7
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.update_committed_state_root_info%>
-    weight: 0
+    weight: 1
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.prove_gateway_on_co_gateway%>
     weight: 8
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.check_prove_gateway_status%>
-    weight: 0
+    weight: 1
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.confirm_stake_intent%>
     weight: 7
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.check_confirm_stake_status%>
-    weight: 0
+    weight: 1
     group: 2
   - kind: <%=GlobalConstant::WorkflowStep.progress_stake%>
     weight: 7
     group: 3
   - kind: <%=GlobalConstant::WorkflowStep.check_progress_stake_status%>
-    weight: 0
+    weight: 1
     group: 3
   - kind: <%=GlobalConstant::WorkflowStep.progress_mint%>
     weight: 8
     group: 4
   - kind: <%=GlobalConstant::WorkflowStep.check_progress_mint_status%>
-    weight: 0
+    weight: 1
     group: 4
   - kind: <%=GlobalConstant::WorkflowStep.mark_success%>
-    weight: 0
+    weight: 1
     group: 4
 
 group_config:

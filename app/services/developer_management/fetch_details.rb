@@ -137,6 +137,12 @@ module DeveloperManagement
       token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
       token_addresses = token_addresses_data[token_id]
 
+      if token_addresses[GlobalConstant::TokenAddresses.owner_address_kind].nil?
+        return success
+      end
+      @addresses['account_owner_address'] = token_addresses[GlobalConstant::TokenAddresses.owner_address_kind][:address]
+
+
       if token_addresses[GlobalConstant::TokenAddresses.branded_token_contract].nil?
         return success
       end
