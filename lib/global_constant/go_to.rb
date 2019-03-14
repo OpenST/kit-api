@@ -95,12 +95,6 @@ module GlobalConstant
         }
       end
 
-      def dashboard
-        {
-          by_screen_name: :dashboard
-        }
-      end
-
       def identify_wf_goto(workflow)
         if workflow.kind == GlobalConstant::Workflow.token_deploy
           return token_deploy
