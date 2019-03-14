@@ -12,6 +12,7 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
+      # TODO - comments
       # @return [Email::HookCreator::Base] returns an object of Email::HookCreator::Base class
       #
       def initialize(params)
@@ -32,6 +33,9 @@ module Email
       def perform
 
         r = validate
+        return r unless r.success?
+
+        r = validate_receiver_entity
         return r unless r.success?
 
         handle_event
@@ -86,7 +90,9 @@ module Email
       #
       def validate_receiver_entity
 
-        if Util::CommonValidator.is_integer?(@receiver_entity_id) && GlobalConstant::EmailServiceApiCallHook.receiver_entity_kind.include?(@receiver_entity_kind)
+        if Util::CommonValidator.is_integer?(@receiver_entity_id) &&
+          EmailServiceApiCallHook.receiver_entity_kinds[@receiver_entity_kind]
+
           success
         else
           validation_error(
