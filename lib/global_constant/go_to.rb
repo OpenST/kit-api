@@ -47,15 +47,15 @@ module GlobalConstant
         }
       end
 
-      def mainnet_token_setup
+      def mainnet_token_dashboard
         {
-          by_screen_name: :mainnet_token_setup
+          by_screen_name: :mainnet_token_dashboard
         }
       end
 
-      def sandbox_token_setup
+      def sandbox_token_dashboard
         {
-          by_screen_name: :sandbox_token_setup
+          by_screen_name: :sandbox_token_dashboard
         }
       end
 
