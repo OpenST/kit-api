@@ -36,17 +36,17 @@ missing_password_auth_cookie_value:
 email_not_allowed_for_dev_program:
   parameter: 'email'
   code: 'invalid'
-  message: 'In order to access OST KIT, please send an email to support@ost.com'
+  message: 'In order to access OST Platform, please send an email to support@ost.com'
 
 email_not_registered:
   parameter: 'email'
   code: 'invalid'
-  message: 'The email address you provided is not associated with an OST KIT⍺ account. Please sign up.'
+  message: 'The email address you provided is not associated with an OST Platform account. Please sign up.'
 
 manager_not_invited:
   parameter: 'to_update_client_manager_id'
   code: 'invalid'
-  message: 'The email address you provided is not associated with an OST KIT⍺ account. Please invite the admin first.'
+  message: 'The email address you provided is not associated with an OST Platform account. Please invite the admin first.'
 
 email_auto_blocked:
   parameter: 'email'
