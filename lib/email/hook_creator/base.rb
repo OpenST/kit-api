@@ -15,7 +15,8 @@ module Email
       # @return [Email::HookCreator::Base] returns an object of Email::HookCreator::Base class
       #
       def initialize(params)
-        @email = params[:email]
+        @receiver_entity_id = params[:receiver_entity_id]
+        @receiver_entity_kind = params[:receiver_entity_kind]
         @custom_description = params[:custom_description]
         @custom_attributes = params[:custom_attributes] || {}
       end
@@ -83,9 +84,9 @@ module Email
       #
       # @return [Result::Base] returns an object of Result::Base class
       #
-      def validate_email
+      def validate_receiver_entity
 
-        if Util::CommonValidator.is_valid_email?(@email) && Util::CommonValidator.is_email_send_allowed?(@email)
+        if Util::CommonValidator.is_integer?(@receiver_entity_id) && GlobalConstant::EmailServiceApiCallHook.receiver_entity_kind.include?(@receiver_entity_kind)
           success
         else
           validation_error(
@@ -133,11 +134,12 @@ module Email
       #
       def create_hook(params = {})
         EmailServiceApiCallHook.create!(
-          event_type: event_type,
-          email: @email,
-          execution_timestamp: params[:execution_timestamp] || current_timestamp,
-          custom_description: @custom_description,
-          params: params
+            receiver_entity_id: @receiver_entity_id,
+            receiver_entity_kind: @receiver_entity_kind,
+            event_type: event_type,
+            execution_timestamp: params[:execution_timestamp] || current_timestamp,
+            custom_description: @custom_description,
+            params: params
         )
       end
 

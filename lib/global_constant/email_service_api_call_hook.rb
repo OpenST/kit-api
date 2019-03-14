@@ -21,6 +21,28 @@ module GlobalConstant
 
       ########## entity_types #############
 
+      ########## receiver_entity_kinds #############
+
+      def client_receiver_entity_kind
+        'client'
+      end
+
+      def manager_receiver_entity_kind
+        'manager'
+      end
+
+      def support_receiver_entity_kind
+        'support'
+      end
+
+      ########## receiver_entity_kinds #############
+
+      def receiver_entity_id_for_ost_support
+        0
+      end
+      
+      
+
     end
 
   end

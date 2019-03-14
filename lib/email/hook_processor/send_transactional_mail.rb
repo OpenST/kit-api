@@ -57,9 +57,9 @@ module Email
         send_mail_params = @hook.params
 
         send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(
-          @hook.email,
-          send_mail_params[:template_name],
-          send_mail_params[:template_vars]
+          @email,
+          send_mail_params["template_name"],
+          send_mail_params["template_vars"]
         )
 
         if send_mail_response['error'].present?

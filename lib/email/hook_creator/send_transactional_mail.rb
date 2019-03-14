@@ -93,7 +93,7 @@ module Email
       # @return [Result::Base] returns an object of Result::Base class
       #
       def validate_template_vars
-
+        
         return error_with_data(
             'e_hc_stm_6',
             'something_went_wrong',
@@ -128,6 +128,14 @@ module Email
 
           return error_with_data(
             'e_hc_stm_7',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+          ) if @template_vars[:manager_email_id].blank?
+
+        elsif GlobalConstant::PepoCampaigns.is_recovery_request_submission_template?(@template_name)
+  
+          return error_with_data(
+            'e_hc_stm_8',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:manager_email_id].blank?

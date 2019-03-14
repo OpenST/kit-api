@@ -46,7 +46,8 @@ class InviteJob < ApplicationJob
   def add_contact_in_email_service
 
     Email::HookCreator::AddContact.new(
-        email: @manager[:email],
+        receiver_entity_id: @manager_id,
+        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         custom_attributes: {
             GlobalConstant::PepoCampaigns.user_registered_attribute => GlobalConstant::PepoCampaigns.user_registered_value
         }
@@ -62,7 +63,8 @@ class InviteJob < ApplicationJob
   #
   def send_invite_link
     r = Email::HookCreator::SendTransactionalMail.new(
-        email: @manager[:email],
+        receiver_entity_id: @manager_id,
+        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         template_name: GlobalConstant::PepoCampaigns.invite_manager_template,
         template_vars: {
             invite_token: CGI.escape(@invite_token),
