@@ -91,7 +91,7 @@ module Google
     #
     def client
       env_name = Rails.env.production? ? '' :  "- #{GlobalConstant::Base.environment_name_short} - #{GlobalConstant::Base.env_identifier}"
-      @client ||= ROTP::TOTP.new(@secret, issuer: "OST Kit #{env_name}")
+      @client ||= ROTP::TOTP.new(@secret, issuer: "OST Platform #{env_name}")
     end
 
   end

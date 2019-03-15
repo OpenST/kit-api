@@ -177,7 +177,7 @@ class AuthenticationController < ApplicationController
     if GlobalConstant::Base.main_sub_environment?
       client_env_statuses = params[:client][:mainnet_statuses]
       allowed_status = GlobalConstant::Client.mainnet_whitelisted_status
-      error_go_to = GlobalConstant::GoTo.sandbox_token_setup
+      error_go_to = GlobalConstant::GoTo.sandbox_token_dashboard
     else
       client_env_statuses = params[:client][:sandbox_statuses]
       allowed_status = GlobalConstant::Client.sandbox_whitelisted_status
