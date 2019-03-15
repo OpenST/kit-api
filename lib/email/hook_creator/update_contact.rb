@@ -10,7 +10,6 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      #
       # @params [Hash] user_Settings (optional) - user settings which has to be updated for this email
       #
       # @return [Email::HookCreator::UpdateContact] returns an object of Email::HookCreator::UpdateContact class

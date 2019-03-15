@@ -12,7 +12,7 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      # @params [String] receiver_entity_id (mandatory) - receiver entity id that would go into hooks table
+      # @params [Integer] receiver_entity_id (mandatory) - receiver entity id that would go into hooks table
       # @params [String] receiver_entity_kind (mandatory) - receiver entity kind
       # @params [String] custom_description (optional) - description which would be logged in email service hooks table
       # @params [Hash] custom_attributes (optional) - attribute which are to be set for this email
