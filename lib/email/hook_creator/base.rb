@@ -12,7 +12,11 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      # TODO - comments
+      # @params [String] receiver_entity_id (mandatory) - receiver entity id that would go into hooks table
+      # @params [String] receiver_entity_kind (mandatory) - receiver entity kind
+      # @params [String] custom_description (optional) - description which would be logged in email service hooks table
+      # @params [Hash] custom_attributes (optional) - attribute which are to be set for this email
+      #
       # @return [Email::HookCreator::Base] returns an object of Email::HookCreator::Base class
       #
       def initialize(params)
@@ -80,7 +84,7 @@ module Email
         fail 'sub class to implement'
       end
 
-      # Validate email
+      # Validate receiver entity id and receiver entity kind
       #
       # * Author: Puneet
       # * Date: 12/01/2018
@@ -91,14 +95,14 @@ module Email
       def validate_receiver_entity
 
         if Util::CommonValidator.is_integer?(@receiver_entity_id) &&
-          EmailServiceApiCallHook.receiver_entity_kinds[@receiver_entity_kind]
+          EmailServiceApiCallHook.receiver_entity_kinds[@receiver_entity_kind].present?
 
           success
         else
           validation_error(
               'e_hc_b_3',
               'invalid_api_params',
-              ['invalid_email'],
+              [],
               GlobalConstant::ErrorAction.default
           )
         end

@@ -10,11 +10,9 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      # @param [String] email (mandatory) - Email
-      # @param [String] event_type (mandatory) - event_type that would go into hooks table
       # @param [String] template_name (mandatory) - Template Name
       # @param [Hash] template_vars (mandatory) - Template Vars
-      # @params [String] custom_description (optional) - description which would be logged in email service hooks table
+      #
       #
       # @return [Email::HookCreator::SendTransactionalMail]  returns an object of Email::HookCreator::SendTransactionalMail class
       #
