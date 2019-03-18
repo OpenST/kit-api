@@ -6,6 +6,11 @@ Rails.application.routes.draw do
     get '/health-checker' => :health_checker
   end
 
+  scope 'api/admin', controller: 'admin/whitelist', :format => false do
+    match 'whitelist/domain' => :domain, via: :GET
+    match 'whitelist/email' => :email, via: :GET
+  end
+
   scope 'api/sign-up', controller: 'access/login', :format => false do
     match '' => :sign_up_get, via: :GET
     match '' => :sign_up_post, via: :POST, constraints: lambda { |request| request.xhr? }

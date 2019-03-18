@@ -96,11 +96,14 @@ module ManagerManagement
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
 
         return validation_error(
-          'm_su_1',
+          'mm_su_wi_1',
           'invalid_api_params',
            validation_errors,
            GlobalConstant::ErrorAction.default
         ) if validation_errors.present?
+
+        r = VerifyEmailWhitelisting.new(email: @email).perform
+        return r unless r.success?
 
         success
 
@@ -123,7 +126,7 @@ module ManagerManagement
           if @manager_obj.status == GlobalConstant::Manager.invited_status
 
             return validation_error(
-              'mm_su_wi_1',
+              'mm_su_wi_3',
               'invalid_api_params',
               ['already_associated_email'],
               GlobalConstant::ErrorAction.default
@@ -132,7 +135,7 @@ module ManagerManagement
           end
 
           return validation_error(
-              'mm_su_wi_2',
+              'mm_su_wi_4',
               'invalid_api_params',
               ['already_registered_email'],
               GlobalConstant::ErrorAction.default

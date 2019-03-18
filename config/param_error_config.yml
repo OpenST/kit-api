@@ -33,7 +33,7 @@ missing_password_auth_cookie_value:
   code: 'missing'
   message: 'Your session has expired. Please refresh your page.'
 
-email_not_allowed_for_dev_program:
+email_not_allowed_to_access_kit:
   parameter: 'email'
   code: 'invalid'
   message: 'In order to access OST Platform, please send an email to support@ost.com'
@@ -317,3 +317,13 @@ cannot_deactivate_all_keys:
   parameter: 'client_id'
   code: 'invalid'
   message: 'Atleast one API Key should be left as active'
+
+missing_domain:
+  parameter: 'domain'
+  code: 'missing'
+  message: 'missing domain'
+
+invalid_domain:
+  parameter: 'domain'
+  code: 'invalid'
+  message: 'invalid domain'

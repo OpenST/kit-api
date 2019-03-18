@@ -96,6 +96,9 @@ module ManagerManagement
           GlobalConstant::ErrorAction.default
         ) if validation_errors.present?
 
+        r = VerifyEmailWhitelisting.new(email: @email).perform
+        return r unless r.success?
+
         # NOTE: To be on safe side, check for generic errors as well
 
         success
@@ -117,21 +120,21 @@ module ManagerManagement
         @manager_obj = Manager.where(email: @email).first
 
         return validation_error(
-            'm_l_pa_2',
+            'm_l_pa_3',
             'invalid_api_params',
             ['email_not_registered'],
             GlobalConstant::ErrorAction.default
         ) if !@manager_obj.present? || !@manager_obj.password.present? || !@manager_obj.authentication_salt.present?
 
         return validation_error(
-            'm_l_pa_3',
+            'm_l_pa_4',
             'invalid_api_params',
             ['email_auto_blocked'],
             GlobalConstant::ErrorAction.default
         ) if @manager_obj.status == GlobalConstant::Manager.auto_blocked_status
 
         return validation_error(
-            'm_l_pa_4',
+            'm_l_pa_5',
             'invalid_api_params',
             ['email_inactive'],
             GlobalConstant::ErrorAction.default
@@ -154,7 +157,7 @@ module ManagerManagement
       def fetch_client
         response = Util::EntityHelper.fetch_and_validate_client(@manager_obj.current_client_id, 'mm_l_pa')
         return validation_error(
-            'm_l_pa_5',
+            'm_l_pa_6',
             'invalid_api_params',
             ['email_not_associated_with_client'],
             GlobalConstant::ErrorAction.default
@@ -180,7 +183,7 @@ module ManagerManagement
        {client_id: @manager_obj.current_client_id}).fetch[@manager_obj.id]
 
         return validation_error(
-            'm_l_pa_6',
+            'm_l_pa_7',
             'invalid_api_params',
             ['email_not_associated_with_client'],
             GlobalConstant::ErrorAction.default
@@ -193,7 +196,7 @@ module ManagerManagement
           privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
 
         return validation_error(
-            'm_l_pa_7',
+            'm_l_pa_8',
             'invalid_api_params',
             ['email_not_associated_with_client'],
             GlobalConstant::ErrorAction.default
@@ -241,7 +244,7 @@ module ManagerManagement
           manager.status = GlobalConstant::Manager.auto_blocked_status if manager.failed_login_attempt_count >= 5
           manager.save
           return validation_error(
-              'mm_l_pa_7',
+              'mm_l_pa_9',
               'invalid_api_params',
               ['password_incorrect'],
               GlobalConstant::ErrorAction.default

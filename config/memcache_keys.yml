@@ -10,7 +10,7 @@ prefixes:
   saas_subenv: &saas_subenv
     prefix: '%{saas_subenv}_'
   kit_saas_subenv: &kit_saas_subenv
-      prefix: '%{kit_saas_subenv}_'
+    prefix: '%{kit_saas_subenv}_'
 
 keys:
 
@@ -21,6 +21,14 @@ keys:
       <<: *kit
     secure_details:
       key_template: 'm_sd_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit
+    whitelisted_emails:
+      key_template: 'm_whlstd_emls'
+      expiry_in_seconds: 86400
+      <<: *kit
+    whitelisted_domains:
+      key_template: 'm_whlstd_dmns'
       expiry_in_seconds: 86400
       <<: *kit
 
