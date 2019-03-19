@@ -20,7 +20,7 @@ module ManagerManagement
         #
         def initialize(params)
           super
-          @qr_code_url = ''
+          @qr_code_token = ''
         end
 
         # Perform
@@ -114,13 +114,10 @@ module ManagerManagement
           r = rotp_client.provisioning_uri("#{@manager_obj.email}")
           return r unless r.success?
 
-          otpauth = r.data[:otpauth]
-          escaped_otpauth = CGI.escape(otpauth)
-
-          # @qr_code_url = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{escaped_otpauth}"
-          @qr_code_url ="https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{escaped_otpauth}"
+          @qr_code_token = r.data[:otpauth]
 
           success
+
         end
 
         # Set success output format
@@ -132,7 +129,7 @@ module ManagerManagement
         def success_response
           success_with_data({
                               setup_mfa: {
-                                qr_code_url: @qr_code_url
+                                qr_code_token: @qr_code_token
                               }
                             })
         end
