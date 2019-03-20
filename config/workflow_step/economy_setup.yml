@@ -99,9 +99,15 @@ step_config:
     weight: 0
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_owner_in_ubt%>
-    weight: 7
+    weight: 3
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_owner_in_ubt%>
+    weight: 0
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.set_internal_actor_for_facilitator_in_ubt%>
+    weight: 4
+    group: 8
+  - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_facilitator_in_ubt%>
     weight: 0
     group: 8
   - kind: <%= GlobalConstant::WorkflowStep.deploy_token_rules%>
