@@ -6,11 +6,11 @@ module GlobalConstant
     class << self
 
       def user_cookie_name
-        'ost_kit_ca'
+        'ost_platform_ca'
       end
 
       def last_used_env_cookie_name
-        'ost_kit_luse'
+        'ost_platform_luse'
       end
 
       def mainnet_env
