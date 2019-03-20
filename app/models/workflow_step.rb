@@ -99,7 +99,8 @@ class WorkflowStep < DbConnection::KitSaasSubenv
     GlobalConstant::WorkflowStep.deploy_create_and_add_modules => 133,
     GlobalConstant::WorkflowStep.save_deploy_create_and_add_modules => 134,
     GlobalConstant::WorkflowStep.fund_recovery_controller_address => 135,
-
+    GlobalConstant::WorkflowStep.set_internal_actor_for_facilitator_in_ubt => 136,
+    GlobalConstant::WorkflowStep.verify_set_internal_actor_for_facilitator_in_ubt => 137,
 
     GlobalConstant::WorkflowStep.grant_eth_ost_init => 171,
     GlobalConstant::WorkflowStep.grant_eth => 172,

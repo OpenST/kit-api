@@ -167,7 +167,15 @@ module GlobalConstant
       def verify_set_internal_actor_for_owner_in_ubt
         'verifySetInternalActorForOwnerInUBT'
       end
-      
+
+      def set_internal_actor_for_facilitator_in_ubt
+        'setInternalActorForFacilitatorInUBT'
+      end
+
+      def verify_set_internal_actor_for_facilitator_in_ubt
+        'verifySetInternalActorForFacilitatorInUBT'
+      end
+
       def assign_shards
         'assignShards'
       end
