@@ -130,7 +130,7 @@ module ManagerManagement
     def send_forgot_password_mail
       Email::HookCreator::SendTransactionalMail.new(
           email: @manager.email,
-          template_name: GlobalConstant::PepoCampaigns.forgot_password_template,
+          template_name: GlobalConstant::PepoCampaigns.platform_forgot_password_template,
           template_vars: {
               reset_password_token: CGI.escape(@reset_password_token),
               company_web_domain: GlobalConstant::CompanyWeb.domain
