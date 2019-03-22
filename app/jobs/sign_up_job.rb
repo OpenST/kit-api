@@ -47,7 +47,7 @@ class SignUpJob < ApplicationJob
     Email::HookCreator::AddContact.new(
         email: @manager[:email],
         custom_attributes: {
-            GlobalConstant::PepoCampaigns.user_registered_attribute => GlobalConstant::PepoCampaigns.user_registered_value
+            GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value
         }
     ).perform
 

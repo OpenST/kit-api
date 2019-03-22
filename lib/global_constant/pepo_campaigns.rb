@@ -36,19 +36,19 @@ module GlobalConstant
       ########### User Custom Attributes #########
 
 
-      def user_registered_attribute
-        'user_registered'
+      def platform_signup_attribute
+        'platform_signup'
       end
 
-      def double_optin_done_attribute
-        'double_optin_done'
+      def platform_double_optin_done_attribute
+        'platform_double_optin_done'
       end
 
 
       def allowed_custom_attributes
         [
-          user_registered_attribute,
-          double_optin_done_attribute
+          platform_signup_attribute,
+          platform_double_optin_done_attribute
         ]
       end
 
@@ -100,11 +100,11 @@ module GlobalConstant
 
       ################ Custom Attribute Values ################
 
-      def user_registered_value
+      def platform_signup_value
         1
       end
 
-      def double_optin_done_value
+      def platform_double_optin_done_value
         1
       end
 

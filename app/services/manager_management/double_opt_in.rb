@@ -206,7 +206,7 @@ module ManagerManagement
       Email::HookCreator::UpdateContact.new(
         email: @manager_obj.email,
         custom_attributes: {
-          GlobalConstant::PepoCampaigns.double_optin_done_attribute => GlobalConstant::PepoCampaigns.double_optin_done_value
+          GlobalConstant::PepoCampaigns.platform_double_optin_done_attribute => GlobalConstant::PepoCampaigns.platform_double_optin_done_value
         },
         user_settings: {
           GlobalConstant::PepoCampaigns.double_opt_in_status_user_setting => GlobalConstant::PepoCampaigns.verified_value
