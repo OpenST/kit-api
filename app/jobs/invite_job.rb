@@ -63,7 +63,7 @@ class InviteJob < ApplicationJob
   def send_invite_link
     r = Email::HookCreator::SendTransactionalMail.new(
         email: @manager[:email],
-        template_name: GlobalConstant::PepoCampaigns.invite_manager_template,
+        template_name: GlobalConstant::PepoCampaigns.platform_invite_manager_template,
         template_vars: {
             invite_token: CGI.escape(@invite_token),
             company_web_domain: GlobalConstant::CompanyWeb.domain
