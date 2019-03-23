@@ -10,11 +10,9 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      # @param [String] email (mandatory) - Email
-      # @param [String] event_type (mandatory) - event_type that would go into hooks table
       # @param [String] template_name (mandatory) - Template Name
       # @param [Hash] template_vars (mandatory) - Template Vars
-      # @params [String] custom_description (optional) - description which would be logged in email service hooks table
+      #
       #
       # @return [Email::HookCreator::SendTransactionalMail]  returns an object of Email::HookCreator::SendTransactionalMail class
       #
@@ -93,7 +91,7 @@ module Email
       # @return [Result::Base] returns an object of Result::Base class
       #
       def validate_template_vars
-
+        
         return error_with_data(
             'e_hc_stm_6',
             'something_went_wrong',
@@ -128,6 +126,14 @@ module Email
 
           return error_with_data(
             'e_hc_stm_7',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+          ) if @template_vars[:manager_email_id].blank?
+
+        elsif GlobalConstant::PepoCampaigns.is_recovery_request_submission_template?(@template_name)
+  
+          return error_with_data(
+            'e_hc_stm_8',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:manager_email_id].blank?

@@ -1,14 +1,20 @@
 class EmailServiceApiCallHook < DbConnection::KitSaasBigSubenv
 
+  enum receiver_entity_kind: {
+    GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind => 1,
+    GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind => 2,
+    GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind => 3
+  }
+  
   enum event_type: {
       GlobalConstant::EmailServiceApiCallHook.add_contact_event_type => 1,
       GlobalConstant::EmailServiceApiCallHook.update_contact_event_type => 2,
       GlobalConstant::EmailServiceApiCallHook.send_transactional_mail_event_type => 3
   }
 
-  serialize :params, Hash
-  serialize :success_response, Hash
-  serialize :failed_response, Hash
+  serialize :params, JSON
+  serialize :success_response, JSON
+  serialize :failed_response, JSON
 
   class << self
 

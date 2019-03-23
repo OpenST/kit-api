@@ -4,6 +4,22 @@ module GlobalConstant
   class EmailServiceApiCallHook
 
     class << self
+  
+      ########## receiver_entity_kinds #############
+  
+      def client_receiver_entity_kind
+        'client'
+      end
+  
+      def manager_receiver_entity_kind
+        'manager'
+      end
+  
+      def support_receiver_entity_kind
+        'support'
+      end
+  
+      ########## receiver_entity_kinds #############
 
       ########## event_types #############
 
@@ -20,6 +36,8 @@ module GlobalConstant
       end
 
       ########## entity_types #############
+      
+      
 
     end
 

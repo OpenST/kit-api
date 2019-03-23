@@ -130,6 +130,11 @@ module GlobalConstant
         'platform_mainnet_access_request'
       end
 
+      # Initiate Recovery - sent when recovery is initiated from saas-api
+      def recovery_request_submission_template
+        'recovery_request_submission'
+      end
+
       # All possible templates integrated with email service
       #
       # * Author: Puneet
@@ -143,7 +148,8 @@ module GlobalConstant
           platform_double_optin_template,
           platform_forgot_password_template,
           platform_invite_manager_template,
-          platform_mainnet_access_request_template
+          platform_mainnet_access_request_template,
+          recovery_request_submission_template
         ]
       end
 
@@ -200,6 +206,20 @@ module GlobalConstant
       def is_mainnet_whitelisting_template?(template_name)
         [
           GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template
+        ].include?(template_name)
+      end
+
+      # Is this template of initiate recovery
+      #
+      # * Author: Dhananjay
+      # * Date: 13/03/2019
+      # * Reviewed By:
+      #
+      # @return [Boolean]
+      #
+      def is_recovery_request_submission_template?(template_name)
+        [
+          GlobalConstant::PepoCampaigns.recovery_request_submission_template
         ].include?(template_name)
       end
 

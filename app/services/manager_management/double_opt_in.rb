@@ -204,13 +204,14 @@ module ManagerManagement
     #
     def create_update_contact_email_service_hook
       Email::HookCreator::UpdateContact.new(
-        email: @manager_obj.email,
-        custom_attributes: {
-          GlobalConstant::PepoCampaigns.platform_double_optin_done_attribute => GlobalConstant::PepoCampaigns.platform_double_optin_done_value
-        },
-        user_settings: {
-          GlobalConstant::PepoCampaigns.double_opt_in_status_user_setting => GlobalConstant::PepoCampaigns.verified_value
-        }
+          receiver_entity_id: @manager_id,
+          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+          custom_attributes: {
+              GlobalConstant::PepoCampaigns.platform_double_optin_done_attribute => GlobalConstant::PepoCampaigns.platform_double_optin_done_value
+          },
+          user_settings: {
+              GlobalConstant::PepoCampaigns.double_opt_in_status_user_setting => GlobalConstant::PepoCampaigns.verified_value
+          }
       ).perform
 
       success

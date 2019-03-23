@@ -129,7 +129,8 @@ module ManagerManagement
     #
     def send_double_optin_email
       Email::HookCreator::SendTransactionalMail.new(
-          email: @manager[:email],
+          receiver_entity_id: @manager_id,
+          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
           template_name: GlobalConstant::PepoCampaigns.platform_double_optin_template,
           template_vars: {
               double_opt_in_token: CGI.escape(@double_optin_token),

@@ -12,9 +12,6 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      # @params [Hash] custom_attributes (optional) - attribute which are to be set for this email
-      # @params [String] custom_description (optional) - description which would be logged in email service hooks table
-      #
       # @return [Email::HookCreator::AddContact] returns an object of Email::HookCreator::AddContact class
       #
       def initialize(params)

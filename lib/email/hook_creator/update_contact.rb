@@ -10,8 +10,6 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      # @params [Hash] custom_attributes (optional) - attribute which are to be set for this email
-      # @params [String] custom_description (optional) - description which would be logged in email service hooks table
       # @params [Hash] user_Settings (optional) - user settings which has to be updated for this email
       #
       # @return [Email::HookCreator::UpdateContact] returns an object of Email::HookCreator::UpdateContact class

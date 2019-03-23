@@ -145,6 +145,7 @@ module TokenManagement
     def send_email
 
       manager_email_id = @manager[:email]
+      manager_id = @manager[:id]
 
       template_vars =  {
         client_id: @client_id, # Email, Sandbox Token Name, Sandbox Symbol
@@ -161,7 +162,8 @@ module TokenManagement
       end
 
       r = Email::HookCreator::SendTransactionalMail.new(
-        email: GlobalConstant::Base.support_email,
+        receiver_entity_id: manager_id,
+        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind,
         template_name: GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template,
         template_vars: template_vars).perform
       return r unless r.success?

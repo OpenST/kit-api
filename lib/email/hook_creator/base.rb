@@ -12,10 +12,16 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
+      # @params [Integer] receiver_entity_id (mandatory) - receiver entity id that would go into hooks table
+      # @params [String] receiver_entity_kind (mandatory) - receiver entity kind
+      # @params [String] custom_description (optional) - description which would be logged in email service hooks table
+      # @params [Hash] custom_attributes (optional) - attribute which are to be set for this email
+      #
       # @return [Email::HookCreator::Base] returns an object of Email::HookCreator::Base class
       #
       def initialize(params)
-        @email = params[:email]
+        @receiver_entity_id = params[:receiver_entity_id]
+        @receiver_entity_kind = params[:receiver_entity_kind]
         @custom_description = params[:custom_description]
         @custom_attributes = params[:custom_attributes] || {}
       end
@@ -31,6 +37,9 @@ module Email
       def perform
 
         r = validate
+        return r unless r.success?
+
+        r = validate_receiver_entity
         return r unless r.success?
 
         handle_event
@@ -75,7 +84,7 @@ module Email
         fail 'sub class to implement'
       end
 
-      # Validate email
+      # Validate receiver entity id and receiver entity kind
       #
       # * Author: Puneet
       # * Date: 12/01/2018
@@ -83,15 +92,17 @@ module Email
       #
       # @return [Result::Base] returns an object of Result::Base class
       #
-      def validate_email
+      def validate_receiver_entity
 
-        if Util::CommonValidator.is_valid_email?(@email) && Util::CommonValidator.is_email_send_allowed?(@email)
+        if Util::CommonValidator.is_integer?(@receiver_entity_id) &&
+          EmailServiceApiCallHook.receiver_entity_kinds[@receiver_entity_kind].present?
+
           success
         else
           validation_error(
               'e_hc_b_3',
               'invalid_api_params',
-              ['invalid_email'],
+              [],
               GlobalConstant::ErrorAction.default
           )
         end
@@ -133,11 +144,12 @@ module Email
       #
       def create_hook(params = {})
         EmailServiceApiCallHook.create!(
-          event_type: event_type,
-          email: @email,
-          execution_timestamp: params[:execution_timestamp] || current_timestamp,
-          custom_description: @custom_description,
-          params: params
+            receiver_entity_id: @receiver_entity_id,
+            receiver_entity_kind: @receiver_entity_kind,
+            event_type: event_type,
+            execution_timestamp: params[:execution_timestamp] || current_timestamp,
+            custom_description: @custom_description,
+            params: params
         )
       end
 

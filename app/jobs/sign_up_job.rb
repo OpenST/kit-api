@@ -45,7 +45,8 @@ class SignUpJob < ApplicationJob
   def add_contact_in_email_service
 
     Email::HookCreator::AddContact.new(
-        email: @manager[:email],
+        receiver_entity_id: @manager_id,
+        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         custom_attributes: {
             GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value
         }
