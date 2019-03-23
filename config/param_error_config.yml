@@ -36,7 +36,7 @@ missing_password_auth_cookie_value:
 email_not_allowed_to_access_kit:
   parameter: 'email'
   code: 'invalid'
-  message: 'OST platform is in its Beta with restricted access. Looks like your account is not whitelisted to access OST platform.'
+  message: '{{FE_format_whitelisting_required}}'
 
 email_not_registered:
   parameter: 'email'
