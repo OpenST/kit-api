@@ -225,7 +225,7 @@ group_config:
     display_text: 'Setting up conversion rate on origin chain'
     name: 'Organization Deployment'
   4:
-    display_text: 'Deploying utility branded token contract'
+    display_text: 'Deploying utility brand token contract'
     name: 'UBT Deployment'
   5:
     display_text: 'Deploying gateway contract on origin chain'
@@ -237,7 +237,7 @@ group_config:
     display_text: 'Linking gateways'
     name: 'Gateway Link'
   8:
-    display_text: 'Setting up company token holder'
+    display_text: 'Setting up company token holder contract'
     name: 'Company Token Holder Deployment'
   9:
     display_text: 'Verifying and finalizing token setup'
