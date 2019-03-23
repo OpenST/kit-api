@@ -131,7 +131,7 @@ module ManagerManagement
       Email::HookCreator::SendTransactionalMail.new(
           receiver_entity_id: @manager.id,
           receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-          template_name: GlobalConstant::PepoCampaigns.forgot_password_template,
+          template_name: GlobalConstant::PepoCampaigns.platform_forgot_password_template,
           template_vars: {
               reset_password_token: CGI.escape(@reset_password_token),
               company_web_domain: GlobalConstant::CompanyWeb.domain

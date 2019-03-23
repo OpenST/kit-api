@@ -96,7 +96,7 @@ client_manager_inactive:
 something_went_wrong:
   http_code: 422
   code: "INTERNAL_SERVER_ERROR"
-  message: "Something went wrong."
+  message: "Something went wrong. Please contact support."
 
 already_associated:
   http_code: 422
@@ -121,7 +121,7 @@ data_validation_failed:
 grant_limit_reached:
   http_code: 422
   code: "INVALID_REQUEST"
-  message: "Grant has been given to the address in last 24 hours. Please try after sometime"
+  message: "You have reached the maximum grant of OST-Test. You can request more every 24 hours."
 
 request_not_xhr:
   http_code: 422

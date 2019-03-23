@@ -21,7 +21,7 @@ already_associated_address:
 invalid_r_t:
   parameter: 'r_t'
   code: 'invalid'
-  message: 'The reset password link is either invalid or has expired. Please use Forgot Password to generate a new one.'
+  message: 'The reset password link has expired. Please use Forgot Password to get a new link.'
 
 invalid_i_t:
   parameter: 'i_t'
@@ -33,20 +33,20 @@ missing_password_auth_cookie_value:
   code: 'missing'
   message: 'Your session has expired. Please refresh your page.'
 
-email_not_allowed_for_dev_program:
+email_not_allowed_to_access_kit:
   parameter: 'email'
   code: 'invalid'
-  message: 'In order to access OST KIT, please send an email to support@ost.com'
+  message: 'OST platform is in its Beta with restricted access. Looks like your account is not whitelisted to access OST platform.'
 
 email_not_registered:
   parameter: 'email'
   code: 'invalid'
-  message: 'The email address you provided is not associated with an OST KIT⍺ account. Please sign up.'
+  message: 'You have entered an invalid email or password.'
 
 manager_not_invited:
   parameter: 'to_update_client_manager_id'
   code: 'invalid'
-  message: 'The email address you provided is not associated with an OST KIT⍺ account. Please invite the admin first.'
+  message: 'The email address you provided is not associated with an OST Platform account. Please invite the admin first.'
 
 email_auto_blocked:
   parameter: 'email'
@@ -56,12 +56,12 @@ email_auto_blocked:
 email_inactive:
   parameter: 'email'
   code: 'invalid'
-  message: 'The email address you provided is inactive. Please contact Support.'
+  message: 'This account is inactive. Please contact support.'
 
 email_not_associated_with_client:
   parameter: 'email'
   code: 'invalid'
-  message: 'The email address you provided is not associated with any client. Please contact Support.'
+  message: 'This account is inactive. Please contact support.'
 
 to_update_client_manager_id_inactive:
   parameter: 'to_update_client_manager_id'
@@ -81,7 +81,7 @@ invalid_email:
 unrecognized_email:
   parameter: 'email'
   code: 'invalid'
-  message: 'This user is not registered or is blocked'
+  message: 'This email address does not exist in OST Platform. Please verify or contact support.'
 
 already_registered_email:
   parameter: 'email'
@@ -136,7 +136,7 @@ already_verified_email:
 password_incorrect:
   parameter: 'password'
   code: 'invalid'
-  message: 'The password you entered is incorrect. Please try again.'
+  message: 'You have entered an invalid email or password.'
 
 password_invalid:
   parameter: 'password'
@@ -146,7 +146,7 @@ password_invalid:
 password_same:
   parameter: 'password'
   code: 'invalid'
-  message: 'Please use a new different password.'
+  message: 'This password has already been used. Please use a different one.'
 
 confirm_password_invalid:
   parameter: 'password'
@@ -201,7 +201,7 @@ missing_client_id:
 invalid_otp:
   parameter: 'otp'
   code: 'invalid'
-  message: 'Invalid OTP'
+  message: 'This code is invalid or has expired. Please try again.'
 
 invalid_is_super_admin:
   parameter: 'is_super_admin'
@@ -246,27 +246,27 @@ invalid_token_symbol:
 invalid_token_name:
   parameter: 'name'
   code: 'invalid'
-  message: 'Come on, the token name you entered is inappropriate. Please choose a nicer word.'
+  message: 'Token name cannot be longer than 3 words'
 
 inappropriate_token_name:
   parameter: 'name'
   code: 'invalid'
-  message: 'Come on, the token name you entered is inappropriate. Please choose a nicer word.'
+  message: 'This token name is not supported.'
 
 inappropriate_token_symbol:
   parameter: 'symbol'
   code: 'invalid'
-  message: 'Come on, the token symbol you entered is inappropriate. Please choose a nicer word.'
+  message: 'This token identifier is not supported.'
 
 duplicate_token_name:
   parameter: 'name'
   code: 'invalid'
-  message: 'This token name is already in use. Please try a different one.'
+  message: 'This token name is already in use.'
 
 duplicate_token_symbol:
   parameter: 'symbol'
   code: 'invalid'
-  message: 'This token symbol is already in use. Please try a different one.'
+  message: 'This token identifier is already in use.'
 
 invalid_conversion_factor:
   parameter: 'conversion_factor'
@@ -317,3 +317,13 @@ cannot_deactivate_all_keys:
   parameter: 'client_id'
   code: 'invalid'
   message: 'Atleast one API Key should be left as active'
+
+missing_domain:
+  parameter: 'domain'
+  code: 'missing'
+  message: 'missing domain'
+
+invalid_domain:
+  parameter: 'domain'
+  code: 'invalid'
+  message: 'invalid domain'

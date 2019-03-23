@@ -1,6 +1,9 @@
 #Note this secret has to be same for kit-web & kit-api in order to make CSRF work
 export COMPANY_SECRET_KEY_BASE='fc06a409bf0a2fc2e8b316ceeb04e8675900f3176668d2a836494417e0164a966aefd701430390d3db685f87c224cbb48b332f8a5cf490fa7f034e063ff13a94'
 
+# Support email
+export KA_SUPPORT_EMAIL='support@ost.com'
+
 # Database details
 export KA_KIT_SUBENV_MYSQL_HOST=127.0.0.1
 export KA_KIT_SUBENV_MYSQL_USER=root
@@ -86,10 +89,3 @@ export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 
 # Company Web Details
 export KA_CW_DOMAIN='developmentost.com'
-
-# OST Explorer Apis
-export KA_EXPLORER_BASE_URL='http://view.developmentost.com:7000/'
-export KA_EXPLORER_SECRET_KEY='6p5BkI0uGHI1JPrAKP3eB1Zm88KZ84a9Th9o4syhwZhxlv0oe0'
-
-# Support email
-export KA_SUPPORT_EMAIL='support@ost.com'

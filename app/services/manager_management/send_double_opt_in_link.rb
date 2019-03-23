@@ -131,7 +131,7 @@ module ManagerManagement
       Email::HookCreator::SendTransactionalMail.new(
           receiver_entity_id: @manager_id,
           receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-          template_name: GlobalConstant::PepoCampaigns.double_opt_in_template,
+          template_name: GlobalConstant::PepoCampaigns.platform_double_optin_template,
           template_vars: {
               double_opt_in_token: CGI.escape(@double_optin_token),
               company_web_domain: GlobalConstant::CompanyWeb.domain

@@ -2,8 +2,9 @@ module Util
 
   class CommonValidator
     
-    REGEX_EMAIL = /\A[A-Z0-9]+[A-Z0-9_%+-]*(\.[A-Z0-9_%+-]{1,})*@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\z/mi
+    REGEX_EMAIL = /\A[A-Z0-9]+[A-Z0-9_%+-]*(\.[A-Z0-9_%+-]{1,})*@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+[A-Z]{2,24}\z/i
     REGEX_TOKEN = /\A([a-z0-9=\-]*)\z/i
+    REGEX_DOMAIN = /\A([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,4}\z/i
 
     # Check for integer-ness of an input
     #
@@ -299,6 +300,18 @@ module Util
         transaction_hash = '0x' + transaction_hash
       end
       transaction_hash
+    end
+
+    # Is the Email Domain valid
+    #
+    # * Author: Puneet
+    # * Date: 18/03/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_domain?(domain)
+      domain =~ REGEX_DOMAIN
     end
 
   end

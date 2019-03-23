@@ -164,7 +164,7 @@ module TokenManagement
       r = Email::HookCreator::SendTransactionalMail.new(
         receiver_entity_id: manager_id,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind,
-        template_name: GlobalConstant::PepoCampaigns.mainnet_whitelisting_request_template,
+        template_name: GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template,
         template_vars: template_vars).perform
       return r unless r.success?
 

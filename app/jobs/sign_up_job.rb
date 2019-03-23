@@ -48,7 +48,7 @@ class SignUpJob < ApplicationJob
         receiver_entity_id: @manager_id,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         custom_attributes: {
-            GlobalConstant::PepoCampaigns.user_registered_attribute => GlobalConstant::PepoCampaigns.user_registered_value
+            GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value
         }
     ).perform
 

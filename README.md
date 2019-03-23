@@ -1,5 +1,5 @@
-# kit-api
-API layer for OST KIT.
+# platform-api
+API layer for OST Platform.
 
 ## Setup
 Install all the Gems.

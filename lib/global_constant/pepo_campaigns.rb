@@ -36,19 +36,19 @@ module GlobalConstant
       ########### User Custom Attributes #########
 
 
-      def user_registered_attribute
-        'user_registered'
+      def platform_signup_attribute
+        'platform_signup'
       end
 
-      def double_optin_done_attribute
-        'double_optin_done'
+      def platform_double_optin_done_attribute
+        'platform_double_optin_done'
       end
 
 
       def allowed_custom_attributes
         [
-          user_registered_attribute,
-          double_optin_done_attribute
+          platform_signup_attribute,
+          platform_double_optin_done_attribute
         ]
       end
 
@@ -100,34 +100,34 @@ module GlobalConstant
 
       ################ Custom Attribute Values ################
 
-      def user_registered_value
+      def platform_signup_value
         1
       end
 
-      def double_optin_done_value
+      def platform_double_optin_done_value
         1
       end
 
       ############# Custom Attribute Values ################
 
       # double optin email - sent when user is adding email for the first time
-      def double_opt_in_template
-        'ost_kit_double_optin'
+      def platform_double_optin_template
+        'platform_double_optin'
       end
 
       # reset password email - sent when user clicks on forgot password
-      def forgot_password_template
-        'forgot_password'
+      def platform_forgot_password_template
+        'platform_forgot_password'
       end
 
       # invite manager email - sent when manager is invited to a client
-      def invite_manager_template
-        'ost_kit_invite_manager'
+      def platform_invite_manager_template
+        'platform_invite_manager'
       end
 
       # Request mainnet  - sent when client requests to get whitelisted for mainnet
-      def mainnet_whitelisting_request_template
-        'mainnet_whitelisting_request'
+      def platform_mainnet_access_request_template
+        'platform_mainnet_access_request'
       end
 
       # Initiate Recovery - sent when recovery is initiated from saas-api
@@ -145,10 +145,10 @@ module GlobalConstant
       #
       def supported_templates
         [
-          double_opt_in_template,
-          forgot_password_template,
-          invite_manager_template,
-          mainnet_whitelisting_request_template,
+          platform_double_optin_template,
+          platform_forgot_password_template,
+          platform_invite_manager_template,
+          platform_mainnet_access_request_template,
           recovery_request_submission_template
         ]
       end
@@ -163,7 +163,7 @@ module GlobalConstant
       #
       def is_double_opt_in_related_template?(template_name)
         [
-          GlobalConstant::PepoCampaigns.double_opt_in_template
+          GlobalConstant::PepoCampaigns.platform_double_optin_template
         ].include?(template_name)
       end
 
@@ -177,7 +177,7 @@ module GlobalConstant
       #
       def is_forgot_password_template?(template_name)
         [
-            GlobalConstant::PepoCampaigns.forgot_password_template
+            GlobalConstant::PepoCampaigns.platform_forgot_password_template
         ].include?(template_name)
       end
 
@@ -191,7 +191,7 @@ module GlobalConstant
       #
       def is_manager_invite_template?(template_name)
         [
-            GlobalConstant::PepoCampaigns.invite_manager_template
+            GlobalConstant::PepoCampaigns.platform_invite_manager_template
         ].include?(template_name)
       end
 
@@ -205,7 +205,7 @@ module GlobalConstant
       #
       def is_mainnet_whitelisting_template?(template_name)
         [
-          GlobalConstant::PepoCampaigns.mainnet_whitelisting_request_template
+          GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template
         ].include?(template_name)
       end
 
@@ -222,7 +222,7 @@ module GlobalConstant
           GlobalConstant::PepoCampaigns.recovery_request_submission_template
         ].include?(template_name)
       end
-      
+
       private
 
       def config

@@ -68,7 +68,7 @@ module TokenManagement
          aux_chain_resp.general_error_identifier,
          GlobalConstant::GoTo.token_setup
       ) unless aux_chain_resp.success?
-      aux_chain_id = aux_chain_resp.data
+      aux_chain_id = aux_chain_resp.data[:aux_chain_id]
 
       price_points = KitSaasSharedCacheManagement::OstPricePoints.new([aux_chain_id]).fetch
       @api_response_data[:price_points] = price_points[aux_chain_id]

@@ -248,3 +248,9 @@
 'DashboardManagement::Get':
   :mandatory:
     - :client_id
+'AdminManagement::Whitelist::Domain':
+ :mandatory:
+   - :identifier
+'AdminManagement::Whitelist::Email':
+ :mandatory:
+   - :identifier

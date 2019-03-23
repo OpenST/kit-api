@@ -49,7 +49,7 @@ class InviteJob < ApplicationJob
         receiver_entity_id: @manager_id,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         custom_attributes: {
-            GlobalConstant::PepoCampaigns.user_registered_attribute => GlobalConstant::PepoCampaigns.user_registered_value
+            GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value
         }
     ).perform
 
@@ -65,7 +65,7 @@ class InviteJob < ApplicationJob
     r = Email::HookCreator::SendTransactionalMail.new(
         receiver_entity_id: @manager_id,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-        template_name: GlobalConstant::PepoCampaigns.invite_manager_template,
+        template_name: GlobalConstant::PepoCampaigns.platform_invite_manager_template,
         template_vars: {
             invite_token: CGI.escape(@invite_token),
             company_web_domain: GlobalConstant::CompanyWeb.domain
