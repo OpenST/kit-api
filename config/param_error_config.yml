@@ -36,7 +36,7 @@ missing_password_auth_cookie_value:
 email_not_allowed_to_access_kit:
   parameter: 'email'
   code: 'invalid'
-  message: '{{FE_format_whitelisting_required}}'
+  message: 'Access is currently available to whitelisted accounts. To request access please <a href="https://goo.gl/forms/26zom9yYqZ1IJQbD3" target="_blank">submit this form</a>.'
 
 email_not_registered:
   parameter: 'email'
