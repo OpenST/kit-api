@@ -314,6 +314,22 @@ module Util
       domain =~ REGEX_DOMAIN
     end
 
+    # Is the Client Manager active/valid?
+    #
+    # * Author: Shlok
+    # * Date: 25/03/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_active_admin?(privileges)
+      privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
+        (
+        privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
+          privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
+        )
+    end
+
   end
 
 end

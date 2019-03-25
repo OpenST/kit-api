@@ -191,9 +191,7 @@ module ManagerManagement
 
         privileges = @client_manager[:privileges]
 
-        is_client_manager_active = privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
-          (privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
-          privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
+        is_client_manager_active = Util::CommonValidator.is_active_admin?(privileges)
 
         return validation_error(
             'm_l_pa_8',

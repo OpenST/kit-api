@@ -153,9 +153,9 @@ module ManagerManagement
             ) if privileges.include?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
 
-            # Check whether the admin is active or not.
-            is_client_manager_active = privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
-              privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
+            # Check whether the admin is active or not. This validation checks for deleted privilege absence again.
+            # But it won't affect this code as the specific error for 'has_been_deleted_privilege' is handled already.
+            is_client_manager_active = Util::CommonValidator.is_active_admin?(privileges)
 
             # The invitee_manager IS currently associated with the client and active.
             return validation_error(
