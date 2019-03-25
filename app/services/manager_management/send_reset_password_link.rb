@@ -18,7 +18,7 @@ module ManagerManagement
 
       @email = @params[:email]
 
-      @manager = nil
+      @manager_obj = nil
       @reset_password_token = nil
 
     end
@@ -41,6 +41,9 @@ module ManagerManagement
         r = fetch_manager
         return r unless r.success?
 
+        r = fetch_client_manager
+        return r unless r.success?
+
         r = create_reset_password_token
         return r unless r.success?
 
@@ -61,27 +64,66 @@ module ManagerManagement
     # * Date: 11/01/2018
     # * Reviewed By:
     #
-    # Sets @manager
+    # Sets @manager_obj
     #
     # @return [Result::Base]
     #
     def fetch_manager
 
-      @manager = Manager.where(email: @email).first
+      @manager_obj = Manager.where(email: @email).first
 
       error_key = ''
-      if @manager.blank?
+      if @manager_obj.blank?
         error_key = 'unrecognized_email'
-      elsif !@manager.is_eligible_for_reset_password?
+      elsif !@manager_obj.is_eligible_for_reset_password?
         error_key = 'email_inactive'
       end
 
       return validation_error(
-        'um_srpl_1',
+        'mm_srpl_1',
         'invalid_api_params',
         [error_key],
         GlobalConstant::ErrorAction.default
       ) if error_key.present?
+
+      success
+
+    end
+
+    # Fetch client manager
+    #
+    # * Author: Shlok
+    # * Date: 25/03/2018
+    # * Reviewed By:
+    #
+    # Sets @client_manager
+    #
+    # @return [Result::Base]
+    #
+    def fetch_client_manager
+
+      @client_manager = CacheManagement::ClientManager.new([@manager_obj.id],
+                                                           {client_id: @manager_obj.current_client_id}).fetch[@manager_obj.id]
+
+      return validation_error(
+        'mm_srpl_2',
+        'invalid_api_params',
+        ['email_not_associated_with_client'],
+        GlobalConstant::ErrorAction.default
+      ) if @client_manager.blank?
+
+      privileges = @client_manager[:privileges]
+
+      is_client_manager_active = privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
+        (privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
+          privileges.include?(GlobalConstant::ClientManager.is_admin_privilege))
+
+      return validation_error(
+        'mm_srpl_3',
+        'invalid_api_params',
+        ['email_not_associated_with_client'],
+        GlobalConstant::ErrorAction.default
+      ) unless is_client_manager_active
 
       success
 
@@ -100,11 +142,11 @@ module ManagerManagement
     def create_reset_password_token
 
       reset_token = LocalCipher.get_sha_hashed_text(
-          "#{@manager.id}::#{@manager.password}::#{current_timestamp}::reset_password::#{rand}"
+          "#{@manager_obj.id}::#{@manager_obj.password}::#{current_timestamp}::reset_password::#{rand}"
       )
 
       db_row = ManagerValidationHash.create!(
-        manager_id: @manager.id,
+        manager_id: @manager_obj.id,
         kind: GlobalConstant::ManagerValidationHash.reset_password_kind,
         validation_hash: reset_token,
         status: GlobalConstant::ManagerValidationHash.active_status
@@ -129,7 +171,7 @@ module ManagerManagement
     #
     def send_forgot_password_mail
       Email::HookCreator::SendTransactionalMail.new(
-          receiver_entity_id: @manager.id,
+          receiver_entity_id: @manager_obj.id,
           receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
           template_name: GlobalConstant::PepoCampaigns.platform_forgot_password_template,
           template_vars: {
