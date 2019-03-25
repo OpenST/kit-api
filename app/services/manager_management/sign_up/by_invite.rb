@@ -22,9 +22,11 @@ module ManagerManagement
         super
 
         @invite_token = @params[:i_t]
+        @marcomm = @params[:marcomm]
 
         @decrypted_invite_token = nil
         @manager_validation_hash = nil
+        @marketing_communication_flag = nil
 
       end
 
@@ -45,6 +47,9 @@ module ManagerManagement
 
           # 1. decode i_t to determine email and client to which invite is for
           # 2. find manager & client record
+
+          r = validate_marcomm_flag
+          return r unless r.success?
 
           r = decrypt_invite_token
           return r unless r.success?

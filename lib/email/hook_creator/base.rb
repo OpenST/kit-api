@@ -99,11 +99,10 @@ module Email
 
           success
         else
-          validation_error(
+          error_with_data(
               'e_hc_b_3',
-              'invalid_api_params',
-              [],
-              GlobalConstant::ErrorAction.default
+              'data_validation_failed',
+              GlobalConstant::ErrorAction.default,
           )
         end
 

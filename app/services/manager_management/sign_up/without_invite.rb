@@ -23,9 +23,11 @@ module ManagerManagement
 
         @email = @params[:email]
         @agreed_terms_of_service = @params[:agreed_terms_of_service]
+        @marcomm = @params[:marcomm]
 
         @authentication_salt_hash = nil
         @authentication_salt_d = nil
+        @marketing_communication_flag = nil
 
       end
 
@@ -42,6 +44,9 @@ module ManagerManagement
         handle_errors_and_exceptions do
 
           r = validate_and_sanitize
+          return r unless r.success?
+
+          r = validate_marcomm_flag
           return r unless r.success?
 
           r = create_manager
