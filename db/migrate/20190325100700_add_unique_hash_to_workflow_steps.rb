@@ -1,7 +1,7 @@
 class AddUniqueHashToWorkflowSteps < DbMigrationConnection
   def up
     run_migration_for_db(DbConnection::KitSaasSubenv) do
-      add_column :workflow_steps, :unique_hash, :string, null: true
+      add_column :workflow_steps, :unique_hash, :string, null: true, after: :response_data
       add_index :workflow_steps, :unique_hash, name: 'uk_uh', unique: true
 
       WorkflowStep.select('id, workflow_id, kind as raw_kind, status').all.each do |row|
