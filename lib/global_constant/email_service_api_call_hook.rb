@@ -18,6 +18,10 @@ module GlobalConstant
       def support_receiver_entity_kind
         'support'
       end
+
+      def whitelisting_requester_kind
+        'whitelisting_requester'
+      end
   
       ########## receiver_entity_kinds #############
 

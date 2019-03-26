@@ -123,6 +123,8 @@ module Email
         
         if @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind
           @email = GlobalConstant::Base.support_email
+        elsif @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.whitelisting_requester_kind
+          @email = ManagerWhitelisting.where(id: @hook.receiver_entity_id).first.identifier
         else
           r = set_manager_id
           return r unless r.success?

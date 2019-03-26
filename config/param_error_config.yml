@@ -327,3 +327,13 @@ invalid_domain:
   parameter: 'domain'
   code: 'invalid'
   message: 'invalid domain'
+
+email_already_signed_up:
+  parameter: 'e'
+  code: 'invalid'
+  message: 'Email already signed up.'
+
+email_already_whitelisted:
+  parameter: 'e'
+  code: 'invalid'
+  message: 'Email already whitelisted.'
