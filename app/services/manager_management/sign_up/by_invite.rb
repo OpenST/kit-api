@@ -75,6 +75,9 @@ module ManagerManagement
           r = update_invite_token
           return r unless r.success?
 
+          r = create_update_contact_email_service_hook
+          return r unless r.success?
+
           r = set_cookie_value
           return r unless r.success?
 
@@ -207,6 +210,27 @@ module ManagerManagement
 
         success
 
+      end
+
+      # Create update contact email hook
+      #
+      # * Author: Puneet
+      # * Date: 16/01/2018
+      # * Reviewed By:
+      #
+      def create_update_contact_email_service_hook
+        Email::HookCreator::UpdateContact.new(
+          receiver_entity_id: @manager_id,
+          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+          custom_attributes: {
+            GlobalConstant::PepoCampaigns.platform_double_optin_done_attribute => GlobalConstant::PepoCampaigns.platform_double_optin_done_value
+          },
+          user_settings: {
+            GlobalConstant::PepoCampaigns.double_opt_in_status_user_setting => GlobalConstant::PepoCampaigns.verified_value
+          }
+        ).perform
+
+        success
       end
 
       # Create client manager
