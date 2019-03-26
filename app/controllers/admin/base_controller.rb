@@ -34,7 +34,7 @@ class Admin::BaseController < AuthenticationController
       end
     end
     
-    Rails.logger.info("Admin request from: #{params[:secret]} (secret)")
+    Rails.logger.info("Admin request from: #{params[:secret][0..10]} (secret)")
 
   end
 

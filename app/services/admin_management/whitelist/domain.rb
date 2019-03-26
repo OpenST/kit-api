@@ -85,12 +85,19 @@ module AdminManagement
           identifier: @domain
         ).first
 
-        unless record.present?
-          ManagerWhitelisting.create!(
-            kind: GlobalConstant::ManagerWhitelisting.domain_kind,
-            identifier: @domain
+        if record.present?
+          return validation_error(
+            'am_w_d_2',
+            'invalid_api_params',
+            ['domain_already_whitelisted'],
+            GlobalConstant::ErrorAction.default
           )
         end
+
+        ManagerWhitelisting.create!(
+          kind: GlobalConstant::ManagerWhitelisting.domain_kind,
+          identifier: @domain
+        )
 
         success
 

@@ -337,3 +337,8 @@ email_already_whitelisted:
   parameter: 'e'
   code: 'invalid'
   message: 'Email already whitelisted.'
+
+domain_already_whitelisted:
+  parameter: 'e'
+  code: 'invalid'
+  message: 'Domain already whitelisted.'
