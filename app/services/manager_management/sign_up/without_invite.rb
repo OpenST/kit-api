@@ -23,9 +23,11 @@ module ManagerManagement
 
         @email = @params[:email]
         @agreed_terms_of_service = @params[:agreed_terms_of_service]
+        @marcomm = @params[:marcomm]
 
         @authentication_salt_hash = nil
         @authentication_salt_d = nil
+        @marketing_communication_flag = nil
 
       end
 
@@ -101,6 +103,9 @@ module ManagerManagement
            validation_errors,
            GlobalConstant::ErrorAction.default
         ) if validation_errors.present?
+
+        r = sanitize_marcomm_flag
+        return r unless r.success?
 
         r = VerifyEmailWhitelisting.new(email: @email).perform
         return r unless r.success?

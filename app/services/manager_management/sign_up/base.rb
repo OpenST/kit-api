@@ -213,21 +213,39 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 08/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
       def enqueue_job
-
         BackgroundJob.enqueue(
             SignUpJob,
             {
-                manager_id: @manager_obj.id
+                manager_id: @manager_obj.id,
+                platform_marketing: @marketing_communication_flag
             }
         )
 
         success
+      end
 
+      # Sanitize marcomm flag
+      #
+      # * Author: Ankit
+      # * Date: 25/03/2019
+      # * Reviewed By: Kedar
+      #
+      # @return [Result::Base]
+      #
+      def sanitize_marcomm_flag
+        # being linient on validation. If marcomm is not on, consider it off.
+        if @marcomm && @marcomm.to_s.downcase == 'on'
+          @marketing_communication_flag = GlobalConstant::PepoCampaigns.platform_marketing_value_true
+        else
+          @marketing_communication_flag = GlobalConstant::PepoCampaigns.platform_marketing_value_false
+        end
+
+        success
       end
 
     end

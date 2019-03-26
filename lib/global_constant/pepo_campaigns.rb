@@ -35,6 +35,9 @@ module GlobalConstant
 
       ########### User Custom Attributes #########
 
+      def platform_marketing_attribute
+        'platform_marketing'
+      end
 
       def platform_signup_attribute
         'platform_signup'
@@ -48,7 +51,8 @@ module GlobalConstant
       def allowed_custom_attributes
         [
           platform_signup_attribute,
-          platform_double_optin_done_attribute
+          platform_double_optin_done_attribute,
+          platform_marketing_attribute
         ]
       end
 
@@ -106,6 +110,14 @@ module GlobalConstant
 
       def platform_double_optin_done_value
         1
+      end
+
+      def platform_marketing_value_true
+        1
+      end
+
+      def platform_marketing_value_false
+        0
       end
 
       ############# Custom Attribute Values ################

@@ -22,9 +22,11 @@ module ManagerManagement
         super
 
         @invite_token = @params[:i_t]
+        @marcomm = @params[:marcomm]
 
         @decrypted_invite_token = nil
         @manager_validation_hash = nil
+        @marketing_communication_flag = nil
 
       end
 
@@ -130,6 +132,10 @@ module ManagerManagement
                                 ) if validation_errors.present?
 
         # NOTE: To be on safe side, check for generic errors as well
+
+        r = sanitize_marcomm_flag
+        return r unless r.success?
+
         success
 
       end

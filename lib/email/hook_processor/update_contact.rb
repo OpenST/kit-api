@@ -82,7 +82,7 @@ module Email
       # @return [Hash]
       #
       def attributes_hash
-        @hook.params[:custom_attributes] || {}
+        @hook.params["custom_attributes"] || {}
       end
 
       # Build user settings for email service
@@ -94,7 +94,7 @@ module Email
       # @return [Hash]
       #
       def user_settings_hash
-        @hook.params[:user_settings] || {}
+        @hook.params["user_settings"] || {}
       end
 
     end
