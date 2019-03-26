@@ -252,7 +252,7 @@
     - :client_id
 'AdminManagement::Whitelist::Domain':
  :mandatory:
-   - :identifier
+   - :d
 'AdminManagement::Whitelist::Email':
  :mandatory:
-   - :identifier
+   - :e

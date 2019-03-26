@@ -10,8 +10,8 @@ module Email
       # * Date: 12/01/2018
       # * Reviewed By:
       #
-      # @param [String] template_name (mandatory) - Template Name
-      # @param [Hash] template_vars (mandatory) - Template Vars
+      # @params [String] template_name (mandatory) - Template Name
+      # @params [Hash] template_vars (mandatory) - Template Vars
       #
       #
       # @return [Email::HookCreator::SendTransactionalMail]  returns an object of Email::HookCreator::SendTransactionalMail class

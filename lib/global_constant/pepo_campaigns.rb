@@ -142,6 +142,11 @@ module GlobalConstant
         'platform_mainnet_access_request'
       end
 
+      # Platform whitelisting done  - sent when platform whitelisting is done
+      def platform_whitelisting_done_template
+        'platform_whitelist_done'
+      end
+
       # Initiate Recovery - sent when recovery is initiated from saas-api
       def recovery_request_submission_template
         'recovery_request_submission'
@@ -161,7 +166,8 @@ module GlobalConstant
           platform_forgot_password_template,
           platform_invite_manager_template,
           platform_mainnet_access_request_template,
-          recovery_request_submission_template
+          recovery_request_submission_template,
+          platform_whitelisting_done_template
         ]
       end
 
