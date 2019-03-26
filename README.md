@@ -48,3 +48,22 @@ For local setup remove the line ':pidfile: ./tmp/pids/sidekiq.pid' from config/s
 source set_env_vars.sh
 sidekiq -C ./config/sidekiq.yml -q sk_api_high_task  -q sk_api_med_task -q sk_api_default
 ```
+
+## Run the following steps in order to de-link a token and client.
+1. Select all 'non-deployed' tokens from tokens table.
+    ```mysql
+    select * from tokens where status != 1; 
+    ``` 
+2. Set client_id for all the tokens as NULL. If you need to de-link only a particular token, please update the query accordingly.
+    ```mysql
+    UPDATE `tokens` SET client_id_was = client_id, client_id = NULL, debug = ('{\"disassociation_reason\":\"Token holder in openst.js v0.10.0-beta.1 had wrong callprefix for executeTransaction and executeRedemption.\"}'), updated_at='2019-03-27 00:32:03.569' WHERE (status != 1);
+    ```
+3. Select all workflows where workflow kind is 'tokenDeployKind'.
+    ```mysql
+    select * from workflows where kind = 1;
+    ``` 
+4. Set unique_hash as NULL. If you need to de-link only a particular token, please update the query accordingly.
+    ```mysql
+    update workflows set unique_hash = NULL where kind = 1;
+    ```
+    
