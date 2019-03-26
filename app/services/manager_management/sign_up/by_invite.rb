@@ -48,9 +48,6 @@ module ManagerManagement
           # 1. decode i_t to determine email and client to which invite is for
           # 2. find manager & client record
 
-          r = validate_marcomm_flag
-          return r unless r.success?
-
           r = decrypt_invite_token
           return r unless r.success?
 
@@ -135,6 +132,10 @@ module ManagerManagement
                                 ) if validation_errors.present?
 
         # NOTE: To be on safe side, check for generic errors as well
+
+        r = sanitize_marcomm_flag
+        return r unless r.success?
+
         success
 
       end

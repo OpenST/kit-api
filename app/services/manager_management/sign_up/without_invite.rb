@@ -46,9 +46,6 @@ module ManagerManagement
           r = validate_and_sanitize
           return r unless r.success?
 
-          r = validate_marcomm_flag
-          return r unless r.success?
-
           r = create_manager
           return r unless r.success?
 
@@ -106,6 +103,9 @@ module ManagerManagement
            validation_errors,
            GlobalConstant::ErrorAction.default
         ) if validation_errors.present?
+
+        r = sanitize_marcomm_flag
+        return r unless r.success?
 
         r = VerifyEmailWhitelisting.new(email: @email).perform
         return r unless r.success?

@@ -6,7 +6,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 02/02/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   # @param [Hash] manager_id (mandatory) - manager id
   #
@@ -26,7 +26,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 02/02/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   # @param [Hash] params
   #
@@ -41,7 +41,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 09/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   def add_contact_in_email_service
 
@@ -60,7 +60,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 09/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   def send_double_optin_link
     r = ManagerManagement::SendDoubleOptInLink.new(manager_id: @manager_id).perform
@@ -71,7 +71,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 09/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   def notify_devs
     ApplicationMailer.notify(

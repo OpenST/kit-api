@@ -213,52 +213,38 @@ module ManagerManagement
       #
       # * Author: Puneet
       # * Date: 08/12/2018
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
       def enqueue_job
-
-        if @marketing_communication_flag.nil?
-          marketing_communication_flag = GlobalConstant::PepoCampaigns.platform_marketing_value_false
-        else
-          marketing_communication_flag = @marketing_communication_flag
-        end
-
         BackgroundJob.enqueue(
             SignUpJob,
             {
                 manager_id: @manager_obj.id,
-                platform_marketing: marketing_communication_flag
+                platform_marketing: @marketing_communication_flag
             }
         )
 
         success
-
       end
 
-      # Validate mark communication flag.
+      # Sanitize marcomm flag
       #
       # * Author: Ankit
       # * Date: 25/03/2019
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
-      def validate_marcomm_flag
-
-        if @marcomm.nil?
-          @marketing_communication_flag = GlobalConstant::PepoCampaigns.platform_marketing_value_false
-        elsif @marcomm.to_s.downcase == 'on'
+      def sanitize_marcomm_flag
+        # being linient on validation. If marcomm is not on, consider it off.
+        if @marcomm && @marcomm.to_s.downcase == 'on'
           @marketing_communication_flag = GlobalConstant::PepoCampaigns.platform_marketing_value_true
         else
-          return validation_error(
-            'mm_su_b_16',
-            'invalid_api_params',
-            ['invalid_marcomm'],
-            GlobalConstant::ErrorAction.default
-          )
+          @marketing_communication_flag = GlobalConstant::PepoCampaigns.platform_marketing_value_false
         end
+
         success
       end
 

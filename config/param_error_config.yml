@@ -228,11 +228,6 @@ invalid_agreed_terms_of_service:
   code: 'invalid'
   message: 'Please read the Term & Conditions and Policy of Use before registration.'
 
-invalid_marcomm:
-  parameter: 'marcomm'
-  code: 'invalid'
-  message: 'Improper value for marcomm.'
-
 invalid_page_no:
   parameter: 'page_no'
   code: 'invalid'
