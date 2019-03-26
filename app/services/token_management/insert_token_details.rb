@@ -149,11 +149,11 @@ module TokenManagement
 
       validation_errors.push('invalid_conversion_factor') if @conversion_factor <= 0
 
-      if Token.where('client_id != ? AND name = ?', @client_id, @name).first.present?
+      if Token.where('(client_id != ? || client_id IS NULL) AND name = ?', @client_id, @name).first.present?
         validation_errors.push('duplicate_token_name')
       end
 
-      if Token.where('client_id != ? AND symbol = ?', @client_id, @symbol).first.present?
+      if Token.where('(client_id != ? || client_id IS NULL) AND symbol = ?', @client_id, @symbol).first.present?
         validation_errors.push('duplicate_token_symbol')
       end
 
