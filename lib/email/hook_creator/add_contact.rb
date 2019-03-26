@@ -42,13 +42,6 @@ module Email
       #
       def validate
 
-        return validation_error(
-            'e_hc_uc_1',
-            'invalid_api_params',
-            ['missing_email'],
-            GlobalConstant::ErrorAction.default
-        ) if @email.blank?
-
         validate_custom_variables
 
       end

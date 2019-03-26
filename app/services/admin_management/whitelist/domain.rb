@@ -8,22 +8,22 @@ module AdminManagement
       #
       # * Author: Puneet
       # * Date: 18/03/2019
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
-      # @params [String] identifier (mandatory) - domain which needs to be whitelisted
+      # @params [String] d (mandatory) - domain which needs to be whitelisted
       #
       # @return [AdminManagement::Whitelist::Domain]
       #
       def initialize(params)
         super
-        @domain = @params[:identifier]
+        @domain = @params[:d]
       end
 
       # Perform
       #
       # * Author: Puneet
       # * Date: 18/03/2019
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
@@ -46,7 +46,7 @@ module AdminManagement
       #
       # * Author: Puneet
       # * Date: 18/03/2019
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
@@ -74,7 +74,7 @@ module AdminManagement
       #
       # * Author: Shlok
       # * Date: 14/09/2018
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
@@ -85,12 +85,19 @@ module AdminManagement
           identifier: @domain
         ).first
 
-        unless record.present?
-          ManagerWhitelisting.create!(
-            kind: GlobalConstant::ManagerWhitelisting.domain_kind,
-            identifier: @domain
+        if record.present?
+          return validation_error(
+            'am_w_d_2',
+            'invalid_api_params',
+            ['domain_already_whitelisted'],
+            GlobalConstant::ErrorAction.default
           )
         end
+
+        ManagerWhitelisting.create!(
+          kind: GlobalConstant::ManagerWhitelisting.domain_kind,
+          identifier: @domain
+        )
 
         success
 

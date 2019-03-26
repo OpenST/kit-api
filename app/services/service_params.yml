@@ -5,6 +5,7 @@
     - :browser_user_agent
     - :agreed_terms_of_service
   :optional:
+    - :marcomm
 'ManagerManagement::SignUp::ByInvite':
   :mandatory:
     - :i_t
@@ -12,6 +13,7 @@
     - :confirm_password
     - :browser_user_agent
   :optional:
+    - :marcomm
 'ManagerManagement::SignUp::GetDetails':
   :mandatory:
     - :i_t
@@ -250,7 +252,7 @@
     - :client_id
 'AdminManagement::Whitelist::Domain':
  :mandatory:
-   - :identifier
+   - :d
 'AdminManagement::Whitelist::Email':
  :mandatory:
-   - :identifier
+   - :e

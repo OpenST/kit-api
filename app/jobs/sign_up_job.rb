@@ -6,7 +6,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 02/02/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   # @param [Hash] manager_id (mandatory) - manager id
   #
@@ -26,13 +26,14 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 02/02/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   # @param [Hash] params
   #
   def init_params(params)
     @manager_id = params[:manager_id].to_i
     @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
+    @platform_marketing = params[:platform_marketing]
     @failed_logs = {}
   end
 
@@ -40,7 +41,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 09/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   def add_contact_in_email_service
 
@@ -48,7 +49,8 @@ class SignUpJob < ApplicationJob
         receiver_entity_id: @manager_id,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         custom_attributes: {
-            GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value
+            GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value,
+            GlobalConstant::PepoCampaigns.platform_marketing_attribute => @platform_marketing
         }
     ).perform
 
@@ -58,7 +60,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 09/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   def send_double_optin_link
     r = ManagerManagement::SendDoubleOptInLink.new(manager_id: @manager_id).perform
@@ -69,7 +71,7 @@ class SignUpJob < ApplicationJob
   #
   # * Author: Puneet
   # * Date: 09/12/2018
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   def notify_devs
     ApplicationMailer.notify(

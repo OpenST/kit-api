@@ -8,22 +8,23 @@ module AdminManagement
       #
       # * Author: Puneet
       # * Date: 18/03/2019
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
-      # @params [String] identifier (mandatory) - email which needs to be whitelisted
+      # @params [String] e (mandatory) - email which needs to be whitelisted
       #
       # @return [AdminManagement::Whitelist::Email]
       #
       def initialize(params)
         super
-        @email = @params[:identifier]
+
+        @email = @params[:e]
       end
 
       # Perform
       #
       # * Author: Puneet
       # * Date: 18/03/2019
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
@@ -46,7 +47,7 @@ module AdminManagement
       #
       # * Author: Puneet
       # * Date: 18/03/2019
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
@@ -74,23 +75,51 @@ module AdminManagement
       #
       # * Author: Shlok
       # * Date: 14/09/2018
-      # * Reviewed By:
+      # * Reviewed By: Kedar
       #
       # @return [Result::Base]
       #
       def find_or_create_record
+
+        #check if the email has already signed up.
+        manager_record = Manager.where(email: @email).first
+
+        if manager_record.present?
+          return validation_error(
+            'am_w_e_2',
+            'invalid_api_params',
+            ['email_already_signed_up'],
+            GlobalConstant::ErrorAction.default
+          )
+        end
 
         record = ManagerWhitelisting.where(
           kind: GlobalConstant::ManagerWhitelisting.email_kind,
           identifier: @email
         ).first
 
-        unless record.present?
-          ManagerWhitelisting.create!(
-            kind: GlobalConstant::ManagerWhitelisting.email_kind,
-            identifier: @email
+        if record.present?
+          return validation_error(
+            'am_w_e_3',
+            'invalid_api_params',
+            ['email_already_whitelisted'],
+            GlobalConstant::ErrorAction.default
           )
         end
+
+        create_response = ManagerWhitelisting.create!(
+          kind: GlobalConstant::ManagerWhitelisting.email_kind,
+          identifier: @email
+        )
+
+        template_vars = {company_web_domain: GlobalConstant::CompanyWeb.domain}
+
+        r = ::Email::HookCreator::SendTransactionalMail.new(
+          receiver_entity_id: create_response.id,
+          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.whitelisting_requester_kind,
+          template_name: GlobalConstant::PepoCampaigns.platform_whitelisting_done_template,
+          template_vars: template_vars).perform
+        return r unless r.success?
 
         success
 

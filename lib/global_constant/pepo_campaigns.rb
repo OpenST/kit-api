@@ -35,6 +35,9 @@ module GlobalConstant
 
       ########### User Custom Attributes #########
 
+      def platform_marketing_attribute
+        'platform_marketing'
+      end
 
       def platform_signup_attribute
         'platform_signup'
@@ -48,7 +51,8 @@ module GlobalConstant
       def allowed_custom_attributes
         [
           platform_signup_attribute,
-          platform_double_optin_done_attribute
+          platform_double_optin_done_attribute,
+          platform_marketing_attribute
         ]
       end
 
@@ -108,6 +112,14 @@ module GlobalConstant
         1
       end
 
+      def platform_marketing_value_true
+        1
+      end
+
+      def platform_marketing_value_false
+        0
+      end
+
       ############# Custom Attribute Values ################
 
       # double optin email - sent when user is adding email for the first time
@@ -130,6 +142,11 @@ module GlobalConstant
         'platform_mainnet_access_request'
       end
 
+      # Platform whitelisting done  - sent when platform whitelisting is done
+      def platform_whitelisting_done_template
+        'platform_whitelist_done'
+      end
+
       # Initiate Recovery - sent when recovery is initiated from saas-api
       def recovery_request_submission_template
         'recovery_request_submission'
@@ -149,7 +166,8 @@ module GlobalConstant
           platform_forgot_password_template,
           platform_invite_manager_template,
           platform_mainnet_access_request_template,
-          recovery_request_submission_template
+          recovery_request_submission_template,
+          platform_whitelisting_done_template
         ]
       end
 
