@@ -84,7 +84,8 @@ class WorkflowSteps
   # TODO: Should fetch from cache
   def fetch_workflow_steps
     @workflow_steps_data_map = {}
-    workflow_step_data = WorkflowStep.where(workflow_id: @workflow_ids).order('id ASC').all
+    workflow_step_data = WorkflowStep.where(workflow_id: @workflow_ids).order('id ASC')
+                             .where('unique_hash is NOT NULL').all
     workflow_step_data.each do |a|
       @workflow_steps_data_map[a.workflow_id] ||= {}
       @workflow_steps_data_map[a.workflow_id][a.kind] = a

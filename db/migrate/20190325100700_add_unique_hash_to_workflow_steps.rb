@@ -15,13 +15,4 @@ class AddUniqueHashToWorkflowSteps < DbMigrationConnection
       add_index :workflow_steps, [:workflow_id, :kind, :status], unique: false, name: 'cuk_wid_kind_status'
     end
   end
-
-  def down
-    run_migration_for_db(DbConnection::KitSaasSubenv) do
-      remove_index :workflow_steps, name: 'uk_uh'
-      remove_column :workflow_steps, :unique_hash
-      remove_index :workflow_steps, name: 'cuk_wid_kind_status'
-      add_index :workflow_steps, [:workflow_id, :kind, :status], unique: true, name: 'cuk_wid_kind_status'
-    end
-  end
 end
