@@ -73,7 +73,7 @@ module TokenManagement
       return r unless r.success?
 
       @name = @name.to_s.strip
-      @symbol = @symbol.to_s.strip
+      @symbol = @symbol.to_s.strip.upcase
 
       validation_errors = validate_token_creation_params
 
