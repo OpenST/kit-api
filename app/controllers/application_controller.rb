@@ -123,6 +123,9 @@ class ApplicationController < ActionController::API
   # Set response headers
   #
   def set_response_headers
+    response.headers["X-Content-Type-Options"] = 'nosniff'
+    response.headers["X-Frame-Options"] = 'SAMEORIGIN'
+    response.headers["X-XSS-Protection"] = '1; mode=block'
     response.headers["X-Robots-Tag"] = 'noindex, nofollow'
     response.headers["Content-Type"] = 'application/json; charset=utf-8'
   end
