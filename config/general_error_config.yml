@@ -121,7 +121,7 @@ data_validation_failed:
 grant_limit_reached:
   http_code: 422
   code: "INVALID_REQUEST"
-  message: "You have reached the maximum grant of OST-Test. You can request more every 24 hours."
+  message: "OST-Test is granted only once every 24 hours. This error also comes up due to a metamask issue. Please try re-enabling the metamask browser extension and hit refresh."
 
 request_not_xhr:
   http_code: 422
