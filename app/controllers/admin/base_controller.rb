@@ -22,7 +22,7 @@ class Admin::BaseController < AuthenticationController
       'UzHArPR5C4CbCXZVHMFDbjPuwG2BL4gbrfsThsQE', # Jean
       'DjJRQWA8bNdd84xceSNCqjydpf78suLZDYpvPcV7',  # Mohit
       'rpkYwd3GM2N7dXEkxtRLBwHvhZnVc88R5K8fbKD5', # Kevin
-      'dF56K5DBC7ZL4CK6gdcQM7gUJPNauAyQwhDfAuAW', # Paul
+      'dF56K5DBC7ZL4CK6gdcQM7gUJPNauAyQwhDfAuAW' # Paul
     ]
   
     authenticate_or_request_with_http_basic do |username, password|
