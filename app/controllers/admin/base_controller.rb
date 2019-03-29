@@ -16,13 +16,13 @@ class Admin::BaseController < AuthenticationController
     }
     
     admin_secrets = [
-      'YFbDp6RgqMvNTKHk8z8BxYJ9QSYQErf2FjMW8Env', # Frankie
-      'DjJRQWA8bNdd84xceSNCqjydpf78suLZDYpvPcV7',  # Junisha
-      'nVXe6BABW8Bb3n8h43XP8W5nTWm3HgJK2sMPaScH', # PDP
-      'rpkYwd3GM2N7dXEkxtRLBwHvhZnVc88R5K8fbKD5', # Jorden
+      'YFbDp6RgqMvNTKHk8z8BxYJ9QSYQErf2FjMW8Env', # Jason
+      'nVXe6BABW8Bb3n8h43XP8W5nTWm3HgJK2sMPaScH', # Shlomi
       'Cx74W6GV5fT9drz47kjDvYMqjGaAJxXrjatbwJ3y', # Ignas
-      'dF56K5DBC7ZL4CK6gdcQM7gUJPNauAyQwhDfAuAW', # Marina
-      'UzHArPR5C4CbCXZVHMFDbjPuwG2BL4gbrfsThsQE' # Jean
+      'UzHArPR5C4CbCXZVHMFDbjPuwG2BL4gbrfsThsQE', # Jean
+      'DjJRQWA8bNdd84xceSNCqjydpf78suLZDYpvPcV7',  # Mohit
+      'rpkYwd3GM2N7dXEkxtRLBwHvhZnVc88R5K8fbKD5', # Kevin
+      'dF56K5DBC7ZL4CK6gdcQM7gUJPNauAyQwhDfAuAW' # Paul
     ]
   
     authenticate_or_request_with_http_basic do |username, password|
