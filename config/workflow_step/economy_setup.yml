@@ -74,12 +74,6 @@ step_config:
   - kind: <%= GlobalConstant::WorkflowStep.update_token_in_ost_view%>
     weight: 0
     group: 6
-  - kind: <%= GlobalConstant::WorkflowStep.activate_token_gateway_kind%>
-    weight: 2
-    group: 7
-  - kind: <%= GlobalConstant::WorkflowStep.verify_activate_token_gateway%>
-    weight: 0
-    group: 7
   - kind: <%= GlobalConstant::WorkflowStep.set_co_gateway_in_ubt_kind%>
     weight: 7
     group: 8
@@ -204,6 +198,12 @@ step_config:
     weight: 1
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.verify_set_internal_actor_for_companyTH_in_UBT%>
+    weight: 0
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.activate_token_gateway_kind%>
+    weight: 2
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.verify_activate_token_gateway%>
     weight: 0
     group: 9
   - kind: <%= GlobalConstant::WorkflowStep.verify_economy_setup%>
