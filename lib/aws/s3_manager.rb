@@ -75,11 +75,14 @@ module Aws
     # @param [String] bucket - bucket where file is to be uploaded
     # @param [Hash] options - extra options
     #
+    # NOTE: refer https://docs.aws.amazon.com/sdkforruby/api/Aws/S3/Client.html#put_object-instance_method for more details
+    #
     def upload(s3_path, body, bucket, options = {})
 
       begin
 
         params = {
+            acl: "private",
             key: s3_path,
             body: body,
             bucket: bucket
