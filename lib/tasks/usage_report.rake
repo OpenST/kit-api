@@ -62,12 +62,13 @@ task :usage_report => :environment do
 
     dashboard_service_response = DashboardManagement::Get.new({client_id: client_id}).perform
 
-    p("---------dashboard_service_response------#{dashboard_service_response.inspect}")
     if dashboard_service_response.success?
       if dashboard_service_response.data[:token]
         data_by_email[row.email][:token_deployment_status] = dashboard_service_response.data[:token][:status]
         data_by_email[row.email][:token_symbol] = dashboard_service_response.data[:token][:symbol]
-        summary_report[:token_setup] += 1
+        if data_by_email[row.email][:token_deployment_status] == 'deploymentCompleted'
+          summary_report[:token_setup] += 1
+        end
       end
 
       if dashboard_service_response.data[:dashboard_details][:total_supply].to_f > 0
@@ -152,6 +153,7 @@ task :usage_report => :environment do
   end
 
   puts("Secured URL : #{r.data[:presigned_url]}")
+  puts("Summary Data : #{summary_report.inspect}")
 
   # delete local file
   File.delete(file_name) if File.exist?(file_name)
