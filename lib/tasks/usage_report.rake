@@ -1,5 +1,8 @@
 desc "Usage: rake RAILS_ENV=staging usage_report"
+
 task :usage_report => :environment do
+
+  require('csv')
 
   whitelisted_email_rows = ManagerWhitelisting.select('identifier', 'created_at').where(
     kind: GlobalConstant::ManagerWhitelisting.email_kind).all
@@ -80,10 +83,77 @@ task :usage_report => :environment do
 
   end
 
-  p("---1------data_by_email------")
-  p(data_by_email.to_json)
-  p("---1------data_by_email------")
+  csv_data = []
 
-  p(summary_report)
+  # prepare CSV Data
+
+  # append headers
+  csv_data.push([
+      'email',
+      'whitelisted_at',
+      'double opt in done',
+      'token deploy status',
+      'token symbol',
+      'stake and mint done',
+      'performed transactions'
+    ])
+
+  data_by_email.each do |email, data|
+    buffer = []
+    buffer.push(email)
+    buffer.push(data[:whitelisted_at])
+    buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
+    buffer.push(data[:token_deployment_status])
+    buffer.push(data[:token_symbol])
+    buffer.push(data[:stake_and_mint_done] == 1 ? 'YES' : 'NO')
+    buffer.push(data[:made_transactions] == 1 ? 'YES' : 'NO')
+    csv_data.push(buffer)
+  end
+
+  puts "Data generated"
+
+  file_name = "#{Time.now.to_i}.csv"
+
+  # write data to csv file
+  File.open(file_name, "w") {|f| f.write(csv_data.inject([]) { |csv, row|  csv << CSV.generate_line(row) }.join(""))}
+
+  puts "Data written to local file"
+
+  s3_manager = Aws::S3Manager.new
+
+  # upload file to S3
+  r = s3_manager.upload(
+      "#{GlobalConstant::S3.platform_usage_reports_folder}/#{file_name}",
+      File.open(file_name),
+      GlobalConstant::S3.reports_bucket,
+      {
+          content_type: 'text/csv',
+          expires: Time.now + 7.day,
+      }
+  )
+  unless r.success?
+    Rails.logger.error('upload_file_error', r.to_json)
+    return r
+  end
+
+  puts "Data uploaded to S3. response #{r.to_json}"
+
+  # generate presigned URL
+  r = s3_manager.get_signed_url_for(
+      GlobalConstant::S3.reports_bucket,
+      "#{GlobalConstant::S3.platform_usage_reports_folder}/#{file_name}",
+      {
+          expires_in: 24 * 60 * 60 #24 hours in seconds
+      }
+  )
+  unless r.success?
+    Rails.logger.error('generate_pre_signed_url_error', r.to_json)
+    return r
+  end
+
+  puts("Secured URL : #{r.data[:presigned_url]}")
+
+  # delete local file
+  File.delete(file_name) if File.exist?(file_name)
 
 end

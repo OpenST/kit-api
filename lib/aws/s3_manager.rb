@@ -24,21 +24,44 @@ module Aws
     #
     # @param [String] bucket - bucket name
     # @param [String] s3_path - file path in bucket
-    # @param [Hash] options - options for signed url
+    # @param [Hash] options - options for signed url (ex expires_in = 9000 (seconds after which URL would expire))
     #
     # @return [Result::Base]
     #
     def get_signed_url_for(bucket, s3_path, options = {})
-      signer = Aws::S3::Presigner.new({client: client})
-      params = {
-          bucket: bucket,
-          key: s3_path
-      }
 
-      signer.presigned_url(
-          :get_object,
-          params.merge(options)
-      )
+      begin
+
+        signer = Aws::S3::Presigner.new({client: client})
+        params = {
+            bucket: bucket,
+            key: s3_path
+        }
+
+        presigned_url = signer.presigned_url(
+            :get_object,
+            params.merge(options)
+        )
+
+        success_with_data({
+                              presigned_url: presigned_url
+                          })
+
+      rescue StandardError => se
+
+        return exception_with_data(
+            se,
+            'l_a_s3_m_1',
+            GlobalConstant::ErrorAction.default,
+            {
+                key: s3_path,
+                bucket: bucket,
+                options: options
+            }
+        )
+
+      end
+
     end
 
     # upload data in s3
@@ -54,13 +77,50 @@ module Aws
     #
     def upload(s3_path, body, bucket, options = {})
 
-      params = {
-          key: s3_path,
-          body: body,
-          bucket: bucket
-      }
+      begin
 
-      client.put_object(params.merge(options))
+        params = {
+            key: s3_path,
+            body: body,
+            bucket: bucket
+        }
+
+        aws_response_obj = client.put_object(params.merge(options))
+
+        aws_response = aws_response_obj.to_h
+
+        if aws_response[:etag].present?
+
+          success_with_data({
+                                etag: aws_response[:etag]
+                            })
+
+        else
+
+          error_with_data(
+              'l_a_s3_m_3',
+              'something_went_wrong',
+              GlobalConstant::ErrorAction.default,
+              {
+                  aws_response: aws_response
+              }
+          )
+
+        end
+
+      rescue StandardError => se
+
+        return exception_with_data(
+            se,
+            'l_a_s3_m_4',
+            GlobalConstant::ErrorAction.default,
+            {
+              key: s3_path,
+              bucket: bucket
+            }
+        )
+
+      end
 
     end
 
@@ -75,10 +135,29 @@ module Aws
     # @param [String] key - file name
     #
     def get(path, key, bucket)
-      client.get_object(
-          bucket: bucket,
-          response_target: path,
-          key: key)
+
+      begin
+
+        client.get_object(
+            bucket: bucket,
+            response_target: path,
+            key: key)
+
+      rescue StandardError => se
+
+        return exception_with_data(
+            se,
+            'l_a_s3_m_5',
+            GlobalConstant::ErrorAction.default,
+            {
+                path: path,
+                key: key,
+                bucket: bucket
+            }
+        )
+
+      end
+
     end
 
     private
