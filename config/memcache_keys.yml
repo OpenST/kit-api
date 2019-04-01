@@ -60,7 +60,7 @@ keys:
 
   token_management:
     details:
-      key_template: 'c_tkn_%{client_id}'
+      key_template: 'c_tkn_by_cid_%{client_id}'
       expiry_in_seconds: 86400
       <<: *kit_saas_subenv
 
