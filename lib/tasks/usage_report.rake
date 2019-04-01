@@ -92,6 +92,7 @@ task :usage_report => :environment do
   csv_data.push([
       'email',
       'whitelisted_at',
+      'registered_at',
       'double opt in done',
       'token deploy status',
       'token symbol',
@@ -103,6 +104,7 @@ task :usage_report => :environment do
     buffer = []
     buffer.push(email)
     buffer.push(data[:whitelisted_at])
+    buffer.push(data[:registered_at])
     buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
     buffer.push(data[:token_deployment_status])
     buffer.push(data[:token_symbol])
