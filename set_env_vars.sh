@@ -58,6 +58,15 @@ export KA_DEFAULT_AWS_REGION="us-east-1"
 export KA_USER_AWS_ACCESS_KEY="AKIAJUDRALNURKAVS5IQ"
 export KA_USER_AWS_SECRET_KEY="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"
 
+# S3 Details
+export KA_S3_ACCESS_KEY="AKIAIG7G5KJ53INDY36A"
+export KA_S3_SECRET_KEY="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"
+export KA_S3_MASTER_FOLDER="d-sandbox"
+export KA_S3_REPORTS_BUCKET="analytics.stagingost.com"
+export KA_S3_REPORTS_PLATFORM_USAGE_FOLDER="platform-usage"
+export KA_S3_ANALYTICS_BUCKET="reports.stagingost.com"
+export KA_S3_ANALYTICS_GRAPHS_FOLDER="graphs"
+
 # KMS Details
 export KA_LOGIN_KMS_ARN='arn:aws:kms:us-east-1:604850698061:key'
 export KA_LOGIN_KMS_ID='eab8148d-fd9f-451d-9eb9-16c115645635'
