@@ -81,7 +81,7 @@ task :usage_report => :environment do
   end
 
   p("---1------data_by_email------")
-  p(data_by_email)
+  p(data_by_email.to_json)
   p("---1------data_by_email------")
 
   p(summary_report)
