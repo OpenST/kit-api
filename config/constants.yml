@@ -14,6 +14,15 @@ constants:
       access_key: <%= ENV['KA_USER_AWS_ACCESS_KEY']%>
       secret_key: <%= ENV['KA_USER_AWS_SECRET_KEY']%>
 
+  s3:
+    access_key: <%= ENV['KA_S3_ACCESS_KEY']%>
+    secret_key: <%= ENV['KA_S3_SECRET_KEY']%>
+    analytics_bucket: <%= ENV['KA_S3_ANALYTICS_BUCKET']%>
+    reports_bucket: <%= ENV['KA_S3_REPORTS_BUCKET']%>
+    master_folder: <%= ENV['KA_S3_MASTER_FOLDER']%>
+    platform_usage_reports_folder: <%= ENV['KA_S3_REPORTS_PLATFORM_USAGE_FOLDER']%>
+    analytics_graphs_folder: <%= ENV['KA_S3_ANALYTICS_GRAPHS_FOLDER']%>
+
   kms:
     login:
       arn: <%= ENV['KA_LOGIN_KMS_ARN']%>

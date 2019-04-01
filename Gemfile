@@ -12,6 +12,7 @@ gem 'sanitize', '5.0.0'
 gem 'exception_notification', '4.3.0'
 
 gem 'aws-sdk-kms', '1.13.0'
+gem 'aws-sdk-s3', '1.36.0'
 
 gem 'http', '4.0.0'
 

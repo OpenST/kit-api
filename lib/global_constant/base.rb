@@ -43,6 +43,10 @@ module GlobalConstant
       @aws ||= fetch_config.fetch('aws', {}).with_indifferent_access
     end
 
+    def self.s3
+      @s3 ||= fetch_config.fetch('s3', {}).with_indifferent_access
+    end
+
     def self.kms
       @kms ||= fetch_config.fetch('kms', {}).with_indifferent_access
     end
