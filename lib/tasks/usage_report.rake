@@ -8,6 +8,15 @@ task :usage_report => :environment do
 
   data_by_email = {}
 
+  summary_report = {
+    whitelisted_emails: 0,
+    registrations: 0,
+    double_opt_in: 0,
+    token_setup: 0,
+    stake_and_mint: 0,
+    transactions: 0
+  }
+
   whitelisted_email_rows.each do |row|
     ## identifier is email in case of kind is email
     email = row.identifier
@@ -22,6 +31,8 @@ task :usage_report => :environment do
       token_deployment_status: GlobalConstant::ClientToken.not_deployed,
       token_symbol: ''
     }
+
+    summary_report[:whitelisted_emails] += 1
   end
 
   manager_rows = Manager.where(
@@ -34,10 +45,17 @@ task :usage_report => :environment do
     client_id = row.current_client_id
 
     client_ids << client_id
+    summary_report[:registrations] += 1
 
     data_by_email[row.email][:client_id] = client_id
-    data_by_email[row.email][:is_verified_email] = (row.send("#{GlobalConstant::Manager.has_verified_email_property}?") ? 1 : 0)
     data_by_email[row.email][:registered_at] = row.created_at
+
+    if row.send("#{GlobalConstant::Manager.has_verified_email_property}?")
+      data_by_email[row.email][:is_verified_email] = 1
+      summary_report[:double_opt_in] += 1
+    else
+      data_by_email[row.email][:is_verified_email] = 0
+    end
 
     dashboard_service_response = DashboardManagement::Get.new({client_id: client_id}).perform
 
@@ -46,14 +64,17 @@ task :usage_report => :environment do
       if dashboard_service_response.data[:token]
         data_by_email[row.email][:token_deployment_status] = dashboard_service_response.data[:token][:status]
         data_by_email[row.email][:token_symbol] = dashboard_service_response.data[:token][:symbol]
+        summary_report[:token_setup] += 1
       end
 
       if dashboard_service_response.data[:dashboard_details][:total_supply].to_f > 0
         data_by_email[row.email][:stake_and_mint_done] = 1
+        summary_report[:stake_and_mint] += 1
       end
 
       if dashboard_service_response.data[:dashboard_details][:circulating_supply].to_f > 0
         data_by_email[row.email][:made_transactions] = 1
+        summary_report[:transactions] += 1
       end
     end
 
@@ -61,5 +82,8 @@ task :usage_report => :environment do
 
   p("---1------data_by_email------")
   p(data_by_email)
+  p("---1------data_by_email------")
+
+  p(summary_report)
 
 end
