@@ -203,8 +203,8 @@ task :usage_report => :environment do
   return lifetime_upload_reposnse unless lifetime_upload_reposnse.success?
 
   daily_data_by_email = {}
-  emails_registerred_today.each do |email, data|
-    daily_data_by_email[email] = data
+  emails_registerred_today.each do |email|
+    daily_data_by_email[email] = lifetime_data_by_email[email]
   end
 
   daily_upload_reposnse = generate_and_upload_csv(daily_data_by_email, 'daily')
