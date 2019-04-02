@@ -64,7 +64,7 @@ export KA_S3_SECRET_KEY="ULEQ7Zm7/TSxAm9oyexcU/Szt8zrAFyXBRCgmL33"
 export KA_S3_MASTER_FOLDER="d-sandbox"
 export KA_S3_REPORTS_BUCKET="reports.stagingost.com"
 export KA_S3_REPORTS_PLATFORM_USAGE_FOLDER="platform-usage"
-export KA_S3_ANALYTICS_BUCKET="analytics.stagingost.com"
+export KA_S3_ANALYTICS_BUCKET="graphs.stagingost.com"
 export KA_S3_ANALYTICS_GRAPHS_FOLDER="graphs"
 
 # KMS Details
