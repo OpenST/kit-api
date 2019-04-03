@@ -315,6 +315,14 @@ module GlobalConstant
       def verify_economy_setup
         'verifyEconomySetup'
       end
+
+      def send_token_setup_success_email
+        'sendTokenSetupSuccessEmail'
+      end
+
+      def send_token_setup_error_email
+        'sendTokenSetupErrorEmail'
+      end
       # workflow economy setup kind: finish
 
       # workflow economy setup kind : State root sync steps start
@@ -415,6 +423,14 @@ module GlobalConstant
 
       def accept_stake
         'acceptStake'
+      end
+
+      def send_stake_and_mint_success_email
+        'sendStakeAndMintSuccessEmail'
+      end
+
+      def send_stake_and_mint_error_email
+        'sendStakeAndMintErrorEmail'
       end
 
       # Bt stake and mint steps: finish

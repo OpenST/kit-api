@@ -86,6 +86,10 @@ class WorkflowStep < DbConnection::KitSaasSubenv
     GlobalConstant::WorkflowStep.check_confirm_stake_status => 83,
     GlobalConstant::WorkflowStep.check_progress_stake_status => 84,
     GlobalConstant::WorkflowStep.check_progress_mint_status => 85,
+    GlobalConstant::WorkflowStep.send_token_setup_success_email => 86,
+    GlobalConstant::WorkflowStep.send_token_setup_error_email => 87,
+    GlobalConstant::WorkflowStep.send_stake_and_mint_success_email => 88,
+    GlobalConstant::WorkflowStep.send_stake_and_mint_error_email => 89,
 
     GlobalConstant::WorkflowStep.mark_success => 101,
     GlobalConstant::WorkflowStep.mark_failure => 102,
