@@ -1,8 +1,9 @@
-desc "Usage: rake RAILS_ENV=staging usage_report"
+desc "Usage: rake RAILS_ENV=production usage_report"
 
 task :usage_report => :environment do
 
-  require('csv')
+  require 'csv'
+  require 'uri'
 
   whitelisted_email_rows = ManagerWhitelisting.select('identifier', 'created_at').where(
     kind: GlobalConstant::ManagerWhitelisting.email_kind).all
@@ -21,7 +22,11 @@ task :usage_report => :environment do
     double_opt_in: 0,
     token_setup: 0,
     stake_and_mint: 0,
-    transactions: 0
+    transactions: 0,
+    resolved_ts_errors: 0,
+    resolved_snm_errors: 0,
+    ts_errors: 0,
+    snm_errors: 0
   }
 
   daily_summary_report = {
@@ -30,7 +35,11 @@ task :usage_report => :environment do
     double_opt_in: 0,
     token_setup: 0,
     stake_and_mint: 0,
-    transactions: 0
+    transactions: 0,
+    resolved_ts_errors: 0,
+    resolved_snm_errors: 0,
+    ts_errors: 0,
+    snm_errors: 0
   }
 
   whitelisted_email_rows.each do |row|
@@ -122,7 +131,82 @@ task :usage_report => :environment do
 
   end
 
-  def generate_and_upload_csv(data_by_email, report_type)
+
+  all_failed_workflows = Workflow.where(kind: [GlobalConstant::Workflow.token_deploy, GlobalConstant::Workflow.bt_stake_and_mint])
+                    .where(client_id: client_ids)
+                    .where(status: [GlobalConstant::Workflow.failed, GlobalConstant::Workflow.completely_failed]).all
+
+  clientwise_lifetime_errors = {}
+  clientwise_daily_errors = {}
+
+  total_lifetime_errors = {snm: 0, ts: 0}
+  total_daily_errors = {snm: 0, ts: 0}
+
+  all_failed_workflows.each do |row|
+    client_id = row.client_id
+
+    is_daily_error = row.created_at.to_i > day_start_ts
+
+    clientwise_lifetime_errors[client_id] ||= {snm: 0, ts: 0}
+    if is_daily_error
+      clientwise_daily_errors[client_id] ||= {snm: 0, ts: 0}
+    end
+
+    if row.kind == GlobalConstant::Workflow.token_deploy
+      clientwise_lifetime_errors[client_id][:ts] += 1
+      total_lifetime_errors[:ts] += 1
+
+      if is_daily_error
+        clientwise_daily_errors[client_id][:ts] += 1
+        total_daily_errors[:ts] += 1
+      end
+    else
+      clientwise_lifetime_errors[client_id][:snm] += 1
+      total_lifetime_errors[:snm] += 1
+
+      if is_daily_error
+        clientwise_daily_errors[client_id][:snm] += 1
+        total_daily_errors[:snm] += 1
+      end
+    end
+  end
+
+  lifetime_summary_report[:ts_errors] = total_lifetime_errors[:ts]
+  lifetime_summary_report[:snm_errors] = total_lifetime_errors[:snm]
+  daily_summary_report[:ts_errors] = total_daily_errors[:ts]
+  daily_summary_report[:snm_errors] = total_daily_errors[:snm]
+
+
+
+  all_resolved_workflow_ids = WorkflowStep.where('status is NULL').pluck(:workflow_id).uniq
+  all_resolved_workflows = Workflow.where(id: all_resolved_workflow_ids,
+                                          kind: [GlobalConstant::Workflow.token_deploy, GlobalConstant::Workflow.bt_stake_and_mint])
+                             .where(client_id: client_ids).where(status: GlobalConstant::Workflow.completed).all
+
+  clientwise_lifetime_resolved_errors = {}
+
+  total_lifetime_resolved_errors = {snm: 0, ts: 0}
+
+  all_resolved_workflows.each do |row|
+    client_id = row.client_id
+
+    clientwise_lifetime_resolved_errors[client_id] ||= {snm: 0, ts: 0}
+
+    if row.kind == GlobalConstant::Workflow.token_deploy
+      clientwise_lifetime_resolved_errors[client_id][:ts] += 1
+      total_lifetime_resolved_errors[:ts] += 1
+    else
+      clientwise_lifetime_resolved_errors[client_id][:snm] += 1
+      total_lifetime_resolved_errors[:snm] += 1
+    end
+  end
+
+
+  lifetime_summary_report[:resolved_ts_errors] = total_lifetime_resolved_errors[:ts]
+  lifetime_summary_report[:resolved_snm_errors] = total_lifetime_resolved_errors[:snm]
+
+
+  def generate_and_upload_csv(data_by_email, clientwise_errors, clientwise_resolved_errors, report_type)
     csv_data = []
 
     # prepare CSV Data
@@ -136,10 +220,28 @@ task :usage_report => :environment do
                              'token deploy status',
                              'token symbol',
                              'stake and mint done',
+                             'error in step',
+                             'error solved',
                              'performed transactions'
                            ])
 
     data_by_email.each do |email, data|
+      error_in_step = ''
+      error_solved = ''
+
+      if data[:client_id] > 0
+        e = clientwise_errors[data[:client_id]] || {snm: 0, ts: 0}
+        re = clientwise_resolved_errors[data[:client_id]] || {snm: 0, ts: 0}
+
+        if (e[:snm] + re[:snm]) > 0
+          error_in_step = 'stake and mint'
+          error_solved = e[:snm] == 0 ? 'YES' : 'NO'
+        elsif (e[:ts] + re[:ts]) > 0
+          error_in_step = 'token setup'
+          error_solved = e[:ts] == 0 ? 'YES' : 'NO'
+        end
+      end
+
       buffer = []
       buffer.push(email)
       buffer.push(data[:whitelisted_at])
@@ -148,6 +250,8 @@ task :usage_report => :environment do
       buffer.push(data[:token_deployment_status])
       buffer.push(data[:token_symbol])
       buffer.push(data[:stake_and_mint_done] == 1 ? 'YES' : 'NO')
+      buffer.push(error_in_step)
+      buffer.push(error_solved)
       buffer.push(data[:made_transactions] == 1 ? 'YES' : 'NO')
       csv_data.push(buffer)
     end
@@ -199,7 +303,7 @@ task :usage_report => :environment do
     return r
   end
 
-  lifetime_upload_reposnse = generate_and_upload_csv(lifetime_data_by_email, 'lifetime')
+  lifetime_upload_reposnse = generate_and_upload_csv(lifetime_data_by_email, clientwise_lifetime_errors, clientwise_lifetime_resolved_errors, 'lifetime')
   return lifetime_upload_reposnse unless lifetime_upload_reposnse.success?
 
   daily_data_by_email = {}
@@ -207,7 +311,7 @@ task :usage_report => :environment do
     daily_data_by_email[email] = lifetime_data_by_email[email]
   end
 
-  daily_upload_reposnse = generate_and_upload_csv(daily_data_by_email, 'daily')
+  daily_upload_reposnse = generate_and_upload_csv(daily_data_by_email, clientwise_lifetime_errors, clientwise_lifetime_resolved_errors, 'daily')
   return daily_upload_reposnse unless daily_upload_reposnse.success?
 
   puts("Lifetime secured URL : #{lifetime_upload_reposnse.data[:presigned_url]}")
@@ -221,5 +325,70 @@ task :usage_report => :environment do
   # delete local file
   File.delete(lifetime_upload_reposnse.data[:file_name]) if File.exist?(lifetime_upload_reposnse.data[:file_name])
   File.delete(daily_upload_reposnse.data[:file_name]) if File.exist?(daily_upload_reposnse.data[:file_name])
+
+  template_name = GlobalConstant::PepoCampaigns.platform_usage_report_template
+  template_vars = {
+    daily_whitelisted_emails: daily_summary_report[:whitelisted_emails],
+    daily_registrations: daily_summary_report[:registrations],
+    daily_email_verifications: daily_summary_report[:double_opt_in],
+    daily_token_setup: daily_summary_report[:token_setup],
+    daily_client_stake_mint: daily_summary_report[:stake_and_mint],
+    daily_client_atleast_one_transaction: daily_summary_report[:transactions],
+
+    lifetime_whitelisted_emails: lifetime_summary_report[:whitelisted_emails],
+    lifetime_registrations: lifetime_summary_report[:registrations],
+    lifetime_email_verifications: lifetime_summary_report[:double_opt_in],
+    lifetime_token_setup: lifetime_summary_report[:token_setup],
+    lifetime_client_stake_mint: lifetime_summary_report[:stake_and_mint],
+    lifetime_client_atleast_one_transaction: lifetime_summary_report[:transactions],
+
+    unresolved_token_setup_errors: lifetime_summary_report[:ts_errors],
+    unresolved_stake_mint_errors: lifetime_summary_report[:snm_errors],
+    resolved_token_setup_errors: lifetime_summary_report[:resolved_ts_errors],
+    resolved_stake_mint_errors: lifetime_summary_report[:resolved_snm_errors],
+    date: Time.now.strftime("%Y-%m-%d"),
+
+    daily_report_link: CGI.escape(daily_upload_reposnse.data[:presigned_url]),
+    lifetime_report_link: CGI.escape(lifetime_upload_reposnse.data[:presigned_url])
+  }
+
+  recipient_emails = [
+    # 'jason@ost.com',
+    # 'ignas@ost.com',
+    # 'chris@ost.com',
+    # 'renee@ost.com',
+    # 'jordan@ost.com',
+    # 'marina@ost.com',
+    # 'paul@ost.com',
+    # 'paul.kuveke@ost.com',
+    # 'mohit@ost.com',
+    # 'kevin@ost.com',
+    # 'jean@ost.com',
+    # 'px@ost.com',
+    # 'sunil@ost.com',
+    # 'aman@ost.com',
+    # 'akshay@ost.com',
+    # 'bala@ost.com',
+    # 'rachin@ost.com',
+    # 'somashekhar@ost.com',
+    # 'ben@ost.com',
+    # 'shlomi@ost.com',
+    'kedar@ost.com'
+  ]
+
+  recipient_emails.each do |email|
+    puts("Sending email to: " + email)
+
+    send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(
+      email,
+      template_name,
+      template_vars
+    )
+
+    if send_mail_response['error'].present?
+      puts("Error in sending email:" + send_mail_response['error'])
+      return
+    end
+  end
 
 end
