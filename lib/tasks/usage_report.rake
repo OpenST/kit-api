@@ -20,6 +20,7 @@ task :usage_report => :environment do
     whitelisted_emails: 0,
     registrations: 0,
     double_opt_in: 0,
+    is_mfa_setup: 0,
     token_setup: 0,
     stake_and_mint: 0,
     transactions: 0,
@@ -33,6 +34,7 @@ task :usage_report => :environment do
     whitelisted_emails: 0,
     registrations: 0,
     double_opt_in: 0,
+    is_mfa_setup: 0,
     token_setup: 0,
     stake_and_mint: 0,
     transactions: 0,
@@ -50,6 +52,7 @@ task :usage_report => :environment do
       whitelisted_at: row.created_at,
       client_id: 0,
       is_verified_email: 0,
+      is_mfa_setup: 0,
       registered_at: nil,
       stake_and_mint_done: 0,
       made_transactions: 0,
@@ -96,6 +99,16 @@ task :usage_report => :environment do
       end
     else
       lifetime_data_by_email[row.email][:is_verified_email] = 0
+    end
+
+    if row.send("#{GlobalConstant::Manager.has_setup_mfa_property}?")
+      lifetime_data_by_email[row.email][:is_mfa_setup] = 1
+      lifetime_summary_report[:is_mfa_setup] += 1
+      if registered_today
+        daily_summary_report[:is_mfa_setup] += 1
+      end
+    else
+      lifetime_data_by_email[row.email][:is_mfa_setup] = 0
     end
 
     dashboard_service_response = DashboardManagement::Get.new({client_id: client_id}).perform
@@ -217,6 +230,7 @@ task :usage_report => :environment do
                              'whitelisted_at',
                              'registered_at',
                              'double opt in done',
+                             'mfa setup',
                              'token deploy status',
                              'token symbol',
                              'stake and mint done',
@@ -247,6 +261,7 @@ task :usage_report => :environment do
       buffer.push(data[:whitelisted_at])
       buffer.push(data[:registered_at])
       buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
+      buffer.push(data[:is_mfa_setup] == 1 ? 'YES' : 'NO')
       buffer.push(data[:token_deployment_status])
       buffer.push(data[:token_symbol])
       buffer.push(data[:stake_and_mint_done] == 1 ? 'YES' : 'NO')
@@ -331,6 +346,7 @@ task :usage_report => :environment do
     daily_whitelisted_emails: daily_summary_report[:whitelisted_emails],
     daily_registrations: daily_summary_report[:registrations],
     daily_email_verifications: daily_summary_report[:double_opt_in],
+    daily_mfa_setup: daily_summary_report[:is_mfa_setup],
     daily_token_setup: daily_summary_report[:token_setup],
     daily_client_stake_mint: daily_summary_report[:stake_and_mint],
     daily_client_atleast_one_transaction: daily_summary_report[:transactions],
@@ -338,6 +354,7 @@ task :usage_report => :environment do
     lifetime_whitelisted_emails: lifetime_summary_report[:whitelisted_emails],
     lifetime_registrations: lifetime_summary_report[:registrations],
     lifetime_email_verifications: lifetime_summary_report[:double_opt_in],
+    lifetime_mfa_setup: lifetime_summary_report[:is_mfa_setup],
     lifetime_token_setup: lifetime_summary_report[:token_setup],
     lifetime_client_stake_mint: lifetime_summary_report[:stake_and_mint],
     lifetime_client_atleast_one_transaction: lifetime_summary_report[:transactions],
@@ -353,26 +370,26 @@ task :usage_report => :environment do
   }
 
   recipient_emails = [
-    # 'jason@ost.com',
-    # 'ignas@ost.com',
-    # 'chris@ost.com',
-    # 'renee@ost.com',
-    # 'jordan@ost.com',
-    # 'marina@ost.com',
-    # 'paul@ost.com',
-    # 'paul.kuveke@ost.com',
-    # 'mohit@ost.com',
-    # 'kevin@ost.com',
-    # 'jean@ost.com',
-    # 'px@ost.com',
-    # 'sunil@ost.com',
-    # 'aman@ost.com',
-    # 'akshay@ost.com',
-    # 'bala@ost.com',
-    # 'rachin@ost.com',
-    # 'somashekhar@ost.com',
-    # 'ben@ost.com',
-    # 'shlomi@ost.com',
+    'jason@ost.com',
+    'ignas@ost.com',
+    'chris@ost.com',
+    'renee@ost.com',
+    'jordan@ost.com',
+    'marina@ost.com',
+    'paul@ost.com',
+    'paul.kuveke@ost.com',
+    'mohit@ost.com',
+    'kevin@ost.com',
+    'jean@ost.com',
+    'px@ost.com',
+    'sunil@ost.com',
+    'aman@ost.com',
+    'akshay@ost.com',
+    'bala@ost.com',
+    'rachin@ost.com',
+    'somashekhar@ost.com',
+    'ben@ost.com',
+    'shlomi@ost.com',
     'kedar@ost.com'
   ]
 
