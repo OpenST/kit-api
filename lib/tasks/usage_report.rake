@@ -389,7 +389,6 @@ task :usage_report => :environment do
     'rachin@ost.com',
     'somashekhar@ost.com',
     'ben@ost.com',
-    'shlomi@ost.com',
     'kedar@ost.com'
   ]
 
