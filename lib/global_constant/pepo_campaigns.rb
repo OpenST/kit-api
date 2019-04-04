@@ -157,6 +157,26 @@ module GlobalConstant
         'platform_usage_report'
       end
 
+      # Platform token setup status successful
+      def platform_token_setup_status_success_template
+        'platform_token_setup_status_success'
+      end
+
+      # Platform token setup status failes
+      def platform_token_setup_status_failed_template
+        'platform_token_setup_status_failed'
+      end
+
+      # Platform stake and mint status successful
+      def platform_stake_and_mint_status_success_template
+        'platform_stake_and_mint_status_success'
+      end
+
+      # Platform token setup status failes
+      def platform_stake_and_mint_status_failed_template
+        'platform_stake_and_mint_status_failed'
+      end
+
       # All possible templates integrated with email service
       #
       # * Author: Puneet
@@ -172,7 +192,11 @@ module GlobalConstant
           platform_invite_manager_template,
           platform_mainnet_access_request_template,
           recovery_request_submission_template,
-          platform_whitelisting_done_template
+          platform_whitelisting_done_template,
+          platform_token_setup_status_success_template,
+          platform_token_setup_status_failed_template,
+          platform_stake_and_mint_status_success_template,
+          platform_stake_and_mint_status_failed_template
         ]
       end
 

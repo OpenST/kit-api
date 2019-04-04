@@ -209,6 +209,12 @@ step_config:
   - kind: <%= GlobalConstant::WorkflowStep.verify_economy_setup%>
     weight: 0
     group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.send_token_setup_success_email%>
+    weight: 0
+    group: 9
+  - kind: <%= GlobalConstant::WorkflowStep.send_token_setup_error_email%>
+    weight: 0
+    group: 9
   - kind: <%= GlobalConstant::WorkflowStep.mark_success%>
     weight: 0
     group: 9

@@ -53,6 +53,12 @@ step_config:
   - kind: <%=GlobalConstant::WorkflowStep.check_progress_mint_status%>
     weight: 1
     group: 4
+  - kind: <%=GlobalConstant::WorkflowStep.send_stake_and_mint_success_email%>
+    weight: 0
+    group: 4
+  - kind: <%=GlobalConstant::WorkflowStep.send_stake_and_mint_error_email%>
+    weight: 0
+    group: 4
   - kind: <%=GlobalConstant::WorkflowStep.mark_success%>
     weight: 1
     group: 4
