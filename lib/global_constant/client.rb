@@ -31,6 +31,14 @@ module GlobalConstant
         'has_enforced_mfa'
       end
 
+      def has_mobile_app_property
+        'has_mobile_app'
+      end
+
+      def has_one_million_users_property
+        'has_one_million_users'
+      end
+
       ### Properties End ###
 
     end

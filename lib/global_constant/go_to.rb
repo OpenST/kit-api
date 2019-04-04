@@ -41,6 +41,12 @@ module GlobalConstant
         }
       end
 
+      def company_information
+        {
+          by_screen_name: :company_information
+        }
+      end
+
       def token_setup
         {
             by_screen_name: :token_setup

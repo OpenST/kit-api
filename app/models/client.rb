@@ -2,7 +2,9 @@ class Client < DbConnection::KitClient
 
   def self.properties_config
     @c_props ||= {
-        GlobalConstant::Client.has_enforced_mfa_property => 1
+        GlobalConstant::Client.has_enforced_mfa_property => 1,
+        GlobalConstant::Client.has_mobile_app_property => 2,
+        GlobalConstant::Client.has_one_million_users_property => 4
     }
   end
 

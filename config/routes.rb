@@ -26,6 +26,11 @@ Rails.application.routes.draw do
     match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
   end
 
+  scope 'api/company-information', controller: 'access/company_information', :format => false do
+    match '' => :company_information_get, via: :GET
+    match '' => :company_information_post, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
   scope 'api/login', controller: 'access/login', :format => false do
     match '' => :password_auth, via: :POST, constraints: lambda { |request| request.xhr? }
   end
