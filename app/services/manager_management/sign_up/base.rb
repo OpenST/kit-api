@@ -222,7 +222,9 @@ module ManagerManagement
             SignUpJob,
             {
                 manager_id: @manager_obj.id,
-                platform_marketing: @marketing_communication_flag
+                platform_marketing: @marketing_communication_flag,
+                manager_first_name: @first_name,
+                manager_last_name: @last_name
             }
         )
 
