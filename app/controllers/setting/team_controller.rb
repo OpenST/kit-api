@@ -10,7 +10,7 @@ class Setting::TeamController < AuthenticationController
   #
   def get
     service_response = ManagerManagement::Team::Get.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # List Admins
@@ -21,7 +21,7 @@ class Setting::TeamController < AuthenticationController
   #
   def list_admins
     service_response = ManagerManagement::Team::ListAdmins.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Reset MFA of admins
@@ -32,7 +32,7 @@ class Setting::TeamController < AuthenticationController
   #
   def reset_mfa
     service_response = ManagerManagement::Team::ResetMfa.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Invite new managers
@@ -43,7 +43,7 @@ class Setting::TeamController < AuthenticationController
   #
   def invite_admin
     service_response = ManagerManagement::Team::InviteAdmin.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Delete admin
@@ -54,7 +54,7 @@ class Setting::TeamController < AuthenticationController
   #
   def delete_admin
     service_response = ManagerManagement::Team::DeleteAdmin.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Update super admin role
@@ -65,7 +65,7 @@ class Setting::TeamController < AuthenticationController
   #
   def update_super_admin_role
     service_response = ManagerManagement::Team::UpdateSuperAdminRole.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Resend admin invite
@@ -76,7 +76,7 @@ class Setting::TeamController < AuthenticationController
   #
   def resend_admin_invite
     service_response = ManagerManagement::Team::ResendAdminInvite.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end

@@ -8,7 +8,7 @@ class WorkflowController < AuthenticationController
   #
   def workflow_status
     service_response = ::GetWorkflowStatus.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end

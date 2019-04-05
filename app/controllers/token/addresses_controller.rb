@@ -8,6 +8,6 @@ class Token::AddressesController < AuthenticationController
   #
   def token_addresses_post
     service_response = WalletAddressesManagement::AssociateAddress.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 end

@@ -128,39 +128,6 @@ class AuthenticationController < ApplicationController
       params[:is_multi_auth_cookie_valid] = true
       params[:is_password_auth_cookie_valid] = true
 
-    else
-
-      # NOTE: Commenting this piece of code for now. Check with Sunil before opening this
-
-      # password_cookie_verify_rsp = ManagerManagement::VerifyCookie::PasswordAuth.new(
-      #     cookie_value: cookies[GlobalConstant::Cookie.user_cookie_name.to_sym],
-      #     browser_user_agent: http_user_agent
-      # ).perform
-      #
-      # if password_cookie_verify_rsp.success?
-      #
-      #   handle_cookie_validation_success(password_cookie_verify_rsp, GlobalConstant::Cookie.password_auth_expiry.from_now)
-      #
-      #   params[:is_multi_auth_cookie_valid] = false
-      #   params[:is_password_auth_cookie_valid] = true
-      #
-      #   if params[:manager][:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
-      #     go_to = GlobalConstant::GoTo.verify_email
-      #     render_api_response(error_with_go_to('wc_vmfc_1', 'unauthorized_access_response', go_to)) and return
-      #   elsif params[:manager][:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
-      #     go_to = GlobalConstant::GoTo.authenticate_mfa
-      #     render_api_response(error_with_go_to('wc_vmfc_2', 'unauthorized_access_response', go_to)) and return
-      #   elsif params[:client][:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
-      #     go_to = GlobalConstant::GoTo.setup_mfa
-      #     render_api_response(error_with_go_to('wc_vmfc_3', 'unauthorized_access_response', go_to)) and return
-      #   end
-      #
-      # else
-      #
-      #   handle_cookie_validation_failure(cookie_verify_rsp)
-      #
-      # end
-
     end
 
     cookie_verify_rsp
@@ -186,7 +153,7 @@ class AuthenticationController < ApplicationController
 
     if client_env_statuses.exclude?(allowed_status)
       service_response = error_with_go_to('a_c_ac_1', 'unauthorized_to_perform_action', error_go_to)
-      render_api_response(service_response)
+      return render_api_response(service_response)
     end
   end
 
@@ -241,7 +208,7 @@ class AuthenticationController < ApplicationController
 
     cookie_verify_rsp.data = {}
 
-    render_api_response(cookie_verify_rsp)
+    return render_api_response(cookie_verify_rsp)
 
   end
 
