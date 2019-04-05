@@ -225,6 +225,7 @@
     - :company_name
     - :mobile_app_flag
     - :one_m_users_flag
+    - :client_id
   :optional:
 'TokenManagement::Mint':
   :mandatory:

@@ -20,6 +20,7 @@ module ClientManagement
       @company_name = @params[:company_name]
       @mobile_app_flag = @params[:mobile_app_flag]
       @one_m_users_flag = @params[:one_m_users_flag] #???
+      @client_id = @params[:client_id]
     end
 
     # Perform
@@ -37,16 +38,10 @@ module ClientManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        r = insert_update_token_details
+        r = insert_client_info
         return r unless r.success?
 
-        r = delete_old_addresses
-        return r unless r.success?
-
-        r = create_api_credentials
-        return r unless r.success?
-
-        success_with_data({token: @token_details.formated_cache_data})
+        success_with_data({})
 
       end
 
@@ -67,14 +62,17 @@ module ClientManagement
       r = validate
       return r unless r.success?
 
-      @name = @name.to_s.strip
-      @symbol = @symbol.to_s.strip.upcase
+      validation_errors = []
 
-      validation_errors = validate_token_creation_params
+      @company_name = @company_name.to_s.strip
+
+      validation_errors.push('invalid_company_name') unless Util::CommonValidator.is_company_name_valid?(@company_name)
+      validation_errors.push('invalid_mobile_app_flag') unless Util::CommonValidator.is_boolean_string?(@mobile_app_flag)
+      validation_errors.push('invalid_one_m_users_flag') unless Util::CommonValidator.is_boolean_string?(@one_m_users_flag)
 
       if validation_errors.present?
         return validation_error(
-          'a_tm_itd_1',
+          'a_s_cm_ici_1',
           'invalid_api_params',
           validation_errors,
           GlobalConstant::ErrorAction.default
@@ -85,7 +83,26 @@ module ClientManagement
 
     end
 
+    # Insert client info in clients table.
+    #
+    # * Author: Anagha
+    # * Date: 05/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def insert_client_info
 
+      client = Client.where(id: @client_id).first
+
+      client.company_name = @company_name
+      client.send("set_#{GlobalConstant::Client.has_mobile_app_property}") if(@mobile_app_flag === 1)
+      client.send("set_#{GlobalConstant::Client.has_one_million_users_property}") if(@one_m_users_flag === 1)
+
+      client.save!
+
+      success
+
+    end
 
   end
 

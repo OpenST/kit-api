@@ -363,4 +363,17 @@ invalid_first_name:
   code: 'invalid'
   message: 'Invalid first name.'
 
+invalid_company_name:
+  parameter: 'company_name'
+  code: 'invalid'
+  message: 'Invalid company name.'
 
+invalid_mobile_app_flag:
+  parameter: 'mobile_app_flag'
+  code: 'invalid'
+  message: 'Invalid mobile app flag.'
+
+invalid_one_m_users_flag:
+  parameter: 'one_m_users_flag'
+  code: 'invalid'
+  message: 'Invalid one million users flag.'

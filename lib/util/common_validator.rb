@@ -342,6 +342,10 @@ module Util
         )
     end
 
+    def self.is_company_name_valid?(company_name)
+      return true
+    end
+
   end
 
 end
