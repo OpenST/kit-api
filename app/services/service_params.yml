@@ -216,6 +216,12 @@
   :mandatory:
     - :client_id
   :optional:
+'ClientManagement::InsertClientInfo':
+  :mandatory:
+    - :company_name
+    - :mobile_app_flag
+    - :one_m_users_flag
+  :optional:
 'TokenManagement::Mint':
   :mandatory:
     - :client_id
