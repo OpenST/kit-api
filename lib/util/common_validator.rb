@@ -160,6 +160,18 @@ module Util
       name =~ /\A[A-Z0-9]+\z/i
     end
 
+    # Is alphabetical string
+    #
+    # * Author: Ankit
+    # * Date: 05/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_name?(name)
+      name =~ /\A[A-Z]+\z/i
+    end
+
     # Should Email be send to this email & this env
     #
     # * Author: Puneet

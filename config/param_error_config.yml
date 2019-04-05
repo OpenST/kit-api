@@ -353,3 +353,14 @@ missing_d:
   code: 'missing'
   message: 'Missing mandatory parameter d.'
 
+invalid_last_name:
+  parameter: 'last_name'
+  code: 'invalid'
+  message: 'Invalid last name.'
+
+invalid_first_name:
+  parameter: 'first_name'
+  code: 'invalid'
+  message: 'Invalid first name.'
+
+
