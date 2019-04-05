@@ -4,7 +4,8 @@ class Client < DbConnection::KitClient
     @c_props ||= {
         GlobalConstant::Client.has_enforced_mfa_property => 1,
         GlobalConstant::Client.has_mobile_app_property => 2,
-        GlobalConstant::Client.has_one_million_users_property => 4
+        GlobalConstant::Client.has_one_million_users_property => 4,
+        GlobalConstant::Client.has_company_info_property => 8
     }
   end
 
@@ -46,6 +47,7 @@ class Client < DbConnection::KitClient
   def formated_cache_data
     {
         id: id,
+        company_name: company_name.present? ? company_name : nil,
         properties: properties.present? ? Client.get_bits_set_for_properties(properties) : [],
         mainnet_statuses: mainnet_statuses.present? ? Client.get_bits_set_for_mainnet_statuses(mainnet_statuses) : [],
         sandbox_statuses: sandbox_statuses.present? ? Client.get_bits_set_for_sandbox_statuses(sandbox_statuses) : []

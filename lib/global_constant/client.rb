@@ -39,6 +39,10 @@ module GlobalConstant
         'has_one_million_users'
       end
 
+      def has_company_info_property
+        'has_company_info'
+      end
+
       ### Properties End ###
 
     end
