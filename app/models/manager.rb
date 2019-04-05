@@ -35,6 +35,8 @@ class Manager < DbConnection::KitClient
   def formated_cache_data
     {
         id: id,
+        first_name: first_name,
+        last_name: last_name,
         email: email,
         status: status,
         current_client_id: current_client_id,
