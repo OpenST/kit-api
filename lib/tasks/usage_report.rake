@@ -5,11 +5,6 @@ task :usage_report => :environment do
   require 'csv'
   require 'uri'
 
-  whitelisted_email_rows = ManagerWhitelisting.select('identifier', 'created_at').where(
-    kind: GlobalConstant::ManagerWhitelisting.email_kind).all
-
-  whitelisted_emails = []
-
   lifetime_data_by_email = {}
   emails_registerred_today = []
 
@@ -17,7 +12,6 @@ task :usage_report => :environment do
   day_start_ts = current_ts - 24.hours.to_i
 
   lifetime_summary_report = {
-    whitelisted_emails: 0,
     registrations: 0,
     double_opt_in: 0,
     is_mfa_setup: 0,
@@ -31,7 +25,6 @@ task :usage_report => :environment do
   }
 
   daily_summary_report = {
-    whitelisted_emails: 0,
     registrations: 0,
     double_opt_in: 0,
     is_mfa_setup: 0,
@@ -44,11 +37,20 @@ task :usage_report => :environment do
     snm_errors: 0
   }
 
-  whitelisted_email_rows.each do |row|
-    ## identifier is email in case of kind is email
-    email = row.identifier
-    whitelisted_emails << email
-    lifetime_data_by_email[email] = {
+  manager_rows = Manager.where(
+    status: GlobalConstant::Manager.active_status).all
+
+  client_ids = []
+
+  manager_rows.each do |row|
+
+    split_email = row.email.to_s.split('@')
+
+    if split_email[1] === 'ost.com'
+      next
+    end
+
+    lifetime_data_by_email[row.email] = {
       whitelisted_at: row.created_at,
       client_id: 0,
       is_verified_email: 0,
@@ -60,20 +62,6 @@ task :usage_report => :environment do
       token_symbol: ''
     }
 
-    lifetime_summary_report[:whitelisted_emails] += 1
-
-    if row.created_at.to_i > day_start_ts
-      daily_summary_report[:whitelisted_emails] += 1
-    end
-  end
-
-  manager_rows = Manager.where(
-    status: GlobalConstant::Manager.active_status,
-    email: whitelisted_emails).all
-
-  client_ids = []
-
-  manager_rows.each do |row|
     client_id = row.current_client_id
 
     registered_today = row.created_at.to_i > day_start_ts
