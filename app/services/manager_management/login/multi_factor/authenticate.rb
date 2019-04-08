@@ -143,6 +143,9 @@ module ManagerManagement
         # @return [Hash]
         #
         def fetch_go_to
+
+          return GlobalConstant::GoTo.company_information unless (@client[:properties].include?(GlobalConstant::Client.has_company_info_property))
+
           #check the cookie value here and redirect accordingly
           if @luse_cookie_value == GlobalConstant::Cookie.mainnet_env
             #redirect to mainnet token setup

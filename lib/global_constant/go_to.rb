@@ -109,6 +109,12 @@ module GlobalConstant
         end
       end
 
+      def company_information
+        {
+          by_screen_name: :company_information
+        }
+      end
+
     end
 
   end
