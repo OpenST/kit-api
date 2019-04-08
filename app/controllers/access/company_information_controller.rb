@@ -5,7 +5,8 @@ class Access::CompanyInformationController < AuthenticationController
   before_action :authenticate_by_password_cookie
 
   def company_information_get
-
+    service_response = ClientManagement::GetClientInfo.new(params).perform
+    render_api_response(service_response)
   end
 
   def company_information_post

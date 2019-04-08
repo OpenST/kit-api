@@ -267,3 +267,9 @@
 'AdminManagement::Whitelist::Email':
  :mandatory:
    - :e
+'ClientManagement::GetClientInfo':
+ :mandatory:
+   - :client_id
+   - :manager
+   - :client
+   - :client_manager
