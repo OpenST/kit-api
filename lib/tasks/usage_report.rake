@@ -51,7 +51,6 @@ task :usage_report => :environment do
     end
 
     lifetime_data_by_email[row.email] = {
-      whitelisted_at: row.created_at,
       client_id: 0,
       is_verified_email: 0,
       is_mfa_setup: 0,
@@ -215,7 +214,6 @@ task :usage_report => :environment do
     # append headers
     csv_data.push([
                              'email',
-                             'whitelisted_at',
                              'registered_at',
                              'double opt in done',
                              'mfa setup',
@@ -246,7 +244,6 @@ task :usage_report => :environment do
 
       buffer = []
       buffer.push(email)
-      buffer.push(data[:whitelisted_at])
       buffer.push(data[:registered_at])
       buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
       buffer.push(data[:is_mfa_setup] == 1 ? 'YES' : 'NO')
@@ -331,7 +328,6 @@ task :usage_report => :environment do
 
   template_name = GlobalConstant::PepoCampaigns.platform_usage_report_template
   template_vars = {
-    daily_whitelisted_emails: daily_summary_report[:whitelisted_emails],
     daily_registrations: daily_summary_report[:registrations],
     daily_email_verifications: daily_summary_report[:double_opt_in],
     daily_mfa_setup: daily_summary_report[:is_mfa_setup],
@@ -339,7 +335,6 @@ task :usage_report => :environment do
     daily_client_stake_mint: daily_summary_report[:stake_and_mint],
     daily_client_atleast_one_transaction: daily_summary_report[:transactions],
 
-    lifetime_whitelisted_emails: lifetime_summary_report[:whitelisted_emails],
     lifetime_registrations: lifetime_summary_report[:registrations],
     lifetime_email_verifications: lifetime_summary_report[:double_opt_in],
     lifetime_mfa_setup: lifetime_summary_report[:is_mfa_setup],
