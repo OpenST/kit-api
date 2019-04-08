@@ -115,9 +115,6 @@ module ManagerManagement
         r = sanitize_marcomm_flag
         return r unless r.success?
 
-        r = VerifyEmailWhitelisting.new(email: @email).perform
-        return r unless r.success?
-
         success
 
       end
