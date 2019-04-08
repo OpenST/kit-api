@@ -1,4 +1,4 @@
-desc "Usage: rake RAILS_ENV=production usage_report"
+desc "Usage: rake RAILS_ENV=development usage_report"
 
 task :usage_report => :environment do
 
@@ -352,28 +352,7 @@ task :usage_report => :environment do
     lifetime_report_link: CGI.escape(lifetime_upload_reposnse.data[:presigned_url])
   }
 
-  recipient_emails = [
-    'jason@ost.com',
-    'ignas@ost.com',
-    'chris@ost.com',
-    'renee@ost.com',
-    'jordan@ost.com',
-    'marina@ost.com',
-    'paul@ost.com',
-    'paul.kuveke@ost.com',
-    'mohit@ost.com',
-    'kevin@ost.com',
-    'jean@ost.com',
-    'px@ost.com',
-    'sunil@ost.com',
-    'aman@ost.com',
-    'akshay@ost.com',
-    'bala@ost.com',
-    'rachin@ost.com',
-    'somashekhar@ost.com',
-    'ben@ost.com',
-    'kedar@ost.com'
-  ]
+  recipient_emails = GlobalConstant::UsageReportRecipient.email_ids
 
   recipient_emails.each do |email|
     puts("Sending email to: " + email)
