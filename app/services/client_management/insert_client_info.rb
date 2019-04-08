@@ -10,7 +10,8 @@ module ClientManagement
     #
     # @params [String] company_name (mandatory) -  company name
     # @params [Boolean] mobile_app_flag (mandatory)
-    # @params [Boolean] 1m_users_flag (mandatory)
+    # @params [Boolean] one_m_users_flag (mandatory)
+    # @params [Integer] client_id (mandatory) - Client Id
     #
     # @return
     #
@@ -19,7 +20,7 @@ module ClientManagement
 
       @company_name = @params[:company_name]
       @mobile_app_flag = @params[:mobile_app_flag]
-      @one_m_users_flag = @params[:one_m_users_flag] #???
+      @one_m_users_flag = @params[:one_m_users_flag]
       @client_id = @params[:client_id]
     end
 
@@ -41,7 +42,7 @@ module ClientManagement
         r = insert_client_info
         return r unless r.success?
 
-        success_with_data({})
+        success_with_data({}, fetch_go_to)
 
       end
 
@@ -102,6 +103,19 @@ module ClientManagement
 
       success
 
+    end
+
+    # Get goto for next page
+    #
+    # * Author: Anagha
+    # * Date: 08/04/2019
+    # * Reviewed By:
+    #
+    # @return [Hash]
+    #
+    def fetch_go_to
+      # Redirect to testnet token setup
+      GlobalConstant::GoTo.sandbox_token_dashboard
     end
 
   end

@@ -9,8 +9,15 @@ class Access::CompanyInformationController < AuthenticationController
     render_api_response(service_response)
   end
 
+  # Sign up Post request
+  #
+  # * Author: Anagha
+  # * Date: 08/04/2019
+  # * Reviewed By:
+  #
   def company_information_post
-
+    service_response = ClientManagement::InsertClientInfo.new(params).perform
+    render_api_response(service_response)
   end
 
 end
