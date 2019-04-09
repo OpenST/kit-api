@@ -75,8 +75,10 @@ module DashboardManagement
       ) unless token_resp.success?
 
       @token = token_resp.data
-      response = Util::EntityHelper.fetch_and_validate_ubt_address(@token[:id], 'dm_g_2')
-      @token[:ubt_address] = response.data[:ubt_address] if response.data[:ubt_address].present?
+      if @token[:id].present?
+        response = Util::EntityHelper.fetch_and_validate_ubt_address(@token[:id], 'dm_g_2')
+        @token[:ubt_address] = response.data[:ubt_address] if response.data[:ubt_address].present?
+      end
 
       success
     end

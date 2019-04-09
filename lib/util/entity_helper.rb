@@ -72,9 +72,11 @@ module Util
       def fetch_and_validate_ubt_address(token_id, err_prefix = 'u_eh_m')
         return token_not_found_response("#{err_prefix}:l_u_eh_fvua_1") if token_id.blank?
         addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
-        return token_not_found_response("#{err_prefix}:l_u_eh_fvua_2") if addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].blank?
-        
-        ubt_address = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address]
+
+        ubt_address = nil
+        if addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].present?
+          ubt_address = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address]
+        end
         success_with_data(ubt_address: ubt_address)
       end
 

@@ -273,3 +273,4 @@
    - :manager
    - :client
    - :client_manager
+   - :luse_cookie_value

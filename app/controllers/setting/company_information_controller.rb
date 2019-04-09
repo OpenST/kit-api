@@ -12,7 +12,7 @@ class Setting::CompanyInformationController < AuthenticationController
   def company_information_get
     params[:luse_cookie_value] = cookies[GlobalConstant::Cookie.last_used_env_cookie_name.to_sym]
     service_response = ClientManagement::GetClientInfo.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Company Information Post request
@@ -23,7 +23,7 @@ class Setting::CompanyInformationController < AuthenticationController
   #
   def company_information_post
     service_response = ClientManagement::InsertClientInfo.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end
