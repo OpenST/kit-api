@@ -10,6 +10,7 @@ class Setting::CompanyInformationController < AuthenticationController
   # * Reviewed By:
   #
   def company_information_get
+    params[:luse_cookie_value] = cookies[GlobalConstant::Cookie.last_used_env_cookie_name.to_sym]
     service_response = ClientManagement::GetClientInfo.new(params).perform
     render_api_response(service_response)
   end
