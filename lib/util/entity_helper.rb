@@ -59,6 +59,24 @@ module Util
         success_with_data(token)
       end
 
+      # Find & validate ubt address for token
+      #
+      # * Author: Dhananjay
+      # * Date: 09/04/2019
+      # * Reviewed By:
+      #
+      # @param [Integer] token_id (mandatory) - token id
+      #
+      # @return [Result::Base]
+      #
+      def fetch_and_validate_ubt_address(token_id, err_prefix = 'u_eh_m')
+        return token_not_found_response("#{err_prefix}:l_u_eh_fvua_1") if token_id.blank?
+        addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
+        return token_not_found_response("#{err_prefix}:l_u_eh_fvua_2") if addresses_data.blank?
+        ubt_address = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address]
+        success_with_data(ubt_address: ubt_address)
+      end
+
       # Fetch chain Id for token id.
       #
       # * Author: Shlok

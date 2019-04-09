@@ -24,7 +24,7 @@ module TokenManagement
 
     private
 
-    # Fetch token
+    # Fetch token details and ubt address
     #
     # * Author: Shlok
     # * Date: 21/01/2019
@@ -45,6 +45,9 @@ module TokenManagement
 
       @token = token_resp.data
 
+      response = Util::EntityHelper.fetch_and_validate_ubt_address(@token.id, 'tm_gtdbs_1')
+      @token[:ubt_address] = response.data[:ubt_address] if response.data[:ubt_address].present?
+      
       success
 
     end
