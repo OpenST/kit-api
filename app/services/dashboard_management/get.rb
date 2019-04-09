@@ -137,6 +137,7 @@ module DashboardManagement
       @circulating_supply_dollar = r.data['circulatingSupplyDollar']
       @total_volume = r.data['totalVolume']
       @total_volume_dollar = r.data['totalVolumeDollar']
+      @economy_users = r.data['economyUsers']
 
       success
     end
@@ -227,7 +228,8 @@ module DashboardManagement
             circulating_supply: @circulating_supply,
             circulating_supply_dollar: @circulating_supply_dollar,
             total_volume: @total_volume,
-            total_volume_dollar: @total_volume_dollar
+            total_volume_dollar: @total_volume_dollar,
+            economy_users: @economy_users
           },
           graph_urls: @graph_urls,
           sub_env_payloads: @sub_env_payloads
