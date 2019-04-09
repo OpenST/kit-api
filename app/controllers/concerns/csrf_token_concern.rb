@@ -25,7 +25,7 @@ module CsrfTokenConcern
       GlobalConstant::ErrorAction.default
     )
 
-    render_api_response(r)
+    return render_api_response(r)
 
   end
 

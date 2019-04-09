@@ -20,7 +20,7 @@ class Token::SetupController < AuthenticationController
       GlobalConstant::Cookie.last_used_env_cookie_expiry
     )
 
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Set token details
@@ -31,7 +31,7 @@ class Token::SetupController < AuthenticationController
   #
   def token_details_post
     service_response = TokenManagement::InsertTokenDetails.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Start token deployment
@@ -42,7 +42,7 @@ class Token::SetupController < AuthenticationController
   #
   def deploy_post
     service_response = TokenManagement::StartDeployment.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Start token deployment
@@ -53,7 +53,7 @@ class Token::SetupController < AuthenticationController
   #
   def deploy_get
     service_response = TokenManagement::GetDeploymentDetail.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Whitelisting
@@ -64,7 +64,7 @@ class Token::SetupController < AuthenticationController
   #
   def request_whitelist
     service_response = TokenManagement::RequestWhitelist.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end
