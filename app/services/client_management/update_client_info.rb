@@ -28,7 +28,7 @@ module ClientManagement
     #
     # * Author: Anagha
     # * Date: 05/04/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -54,7 +54,7 @@ module ClientManagement
     #
     # * Author: Anagha
     # * Date: 05/04/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -110,7 +110,7 @@ module ClientManagement
     #
     # * Author: Anagha
     # * Date: 08/04/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Hash]
     #
