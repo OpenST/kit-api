@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   end
 
   scope 'api/setting/company-information', controller: 'setting/company_information', :format => false do
-    match '' => :company_information_get, via: :GET
-    match '' => :company_information_post, via: :POST, constraints: lambda { |request| request.xhr? }
+    match '' => :get, via: :GET
+    match '' => :update, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope 'api/login', controller: 'access/login', :format => false do

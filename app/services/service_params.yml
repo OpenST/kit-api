@@ -220,13 +220,20 @@
   :mandatory:
     - :client_id
   :optional:
-'ClientManagement::InsertClientInfo':
+'ClientManagement::UpdateClientInfo':
   :mandatory:
     - :company_name
     - :mobile_app_flag
     - :one_m_users_flag
     - :client_id
   :optional:
+'ClientManagement::GetClientInfo':
+  :mandatory:
+    - :client_id
+    - :manager
+    - :client
+    - :client_manager
+    - :luse_cookie_value
 'TokenManagement::Mint':
   :mandatory:
     - :client_id
@@ -267,10 +274,3 @@
 'AdminManagement::Whitelist::Email':
  :mandatory:
    - :e
-'ClientManagement::GetClientInfo':
- :mandatory:
-   - :client_id
-   - :manager
-   - :client
-   - :client_manager
-   - :luse_cookie_value

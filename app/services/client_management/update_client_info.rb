@@ -1,12 +1,12 @@
 module ClientManagement
 
-  class InsertClientInfo < ServicesBase
+  class UpdateClientInfo < ServicesBase
 
     # Initialize
     #
     # * Author: Anagha
     # * Date: 05/04/2019
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @params [String] company_name (mandatory) -  company name
     # @params [Boolean] mobile_app_flag (mandatory)
@@ -39,7 +39,7 @@ module ClientManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        r = insert_client_info
+        r = update_client_info
         return r unless r.success?
 
         success_with_data({}, fetch_go_to)
@@ -84,14 +84,15 @@ module ClientManagement
 
     end
 
-    # Insert client info in clients table.
+    # Update client info in clients table.
     #
     # * Author: Anagha
     # * Date: 05/04/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
-    def insert_client_info
+    #
+    def update_client_info
 
       client = Client.where(id: @client_id).first
 

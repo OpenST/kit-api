@@ -3,26 +3,28 @@ class Setting::CompanyInformationController < AuthenticationController
 
   before_action :authenticate_by_password_cookie
 
-  # Company Information Get request
+  # Get Request for Company Information Page
   #
   # * Author: Anagha
   # * Date: 08/04/2019
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
-  def company_information_get
+  def get
     params[:luse_cookie_value] = cookies[GlobalConstant::Cookie.last_used_env_cookie_name.to_sym]
     service_response = ClientManagement::GetClientInfo.new(params).perform
+
     return render_api_response(service_response)
   end
 
-  # Company Information Post request
+  # Update Company Information Post Request
   #
   # * Author: Anagha
   # * Date: 08/04/2019
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
-  def company_information_post
-    service_response = ClientManagement::InsertClientInfo.new(params).perform
+  def update
+    service_response = ClientManagement::UpdateClientInfo.new(params).perform
+
     return render_api_response(service_response)
   end
 

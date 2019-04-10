@@ -1,12 +1,12 @@
 module ClientManagement
+
   class GetClientInfo < ServicesBase
 
     # Initialize
     #
     # * Author: Ankit
     # * Date: 08/04/2019
-    # * Reviewed By:
-    #
+    # * Reviewed By: Kedar
     #
     # @return [ClientManagement::GetClientInfo]
     #
@@ -36,7 +36,7 @@ module ClientManagement
 
       handle_errors_and_exceptions do
 
-        r = validate_and_sanitize
+        r = validate
         return r unless r.success?
 
         r = fetch_goto
@@ -62,23 +62,6 @@ module ClientManagement
     # Validate and sanitize
     #
     # * Author: Ankit
-    # * Date: 08/04/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def validate_and_sanitize
-
-      r = validate
-      return r unless r.success?
-
-      success
-
-    end
-
-    # Validate and sanitize
-    #
-    # * Author: Ankit
     # * Date: 09/04/2019
     # * Reviewed By:
     #
@@ -86,28 +69,23 @@ module ClientManagement
     #
     def fetch_goto
 
-      if @client[:properties].include?(GlobalConstant::Client.has_company_info_property)
+      return success unless @client[:properties].include?(GlobalConstant::Client.has_company_info_property)
 
-        #check the cookie value here and redirect accordingly
-        if @luse_cookie_value == GlobalConstant::Cookie.mainnet_env
-          #redirect to mainnet token dashboard
-          goto_screen = GlobalConstant::GoTo.mainnet_token_dashboard
-        elsif @luse_cookie_value == GlobalConstant::Cookie.sandbox_env
-          #redirect to testnet token dashboard
-          goto_screen = GlobalConstant::GoTo.sandbox_token_dashboard
-        else
-          #redirect to token dashboard
-          goto_screen = GlobalConstant::GoTo.sandbox_token_dashboard
-        end
-
-        return error_with_go_to(
-                 'a_s_cm_gci_1',
-                 'unauthorized_to_perform_action',
-                 goto_screen
-        )
+      #check the cookie value here and redirect accordingly
+      if @luse_cookie_value == GlobalConstant::Cookie.mainnet_env
+        #redirect to mainnet token dashboard
+        goto_screen = GlobalConstant::GoTo.mainnet_token_dashboard
+      else
+        #redirect to testnet token dashboard
+        goto_screen = GlobalConstant::GoTo.sandbox_token_dashboard
       end
 
-      success
+      error_with_go_to(
+        'a_s_cm_gci_1',
+        'unauthorized_to_perform_action',
+        goto_screen
+      )
+
     end
 
     # fetch the sub env response data entity
