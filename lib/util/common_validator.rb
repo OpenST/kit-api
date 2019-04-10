@@ -351,7 +351,7 @@ module Util
     # @return [Boolean] returns a boolean
     #
     def self.is_company_name_valid?(company_name)
-      match_status = !(/\A{2,29}[a-zA-Z0-9&@$€¥\/.,: ;<>«»\-\'\(\)\[\]\{\}\!\?\"]+$\z/i.match(company_name)).nil?
+      match_status = !(/\A{2,29}[a-zA-Z0-9&£@$€¥\/.,: ;<>«»\-\'\(\)\[\]\{\}\!\?\"]+$\z/i.match(company_name)).nil?
 
       valid_brackets_status = ((company_name.include? '<') || (company_name.include? '>')) ? is_valid_brackets?(company_name) : true
 

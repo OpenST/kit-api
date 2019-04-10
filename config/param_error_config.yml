@@ -363,10 +363,25 @@ invalid_first_name:
   code: 'invalid'
   message: 'Invalid first name.'
 
+missing_first_name:
+  parameter: 'first_name'
+  code: 'missing'
+  message: 'Missing mandatory parameter first name.'
+
+missing_last_name:
+  parameter: 'last_name'
+  code: 'missing'
+  message: 'Missing mandatory parameter last name.'
+
 invalid_company_name:
   parameter: 'company_name'
   code: 'invalid'
   message: 'Invalid company name.'
+
+missing_company_name:
+  parameter: 'company_name'
+  code: 'missing'
+  message: 'Missing company name.'
 
 invalid_mobile_app_flag:
   parameter: 'mobile_app_flag'

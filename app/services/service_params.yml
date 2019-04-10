@@ -233,6 +233,7 @@
     - :manager
     - :client
     - :client_manager
+  :optional:
     - :luse_cookie_value
 'TokenManagement::Mint':
   :mandatory:
