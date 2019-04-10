@@ -169,7 +169,7 @@ module Util
     # @return [Boolean] returns a boolean
     #
     def self.is_valid_name?(name)
-      name =~ /\A[A-Z]+\z/i
+      name =~ /\A[A-Z]{0,30}\z/i
     end
 
     # Should Email be send to this email & this env
@@ -371,7 +371,7 @@ module Util
     # @return [Boolean] returns a boolean
     #
     def self.is_valid_brackets?(company_name)
-      if((company_name.include? '<') && (company_name.include? '>'))
+      if((company_name.include? '<') && (company_name.include? '>') && (company_name.count('<') ==  company_name.count('>')))
         return true
       else
         return false
@@ -388,7 +388,7 @@ module Util
     # @return [Boolean] returns a boolean
     #
     def self.is_valid_guillemet?(company_name)
-      if((company_name.include? '«') && (company_name.include? '»'))
+      if((company_name.include? '«') && (company_name.include? '»') && (company_name.count('«') ==  company_name.count('»')))
         return true
       else
         return false
