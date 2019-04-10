@@ -169,7 +169,7 @@ module Util
     # @return [Boolean] returns a boolean
     #
     def self.is_valid_name?(name)
-      name =~ /\A[A-Z]{0,30}\z/i
+      name =~ /\A[A-Z]{1,30}\z/i
     end
 
     # Should Email be send to this email & this env
