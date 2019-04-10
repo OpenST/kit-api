@@ -92,10 +92,15 @@ module Util
       #
       def fetch_chain_id_for_token_id(token_id, err_prefix = 'u_eh_m')
         return token_not_found_response("#{err_prefix}:l_u_eh_fciti_1") if token_id.blank?
-        token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch || {}
-        aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
-        return aux_chain_id_not_found_response("#{err_prefix}:l_u_eh_fciti_2") if aux_chain_id.blank?
-        success_with_data({aux_chain_id: aux_chain_id})
+        token_addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
+        aux_chain_id = nil
+
+        if token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].present?
+          aux_chain_id = token_addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
+        else
+          return aux_chain_id_not_found_response("#{err_prefix}:l_u_eh_fciti_2")
+        end
+        success_with_data(aux_chain_id: aux_chain_id)
       end
 
       private
