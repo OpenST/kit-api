@@ -113,5 +113,5 @@ keys:
   stake_currency:
     details:
       key_template: 'c_stk_cur_%{id}'
-      expiry_in_seconds: 86400
+      expiry_in_seconds: 259200
       <<: *kit_saas_subenv
