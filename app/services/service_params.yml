@@ -18,6 +18,7 @@
     - :last_name
   :optional:
     - :marcomm
+    - :luse_cookie_value
 'ManagerManagement::SignUp::GetDetails':
   :mandatory:
     - :i_t
@@ -158,6 +159,7 @@
 'TokenManagement::GetTokenDetailsBeforeSetup':
   :mandatory:
     - :client_id
+    - :manager
   :optional:
     - :client_manager
 'TokenManagement::InsertTokenDetails':
@@ -176,6 +178,7 @@
 'TokenManagement::GetDeploymentDetail':
   :mandatory:
     - :client_id
+    - :manager
   :optional:
 'TokenManagement::ResetDeployment':
   :mandatory:
@@ -236,6 +239,7 @@
 'TokenManagement::Mint':
   :mandatory:
     - :client_id
+    - :manager
   :optional:
 'ContractManagement::GetGatewayComposerAddress':
   :mandatory:
@@ -246,6 +250,7 @@
   :mandatory:
     - :client_id
     - :client_manager
+    - :manager
   :optional:
 'TokenManagement::GrantEthOst':
   :mandatory:
@@ -264,9 +269,11 @@
   :mandatory:
     - :client_id
     - :client_manager
+    - :manager
 'DashboardManagement::Get':
   :mandatory:
     - :client_id
+    - :manager
 'AdminManagement::Whitelist::Domain':
  :mandatory:
    - :d

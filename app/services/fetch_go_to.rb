@@ -50,6 +50,9 @@ class FetchGoTo < ServicesBase
 
         GlobalConstant::GoTo.setup_mfa
 
+      else
+        fetch_by_economy_state
+        
       end
 
     end

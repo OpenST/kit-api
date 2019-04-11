@@ -9,6 +9,7 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Object] manager(mandatory) - manager
     # @params [Hash] client_manager (optional) - Client manager hash
     #
     # @return [TokenManagement::Mint]
@@ -18,6 +19,7 @@ module TokenManagement
       super
 
       @client_manager = @params[:client_manager]
+      @manager = @params[:manager]
 
       @api_response_data = {}
       @mint_workflow = nil
@@ -215,6 +217,7 @@ module TokenManagement
       return success unless @client_manager.present?
 
       @api_response_data[:client_manager] = @client_manager
+      @api_response_data[:manager] = @manager
 
       success
     end

@@ -56,12 +56,12 @@ email_auto_blocked:
 email_inactive:
   parameter: 'email'
   code: 'invalid'
-  message: 'This account is inactive. Please contact support.'
+  message: 'This account is inactive. Please <a href="https://help.ost.com/support/home" target="_blank">contact support</a>.'
 
 email_not_associated_with_client:
   parameter: 'email'
   code: 'invalid'
-  message: 'This account is inactive. Please contact support.'
+  message: 'This account is inactive. Please <a href="https://help.ost.com/support/home" target="_blank">contact support</a>.'
 
 to_update_client_manager_id_inactive:
   parameter: 'to_update_client_manager_id'
@@ -81,7 +81,7 @@ invalid_email:
 unrecognized_email:
   parameter: 'email'
   code: 'invalid'
-  message: 'This email address does not exist in OST Platform. Please verify or contact support.'
+  message: 'This email address does not exist in OST Platform. Please verify or <a href="https://help.ost.com/support/home" target="_blank">contact support</a>.'
 
 already_registered_email:
   parameter: 'email'
@@ -92,31 +92,31 @@ already_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'An invite email is already sent to this email.
-  Please check your email or contact Support.'
+  Please check your email or <a href="https://help.ost.com/support/home" target="_blank">contact support</a>.'
 
 already_client_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'This email is already associated with another economy.
-  Please contact Support.'
+  Please <a href="https://help.ost.com/support/home" target="_blank">contact support</a>.'
 
 already_client_associated_manager:
   parameter: 'to_update_client_manager_id'
   code: 'invalid'
   message: 'This manager is already associated with another economy.
-  Please contact Support.'
+  Please <a href="https://help.ost.com/support/home" target="_blank">contact support</a>.'
 
 was_current_client_associated_email:
   parameter: 'email'
   code: 'invalid'
   message: 'This email was already associated with your economy.
-  Please contact Support to re-activate the account.'
+  Please <a href="https://help.ost.com/support/home" target="_blank">contact support</a> to re-activate the account.'
 
 was_current_client_associated_deleted_manager:
   parameter: 'to_update_client_manager_id'
   code: 'invalid'
   message: 'This manager was already associated with your economy. We cannot invite the manager again.
-  Please contact Support to re-activate the account.'
+  Please <a href="https://help.ost.com/support/home" target="_blank">contact support</a> to re-activate the account.'
 
 is_current_client_associated_email:
   parameter: 'email'
