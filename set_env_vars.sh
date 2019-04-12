@@ -100,4 +100,4 @@ export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 export KA_CW_DOMAIN='developmentost.com'
 
 # Usage report recipient's email ids
-export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"ankit@ost.com\", \"anagha@ost.com\", \"dhananjay@ost.com\"]"
+export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
