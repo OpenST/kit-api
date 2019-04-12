@@ -179,16 +179,8 @@ module ManagerManagement
 
         managers_data = CacheManagement::Manager.new(@manager_ids).fetch
 
-        @manager_ids.each do |manager_id|
-          manager = managers_data[manager_id]
-          #Delete the first name and last name key from response entity.
-          if manager[:first_name].blank? || manager[:last_name].blank?
-            manager.delete(:first_name)
-            manager.delete(:last_name)
-          end
-        end
-
         @api_response_data[:managers] = managers_data
+
         success
 
       end
