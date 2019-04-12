@@ -18,7 +18,6 @@
     - :last_name
   :optional:
     - :marcomm
-    - :luse_cookie_value
 'ManagerManagement::SignUp::GetDetails':
   :mandatory:
     - :i_t
