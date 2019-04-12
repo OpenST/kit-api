@@ -56,6 +56,15 @@ module Util
         return client_not_found_response("#{err_prefix}:l_u_eh_fvt_1") if client_id.blank?
         token = KitSaasSharedCacheManagement::TokenDetails.new([client_id]).fetch[client_id]
         return token_not_found_response("#{err_prefix}:l_u_eh_fvt_2") if token.blank?
+
+        token_id = token[:id]
+        addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
+
+        if addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].present?
+          token[:ubt_address] = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:address]
+          token[:aux_chain_id] = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id].to_s
+        end
+
         success_with_data(token)
       end
 

@@ -45,16 +45,6 @@ module TokenManagement
 
       @token = token_resp.data
 
-      if @token[:id].present?
-        response = Util::EntityHelper.fetch_and_validate_ubt_address(@token[:id], 'tm_b_2')
-        @token[:ubt_address] = response.data[:ubt_address] if response.data[:ubt_address].present?
-
-        chain_id_response = Util::EntityHelper.fetch_chain_id_for_token_id(@token[:id], 'tm_b_3')
-        if chain_id_response.success? && chain_id_response.data[:aux_chain_id].present?
-          @token[:aux_chain_id] = chain_id_response.data[:aux_chain_id]
-        end
-      end
-      
       success
 
     end
@@ -69,16 +59,12 @@ module TokenManagement
     #
     def fetch_price_points
 
-      token_id = @token[:id]
-
-      aux_chain_resp = Util::EntityHelper.fetch_chain_id_for_token_id(token_id, 'tm_b_4')
-
       return error_with_go_to(
-         aux_chain_resp.internal_id,
-         aux_chain_resp.general_error_identifier,
+         'tm_b_4',
+         'aux_chain_id_not_found',
          GlobalConstant::GoTo.token_setup
-      ) unless aux_chain_resp.success?
-      aux_chain_id = aux_chain_resp.data[:aux_chain_id]
+      ) unless @token[:aux_chain_id].present?
+      aux_chain_id = @token[:aux_chain_id]
 
       price_points = KitSaasSharedCacheManagement::OstPricePoints.new([aux_chain_id]).fetch
       @api_response_data[:price_points] = price_points[aux_chain_id]

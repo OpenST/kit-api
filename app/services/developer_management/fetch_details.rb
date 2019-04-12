@@ -158,7 +158,8 @@ module DeveloperManagement
       @addresses['utility_branded_token_contract'] = token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract][:address]
       aux_chain_id = token_addresses[GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id]
 
-      @token['ubt_address'] = @addresses['utility_branded_token_contract'] #This is needed as we are sending ubt address in token entity
+      @token[:ubt_address] = @addresses['utility_branded_token_contract'] #This is needed as we are sending ubt address in token entity
+      @token[:aux_chain_id] = aux_chain_id
 
       # Fetch chain addresses.
       chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
