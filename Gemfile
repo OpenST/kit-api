@@ -25,6 +25,9 @@ gem 'redis-namespace', '1.6.0'
 # required by rails dependencies
 gem 'listen', '3.1.5'
 
+# QR Code generator
+gem 'rqrcode', '0.10.1'
+
 # gem 'ost-sdk-ruby', '1.1.0'
 
 group :development, :test do

@@ -265,7 +265,7 @@ task :usage_report => :environment do
 
     puts "Data written to local file: " + report_type
 
-    s3_manager = Aws::S3Manager.new
+    s3_manager = Aws::S3Manager.new(GlobalConstant::S3.private_access)
 
     # upload file to S3
     r = s3_manager.upload(

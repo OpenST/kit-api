@@ -279,3 +279,15 @@
 'AdminManagement::Whitelist::Email':
  :mandatory:
    - :e
+'TestEconomyManagement::Activate':
+ :mandatory:
+   - :client_id
+   - :client
+ :optional:
+   - :auth_token
+'TestEconomyManagement::Get':
+ :mandatory:
+   - :client_id
+   - :client
+ :optional:
+   - :auth_token

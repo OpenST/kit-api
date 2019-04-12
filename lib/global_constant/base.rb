@@ -23,6 +23,10 @@ module GlobalConstant
       @support_email ||= fetch_config.fetch('support_email', '')
     end
 
+    def self.activate_test_economy_auth_token
+      @ateat ||= fetch_config.fetch('activate_test_economy_auth_token', '')
+    end
+
     def self.main_sub_environment?
       sub_environment_name == GlobalConstant::Environment.main_sub_environment
     end
@@ -83,12 +87,20 @@ module GlobalConstant
       @saas_api ||= fetch_config.fetch('saas_api', {}).with_indifferent_access
     end
 
+    def self.demo_mappy_server
+      @demo_mappy_server ||= fetch_config.fetch('demo_mappy_server', {}).with_indifferent_access
+    end
+
     def self.grant_timeout
       86400 #24 hours
     end
     
     def self.usage_report_recipients_config
       @usage_report_recipients ||= fetch_config.fetch('usage_report_recipients', {}).with_indifferent_access
+    end
+
+    def self.current_api_version
+      'v2'
     end
 
     private

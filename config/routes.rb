@@ -60,6 +60,11 @@ Rails.application.routes.draw do
     match '' => :get, via: :GET
   end
 
+  scope "#{GlobalConstant::Environment.url_prefix}/api/test-economy", controller: 'test_economy', :format => false do
+    match '' => :get, via: :GET
+    match '' => :activate, via: :POST, constraints: lambda { |request| request.xhr? } #TODO: Handle use of token here
+  end
+
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup', :format => false do
     match '' => :token_details_get, via: :GET
     match '' => :token_details_post, via: :POST, constraints: lambda { |request| request.xhr? }
