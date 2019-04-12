@@ -1,7 +1,6 @@
 class Setting::CompanyInformationController < AuthenticationController
   skip_before_action :authenticate_sub_env_access
 
-  before_action :authenticate_by_password_cookie
   before_action :perform_common_validations
 
   # Get Request for Company Information Page
