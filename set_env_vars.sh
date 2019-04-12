@@ -98,3 +98,6 @@ export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 
 # Company Web Details
 export KA_CW_DOMAIN='developmentost.com'
+
+# Usage report recipient's email ids
+export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"

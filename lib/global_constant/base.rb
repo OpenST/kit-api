@@ -86,6 +86,10 @@ module GlobalConstant
     def self.grant_timeout
       86400 #24 hours
     end
+    
+    def self.usage_report_recipients_config
+      @usage_report_recipients ||= fetch_config.fetch('usage_report_recipients', {}).with_indifferent_access
+    end
 
     private
 

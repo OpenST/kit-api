@@ -1,14 +1,9 @@
-desc "Usage: rake RAILS_ENV=production usage_report"
+desc "Usage: rake RAILS_ENV=development usage_report"
 
 task :usage_report => :environment do
 
   require 'csv'
   require 'uri'
-
-  whitelisted_email_rows = ManagerWhitelisting.select('identifier', 'created_at').where(
-    kind: GlobalConstant::ManagerWhitelisting.email_kind).all
-
-  whitelisted_emails = []
 
   lifetime_data_by_email = {}
   emails_registerred_today = []
@@ -17,7 +12,6 @@ task :usage_report => :environment do
   day_start_ts = current_ts - 24.hours.to_i
 
   lifetime_summary_report = {
-    whitelisted_emails: 0,
     registrations: 0,
     double_opt_in: 0,
     is_mfa_setup: 0,
@@ -31,7 +25,6 @@ task :usage_report => :environment do
   }
 
   daily_summary_report = {
-    whitelisted_emails: 0,
     registrations: 0,
     double_opt_in: 0,
     is_mfa_setup: 0,
@@ -44,12 +37,20 @@ task :usage_report => :environment do
     snm_errors: 0
   }
 
-  whitelisted_email_rows.each do |row|
-    ## identifier is email in case of kind is email
-    email = row.identifier
-    whitelisted_emails << email
-    lifetime_data_by_email[email] = {
-      whitelisted_at: row.created_at,
+  manager_rows = Manager.where(
+    status: GlobalConstant::Manager.active_status).all
+
+  client_ids = []
+
+  manager_rows.each do |row|
+
+    split_email = row.email.to_s.split('@')
+
+    if split_email[1] === 'ost.com'
+      next
+    end
+
+    lifetime_data_by_email[row.email] = {
       client_id: 0,
       is_verified_email: 0,
       is_mfa_setup: 0,
@@ -60,20 +61,6 @@ task :usage_report => :environment do
       token_symbol: ''
     }
 
-    lifetime_summary_report[:whitelisted_emails] += 1
-
-    if row.created_at.to_i > day_start_ts
-      daily_summary_report[:whitelisted_emails] += 1
-    end
-  end
-
-  manager_rows = Manager.where(
-    status: GlobalConstant::Manager.active_status,
-    email: whitelisted_emails).all
-
-  client_ids = []
-
-  manager_rows.each do |row|
     client_id = row.current_client_id
 
     registered_today = row.created_at.to_i > day_start_ts
@@ -227,7 +214,6 @@ task :usage_report => :environment do
     # append headers
     csv_data.push([
                              'email',
-                             'whitelisted_at',
                              'registered_at',
                              'double opt in done',
                              'mfa setup',
@@ -258,7 +244,6 @@ task :usage_report => :environment do
 
       buffer = []
       buffer.push(email)
-      buffer.push(data[:whitelisted_at])
       buffer.push(data[:registered_at])
       buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
       buffer.push(data[:is_mfa_setup] == 1 ? 'YES' : 'NO')
@@ -343,7 +328,6 @@ task :usage_report => :environment do
 
   template_name = GlobalConstant::PepoCampaigns.platform_usage_report_template
   template_vars = {
-    daily_whitelisted_emails: daily_summary_report[:whitelisted_emails],
     daily_registrations: daily_summary_report[:registrations],
     daily_email_verifications: daily_summary_report[:double_opt_in],
     daily_mfa_setup: daily_summary_report[:is_mfa_setup],
@@ -351,7 +335,6 @@ task :usage_report => :environment do
     daily_client_stake_mint: daily_summary_report[:stake_and_mint],
     daily_client_atleast_one_transaction: daily_summary_report[:transactions],
 
-    lifetime_whitelisted_emails: lifetime_summary_report[:whitelisted_emails],
     lifetime_registrations: lifetime_summary_report[:registrations],
     lifetime_email_verifications: lifetime_summary_report[:double_opt_in],
     lifetime_mfa_setup: lifetime_summary_report[:is_mfa_setup],
@@ -369,28 +352,7 @@ task :usage_report => :environment do
     lifetime_report_link: CGI.escape(lifetime_upload_reposnse.data[:presigned_url])
   }
 
-  recipient_emails = [
-    'jason@ost.com',
-    'ignas@ost.com',
-    'chris@ost.com',
-    'renee@ost.com',
-    'jordan@ost.com',
-    'marina@ost.com',
-    'paul@ost.com',
-    'paul.kuveke@ost.com',
-    'mohit@ost.com',
-    'kevin@ost.com',
-    'jean@ost.com',
-    'px@ost.com',
-    'sunil@ost.com',
-    'aman@ost.com',
-    'akshay@ost.com',
-    'bala@ost.com',
-    'rachin@ost.com',
-    'somashekhar@ost.com',
-    'ben@ost.com',
-    'kedar@ost.com'
-  ]
+  recipient_emails = GlobalConstant::UsageReportRecipient.email_ids
 
   recipient_emails.each do |email|
     puts("Sending email to: " + email)

@@ -160,6 +160,18 @@ module Util
       name =~ /\A[A-Z0-9]+\z/i
     end
 
+    # Is alphabetical string
+    #
+    # * Author: Ankit
+    # * Date: 05/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_name?(name)
+      name =~ /\A[A-Z]{1,30}\z/i
+    end
+
     # Should Email be send to this email & this env
     #
     # * Author: Puneet
@@ -328,6 +340,59 @@ module Util
         privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
           privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
         )
+    end
+
+    # Is the company name valid?
+    #
+    # * Author: Anagha
+    # * Date: 08/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_company_name_valid?(company_name)
+      match_status = !(/\A{2,29}[a-zA-Z0-9&£@$€¥\/.,: ;<>«»\-\'\(\)\[\]\{\}\!\?\"\\]+$\z/i.match(company_name)).nil?
+
+      valid_brackets_status = ((company_name.include? '<') || (company_name.include? '>')) ? is_valid_brackets?(company_name) : true
+
+      valid_guillemet_status = ((company_name.include? '«') || (company_name.include? '»')) ? is_valid_guillemet?(company_name) : true
+
+      (match_status && valid_brackets_status && valid_guillemet_status) ? true: false
+
+    end
+
+    # Are the brackets valid.
+    # i.e. '<' and '>' should be present.
+    #
+    # * Author: Anagha
+    # * Date: 08/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_brackets?(company_name)
+      if((company_name.include? '<') && (company_name.include? '>') && (company_name.count('<') ==  company_name.count('>')))
+        return true
+      else
+        return false
+      end
+    end
+
+    # Are the guillemet valid.
+    # i.e. '«' and '»' should be present.
+    #
+    # * Author: Anagha
+    # * Date: 08/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_guillemet?(company_name)
+      if((company_name.include? '«') && (company_name.include? '»') && (company_name.count('«') ==  company_name.count('»')))
+        return true
+      else
+        return false
+      end
     end
 
   end

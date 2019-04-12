@@ -8,7 +8,7 @@ class GrantController < AuthenticationController
   #
   def get
     service_response = TokenManagement::GrantEthOst.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end

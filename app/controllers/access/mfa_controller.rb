@@ -14,7 +14,7 @@ class Access::MfaController < AuthenticationController
   def mfa
     params[:cookie_value] = cookies[GlobalConstant::Cookie.user_cookie_name.to_sym]
     service_response = ManagerManagement::Login::MultiFactor::GetMfaUrl.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Perform MFA
@@ -38,7 +38,7 @@ class Access::MfaController < AuthenticationController
       )
     end
 
-    render_api_response(service_response)
+    return render_api_response(service_response)
 
   end
 

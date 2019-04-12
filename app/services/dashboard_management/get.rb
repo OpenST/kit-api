@@ -67,7 +67,7 @@ module DashboardManagement
     #
     def fetch_token
 
-      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'dm_g_1')
       return error_with_go_to(
           token_resp.internal_id,
           token_resp.general_error_identifier,
@@ -75,6 +75,15 @@ module DashboardManagement
       ) unless token_resp.success?
 
       @token = token_resp.data
+      if @token[:id].present?
+        response = Util::EntityHelper.fetch_and_validate_ubt_address(@token[:id], 'dm_g_2')
+        @token[:ubt_address] = response.data[:ubt_address] if response.data[:ubt_address].present?
+
+        chain_id_response = Util::EntityHelper.fetch_chain_id_for_token_id(@token[:id], 'dm_g_3')
+        if chain_id_response.success? && chain_id_response.data[:aux_chain_id].present?
+          @token[:aux_chain_id] = chain_id_response.data[:aux_chain_id]
+        end
+      end
 
       success
     end

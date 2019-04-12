@@ -8,7 +8,7 @@ class Admin::WhitelistController < Admin::BaseController
   #
   def domain
     service_response = AdminManagement::Whitelist::Domain.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Whitelist email
@@ -19,7 +19,7 @@ class Admin::WhitelistController < Admin::BaseController
   #
   def email
     service_response = AdminManagement::Whitelist::Email.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end

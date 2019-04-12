@@ -24,6 +24,8 @@ module ManagerManagement
         @email = @params[:email]
         @agreed_terms_of_service = @params[:agreed_terms_of_service]
         @marcomm = @params[:marcomm]
+        @first_name = @params[:first_name]
+        @last_name = @params[:last_name]
 
         @authentication_salt_hash = nil
         @authentication_salt_d = nil
@@ -97,6 +99,12 @@ module ManagerManagement
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
 
+        @first_name = @first_name.to_s.strip
+        validation_errors.push('invalid_first_name') unless Util::CommonValidator.is_valid_name?(@first_name)
+
+        @last_name = @last_name.to_s.strip
+        validation_errors.push('invalid_last_name') unless Util::CommonValidator.is_valid_name?(@last_name)
+
         return validation_error(
           'mm_su_wi_1',
           'invalid_api_params',
@@ -105,9 +113,6 @@ module ManagerManagement
         ) if validation_errors.present?
 
         r = sanitize_marcomm_flag
-        return r unless r.success?
-
-        r = VerifyEmailWhitelisting.new(email: @email).perform
         return r unless r.success?
 
         success
@@ -153,6 +158,8 @@ module ManagerManagement
 
           @manager_obj = Manager.new(
               email: @email,
+              first_name: @first_name,
+              last_name: @last_name,
               authentication_salt: @authentication_salt_hash[:ciphertext_blob]
           )
 

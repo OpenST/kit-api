@@ -17,7 +17,7 @@ class Access::VerifyEmailController < AuthenticationController
     params[:is_logged_in_manager] = cookie_verify_response.success? ? 1 : 0
 
     service_response = ManagerManagement::DoubleOptIn.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
 
   end
 
@@ -29,7 +29,7 @@ class Access::VerifyEmailController < AuthenticationController
   #
   def send_verify_email_link
     service_response = ManagerManagement::SendDoubleOptInLink.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end

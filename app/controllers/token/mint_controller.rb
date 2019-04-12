@@ -8,7 +8,7 @@ class Token::MintController < AuthenticationController
   #
   def mint_get
     service_response = TokenManagement::Mint.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Start token minting
@@ -19,7 +19,7 @@ class Token::MintController < AuthenticationController
   #
   def mint_post
     service_response = TokenManagement::StartMint.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Start token minting
@@ -30,6 +30,6 @@ class Token::MintController < AuthenticationController
   #
   def mint_progress
     service_response = TokenManagement::MintProgress.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 end

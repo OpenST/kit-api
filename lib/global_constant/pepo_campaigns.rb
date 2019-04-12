@@ -47,12 +47,22 @@ module GlobalConstant
         'platform_double_optin_done'
       end
 
+      def manager_first_name_attribute
+        'First Name' #Attribute name as given in pepo campaigns.
+      end
+
+      def manager_last_name_attribute
+        'Last Name' #Attribute name as given in pepo campaigns.
+      end
+
 
       def allowed_custom_attributes
         [
           platform_signup_attribute,
           platform_double_optin_done_attribute,
-          platform_marketing_attribute
+          platform_marketing_attribute,
+          manager_first_name_attribute,
+          manager_last_name_attribute
         ]
       end
 
