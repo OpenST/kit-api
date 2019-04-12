@@ -342,6 +342,21 @@ module Util
         )
     end
 
+    # Is the Client Manager active/valid super admin?
+    #
+    # * Author: Shlok
+    # * Date: 25/03/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_active_super_admin?(privileges)
+      privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
+        (
+        privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege)
+        )
+    end
+
     # Is the company name valid?
     #
     # * Author: Anagha
