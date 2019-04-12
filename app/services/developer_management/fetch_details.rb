@@ -10,6 +10,7 @@ module DeveloperManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client_manager (mandatory) - Client Manager
+    # @params [Object] manager(mandatory) - manager
     #
     # @return [DeveloperManagement::FetchDetails]
     #
@@ -19,6 +20,7 @@ module DeveloperManagement
 
       @client_id = @params[:client_id]
       @client_manager = @params[:client_manager]
+      @manager = @params[:manager]
 
       @token = nil
       @price_points = nil
@@ -54,6 +56,7 @@ module DeveloperManagement
         @api_response_data = {
           token: @token,
           client_manager: @client_manager,
+          manager: @manager,
           sub_env_payloads: @sub_env_payload_data,
           developer_page_addresses: @addresses
         }

@@ -37,7 +37,8 @@ class Access::LoginController < AuthenticationController
   # * Reviewed By: Sunil
   #
   def sign_up_post
-
+  
+    params[:luse_cookie_value] = cookies[GlobalConstant::Cookie.last_used_env_cookie_name.to_sym]
     if params[:i_t].present?
       service_response = ManagerManagement::SignUp::ByInvite.new(params).perform
     else

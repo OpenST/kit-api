@@ -9,6 +9,7 @@ module DashboardManagement
     # * Reviewed By: Kedar
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Object] manager(mandatory) - manager
     #
     # @return [TokenManagement::GetDeploymentDetail]
     #
@@ -16,6 +17,7 @@ module DashboardManagement
       super
 
       @client_id = @params[:client_id]
+      @manager = @params[:manager]
 
       @token_id = nil
     end
@@ -240,6 +242,7 @@ module DashboardManagement
             total_volume_dollar: @total_volume_dollar,
             economy_users: @economy_users
           },
+          manager: @manager,
           graph_urls: @graph_urls,
           sub_env_payloads: @sub_env_payloads
         }

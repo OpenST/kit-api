@@ -25,6 +25,7 @@ module ManagerManagement
         @marcomm = @params[:marcomm]
         @first_name = @params[:first_name]
         @last_name = @params[:last_name]
+        @luse_cookie_value = @params[:luse_cookie_value]
 
         @decrypted_invite_token = nil
         @manager_validation_hash = nil
@@ -281,7 +282,24 @@ module ManagerManagement
       # @return [Hash]
       #
       def fetch_go_to
-        GlobalConstant::GoTo.setup_mfa
+        if @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
+    
+          GlobalConstant::GoTo.setup_mfa
+        else
+          #check the cookie value here and redirect accordingly
+          if @luse_cookie_value == GlobalConstant::Cookie.mainnet_env
+            #redirect to mainnet token setup
+            GlobalConstant::GoTo.mainnet_token_dashboard
+          elsif @luse_cookie_value == GlobalConstant::Cookie.sandbox_env
+            #redirect to testnet token setup
+            GlobalConstant::GoTo.sandbox_token_dashboard
+          else
+            #redirect to token setup
+            GlobalConstant::GoTo.token_dashboard
+          end
+          
+        end
+        
       end
 
     end

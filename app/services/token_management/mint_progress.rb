@@ -8,12 +8,17 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Object] manager(mandatory) - manager
     #
     # @return [TokenManagement::MintProgress]
     #
     def initialize(params)
+      
       super
+      
       @client_manager = @params[:client_manager]
+      @manager = @params[:manager]
+      
       @api_response_data = {}
       @mint_workflow = nil
     end
@@ -176,6 +181,8 @@ module TokenManagement
       if @client_manager.present?
         @api_response_data[:client_manager] = @client_manager
       end
+
+      @api_response_data[:manager] = @manager
 
       success
     end

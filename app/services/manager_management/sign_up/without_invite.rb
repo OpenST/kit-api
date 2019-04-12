@@ -190,7 +190,6 @@ module ManagerManagement
         client = Client.new
 
         client.send("set_#{GlobalConstant::Client.sandbox_whitelisted_status}")
-        client.send("set_#{GlobalConstant::Client.has_enforced_mfa_property}")
         client.send("unset_#{GlobalConstant::Client.mainnet_whitelisted_status}")
         client.save!
 
