@@ -36,11 +36,14 @@ task :usage_report => :environment do
     snm_errors: 0
   }
 
-  all_manager_ids = []
-  manager_rows = []
+  all_manager_rows = []
+  first_active_superadmin_manager_map = {}
+  first_active_superadmin_details = []
 
   # Fetch all active managers in batches.
   Manager.find_in_batches(batch_size: 100) do |managers_batches|
+
+    batched_manager_ids = []
 
     managers_batches.each do |row|
 
@@ -50,82 +53,68 @@ task :usage_report => :environment do
         next
       end
 
-      manager_rows << row
-      all_manager_ids << row.id
+      all_manager_rows << row
+      batched_manager_ids << row.id
   
     end
 
-  end
+    if batched_manager_ids.present?
+      # Fetch all client managers in batches.
+      ClientManager.where(manager_id: batched_manager_ids).each do |client_manager_row|
 
-  client_manager_rows = []
+        client_details[client_manager_row.client_id] = client_details[client_manager_row.client_id] || {
+          processed: 0,
+          registered_super_admins: 0,
+          invited_super_admins: 0,
+          registered_admins: 0,
+          invited_admins: 0,
+          company_name: '',
+          enterprise: '',
+          mobile_app: ''
+        }
 
-  # Fetch all client managers in batches.
-  ClientManager.where(manager_id: all_manager_ids).find_in_batches(batch_size: 100) do |client_managers_batches|
+        client_manager_entity = client_manager_row.formated_cache_data
 
-    client_managers_batches.each do |row|
-      client_manager_rows << row
-    end
+        if client_manager_entity[:privileges].exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
-  end
+          if client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
+            client_details[client_manager_row.client_id][:registered_super_admins] += 1
 
-  manager_ids = []
-  processed_client_ids = []
-  
-  # Loop over client managers.
-  client_manager_rows.each do |client_manager_row|
+          elsif client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_invited_privilege)
+            client_details[client_manager_row.client_id][:invited_super_admins] += 1
 
-    client_details[client_manager_row.client_id] = client_details[client_manager_row.client_id] || {
-      processed: 0,
-      registered_super_admins: 0,
-      invited_super_admins: 0,
-      registered_admins: 0,
-      invited_admins: 0,
-      company_name: '',
-      enterprise: '',
-      mobile_app: ''
-    }
+          elsif client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_admin_privilege)
+            client_details[client_manager_row.client_id][:registered_admins] += 1
 
-    client_manager_entity = client_manager_row.formated_cache_data
+          elsif client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_admin_invited_privilege)
+            client_details[client_manager_row.client_id][:invited_admins] += 1
+          end
 
-    if client_manager_entity[:privileges].exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege)
+        end
 
-      if client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
-        client_details[client_manager_row.client_id][:registered_super_admins] += 1
-        
-      elsif client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_invited_privilege)
-        client_details[client_manager_row.client_id][:invited_super_admins] += 1
+        if Util::CommonValidator.is_active_super_admin?(client_manager_entity[:privileges]) &&
+          client_details[client_manager_row.client_id][:processed] == 0
 
-      elsif client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_admin_privilege)
-        client_details[client_manager_row.client_id][:registered_admins] += 1
+          client_details[client_manager_row.client_id][:processed] = 1
+          first_active_superadmin_manager_map[client_manager_row.manager_id] = 1
+        end
 
-      elsif client_manager_entity[:privileges].include?(GlobalConstant::ClientManager.is_admin_invited_privilege)
-        client_details[client_manager_row.client_id][:invited_admins] += 1
       end
-      
-    end 
-    
-    if Util::CommonValidator.is_active_super_admin?(client_manager_entity[:privileges]) && 
-      client_details[client_manager_row.client_id][:processed] == 0 
-      
-      client_details[client_manager_row.client_id][:processed] = 1
-      manager_ids << client_manager_row.manager_id
-      processed_client_ids << client_manager_row.client_id 
-    
-    end 
+
+    end
+
   end
 
   # Create final array of required managers.
-  manager_details = []
-
-  manager_rows.each do |row|
-    if manager_ids.include?(row.id)
-      manager_details << row
+  all_manager_rows.each do |row|
+    if first_active_superadmin_manager_map[row.id]
+      first_active_superadmin_details << row
     end
   end
 
   client_ids = []
   
-  manager_details.each do |row|
+  first_active_superadmin_details.each do |row|
     
     lifetime_data_by_email[row.email] = {
       client_id: 0,
