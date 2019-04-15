@@ -83,6 +83,10 @@ module GlobalConstant
       @saas_api ||= fetch_config.fetch('saas_api', {}).with_indifferent_access
     end
 
+    def self.jira_config
+      @jira_config ||= fetch_config.fetch('jira', {}).with_indifferent_access
+    end
+
     def self.grant_timeout
       86400 #24 hours
     end

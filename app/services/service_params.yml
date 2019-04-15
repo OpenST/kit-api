@@ -228,6 +228,7 @@
     - :mobile_app_flag
     - :one_m_users_flag
     - :client_id
+    - :manager
   :optional:
 'ClientManagement::GetClientInfo':
   :mandatory:
