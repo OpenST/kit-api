@@ -342,6 +342,21 @@ module Util
         )
     end
 
+    # Is the Client Manager active/valid super admin?
+    #
+    # * Author: Shlok
+    # * Date: 25/03/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_active_super_admin?(privileges)
+      privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
+        (
+        privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege)
+        )
+    end
+
     # Is the company name valid?
     #
     # * Author: Anagha
@@ -354,23 +369,10 @@ module Util
 
       # NOTE: Don't put length checks here as some chars like &,<,> reaching here become &lt; which would make our length checks void
       # Length check has been done for safety purposes.
-      match_status = !(/\A[a-zA-Z0-9&£@$€¥\/.,:;<>«»\-\'\(\)\[\]\{\}\!\?\"\s]{3,100}\z/i.match(company_name)).nil?
+      match_status = !(/\A[a-zA-Z0-9&£@$€¥\/.,:;«»\-\'\(\)\[\]\{\}\!\?\"\s]{3,100}\z/i.match(company_name)).nil?
 
-      match_status && is_valid_brackets?(company_name) && is_valid_guillemet?(company_name)
+      match_status && is_valid_guillemet?(company_name)
 
-    end
-
-    # If present, count of '<' and '>' should be same.
-    #
-    # * Author: Anagha
-    # * Date: 08/04/2019
-    # * Reviewed By:
-    #
-    # @return [Boolean] returns a boolean
-    #
-    def self.is_valid_brackets?(company_name)
-      return true unless (company_name.include?('&lt;') || company_name.include?('&gt;'))
-      return company_name.scan(/&lt;/).length == company_name.scan(/&gt;/).length
     end
 
     # if present, count of '«' and '»' should be same.
