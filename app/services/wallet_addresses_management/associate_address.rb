@@ -254,6 +254,7 @@ module WalletAddressesManagement
 
       if tokenAddresses.present?
         TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).update_all(address:@owner_address)
+        KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
       else
         TokenAddresses.create!(
           token_id: token_id,

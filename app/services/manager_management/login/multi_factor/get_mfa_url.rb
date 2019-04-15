@@ -21,6 +21,8 @@ module ManagerManagement
         def initialize(params)
           super
           @qr_code_token = ''
+          @sub_env_payload_data = nil
+          @client_id = @client[:id]
         end
 
         # Perform
@@ -66,6 +68,9 @@ module ManagerManagement
             end
 
             r = set_ga_secret_auth
+            return r unless r.success?
+
+            r = fetch_sub_env_payloads
             return r unless r.success?
 
             success_response
@@ -130,8 +135,26 @@ module ManagerManagement
           success_with_data({
                               setup_mfa: {
                                 qr_code_token: @qr_code_token
-                              }
+                              },
+                              sub_env_payloads: @sub_env_payload_data,
                             })
+        end
+
+        # fetch the sub env response data entity
+        #
+        # * Author: Ankit
+        # * Date: 04/02/2019
+        # * Reviewed By: Sunil
+        #
+        # @return [Result::Base]
+        #
+        def fetch_sub_env_payloads
+          r = SubEnvPayload.new({client_id: @client_id}).perform
+          return r unless r.success?
+
+          @sub_env_payload_data = r.data[:sub_env_payloads]
+
+          success
         end
 
       end
