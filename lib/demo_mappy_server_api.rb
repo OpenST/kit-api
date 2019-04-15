@@ -34,24 +34,25 @@ class DemoMappyServerApi
 
       request_path = GlobalConstant::DemoMappyServer.api_endpoint + path
 
-      #TODO: This is done for Saas APIs, I dont think this should be done here
-      # It overrides verification of SSL certificates
-      ssl_context = OpenSSL::SSL::SSLContext.new
-      ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      if GlobalConstant::Environment.is_development_env?
+        # It overrides verification of SSL certificates
+        ssl_context = OpenSSL::SSL::SSLContext.new
+        ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
 
       case request_type
-      when 'get'
-        response = HTTP.timeout(@timeouts)
-                       .get(request_path, params: params, ssl_context: ssl_context)
-      when 'post'
-        response = HTTP.timeout(@timeouts)
-                       .post(request_path, json: params, ssl_context: ssl_context)
-      else
-        return error_with_data(
-            'l_dmsa_1',
-            'something_went_wrong',
-            GlobalConstant::ErrorAction.default
-        )
+        when 'get'
+          response = HTTP.timeout(@timeouts)
+                         .get(request_path, params: params)
+        when 'post'
+          response = HTTP.timeout(@timeouts)
+                         .post(request_path, json: params)
+        else
+          return error_with_data(
+              'l_dmsa_1',
+              'something_went_wrong',
+              GlobalConstant::ErrorAction.default
+          )
       end
 
       parsed_response = Oj.load(response.body.to_s,{})

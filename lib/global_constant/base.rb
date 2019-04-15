@@ -91,6 +91,10 @@ module GlobalConstant
       @demo_mappy_server ||= fetch_config.fetch('demo_mappy_server', {}).with_indifferent_access
     end
 
+    def self.demo_app
+      @demo_app ||= fetch_config.fetch('demo_app', {}).with_indifferent_access
+    end
+
     def self.grant_timeout
       86400 #24 hours
     end

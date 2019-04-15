@@ -10,6 +10,7 @@ module TestEconomyManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client (mandatory) - Client cache data
+    # @params [Hash] manager (mandatory) - Manager cache data
     # @params [String] auth_token (optional) - auth token to allow logged in user in main env to access test economy
     #
     # @return [TestEconomyManagement::Base]
@@ -20,6 +21,7 @@ module TestEconomyManagement
 
       @client_id = @params[:client_id]
       @client = @params[:client]
+      @manager = @params[:manager]
       @auth_token = @params[:auth_token]
 
       @token = nil

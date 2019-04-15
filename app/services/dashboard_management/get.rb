@@ -175,6 +175,7 @@ module DashboardManagement
             expires_in: 120.minutes.to_i
           }
         )
+
         unless r.success?
           Rails.logger.error('generate_pre_signed_url_error', r.to_json)
         end

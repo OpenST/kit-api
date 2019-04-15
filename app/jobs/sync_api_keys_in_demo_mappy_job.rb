@@ -17,13 +17,13 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
     init_params(params)
 
     r = fetch_token
-    return r unless r.success?
+    return notify_devs(r) unless r.success?
 
     r = fetch_api_credentials
-    return r unless r.success?
+    return notify_devs(r) unless r.success?
 
     r = sync_in_demo_mappy
-    return r unless r.success?
+    return notify_devs(r) unless r.success?
 
     success
 
@@ -55,6 +55,8 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
     return token_resp unless token_resp.success?
 
     @token_id = token_resp.data[:id]
+
+    success
 
   end
 
@@ -102,6 +104,24 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
       }
     )
 
+  end
+
+  # Notify devs on error response
+  #
+  # * Author: Puneet
+  # * Date: 13/04/2019
+  # * Reviewed By:
+  #
+  def notify_devs(response)
+    ApplicationMailer.notify(
+        data: {
+          params: {client_id: @client_id}
+        },
+        body: {
+          response: response.to_json
+        },
+        subject: 'Problem in SyncApiKeysInDemoMappyJob'
+    ).deliver
   end
 
 end

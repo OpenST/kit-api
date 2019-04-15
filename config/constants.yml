@@ -77,3 +77,7 @@ constants:
 
   demo_mappy_server:
     endpoint: '<%= ENV['KA_DEMO_MAPPY_SERVER_API_ENDPOINT'] %>/'
+
+  demo_app:
+    ios_url: <%= ENV['KA_DEMO_IOS_APP_URL'] %>
+    android_url: <%= ENV['KA_DEMO_ANDROID_APP_URL'] %>

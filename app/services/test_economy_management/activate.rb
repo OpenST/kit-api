@@ -10,6 +10,7 @@ module TestEconomyManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client (mandatory) - Client cache data
+    # @params [Hash] manager (mandatory) - Manager cache data
     # @params [String] auth_token (optional) - auth token to allow logged in user in main env to access test economy
     #
     # @return [TestEconomyManagement::Activate]
@@ -118,13 +119,17 @@ module TestEconomyManagement
     #
     def perform_activation
 
-      tasks = []
-      
-      tasks.push(Thread.new {perform_qr_code_task}) unless test_economy_qr_code_uploaded?
+      # tasks = []
+      #
+      # tasks.push(Thread.new {perform_qr_code_task()}) unless test_economy_qr_code_uploaded?
+      #
+      # tasks.push(Thread.new {perform_registeration_in_mappy_task()}) unless registered_in_mappy_server?
+      #
+      # tasks.each { |thread| thread.join } # make others wait for the one taking time
 
-      tasks.push(Thread.new {perform_registeration_in_mappy_task}) unless registered_in_mappy_server?
-      
-      tasks.each { |thread| thread.join } # make others wait for the one taking time
+      perform_qr_code_task
+
+      perform_registeration_in_mappy_task
 
       @client_obj.save! if @client_obj.changed?
 
@@ -194,7 +199,7 @@ module TestEconomyManagement
 
       unless r.success?
         @error_responses.push(perform_qr_code_task: r.to_json)
-        return
+        return r
       end
 
       if is_main_sub_env?
@@ -202,6 +207,8 @@ module TestEconomyManagement
       else
         @client_obj.send("set_#{GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status}")
       end
+
+      success
 
     end
 
@@ -250,7 +257,7 @@ module TestEconomyManagement
 
       unless r.success?
         @error_responses.push(perform_registeration_in_mappy_task: r.to_json)
-        return
+        return r
       end
 
       if is_main_sub_env?
@@ -258,6 +265,8 @@ module TestEconomyManagement
       else
         @client_obj.send("set_#{GlobalConstant::Client.sandbox_registered_in_mappy_server_status}")
       end
+
+      success
 
     end
 
@@ -274,10 +283,13 @@ module TestEconomyManagement
         {
           token: @token,
           client: @client_obj.formated_cache_data,
+          manager: @manager,
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {
             qr_code_url: qr_code_s3_url,
-            mappy_api_endpoint: mappy_api_endpoint
+            mappy_api_endpoint: mappy_api_endpoint,
+            ios_app_download_link: GlobalConstant::DemoApp.ios_url,
+            android_app_download_link: GlobalConstant::DemoApp.android_url
           }
         }
       )

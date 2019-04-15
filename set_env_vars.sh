@@ -119,3 +119,7 @@ export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
 
 # Demo Mappy Server Details
 export KA_DEMO_MAPPY_SERVER_API_ENDPOINT='http://127.0.0.1:3000/demo/api'
+
+# Demo App URL's
+export KA_DEMO_IOS_APP_URL=''
+export KA_DEMO_ANDROID_APP_URL=''

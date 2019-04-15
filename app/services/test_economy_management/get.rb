@@ -11,6 +11,7 @@ module TestEconomyManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client (mandatory) - Client cache data
     # @params [String] auth_token (optional) - auth token to allow logged in user in main env to access test economy
+    # @params [Hash] manager (mandatory) - Manager cache data
     #
     # @return [TestEconomyManagement::Get]
     #
@@ -82,10 +83,13 @@ module TestEconomyManagement
         {
           token: @token,
           client: @client,
+          manager: @manager,
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {
             mappy_api_endpoint: mappy_api_endpoint,
-            qr_code_url: test_economy_qr_code_uploaded? ? qr_code_s3_url : nil
+            qr_code_url: test_economy_qr_code_uploaded? ? qr_code_s3_url : nil,
+            ios_app_download_link: GlobalConstant::DemoApp.ios_url,
+            android_app_download_link: GlobalConstant::DemoApp.android_url
           }
         }
       )
