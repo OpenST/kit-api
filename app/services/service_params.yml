@@ -46,6 +46,7 @@
     - :browser_user_agent
     - :cookie_value
   :optional:
+    - :client
 'ManagerManagement::Login::PasswordAuth':
   :mandatory:
     - :email
