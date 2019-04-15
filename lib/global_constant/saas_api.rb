@@ -48,7 +48,7 @@ module GlobalConstant
     end
 
     def self.api_endpoint_for_current_version
-      "#{GlobalConstant::SaasApi.base_url}#{GlobalConstant::Environment.url_prefix}/#{GlobalConstant::Base.current_api_version}/"
+      "#{GlobalConstant::SaasApi.base_url}/#{GlobalConstant::Environment.url_prefix}/#{GlobalConstant::Base.current_api_version}/"
     end
 
   end

@@ -188,7 +188,7 @@ module TestEconomyManagement
     # @return [String]
     #
     def mappy_api_endpoint
-      @mappy_api_endpoint ||= "#{GlobalConstant::DemoMappyServer.api_endpoint}#{@token_id}/#{url_id}/"
+      @mappy_api_endpoint ||= "#{GlobalConstant::DemoMappyServer.api_endpoint}/#{@token_id}/#{url_id}/"
     end
 
     # Generate QR Code file S3 Path

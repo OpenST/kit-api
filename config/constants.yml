@@ -66,7 +66,7 @@ constants:
       master_list: <%= ENV['KA_CAMPAIGN_MASTER_LIST']%>
 
   saas_api:
-    endpoint: '<%= ENV['KA_SAAS_API_ENDPOINT'] %>/'
+    endpoint: <%= ENV['KA_SAAS_API_ENDPOINT'] %>
     secret_key: <%= ENV['KA_SAAS_API_SECRET_KEY'] %>
 
   company_web:
@@ -76,7 +76,7 @@ constants:
     email_ids: <%= ENV['KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS'] %>
 
   demo_mappy_server:
-    endpoint: '<%= ENV['KA_DEMO_MAPPY_SERVER_API_ENDPOINT'] %>/'
+    endpoint: <%= ENV['KA_DEMO_MAPPY_SERVER_API_ENDPOINT'] %>
 
   demo_app:
     ios_url: <%= ENV['KA_DEMO_IOS_APP_URL'] %>
