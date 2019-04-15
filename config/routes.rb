@@ -6,11 +6,6 @@ Rails.application.routes.draw do
     get '/health-checker' => :health_checker
   end
 
-  scope 'api/admin', controller: 'admin/whitelist', :format => false do
-    match 'whitelist/domain' => :domain, via: :GET
-    match 'whitelist/email' => :email, via: :GET
-  end
-
   scope 'api/sign-up', controller: 'access/login', :format => false do
     match '' => :sign_up_get, via: :GET
     match '' => :sign_up_post, via: :POST, constraints: lambda { |request| request.xhr? }
@@ -24,6 +19,11 @@ Rails.application.routes.draw do
   scope 'api/mfa', controller: 'access/mfa', :format => false do
     match '' => :mfa, via: :GET, as: :mfa
     match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope 'api/setting/company-information', controller: 'setting/company_information', :format => false do
+    match '' => :get, via: :GET
+    match '' => :update, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope 'api/login', controller: 'access/login', :format => false do

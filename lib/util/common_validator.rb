@@ -160,6 +160,18 @@ module Util
       name =~ /\A[A-Z0-9]+\z/i
     end
 
+    # Is alphabetical string
+    #
+    # * Author: Ankit
+    # * Date: 05/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_name?(name)
+      name =~ /\A[A-Z]{1,30}\z/i
+    end
+
     # Should Email be send to this email & this env
     #
     # * Author: Puneet
@@ -328,6 +340,52 @@ module Util
         privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege) ||
           privileges.include?(GlobalConstant::ClientManager.is_admin_privilege)
         )
+    end
+
+    # Is the Client Manager active/valid super admin?
+    #
+    # * Author: Shlok
+    # * Date: 25/03/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_active_super_admin?(privileges)
+      privileges.exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege) &&
+        (
+        privileges.include?(GlobalConstant::ClientManager.is_super_admin_privilege)
+        )
+    end
+
+    # Is the company name valid?
+    #
+    # * Author: Anagha
+    # * Date: 08/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_company_name_valid?(company_name)
+
+      # NOTE: Don't put length checks here as some chars like &,<,> reaching here become &lt; which would make our length checks void
+      # Length check has been done for safety purposes.
+      match_status = !(/\A[a-zA-Z0-9&£@$€¥\/.,:;«»\-\'\(\)\[\]\{\}\!\?\"\s]{3,100}\z/i.match(company_name)).nil?
+
+      match_status && is_valid_guillemet?(company_name)
+
+    end
+
+    # if present, count of '«' and '»' should be same.
+    #
+    # * Author: Anagha
+    # * Date: 08/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_guillemet?(company_name)
+      return true unless (company_name.include?('«') || company_name.include?('»'))
+      return company_name.count('«') == company_name.count('»')
     end
 
   end

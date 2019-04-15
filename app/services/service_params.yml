@@ -4,6 +4,8 @@
     - :password
     - :browser_user_agent
     - :agreed_terms_of_service
+    - :first_name
+    - :last_name
   :optional:
     - :marcomm
 'ManagerManagement::SignUp::ByInvite':
@@ -12,6 +14,8 @@
     - :password
     - :confirm_password
     - :browser_user_agent
+    - :first_name
+    - :last_name
   :optional:
     - :marcomm
 'ManagerManagement::SignUp::GetDetails':
@@ -154,6 +158,7 @@
 'TokenManagement::GetTokenDetailsBeforeSetup':
   :mandatory:
     - :client_id
+    - :manager
   :optional:
     - :client_manager
 'TokenManagement::InsertTokenDetails':
@@ -172,6 +177,7 @@
 'TokenManagement::GetDeploymentDetail':
   :mandatory:
     - :client_id
+    - :manager
   :optional:
 'TokenManagement::ResetDeployment':
   :mandatory:
@@ -216,9 +222,23 @@
   :mandatory:
     - :client_id
   :optional:
+'ClientManagement::UpdateClientInfo':
+  :mandatory:
+    - :company_name
+    - :mobile_app_flag
+    - :one_m_users_flag
+    - :client_id
+  :optional:
+'ClientManagement::GetClientInfo':
+  :mandatory:
+    - :client_id
+    - :manager
+    - :client
+    - :client_manager
 'TokenManagement::Mint':
   :mandatory:
     - :client_id
+    - :manager
   :optional:
 'ContractManagement::GetGatewayComposerAddress':
   :mandatory:
@@ -229,6 +249,7 @@
   :mandatory:
     - :client_id
     - :client_manager
+    - :manager
   :optional:
 'TokenManagement::GrantEthOst':
   :mandatory:
@@ -247,9 +268,11 @@
   :mandatory:
     - :client_id
     - :client_manager
+    - :manager
 'DashboardManagement::Get':
   :mandatory:
     - :client_id
+    - :manager
 'AdminManagement::Whitelist::Domain':
  :mandatory:
    - :d

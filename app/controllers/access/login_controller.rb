@@ -26,7 +26,7 @@ class Access::LoginController < AuthenticationController
       service_response = Result::Base.success({})
     end
 
-    render_api_response(service_response)
+    return render_api_response(service_response)
 
   end
 
@@ -37,7 +37,7 @@ class Access::LoginController < AuthenticationController
   # * Reviewed By: Sunil
   #
   def sign_up_post
-
+    
     if params[:i_t].present?
       service_response = ManagerManagement::SignUp::ByInvite.new(params).perform
     else
@@ -57,7 +57,7 @@ class Access::LoginController < AuthenticationController
       )
     end
 
-    render_api_response(service_response)
+    return render_api_response(service_response)
 
   end
 
@@ -81,7 +81,7 @@ class Access::LoginController < AuthenticationController
       )
     end
 
-    render_api_response(service_response)
+    return render_api_response(service_response)
 
   end
 
@@ -93,7 +93,7 @@ class Access::LoginController < AuthenticationController
   #
   def send_reset_password_link
     service_response = ManagerManagement::SendResetPasswordLink.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Reset Password
@@ -104,7 +104,7 @@ class Access::LoginController < AuthenticationController
   #
   def reset_password
     service_response = ManagerManagement::ResetPassword.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   private
@@ -124,7 +124,7 @@ class Access::LoginController < AuthenticationController
 
     unless service_response.success?
       Rails.logger.error("---- Recaptcha::Verify Error: #{service_response.to_hash}")
-      render_api_response(service_response)
+      return render_api_response(service_response)
     end
 
     Rails.logger.debug('---- check_recaptcha_before_verification done')

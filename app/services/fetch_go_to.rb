@@ -38,6 +38,8 @@ class FetchGoTo < ServicesBase
 
       return GlobalConstant::GoTo.verify_email if @manager[:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
 
+      return GlobalConstant::GoTo.company_information unless @client[:properties].include?(GlobalConstant::Client.has_company_info_property)
+
       if @is_multi_auth_cookie_valid
 
         fetch_by_economy_state
@@ -50,6 +52,9 @@ class FetchGoTo < ServicesBase
 
         GlobalConstant::GoTo.setup_mfa
 
+      else
+        fetch_by_economy_state
+        
       end
 
     end

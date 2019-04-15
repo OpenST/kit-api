@@ -9,6 +9,7 @@ module DashboardManagement
     # * Reviewed By: Kedar
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Object] manager(mandatory) - manager
     #
     # @return [TokenManagement::GetDeploymentDetail]
     #
@@ -16,6 +17,7 @@ module DashboardManagement
       super
 
       @client_id = @params[:client_id]
+      @manager = @params[:manager]
 
       @token_id = nil
     end
@@ -67,7 +69,7 @@ module DashboardManagement
     #
     def fetch_token
 
-      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'dm_g_1')
       return error_with_go_to(
           token_resp.internal_id,
           token_resp.general_error_identifier,
@@ -75,7 +77,6 @@ module DashboardManagement
       ) unless token_resp.success?
 
       @token = token_resp.data
-
       success
     end
 
@@ -231,6 +232,7 @@ module DashboardManagement
             total_volume_dollar: @total_volume_dollar,
             economy_users: @economy_users
           },
+          manager: @manager,
           graph_urls: @graph_urls,
           sub_env_payloads: @sub_env_payloads
         }

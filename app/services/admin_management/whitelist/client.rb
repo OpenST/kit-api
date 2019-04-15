@@ -50,7 +50,7 @@ module AdminManagement
           r = find_or_create_client_whitelisting
           return r unless r.success?
 
-          r = mark_client_as_whitelisted_for_mainnet
+          r = enforce_mfa_and_mark_client_as_whitelisted_for_mainnet
           return r unless r.success?
 
           success
@@ -188,16 +188,16 @@ module AdminManagement
 
       end
 
-      # Whitelist the client in client table
+      # Enforce MFA and Whitelist the client in client table
       # * Author: Ankit
       # * Date: 30/01/2019
       # * Reviewed By:
       #
       # @return [Result::Base]
-      def mark_client_as_whitelisted_for_mainnet
+      def enforce_mfa_and_mark_client_as_whitelisted_for_mainnet
 
         client_obj = ::Client.where(id: @client_id).first
-
+        client_obj.send("set_#{GlobalConstant::Client.has_enforced_mfa_property}")
         client_obj.send("set_#{GlobalConstant::Client.mainnet_whitelisted_status}")
         client_obj.save!
 

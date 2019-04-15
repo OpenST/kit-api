@@ -47,14 +47,14 @@ class ApplicationController < ActionController::API
         }
     )
 
-    render_api_response(r)
+    return render_api_response(r)
 
   end
 
   # ELB Health Checker
   #
   def health_checker
-    render plain: ''
+    render plain: '' and return
   end
 
   private
@@ -90,7 +90,7 @@ class ApplicationController < ActionController::API
     #     http_code: GlobalConstant::ErrorCode.under_maintenance,
     #     go_to: GlobalConstant::GoTo.service_unavailable
     #   )
-    #   render_api_response(r)
+    #   return render_api_response(r)
     # end
 
   end
@@ -227,11 +227,18 @@ class ApplicationController < ActionController::API
       yield
 
     rescue => se
+
       Rails.logger.error("Exception in API: #{se.message}")
+
       ApplicationMailer.notify(
-          body: {exception: {message: se.message, backtrace: se.backtrace}},
+          body: {
+              exception: {
+                  message: se.message,
+                  backtrace: se.backtrace
+              }
+          },
           data: {
-              'params' => params
+              params: params
           },
           subject: 'Exception in API'
       ).deliver
@@ -241,7 +248,7 @@ class ApplicationController < ActionController::API
           general_error_identifier: 'something_went_wrong'
       )
 
-      render_api_response(r)
+      return render_api_response(r)
 
     end
 

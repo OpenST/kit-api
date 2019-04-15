@@ -24,7 +24,7 @@ module TokenManagement
 
     private
 
-    # Fetch token
+    # Fetch token details and ubt address
     #
     # * Author: Shlok
     # * Date: 21/01/2019
@@ -36,7 +36,7 @@ module TokenManagement
     #
     def fetch_token
 
-      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b')
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'tm_b_1')
       return error_with_go_to(
           token_resp.internal_id,
           token_resp.general_error_identifier,
@@ -59,16 +59,12 @@ module TokenManagement
     #
     def fetch_price_points
 
-      token_id = @token[:id]
-
-      aux_chain_resp = Util::EntityHelper.fetch_chain_id_for_token_id(token_id, 'tm_b')
-
       return error_with_go_to(
-         aux_chain_resp.internal_id,
-         aux_chain_resp.general_error_identifier,
+         'tm_b_4',
+         'aux_chain_id_not_found',
          GlobalConstant::GoTo.token_setup
-      ) unless aux_chain_resp.success?
-      aux_chain_id = aux_chain_resp.data[:aux_chain_id]
+      ) unless @token[:aux_chain_id].present?
+      aux_chain_id = @token[:aux_chain_id]
 
       price_points = KitSaasSharedCacheManagement::OstPricePoints.new([aux_chain_id]).fetch
       @api_response_data[:price_points] = price_points[aux_chain_id]

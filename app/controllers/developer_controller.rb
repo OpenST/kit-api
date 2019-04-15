@@ -8,7 +8,7 @@ class DeveloperController < AuthenticationController
   #
   def developer_get
     service_response = DeveloperManagement::FetchDetails.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Get developer's api key and secret key
@@ -19,7 +19,7 @@ class DeveloperController < AuthenticationController
   #
   def api_keys_get
     service_response = ClientManagement::ApiCredentials::Fetch.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Generate new / Rotate api keys
@@ -30,7 +30,7 @@ class DeveloperController < AuthenticationController
   #
   def api_keys_rotate
     service_response = ClientManagement::ApiCredentials::Rotate.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
   # Deactivate key
@@ -41,7 +41,7 @@ class DeveloperController < AuthenticationController
   #
   def api_keys_deactivate
     service_response = ClientManagement::ApiCredentials::Deactivate.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end
