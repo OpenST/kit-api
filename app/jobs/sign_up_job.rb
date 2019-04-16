@@ -34,6 +34,8 @@ class SignUpJob < ApplicationJob
     @manager_id = params[:manager_id].to_i
     @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
     @platform_marketing = params[:platform_marketing]
+    @manager_first_name = params[:manager_first_name]
+    @manager_last_name = params[:manager_last_name]
     @failed_logs = {}
   end
 
@@ -50,7 +52,9 @@ class SignUpJob < ApplicationJob
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         custom_attributes: {
             GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value,
-            GlobalConstant::PepoCampaigns.platform_marketing_attribute => @platform_marketing
+            GlobalConstant::PepoCampaigns.platform_marketing_attribute => @platform_marketing,
+            GlobalConstant::PepoCampaigns.manager_first_name_attribute => @manager_first_name,
+            GlobalConstant::PepoCampaigns.manager_last_name_attribute => @manager_last_name
         }
     ).perform
 

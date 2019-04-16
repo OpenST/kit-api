@@ -200,6 +200,8 @@ module TokenManagement
       ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name ).destroy_all
       TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).destroy_all
 
+      KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
+
       success
     end
 

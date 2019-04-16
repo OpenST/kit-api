@@ -23,6 +23,8 @@ module ManagerManagement
 
         @invite_token = @params[:i_t]
         @marcomm = @params[:marcomm]
+        @first_name = @params[:first_name]
+        @last_name = @params[:last_name]
 
         @decrypted_invite_token = nil
         @manager_validation_hash = nil
@@ -113,6 +115,12 @@ module ManagerManagement
         validation_errors.push('password_invalid') unless Util::CommonValidator.is_valid_password?(@password)
         validation_errors.push('confirm_password_invalid') if @confirm_password != @password
 
+        @first_name = @first_name.to_s.strip
+        validation_errors.push('invalid_first_name') unless Util::CommonValidator.is_valid_name?(@first_name)
+
+        @last_name = @last_name.to_s.strip
+        validation_errors.push('invalid_last_name') unless Util::CommonValidator.is_valid_name?(@last_name)
+
         if @invite_token.blank?
 
           validation_errors.push('missing_i_t')
@@ -174,6 +182,8 @@ module ManagerManagement
       #
       def update_manager
 
+        @manager_obj.first_name = @first_name
+        @manager_obj.last_name = @last_name
         @manager_obj.password = Manager.get_encrypted_password(@password, @login_salt_d)
         @manager_obj.current_client_id = @client_id
         @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
@@ -271,7 +281,16 @@ module ManagerManagement
       # @return [Hash]
       #
       def fetch_go_to
-        GlobalConstant::GoTo.setup_mfa
+        if @client[:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
+    
+          GlobalConstant::GoTo.setup_mfa
+  
+        else
+
+          GlobalConstant::GoTo.sandbox_token_dashboard
+
+        end
+
       end
 
     end

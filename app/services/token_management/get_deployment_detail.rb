@@ -9,12 +9,15 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Object] manager(mandatory) - manager
     #
     # @return [TokenManagement::GetDeploymentDetail]
     #
     def initialize(params)
 
       super
+
+      @manager = @params[:manager]
 
       @api_response_data = {}
       @token_id = nil
@@ -144,6 +147,8 @@ module TokenManagement
       return r unless r.success?
 
       @api_response_data['sub_env_payloads'] = r.data[:sub_env_payloads]
+
+      @api_response_data['manager'] = @manager
 
       success
     end

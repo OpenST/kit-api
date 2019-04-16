@@ -8,6 +8,6 @@ class Contracts::GatewayComposerController < AuthenticationController
   #
   def get_details
     service_response = ContractManagement::GetGatewayComposerAddress.new(params).perform
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 end

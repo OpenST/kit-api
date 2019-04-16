@@ -10,6 +10,7 @@ module TokenManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Object] client_manager(optional) - Client manager
+    # @params [Object] manager(mandatory) - manager
     #
     # @return [TokenManagement::GetTokenDetailsBeforeSetup]
     #
@@ -18,6 +19,7 @@ module TokenManagement
       super
 
       @client_manager = @params[:client_manager]
+      @manager = @params[:manager]
 
     end
 
@@ -57,6 +59,7 @@ module TokenManagement
             token: @token,
             sign_messages: @sign_message,
             client_manager: @client_manager,
+            manager: @manager,
             price_points: @price_points,
             sub_env_payloads: @sub_env_payload_data
           }

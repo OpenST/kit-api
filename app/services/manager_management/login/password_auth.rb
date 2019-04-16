@@ -96,9 +96,6 @@ module ManagerManagement
           GlobalConstant::ErrorAction.default
         ) if validation_errors.present?
 
-        r = VerifyEmailWhitelisting.new(email: @email).perform
-        return r unless r.success?
-
         # NOTE: To be on safe side, check for generic errors as well
 
         success

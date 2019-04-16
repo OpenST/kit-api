@@ -15,7 +15,7 @@ class DashboardController < AuthenticationController
       GlobalConstant::Base.main_sub_environment? ? GlobalConstant::Cookie.mainnet_env : GlobalConstant::Cookie.sandbox_env,
       GlobalConstant::Cookie.last_used_env_cookie_expiry
     )
-    render_api_response(service_response)
+    return render_api_response(service_response)
   end
 
 end

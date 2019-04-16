@@ -46,12 +46,12 @@ resource_not_found:
 no_client_associated:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
-  message: "No client is associated with this account. Please contact support."
+  message: "No client is associated with this account. Please <a href=\"https://help.ost.com/support/home\" target=\"_blank\">contact support</a>."
 
 client_inactive:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
-  message: "Client is not active. Please contact support."
+  message: "Client is not active. Please <a href=\"https://help.ost.com/support/home\" target=\"_blank\">contact support</a>."
 
 client_not_found:
   http_code: 404
@@ -61,7 +61,7 @@ client_not_found:
 manager_inactive:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
-  message: "Manager is not active. Please contact support."
+  message: "Manager is not active. Please <a href=\"https://help.ost.com/support/home\" target=\"_blank\">contact support</a>."
 
 manager_not_found:
   http_code: 404
@@ -96,7 +96,7 @@ client_manager_inactive:
 something_went_wrong:
   http_code: 422
   code: "INTERNAL_SERVER_ERROR"
-  message: "Something went wrong. Please contact support."
+  message: "Something went wrong. Please <a href=\"https://help.ost.com/support/home\" target=\"_blank\">contact support</a>."
 
 already_associated:
   http_code: 422
@@ -127,3 +127,8 @@ request_not_xhr:
   http_code: 422
   code: "INVALID_REQUEST"
   message: "Request should be xhr"
+
+mfa_mandatory_for_client:
+  http_code: 422
+  code: 'invalid'
+  message: 'You have been whitelisted on Mainnet, please set up your <a href="/mfa">2FA</a> to proceed.'
