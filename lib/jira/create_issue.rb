@@ -8,13 +8,13 @@ module Jira
     #
     # * Author: Anagha
     # * Date: 15/04/2018
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @params [String] project_name (mandatory) - Project name
     # @params [String] issue_type (mandatory) - Issue type
     # @params [String] priority (mandatory) - Priority
-    # @params [String] summary (mandatory) - Summary
-    # @params [String] description (mandatory) - Description
+    # @params [String] summary (optional) - Summary
+    # @params [String] description (optional) - Description
     # @params [Array] labels (optional) - Labels
     #
     # @return [Jira::CreateIssue]
@@ -55,11 +55,17 @@ module Jira
     #
     # * Author: Anagha
     # * Date: 15/04/2018
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
     def validate_and_sanitize
+      # validate @project_name as string non empty
+      # @issue_type - should one of the recognized types
+      # @priority - should be one of low medium high
+      # @summary - string check
+      # @description
+
       validation_errors = []
 
       validation_errors.push('invalid_labels') unless Util::CommonValidator.is_array?(@labels)
@@ -78,7 +84,7 @@ module Jira
     #
     # * Author: Anagha
     # * Date: 15/04/2018
-    # * Reviewed By:
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
