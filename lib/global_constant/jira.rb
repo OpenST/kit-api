@@ -10,20 +10,34 @@ module GlobalConstant
     def self.bug_issue_type
       return 'Bug'
     end
+
+    def self.story_issue_type
+      return 'Story'
+    end
+
     ### Issue types end ###
 
     ### Issue priorities start ###
-    def self.low_priority_issue
-      return "1"
-    end
-
-    def self.medium_priority_issue
-      return "3"
+    def self.highest_priority_issue
+      return "Highest"
     end
 
     def self.high_priority_issue
-      return "2"
+      return "High"
     end
+
+    def self.medium_priority_issue
+      return "Medium"
+    end
+
+    def self.low_priority_issue
+      return "Low"
+    end
+
+    def self.lowest_priority_issue
+      return "Lowest"
+    end
+
     ### Issue priorities end ###
 
     def self.username
