@@ -65,7 +65,8 @@ module TestEconomyManagement
       return success if GlobalConstant::Base.sandbox_sub_environment?
 
       return success if GlobalConstant::Base.activate_test_economy_auth_token.present? &&
-          @auth_token == GlobalConstant::Base.activate_test_economy_auth_token
+          @auth_token == GlobalConstant::Base.activate_test_economy_auth_token &&
+          is_ost_managed_economy? && is_ost_manager?
 
       error_with_data(
           'tem_b_1',
@@ -73,6 +74,50 @@ module TestEconomyManagement
           GlobalConstant::ErrorAction.default
       )
 
+    end
+
+    # Check if this economy is OST Managed by verifying if all super admin(s) are an OST manager(s)
+    #
+    # * Author: Puneet
+    # * Date: 15/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean]
+    #
+    def is_ost_managed_economy?
+
+      super_admin_manager_ids = ClientManager.super_admins(@client_id).pluck(:manager_id)
+
+      super_admin_managers = {}
+      if super_admin_manager_ids.include?(@manager[:id])
+        super_admin_managers[@manager[:id]] = @manager
+        manager_ids_to_fetch = super_admin_manager_ids - [@manager[:id]]
+      else
+        manager_ids_to_fetch = super_admin_manager_ids
+      end
+
+      if manager_ids_to_fetch.any?
+        super_admin_managers.merge!(CacheManagement::Manager.new(manager_ids_to_fetch))
+      end
+
+      super_admin_managers.each do |manager|
+        return false unless Util::CommonValidator.is_valid_ost_email?(manager[:email])
+      end
+
+      true
+
+    end
+
+    # Check if logged in user is an OST manager
+    #
+    # * Author: Puneet
+    # * Date: 15/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean]
+    #
+    def is_ost_manager?
+      Util::CommonValidator.is_valid_ost_email?(@manager[:email])
     end
 
     # Check if request is to mainnet ENV
