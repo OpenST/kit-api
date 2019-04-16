@@ -11,11 +11,11 @@ module Jira
     # * Reviewed By:
     #
     # @params [String] project_name (mandatory) - Project name
-    # @params [Integer] issue_type (String) - issue_type
-    # @params [Integer] priority (String) - priority
-    # @params [Integer] summary (String) - summary
-    # @params [Integer] description (mandatory) - description
-    # @params [Integer] labels (optional) - labels
+    # @params [String] issue_type (mandatory) - Issue type
+    # @params [String] priority (mandatory) - Priority
+    # @params [String] summary (mandatory) - Summary
+    # @params [String] description (mandatory) - Description
+    # @params [Array] labels (optional) - Labels
     #
     # @return [Jira::CreateIssue]
     #
