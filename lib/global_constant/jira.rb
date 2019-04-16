@@ -2,14 +2,6 @@ module GlobalConstant
 
   class Jira
 
-    # Returns jira config
-    #
-    # * Author: Anagha
-    # * Date: 15/04/2019
-    # * Reviewed By:
-    #
-    #
-
     def self.task_issue_type
       return 'Task'
     end
@@ -17,8 +9,6 @@ module GlobalConstant
     def self.bug_issue_type
       return 'Bug'
     end
-
-
 
     def self.low_priority_issue
       return "1"
@@ -53,6 +43,13 @@ module GlobalConstant
       config[:auth_type]
     end
 
+    # Returns jira config
+    #
+    # * Author: Anagha
+    # * Date: 15/04/2019
+    # * Reviewed By:
+    #
+    #
     def self.jira_config
       {
         :username => username,
@@ -62,6 +59,8 @@ module GlobalConstant
         :auth_type => auth_type
       }
     end
+
+    private
 
     def self.config
       GlobalConstant::Base.jira_config

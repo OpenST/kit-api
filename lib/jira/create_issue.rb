@@ -2,6 +2,8 @@ module Jira
 
   class CreateIssue
 
+    include Util::ResultHelper
+
     # Initialize
     #
     # * Author: Anagha
@@ -15,7 +17,7 @@ module Jira
     # @params [Integer] description (mandatory) - description
     # @params [Integer] labels (optional) - labels
     #
-    # @return [ManagerManagement::Team::Get]
+    # @return [Jira::CreateIssue]
     #
     def initialize(params)
 
@@ -29,14 +31,53 @@ module Jira
     end
 
 
+    # Perform
+    #
+    # * Author: Anagha
+    # * Date: 15/04/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
     def perform
+
+      r = validate_and_sanitize
+      return r unless r.success?
+
+      r = create_task
+      return r unless r.success?
+
+      success_with_data({})
+
+    end
+
+    # Validate
+    #
+    # * Author: Anagha
+    # * Date: 15/04/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def validate_and_sanitize
+      success
+    end
+
+    # Create task in jira
+    #
+    # * Author: Anagha
+    # * Date: 15/04/2018
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def create_task
 
       jira_config = GlobalConstant::Jira.jira_config
 
       client = JIRA::Client.new(jira_config)
 
       issue = client.Issue.build
-      Rails.logger.info("======== Jira_config ======== #{jira_config}")
 
       custom_params = {
         "fields" => {
@@ -50,9 +91,16 @@ module Jira
         }
       }
 
-      Rails.logger.info("======== Custom params ======== #{custom_params}")
-      issue.save(custom_params)
+      issue_response = issue.save(custom_params)
 
+      return validation_error(
+        'l_j_ci_1',
+        'unauthorized_access_response',
+        [],
+        GlobalConstant::ErrorAction.default
+      ) unless issue_response
+
+      success
     end
 
   end
