@@ -26,7 +26,7 @@ module Jira
       @priority = params[:priority]
       @summary = params[:summary]
       @description = params[:description]
-      @labels = params[:labels]
+      @labels = params[:labels] || []
 
     end
 
@@ -60,6 +60,17 @@ module Jira
     # @return [Result::Base]
     #
     def validate_and_sanitize
+      validation_errors = []
+
+      validation_errors.push('invalid_labels') unless Util::CommonValidator.is_array?(@labels)
+
+      return validation_error(
+        'l_j_ci_1',
+        'something_went_wrong',
+        validation_errors,
+        GlobalConstant::ErrorAction.default
+      ) if validation_errors.present?
+
       success
     end
 
@@ -93,10 +104,9 @@ module Jira
 
       issue_response = issue.save(custom_params)
 
-      return validation_error(
+      return error_with_data(
         'l_j_ci_1',
         'error_in_issue_creation',
-        [],
         GlobalConstant::ErrorAction.default
       ) unless issue_response
 

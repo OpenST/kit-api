@@ -18,6 +18,19 @@ module Util
       return is_numeric?(object) && Float(object) == Integer(object) rescue false
     end
 
+    # Check if input is an array
+    #
+    # * Author: Anagha
+    # * Date: 16/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_array?(object)
+      return object.is_a?(Array)
+    end
+
+    
     # Check for numeric-ness of an input
     #
     # * Author: Puneet
