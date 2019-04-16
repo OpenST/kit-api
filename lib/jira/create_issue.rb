@@ -95,7 +95,7 @@ module Jira
 
       return validation_error(
         'l_j_ci_1',
-        'unauthorized_access_response',
+        'error_in_issue_creation',
         [],
         GlobalConstant::ErrorAction.default
       ) unless issue_response
