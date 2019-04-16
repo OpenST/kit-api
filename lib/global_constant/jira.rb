@@ -2,6 +2,7 @@ module GlobalConstant
 
   class Jira
 
+    ### Issue types start ###
     def self.task_issue_type
       return 'Task'
     end
@@ -9,7 +10,9 @@ module GlobalConstant
     def self.bug_issue_type
       return 'Bug'
     end
+    ### Issue types end ###
 
+    ### Issue priorities start ###
     def self.low_priority_issue
       return "1"
     end
@@ -21,7 +24,7 @@ module GlobalConstant
     def self.high_priority_issue
       return "2"
     end
-
+    ### Issue priorities end ###
 
     def self.username
       config[:username]

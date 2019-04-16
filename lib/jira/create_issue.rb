@@ -105,7 +105,7 @@ module Jira
       issue_response = issue.save(custom_params)
 
       return error_with_data(
-        'l_j_ci_1',
+        'l_j_ci_2',
         'error_in_issue_creation',
         GlobalConstant::ErrorAction.default
       ) unless issue_response
