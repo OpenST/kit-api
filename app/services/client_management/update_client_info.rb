@@ -43,7 +43,7 @@ module ClientManagement
         r = update_client_info
         return r unless r.success?
 
-        r = enqueue_form_integration_job
+        r = enqueue_ticketing_job
         return r unless r.success?
 
         success_with_data({}, fetch_go_to)
@@ -117,7 +117,7 @@ module ClientManagement
     # * Reviewed By:
     #
     # @return [Hash]
-
+    # 
     def get_platform_registration
       {
         company_name: @company_name,
@@ -129,9 +129,21 @@ module ClientManagement
       }
     end
 
-
-    def enqueue_form_integration_job
-
+    # Enqueue job to sidekiq.
+    #
+    # * Author: Anagha
+    # * Date: 16/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    # 
+    def enqueue_ticketing_job
+      
+      # Skip creating jira ticket and deal in pipe-drive for development env.
+      if GlobalConstant::Base.environment_name == 'development'
+        success
+      end
+      
       BackgroundJob.enqueue(
         TicketingJob,
         get_platform_registration

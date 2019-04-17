@@ -22,7 +22,7 @@ namespace :one_timers do
 
     if custom_field_for_mobile_app_resp.success?
       if custom_field_for_mobile_app_resp[:data]
-        puts("Custom field name: #{custom_field_for_enterprise_resp[:data][:name]} => Value of \"key\" to be added in ENV vars: #{custom_field_for_enterprise_resp[:data][:key]}")
+        puts("Custom field name: #{custom_field_for_mobile_app_resp[:data][:name]} => Value of \"key\" to be added in ENV vars: #{custom_field_for_mobile_app_resp[:data][:key]}")
       end
     end
   

@@ -12,10 +12,13 @@ class TicketingJob < ApplicationJob
 
     init_params(params)
 
-    create_issue_in_jira
+    r = create_issue_in_jira
+    return r unless r.success?
 
-    create_deal_in_pipedrive
+    r = create_deal_in_pipedrive
+    return r unless r.success?
 
+    success
   end
 
   # Init params
@@ -46,7 +49,7 @@ class TicketingJob < ApplicationJob
   #
   def create_issue_in_jira
 
-    if @one_m_users_flag
+    if @one_m_users_flag.to_i == 1
 
       format_company_info_fields
 
@@ -70,25 +73,31 @@ class TicketingJob < ApplicationJob
 
   end
 
+  # Create deal in pipedrive
+  #
+  # * Author: Dhananjay
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
   def create_deal_in_pipedrive
 
     create_organization_resp = Ticketing::PipeDrive::Organization.new.create(@company_name)
-    @failed_logs[:error_in_pipedrive_org_creation] = r.to_hash unless r.success?
+    @failed_logs[:error_in_pipedrive_org_creation] = create_organization_resp.to_hash unless create_organization_resp.success?
 
     org_id = create_organization_resp[:data][:org_id]
 
     create_person_resp = Ticketing::PipeDrive::Person.new.create(@first_name, @last_name, @email_address, org_id)
-    @failed_logs[:error_in_pipedrive_person_creation] = r.to_hash unless r.success?
+    @failed_logs[:error_in_pipedrive_person_creation] = create_person_resp.to_hash unless create_person_resp.success?
 
     person_id = create_person_resp[:data][:person_id]
 
     format_company_info_fields
 
     create_deal_resp = Ticketing::PipeDrive::Deal.new.create(@company_name, person_id, org_id, @one_m_users_flag_str, @mobile_app_flag_str)
-    @failed_logs[:error_in_pipedrive_deal_creation] = r.to_hash unless r.success?
-
+    @failed_logs[:error_in_pipedrive_deal_creation] = create_deal_resp.to_hash unless create_deal_resp.success?
     deal_id = create_deal_resp[:data][:deal_id]
 
+    success
   end
 
   # Send notification mail
@@ -146,8 +155,8 @@ class TicketingJob < ApplicationJob
       first_name: @first_name,
       last_name: @last_name,
       email_address: @email_address,
-      mobile_app_flag: @mobile_app_flag,
-      one_m_users_flag: @one_m_users_flag
+      mobile_app_flag_str: @mobile_app_flag_str,
+      one_m_users_flag_str: @one_m_users_flag_str
     }
   end
 
@@ -172,12 +181,12 @@ class TicketingJob < ApplicationJob
   # @returns [String]
   #
   def get_description_template
-    "Company name: %{company_name}
-     Mobile app: %{mobile_app_flag}
-     Users: %{one_m_users_flag}
-     First name: %{first_name}
-     Last name : %{last_name}
-     Email Address: %{email_address}"
+    "Enterprise or Business? : %{one_m_users_flag_str}
+     Company name: %{company_name}
+     Does the client have an iOS or Android app? : %{mobile_app_flag_str}
+     Super admin first name: %{first_name}
+     Super admin last name: %{last_name}
+     Email Address: [%{email_address}|mailto:%{email_address}]"
   end
 
   # format company info fields
@@ -189,8 +198,8 @@ class TicketingJob < ApplicationJob
   # @Sets @one_m_users_flag_str, @mobile_app_flag_str
   #
   def format_company_info_fields
-    @one_m_users_flag_str = @one_m_users_flag ? 'Enterprise' : 'Business'
-    @mobile_app_flag_str = @mobile_app_flag ? 'YES' : 'NO'
+    @one_m_users_flag_str = @one_m_users_flag.to_i == 1 ? 'Enterprise' : 'Business'
+    @mobile_app_flag_str = @mobile_app_flag.to_i == 1 ? 'YES' : 'NO'
   end
 
 end

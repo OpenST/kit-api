@@ -41,8 +41,8 @@ module Ticketing
         validation_errors.push('invalid_person_id') unless Util::CommonValidator.is_integer?(person_id)
         validation_errors.push('invalid_org_id') unless Util::CommonValidator.is_integer?(org_id)
         validation_errors.push('invalid_one_m_users_flag_str') unless Util::CommonValidator.is_string?(one_m_users_flag_str)
-        validation_errors.push('invalid_mobile_app_flag_str') unless is_string?(mobile_app_flag_str)
-  
+        validation_errors.push('invalid_mobile_app_flag_str') unless Util::CommonValidator.is_string?(mobile_app_flag_str)
+
         return validation_error(
           'l_t_pd_d_1',
           'something_went_wrong',
@@ -52,7 +52,7 @@ module Ticketing
         
         enterprise_custom_field_key = GlobalConstant::PipeDrive.pipedrive_deal_enterprise_custom_field_key
         mobile_app_custom_field_key = GlobalConstant::PipeDrive.pipedrive_deal_mobile_app_custom_field_key
-  
+
         url_path = create_request_path(@deals_endpoint)
         custom_params = {
           title: deal_title,
