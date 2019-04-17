@@ -25,6 +25,10 @@ module GlobalConstant
         43200
       end
 
+      def has_ost_managed_owner
+        'has_ost_managed_owner'
+      end
+
     end
 
   end

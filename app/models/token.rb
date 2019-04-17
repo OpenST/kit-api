@@ -7,6 +7,21 @@ class Token < DbConnection::KitSaasSubenv
     GlobalConstant::ClientToken.deployment_failed => 4
   }
 
+  def self.properties_config
+    @t_props ||= {
+      GlobalConstant::ClientToken.has_ost_managed_owner => 1
+    }
+  end
+
+  def self.bit_wise_columns_config
+    @b_w_c_c ||= {
+      properties: properties_config,
+    }
+  end
+
+  # Note : always include this after declaring bit_wise_columns_config method
+  include BitWiseConcern
+
 # Format data to a format which goes into cache
 #
 # * Author: Puneet
@@ -23,7 +38,8 @@ class Token < DbConnection::KitSaasSubenv
         symbol: symbol,
         conversion_factor: conversion_factor.present? ? conversion_factor.to_s : conversion_factor, # should be string as it goes to FE
         decimal: decimal,
-        status: status
+        status: status,
+        properties: properties.present? ? Token.get_bits_set_for_properties(properties) : [],
     }
   end
 
