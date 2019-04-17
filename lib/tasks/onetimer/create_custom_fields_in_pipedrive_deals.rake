@@ -10,7 +10,7 @@ namespace :one_timers do
   
   task :create_custom_fields_in_pipedrive_deals => :environment do
   
-    custom_field_for_enterprise_resp = FormIntegration::PipeDrive.new.add_custom_field_in_deals('Enterprise or Business?', ['Enterprise', 'Business'])
+    custom_field_for_enterprise_resp = Ticketing::PipeDrive::Deal.new.add_custom_field('Enterprise or Business?', ['Enterprise', 'Business'])
     
     if custom_field_for_enterprise_resp.success?
       
@@ -20,7 +20,7 @@ namespace :one_timers do
       end
     end
 
-    custom_field_for_mobile_app_resp = FormIntegration::PipeDrive.new.add_custom_field_in_deals('Does the client have an iOS or Android app?', ['YES', 'NO'])
+    custom_field_for_mobile_app_resp = Ticketing::PipeDrive::Deal.new.add_custom_field('Does the client have an iOS or Android app?', ['YES', 'NO'])
 
     if custom_field_for_mobile_app_resp.success?
       if custom_field_for_mobile_app_resp['data']

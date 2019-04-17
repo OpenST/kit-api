@@ -73,19 +73,19 @@ class FormIntegrationJob < ApplicationJob
 
   def create_deal_in_pipedrive
 
-    create_organization_resp = FormIntegration::PipeDrive.new.create_organization(@company_name)
+    create_organization_resp = Ticketing::PipeDrive::Organization.new.create(@company_name)
     @failed_logs[:error_in_pipedrive_org_creation] = r.to_hash unless r.success?
 
     org_id = create_organization_resp[:data]['data'].id
 
-    add_person_resp = FormIntegration::PipeDrive.new.add_person(@first_name, @last_name, @email_address, org_id)
+    add_person_resp = Ticketing::PipeDrive::Person.new.create(@first_name, @last_name, @email_address, org_id)
     @failed_logs[:error_in_pipedrive_org_creation] = r.to_hash unless r.success?
 
     person_id = add_person_resp[:data]['data'].id
 
     format_company_info_fields
 
-    FormIntegration::PipeDrive.new.create_deal(@company_name, person_id, org_id, @one_m_users_flag_str, @mobile_app_flag_str)
+    Ticketing::PipeDrive::Deal.new.create(@company_name, person_id, org_id, @one_m_users_flag_str, @mobile_app_flag_str)
 
   end
 
