@@ -13,19 +13,16 @@ namespace :one_timers do
     custom_field_for_enterprise_resp = Ticketing::PipeDrive::Deal.new.add_custom_field('Enterprise or Business?', ['Enterprise', 'Business'])
     
     if custom_field_for_enterprise_resp.success?
-      
       if custom_field_for_enterprise_resp[:data]
-        resp = custom_field_for_enterprise_resp[:data]['data']
-        puts("Custom field name: #{resp['name']} => Value of \"key\" to be added in ENV vars: #{resp['key']}")
+        puts("Custom field name: #{custom_field_for_enterprise_resp[:data][:name]} => Value of \"key\" to be added in ENV vars: #{custom_field_for_enterprise_resp[:data][:key]}")
       end
     end
 
     custom_field_for_mobile_app_resp = Ticketing::PipeDrive::Deal.new.add_custom_field('Does the client have an iOS or Android app?', ['YES', 'NO'])
 
     if custom_field_for_mobile_app_resp.success?
-      if custom_field_for_mobile_app_resp['data']
-        resp = custom_field_for_mobile_app_resp[:data]['data']
-        puts("Custom field name: #{resp['name']} => Value of \"key\" to be added in ENV vars: #{resp['key']}")
+      if custom_field_for_mobile_app_resp[:data]
+        puts("Custom field name: #{custom_field_for_enterprise_resp[:data][:name]} => Value of \"key\" to be added in ENV vars: #{custom_field_for_enterprise_resp[:data][:key]}")
       end
     end
   

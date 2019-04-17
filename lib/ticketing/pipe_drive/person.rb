@@ -14,8 +14,7 @@ module Ticketing
       #
       def initialize
         super
-
-        # TODO - Dhananjay - add api params validations
+        
         @persons_endpoint = "/#{@api_version}/persons"
       end
 
@@ -33,6 +32,20 @@ module Ticketing
       # @return [Result::Base]
       #
       def create(first_name, last_name, email, org_id)
+        validation_errors = []
+  
+        validation_errors.push('invalid_first_name') unless Util::CommonValidator.is_string?(first_name)
+        validation_errors.push('invalid_last_name') unless Util::CommonValidator.is_string?(last_name)
+        validation_errors.push('invalid_email') unless Util::CommonValidator.is_string?(email)
+        validation_errors.push('invalid_org_id') unless Util::CommonValidator.is_integer?(org_id)
+  
+        return validation_error(
+          'l_t_pd_p_1',
+          'something_went_wrong',
+          validation_errors,
+          GlobalConstant::ErrorAction.default
+        ) if validation_errors.present?
+        
         url_path = create_request_path(@persons_endpoint)
         custom_params = {
           name: "#{first_name} #{last_name}",
@@ -41,7 +54,11 @@ module Ticketing
         }
         r = send_request_of_type('post', url_path, custom_params)
         return r unless r.success?
-        success_with_data(r.data)
+        
+        success_with_data(
+          {
+            person_id: r[:data]['id'],
+          })
       end
     
     end

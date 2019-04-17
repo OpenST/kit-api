@@ -64,8 +64,7 @@ module Ticketing
             when 'post'
               response = HTTP.timeout(@timeouts).post(request_path, json: params, ssl_context: ssl_context)
             else
-              # TODO - Dhananjay - change error codes
-              return error_with_data('fi_pd_1',
+              return error_with_data('l_t_pd_b_1',
                                      "Request type not implemented: #{request_type}",
                                      'Something Went Wrong.',
                                      GlobalConstant::ErrorAction.default)
@@ -76,23 +75,23 @@ module Ticketing
           case response.status
             when 200, 201
               if parsed_response['success']
-                return success_with_data(parsed_response)
+                return success_with_data(parsed_response['data'])
               else
-                return error_with_data('fi_pd_2',
+                return error_with_data('l_t_pd_b_2',
                                        'Something Went Wrong.',
                                        GlobalConstant::ErrorAction.default,
                                        {error: parsed_response['error']}
                 )
               end
             else
-              return error_with_data('fi_pd_3',
+              return error_with_data('l_t_pd_b_3',
                                      'Something Went Wrong.',
                                      GlobalConstant::ErrorAction.default ,
                                      {error: parsed_response['error']}
               )
           end
         rescue => e
-          return error_with_data('fi_pd_4',
+          return error_with_data('l_t_pd_b_4',
                                  'Something Went Wrong.',
                                  GlobalConstant::ErrorAction.default,
                                  {error: "Exception in API call: #{e.message}"}

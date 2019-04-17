@@ -15,7 +15,6 @@ module Ticketing
       def initialize
         super
 
-        # TODO - Dhananjay - add api params validations
         @deals_endpoint = "/#{@api_version}/deals/"
         @deal_fields_endpoint = "/#{@api_version}/dealFields"
       end
@@ -29,12 +28,28 @@ module Ticketing
       # @params [String] deal_title (mandatory) - deal title
       # @params [Integer] person_id (mandatory) - person id
       # @params [Integer] org_id (mandatory) - organization id
-      # @params [String] is_enterprise (optional) - has 1M users or not
-      # @params [String] has_mobile_app (optional) - has mobile app or not
+      # @params [String] one_m_users_flag_str (mandatory) - has 1M users or not
+      # @params [String] mobile_app_flag_str (mobile_app_flag_str) - has mobile app or not
       #
       # @return [Result::Base]
       #
-      def create(deal_title, person_id, org_id, is_enterprise, has_mobile_app)
+      def create(deal_title, person_id, org_id, one_m_users_flag_str, mobile_app_flag_str)
+  
+        validation_errors = []
+  
+        validation_errors.push('invalid_deal_title') unless Util::CommonValidator.is_string?(deal_title)
+        validation_errors.push('invalid_person_id') unless Util::CommonValidator.is_integer?(person_id)
+        validation_errors.push('invalid_org_id') unless Util::CommonValidator.is_integer?(org_id)
+        validation_errors.push('invalid_one_m_users_flag_str') unless Util::CommonValidator.is_string?(one_m_users_flag_str)
+        validation_errors.push('invalid_mobile_app_flag_str') unless is_string?(mobile_app_flag_str)
+  
+        return validation_error(
+          'l_t_pd_d_1',
+          'something_went_wrong',
+          validation_errors,
+          GlobalConstant::ErrorAction.default
+        ) if validation_errors.present?
+        
         enterprise_custom_field_key = GlobalConstant::PipeDrive.pipedrive_deal_enterprise_custom_field_key
         mobile_app_custom_field_key = GlobalConstant::PipeDrive.pipedrive_deal_mobile_app_custom_field_key
   
@@ -44,13 +59,16 @@ module Ticketing
           person_id: person_id,
           org_id: org_id
         }
-        custom_params[enterprise_custom_field_key.to_sym] = is_enterprise
-        custom_params[mobile_app_custom_field_key.to_sym] = has_mobile_app
+        custom_params[enterprise_custom_field_key.to_sym] = one_m_users_flag_str
+        custom_params[mobile_app_custom_field_key.to_sym] = mobile_app_flag_str
   
         r = send_request_of_type('post', url_path, custom_params)
         return r unless r.success?
-        
-        success_with_data(r.data)
+
+        success_with_data(
+          {
+            deal_id: r[:data]['id']
+          })
       end
 
       # Add a custom field in deals
@@ -65,6 +83,19 @@ module Ticketing
       # @return [Result::Base]
       #
       def add_custom_field(field_name, options_array)
+  
+        validation_errors = []
+  
+        validation_errors.push('invalid_field_name') unless Util::CommonValidator.is_string?(field_name)
+        validation_errors.push('invalid_options_array') unless Util::CommonValidator.is_array?(options_array)
+  
+        return validation_error(
+          'l_t_pd_d_2',
+          'something_went_wrong',
+          validation_errors,
+          GlobalConstant::ErrorAction.default
+        ) if validation_errors.present?
+        
         url_path = create_request_path(@deal_fields_endpoint)
         
         custom_params = {
@@ -74,7 +105,12 @@ module Ticketing
         }
         r = send_request_of_type('post', url_path, custom_params)
         return r unless r.success?
-        success_with_data(r.data)
+        
+        success_with_data(
+          {
+            name: r[:data]['name'],
+            key: r[:data]['key']
+          })
       end
       
     end

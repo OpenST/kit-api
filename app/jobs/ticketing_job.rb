@@ -73,16 +73,19 @@ class TicketingJob < ApplicationJob
     create_organization_resp = Ticketing::PipeDrive::Organization.new.create(@company_name)
     @failed_logs[:error_in_pipedrive_org_creation] = r.to_hash unless r.success?
 
-    org_id = create_organization_resp[:data]['data'].id
+    org_id = create_organization_resp[:data][:org_id]
 
-    add_person_resp = Ticketing::PipeDrive::Person.new.create(@first_name, @last_name, @email_address, org_id)
-    @failed_logs[:error_in_pipedrive_org_creation] = r.to_hash unless r.success?
+    create_person_resp = Ticketing::PipeDrive::Person.new.create(@first_name, @last_name, @email_address, org_id)
+    @failed_logs[:error_in_pipedrive_person_creation] = r.to_hash unless r.success?
 
-    person_id = add_person_resp[:data]['data'].id
+    person_id = create_person_resp[:data][:person_id]
 
     format_company_info_fields
 
-    Ticketing::PipeDrive::Deal.new.create(@company_name, person_id, org_id, @one_m_users_flag_str, @mobile_app_flag_str)
+    create_deal_resp = Ticketing::PipeDrive::Deal.new.create(@company_name, person_id, org_id, @one_m_users_flag_str, @mobile_app_flag_str)
+    @failed_logs[:error_in_pipedrive_deal_creation] = r.to_hash unless r.success?
+
+    deal_id = create_deal_resp[:data][:deal_id]
 
   end
 
