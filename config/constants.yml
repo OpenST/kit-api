@@ -73,3 +73,8 @@ constants:
     context_path: <%= ENV['KA_JIRA_CONTEXT_PATH'] %>
     auth_type: <%= ENV['KA_JIRA_AUTH_TYPE'] %>
 
+  pipedrive:
+    api_token: <%= ENV['KA_OST_PD_API_TOKEN'] %>
+    user_id: <%= ENV['KA_OST_PD_USER_ID'] %>
+    pipedrive_deal_enterprise_custom_field: <%= ENV['KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD'] %>
+    pipedrive_deal_mobile_app_custom_field: <%= ENV['KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD'] %>

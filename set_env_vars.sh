@@ -92,6 +92,12 @@ export KA_CAMPAIGN_CLIENT_SECRET="818506e0d00c33f84099744461b41ac5"
 export KA_CAMPAIGN_BASE_URL="https://pepocampaigns.com/"
 export KA_CAMPAIGN_MASTER_LIST="5346"
 
+# pipedrive Details
+export KA_OST_PD_API_TOKEN="0c5740a0fa913e7e06683d12934fc8e71e3706ba"
+export KA_OST_PD_USER_ID="8857041"
+export KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD='61743a9d7deb78a4bcdf95d27cc4805781a811ef'
+export KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD='db3f20b11f627b6f9ef094ecd6f7c275ed957137'
+
 # Company Restful API (SAAS) details
 export KA_SAAS_API_ENDPOINT='http://developmentost.com:7001'
 export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'

@@ -95,6 +95,10 @@ module GlobalConstant
       @usage_report_recipients ||= fetch_config.fetch('usage_report_recipients', {}).with_indifferent_access
     end
 
+    def self.pipedrive
+      @pipedrive ||= fetch_config.fetch('pipedrive', {}).with_indifferent_access
+    end
+
     private
 
     def self.fetch_config
