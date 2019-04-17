@@ -170,15 +170,16 @@ module FormIntegration
     # * Reviewed By:
     #
     # @params [String] field_name (mandatory) - field name for custom attribute field
+    # @params [String] options_array (mandatory) - allowed values for custom field
     #
     # @return [Result::Base] returns an object of Result::Base class
     #
-    def add_custom_field_in_deals(field_name)
+    def add_custom_field_in_deals(field_name, options_array)
       url_path = create_request_path(@deal_fields_endpoint)
       custom_params = {
         name: field_name,
         field_type: "enum",
-        options: [%w"YES", %w"NO"]
+        options: options_array
       }
       r = send_request_of_type('post', url_path, custom_params)
       return r unless r.success?
