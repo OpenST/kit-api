@@ -109,8 +109,9 @@ export KA_CW_DOMAIN='developmentost.com'
 export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
 
 # Jira Details
-export KA_JIRA_USERNAME=''
-export KA_JIRA_PASSWWORD=''
+export KA_JIRA_USERNAME='anagha@ost.com'
+export KA_JIRA_PASSWWORD='Atlassianana@1797'
 export KA_JIRA_SITE='https://ostdotcom.atlassian.net:443/'
 export KA_JIRA_CONTEXT_PATH=""
 export KA_JIRA_AUTH_TYPE=':basic'
+export KA_JIRA_PROJECT_NAME='TP'

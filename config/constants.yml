@@ -72,6 +72,7 @@ constants:
     site: <%= ENV['KA_JIRA_SITE'] %>
     context_path: <%= ENV['KA_JIRA_CONTEXT_PATH'] %>
     auth_type: <%= ENV['KA_JIRA_AUTH_TYPE'] %>
+    project_name: <%= ENV['KA_JIRA_PROJECT_NAME'] %>
 
   pipedrive:
     api_token: <%= ENV['KA_OST_PD_API_TOKEN'] %>

@@ -60,6 +60,10 @@ module GlobalConstant
       config[:auth_type]
     end
 
+    def self.project_name
+      config[:project_name]
+    end
+
     # Returns jira config
     #
     # * Author: Anagha

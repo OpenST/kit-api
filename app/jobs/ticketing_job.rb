@@ -1,4 +1,4 @@
-class FormIntegrationJob < ApplicationJob
+class TicketingJob < ApplicationJob
 
   queue_as GlobalConstant::Sidekiq.queue_name :default_medium_priority_queue
 
@@ -8,12 +8,11 @@ class FormIntegrationJob < ApplicationJob
   # * Date: 16/04/2019
   # * Reviewed By:
   #
-  #
   def perform(params)
 
     init_params(params)
 
-    add_ticket_to_jira
+    create_issue_in_jira
 
     create_deal_in_pipedrive
 
@@ -28,7 +27,7 @@ class FormIntegrationJob < ApplicationJob
   # Sets @company_name, @first_name, @last_name, @email_address, @mobile_app_flag, @one_m_users_flag
   #
   def init_params(params)
-    puts "======init_params =#{params.inspect}"
+
     @company_name = params[:company_name]
     @first_name = params[:first_name]
     @last_name = params[:last_name]
@@ -45,21 +44,19 @@ class FormIntegrationJob < ApplicationJob
   # * Date: 17/04/2019
   # * Reviewed By:
   #
-  def add_ticket_to_jira
-
-    puts "======In add ticket to jira ="
+  def create_issue_in_jira
 
     if @one_m_users_flag
 
       issue_params = {
-        project_name:'TP', #get_project_name
+        project_name:GlobalConstant::Jira.project_name,
         issue_type: GlobalConstant::Jira.task_issue_type,
         priority:GlobalConstant::Jira.medium_priority_issue,
         summary: get_issue_summary,
         description: get_issue_description
       }
 
-      r = Jira::CreateJiraIssue.new(issue_params).perform
+      r = Ticketing::Jira::Issue.new(issue_params).perform
 
       @failed_logs[:error_in_jira_issue_creation] = r.to_hash unless r.success?
 
