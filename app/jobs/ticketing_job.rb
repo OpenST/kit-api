@@ -48,6 +48,8 @@ class TicketingJob < ApplicationJob
 
     if @one_m_users_flag
 
+      format_company_info_fields
+
       issue_params = {
         project_name:GlobalConstant::Jira.project_name,
         issue_type: GlobalConstant::Jira.task_issue_type,

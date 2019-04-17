@@ -119,24 +119,21 @@ module ClientManagement
     # @return [Hash]
 
     def get_platform_registration
-      platform_registration = {
+      {
         company_name: @company_name,
         first_name: @manager[:first_name],
         last_name: @manager[:last_name],
         email_address: @manager[:email],
+        mobile_app_flag: @mobile_app_flag,
+        one_m_users_flag: @one_m_users_flag
       }
-
-      platform_registration[:mobile_app_flag] = @mobile_app_flag ? 'YES' : 'NO'
-      platform_registration[:one_m_users_flag] = @one_m_users_flag ? 'More than 1 Million users' : 'Less than 1 Million users'
-
-      return platform_registration
     end
 
 
     def enqueue_form_integration_job
 
       BackgroundJob.enqueue(
-        JiraTicketJob,
+        TicketingJob,
         get_platform_registration
       )
 
