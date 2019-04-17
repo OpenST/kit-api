@@ -1,0 +1,194 @@
+class FormIntegrationJob < ApplicationJob
+
+  queue_as GlobalConstant::Sidekiq.queue_name :default_medium_priority_queue
+
+  # Perform
+  #
+  # * Author: Anagha
+  # * Date: 16/04/2019
+  # * Reviewed By:
+  #
+  #
+  def perform(params)
+
+    init_params(params)
+
+    add_ticket_to_jira
+
+    create_deal_in_pipedrive
+
+  end
+
+  # Init params
+  #
+  # * Author: Anagha
+  # * Date: 16/04/2019
+  # * Reviewed By:
+  #
+  # Sets @company_name, @first_name, @last_name, @email_address, @mobile_app_flag, @one_m_users_flag
+  #
+  def init_params(params)
+    puts "======init_params =#{params.inspect}"
+    @company_name = params[:company_name]
+    @first_name = params[:first_name]
+    @last_name = params[:last_name]
+    @email_address = params[:email_address]
+    @mobile_app_flag = params[:mobile_app_flag]
+    @one_m_users_flag = params[:one_m_users_flag]
+
+    @failed_logs = {}
+  end
+
+  # Create ticket in jira for enterprise company/organization
+  #
+  # * Author: Anagha
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
+  def add_ticket_to_jira
+
+    puts "======In add ticket to jira ="
+
+    if @one_m_users_flag
+
+      issue_params = {
+        project_name:'TP', #get_project_name
+        issue_type: GlobalConstant::Jira.task_issue_type,
+        priority:GlobalConstant::Jira.medium_priority_issue,
+        summary: get_issue_summary,
+        description: get_issue_description
+      }
+
+      r = Jira::CreateJiraIssue.new(issue_params).perform
+
+      @failed_logs[:error_in_jira_issue_creation] = r.to_hash unless r.success?
+
+      success
+
+    end
+
+    success
+
+  end
+
+  def create_deal_in_pipedrive
+
+    create_organization_resp = FormIntegration::PipeDrive.new.create_organization(@company_name)
+    @failed_logs[:error_in_pipedrive_org_creation] = r.to_hash unless r.success?
+
+    org_id = create_organization_resp[:data]['data'].id
+
+    add_person_resp = FormIntegration::PipeDrive.new.add_person(@first_name, @last_name, @email_address, org_id)
+    @failed_logs[:error_in_pipedrive_org_creation] = r.to_hash unless r.success?
+
+    person_id = add_person_resp[:data]['data'].id
+
+    format_company_info_fields
+
+    FormIntegration::PipeDrive.new.create_deal(@company_name, person_id, org_id, @one_m_users_flag_str, @mobile_app_flag_str)
+
+  end
+
+  # Send notification mail
+  #
+  # * Author: Anagha
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
+  def notify_devs
+    ApplicationMailer.notify(
+      data: @failed_logs,
+      body: {email_address: @email_address,
+             company_name: @company_name},
+      subject: 'Exception in FormIntegrationJob'
+    ).deliver if @failed_logs.present?
+  end
+
+  private
+
+  # Get summary for jira ticket
+  #
+  # * Author: Anagha
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
+  # @returns [String]
+  #
+  def get_issue_summary
+    get_summary_template % get_platform_registration
+  end
+
+  # Get summary template for jira ticket
+  #
+  # * Author: Anagha
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
+  # @returns [String]
+  #
+  def get_summary_template
+    "Enterprise: %{company_name}"
+  end
+
+  # Get platform registration fields
+  #
+  # * Author: Anagha
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
+  # @returns [Hash]
+  #
+  def get_platform_registration
+    {
+      company_name: @company_name,
+      first_name: @first_name,
+      last_name: @last_name,
+      email_address: @email_address,
+      mobile_app_flag: @mobile_app_flag,
+      one_m_users_flag: @one_m_users_flag
+    }
+  end
+
+  # Get description for jira ticket
+  #
+  # * Author: Anagha
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
+  # @returns [String]
+  #
+  def get_issue_description
+    get_description_template % get_platform_registration
+  end
+
+  # Get description template for jira ticket
+  #
+  # * Author: Anagha
+  # * Date: 17/04/2019
+  # * Reviewed By:
+  #
+  # @returns [String]
+  #
+  def get_description_template
+    "Company name: %{company_name}
+     Mobile app: %{mobile_app_flag}
+     Users: %{one_m_users_flag}
+     First name: %{first_name}
+     Last name : %{last_name}
+     Email Address: %{email_address}"
+  end
+
+  # format company info fields
+  #
+  # * Author: Dhananjay
+  # * Date: 17/04/2019
+  # * Reviewed By: Anagha
+  #
+  # @Sets @one_m_users_flag_str, @mobile_app_flag_str
+  #
+  def format_company_info_fields
+    @one_m_users_flag_str = @one_m_users_flag ? 'Enterprise' : 'Business'
+    @mobile_app_flag_str = @mobile_app_flag ? 'YES' : 'NO'
+  end
+
+end

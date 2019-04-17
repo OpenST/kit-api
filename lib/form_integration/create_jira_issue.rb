@@ -1,13 +1,13 @@
-module Jira
+module FormIntegration
 
-  class CreateIssue
+  class CreateJiraIssue
 
     include Util::ResultHelper
 
     # Initialize
     #
     # * Author: Anagha
-    # * Date: 15/04/2018
+    # * Date: 15/04/2019
     # * Reviewed By: Kedar
     #
     # @params [String] project_name (mandatory) - Project name
@@ -17,7 +17,8 @@ module Jira
     # @params [String] description (optional) - Description
     # @params [Array] labels (optional) - Labels
     # @params [String] assignee (optional) - Assignee
-    # @return [Jira::CreateIssue]
+    #
+    # @Sets @project_name, @issue_type, @priority, @summary, @description, @labels, @assignee
     #
     def initialize(params)
 
@@ -35,7 +36,7 @@ module Jira
     # Perform
     #
     # * Author: Anagha
-    # * Date: 15/04/2018
+    # * Date: 15/04/2019
     # * Reviewed By:
     #
     # @return [Result::Base]
@@ -55,7 +56,7 @@ module Jira
     # Validate
     #
     # * Author: Anagha
-    # * Date: 15/04/2018
+    # * Date: 15/04/2019
     # * Reviewed By: Kedar
     #
     # @return [Result::Base]
@@ -145,8 +146,13 @@ module Jira
         }
       }
 
+      puts " Custom params #{custom_params}"
+
       issue_response = issue.save(custom_params)
 
+      puts " Issue response params #{issue_response}"
+
+      puts" PP issue    #{pp issue}"
       return error_with_data(
         'l_j_ci_2',
         'error_in_issue_creation',

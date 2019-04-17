@@ -94,8 +94,8 @@ module FormIntegration
     # @params [String] deal_title (mandatory) - deal title
     # @params [Integer] person_id (mandatory) - person id
     # @params [Integer] org_id (mandatory) - organization id
-    # @params [Boolean] is_enterprise (optional) - has 1M users or not
-    # @params [Boolean] has_mobile_app (optional) - has mobile app or not
+    # @params [String] is_enterprise (optional) - has 1M users or not
+    # @params [String] has_mobile_app (optional) - has mobile app or not
     #
     # @return [Result::Base] returns an object of Result::Base class
     #
