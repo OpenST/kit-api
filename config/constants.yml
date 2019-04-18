@@ -81,3 +81,6 @@ constants:
   demo_app:
     ios_url: <%= ENV['KA_DEMO_IOS_APP_URL'] %>
     android_url: <%= ENV['KA_DEMO_ANDROID_APP_URL'] %>
+
+  company_other_product_urls:
+    view_root_url: <%= ENV['KA_VIEW_ROOT_URL'] %>

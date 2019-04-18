@@ -224,18 +224,6 @@ module TestEconomyManagement
       end
     end
 
-    # Get mappy api endpoint
-    #
-    # * Author: Puneet
-    # * Date: 10/04/2019
-    # * Reviewed By: Sunil
-    #
-    # @return [String]
-    #
-    def mappy_api_endpoint
-      @mappy_api_endpoint ||= "#{GlobalConstant::DemoMappyServer.api_endpoint}/#{@token_id}/#{url_id}/"
-    end
-
     # Generate QR Code file S3 Path
     #
     # * Author: Puneet

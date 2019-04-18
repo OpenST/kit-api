@@ -114,12 +114,15 @@ export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 # Company Web Details
 export KA_CW_DOMAIN='developmentost.com'
 
-# Usage report recipient's email ids
-export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
+# Company Other Product URL
+export KA_VIEW_ROOT_URL='http://view.developmentost.com:8080/'
 
 # Demo Mappy Server Details
-export KA_DEMO_MAPPY_SERVER_API_ENDPOINT='http://127.0.0.1:3000/demo/api'
+export KA_DEMO_MAPPY_SERVER_API_ENDPOINT='http://127.0.0.1:3000/demo'
 
 # Demo App URL's
 export KA_DEMO_IOS_APP_URL=''
 export KA_DEMO_ANDROID_APP_URL=''
+
+# Usage report recipient's email ids
+export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"

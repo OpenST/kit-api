@@ -157,11 +157,13 @@ module TestEconomyManagement
     def perform_qr_code_task
 
       qr_code_data = {
-          token_id: @token_id,
-          token_name: @token[:name],
-          token_symbol: @token[:symbol],
-          url_id: url_id,
-          mappy_api_endpoint: mappy_api_endpoint
+        token_id: @token_id,
+        token_name: @token[:name],
+        token_symbol: @token[:symbol],
+        url_id: url_id,
+        mappy_api_endpoint: "#{GlobalConstant::DemoMappyServer.api_endpoint}/",
+        saas_api_endpoint: GlobalConstant::SaasApi.api_endpoint_for_current_version,
+        view_api_endpoint: "#{GlobalConstant::CompanyOtherProductUrls.view_root_url}/#{GlobalConstant::Environment.url_prefix}/"
       }
 
       qr_code_obj = RQRCode::QRCode.new(qr_code_data.to_json)
@@ -287,7 +289,6 @@ module TestEconomyManagement
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {
             qr_code_url: qr_code_s3_url,
-            mappy_api_endpoint: mappy_api_endpoint,
             ios_app_download_link: GlobalConstant::DemoApp.ios_url,
             android_app_download_link: GlobalConstant::DemoApp.android_url
           }

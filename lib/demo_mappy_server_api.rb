@@ -32,7 +32,7 @@ class DemoMappyServerApi
 
     begin
 
-      request_path = "#{GlobalConstant::DemoMappyServer.api_endpoint}/#{path}"
+      request_path = "#{GlobalConstant::DemoMappyServer.api_endpoint}/api/#{path}"
 
       if GlobalConstant::Environment.is_development_env?
         # It overrides verification of SSL certificates

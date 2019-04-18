@@ -95,6 +95,10 @@ module GlobalConstant
       @demo_app ||= fetch_config.fetch('demo_app', {}).with_indifferent_access
     end
 
+    def self.company_other_product_urls
+      @company_other_product_urls ||= fetch_config.fetch('company_other_product_urls', {}).with_indifferent_access
+    end
+
     def self.grant_timeout
       86400 #24 hours
     end
