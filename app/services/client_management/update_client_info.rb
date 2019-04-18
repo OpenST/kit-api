@@ -141,7 +141,7 @@ module ClientManagement
       
       # Skip creating jira ticket and deal in pipe-drive for development env.
       if GlobalConstant::Base.environment_name == 'development'
-        success
+        return success
       end
       
       BackgroundJob.enqueue(
