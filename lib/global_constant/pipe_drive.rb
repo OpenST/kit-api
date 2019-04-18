@@ -13,6 +13,10 @@ module GlobalConstant
         config[:user_id]
       end
       
+      def ost_platform_stage_id
+        config[:stage_id]
+      end
+      
       def pipedrive_deal_enterprise_custom_field_key
         config[:pipedrive_deal_enterprise_custom_field]
       end

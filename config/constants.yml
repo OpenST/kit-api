@@ -77,5 +77,6 @@ constants:
   pipedrive:
     api_token: <%= ENV['KA_OST_PD_API_TOKEN'] %>
     user_id: <%= ENV['KA_OST_PD_USER_ID'] %>
+    stage_id: <%= ENV['KA_OST_PD_STAGE_ID'] %>
     pipedrive_deal_enterprise_custom_field: <%= ENV['KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD'] %>
     pipedrive_deal_mobile_app_custom_field: <%= ENV['KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD'] %>

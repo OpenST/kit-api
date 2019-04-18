@@ -57,7 +57,8 @@ module Ticketing
         custom_params = {
           title: deal_title,
           person_id: person_id,
-          org_id: org_id
+          org_id: org_id,
+          stage_id: GlobalConstant::PipeDrive.ost_platform_stage_id   # ID of the stage where this deal will be placed in a pipeline
         }
         custom_params[enterprise_custom_field_key.to_sym] = one_m_users_flag_str
         custom_params[mobile_app_custom_field_key.to_sym] = mobile_app_flag_str

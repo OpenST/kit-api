@@ -92,12 +92,6 @@ export KA_CAMPAIGN_CLIENT_SECRET="818506e0d00c33f84099744461b41ac5"
 export KA_CAMPAIGN_BASE_URL="https://pepocampaigns.com/"
 export KA_CAMPAIGN_MASTER_LIST="5346"
 
-# pipedrive Details
-export KA_OST_PD_API_TOKEN="0c5740a0fa913e7e06683d12934fc8e71e3706ba"
-export KA_OST_PD_USER_ID="8857041"
-export KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD=''
-export KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD=''
-
 # Company Restful API (SAAS) details
 export KA_SAAS_API_ENDPOINT='http://developmentost.com:7001'
 export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
@@ -111,7 +105,13 @@ export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
 # Jira Details
 export KA_JIRA_USERNAME='anagha@ost.com'
 export KA_JIRA_PASSWWORD='Atlassianana@1797'
-export KA_JIRA_SITE='https://ostdotcom.atlassian.net:443/'
+export KA_JIRA_PROJECT_NAME='TP'
 export KA_JIRA_CONTEXT_PATH=""
 export KA_JIRA_AUTH_TYPE=':basic'
-export KA_JIRA_PROJECT_NAME='TP'
+
+# Pipedrive Details
+export KA_OST_PD_API_TOKEN="0c5740a0fa913e7e06683d12934fc8e71e3706ba"
+export KA_OST_PD_USER_ID="8857041"
+export KA_OST_PD_STAGE_ID="1"
+export KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD=''
+export KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD=''

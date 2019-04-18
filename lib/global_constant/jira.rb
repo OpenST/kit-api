@@ -45,7 +45,7 @@ module GlobalConstant
     end
 
     def self.site
-      config[:site]
+      'https://ostdotcom.atlassian.net:443/'
     end
 
     def self.password
