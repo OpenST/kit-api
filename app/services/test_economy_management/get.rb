@@ -59,8 +59,8 @@ module TestEconomyManagement
     def prepare_error_response
 
       if @token.blank?
-        r = fetch_token
-        return r unless r.success?
+        # dont check response here, as even if token wasn't found we want to proceed
+        fetch_token
       end
 
       FetchGoToByEconomyState.new({
