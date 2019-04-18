@@ -57,6 +57,7 @@ class TicketingJob < ApplicationJob
         project_name:GlobalConstant::Jira.project_name,
         issue_type: GlobalConstant::Jira.task_issue_type,
         priority:GlobalConstant::Jira.medium_priority_issue,
+        assignee: GlobalConstant::Jira.assignee_name,
         summary: get_issue_summary,
         description: get_issue_description
       }

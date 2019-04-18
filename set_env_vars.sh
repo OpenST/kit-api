@@ -108,6 +108,7 @@ export KA_JIRA_PASSWWORD='Atlassianana@1797'
 export KA_JIRA_PROJECT_NAME='TP'
 export KA_JIRA_CONTEXT_PATH=""
 export KA_JIRA_AUTH_TYPE=':basic'
+export KA_JIRA_ASSIGNEE_NAME='anagha'
 
 # Pipedrive Details
 export KA_OST_PD_API_TOKEN="0c5740a0fa913e7e06683d12934fc8e71e3706ba"

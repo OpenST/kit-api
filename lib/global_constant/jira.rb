@@ -64,6 +64,10 @@ module GlobalConstant
       config[:project_name]
     end
 
+    def self.assignee_name
+      config[:assignee_name]
+    end
+
     # Returns jira config
     #
     # * Author: Anagha
