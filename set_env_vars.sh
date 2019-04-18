@@ -115,7 +115,7 @@ export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 export KA_CW_DOMAIN='developmentost.com'
 
 # Company Other Product URL
-export KA_VIEW_ROOT_URL='http://view.developmentost.com:8080/'
+export KA_VIEW_ROOT_URL='http://view.developmentost.com:8080'
 
 # Demo Mappy Server Details
 export KA_DEMO_MAPPY_SERVER_API_ENDPOINT='http://127.0.0.1:3000/demo'
