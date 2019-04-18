@@ -81,4 +81,16 @@ class TokenAddresses < DbConnection::KitSaasSubenv
     end
     success_with_data(@return_data)
   end
+
+  after_commit :flush_cache
+
+  # Flush caches
+  #
+  # * Author: Ankit
+  # * Date: 15/04/2019
+  # * Reviewed By:
+  #
+  def flush_cache
+    KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
+  end
 end

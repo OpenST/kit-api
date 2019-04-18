@@ -141,37 +141,22 @@ class AuthenticationController < ApplicationController
       ).perform
   
       if password_cookie_verify_rsp.success?
-    
-        params[:manager_id] = password_cookie_verify_rsp.data[:manager_id]
-        params[:manager] = password_cookie_verify_rsp.data[:manager]
-        params[:client_id] = password_cookie_verify_rsp.data[:client_id]
-        params[:client] = password_cookie_verify_rsp.data[:client]
-        params[:client_manager] = password_cookie_verify_rsp.data[:client_manager]
-        params[:is_multi_auth_cookie_valid] = false
-        params[:is_password_auth_cookie_valid] = true
-        
-        if params[:manager][:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
+        if password_cookie_verify_rsp.data[:manager][:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
           go_to = GlobalConstant::GoTo.verify_email
           return error_with_go_to('wc_vmfc_1', 'unauthorized_access_response', go_to)
-        elsif params[:manager][:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
+        elsif password_cookie_verify_rsp.data[:manager][:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
           go_to = GlobalConstant::GoTo.authenticate_mfa
           return error_with_go_to('wc_vmfc_2', 'unauthorized_access_response', go_to)
         elsif password_cookie_verify_rsp.data[:client][:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
           go_to = GlobalConstant::GoTo.setup_mfa
           return error_with_go_to('wc_vmfc_3', 'mfa_mandatory_for_client', go_to)
         end
-        
-        extended_cookie_value = password_cookie_verify_rsp.data[:extended_cookie_value]
-        if extended_cookie_value.present?
-          set_cookie(
-            GlobalConstant::Cookie.user_cookie_name,
-            extended_cookie_value,
-            GlobalConstant::Cookie.password_auth_expiry.from_now
-          )
-        end
-    
-        # Remove sensitive data
-        password_cookie_verify_rsp.data = {}
+
+        handle_cookie_validation_success(password_cookie_verify_rsp,
+                                         GlobalConstant::Cookie.password_auth_expiry.from_now)
+
+        params[:is_multi_auth_cookie_valid] = false
+        params[:is_password_auth_cookie_valid] = true
         
         return password_cookie_verify_rsp
   

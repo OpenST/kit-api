@@ -152,9 +152,12 @@ task :usage_report => :environment do
     else
       lifetime_data_by_email[row.email][:is_verified_email] = 0
     end
-
-    dashboard_service_response = DashboardManagement::Get.new({client_id: client_id}).perform
-
+    
+    dashboard_service_response = DashboardManagement::Get.new({
+                                                                client_id: client_id,
+                                                                manager: row.formated_cache_data
+                                                              }).perform
+    
     if dashboard_service_response.success?
       if dashboard_service_response.data[:token]
         lifetime_data_by_email[row.email][:token_deployment_status] = dashboard_service_response.data[:token][:status]
