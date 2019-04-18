@@ -240,6 +240,7 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def create_utm_info
+        return if @utm_params.blank? || @utm_params[:utm_source].blank?
         UtmLogs.create(
           {
             client_manager_id: @client_manager_obj.id,
