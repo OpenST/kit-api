@@ -28,12 +28,19 @@ module CacheManagement
     # @return [Result::Base]
     #
     def fetch_from_db
-      record = ::CurrencyConversionRate.where(["status = ? AND quote_currency = ?", 1, 1]).order('timestamp desc').first
-      data_to_cache = {}
-      if record
-        data_to_cache[record.base_currency] = {}
-        data_to_cache[record.base_currency][record.quote_currency] = record.conversion_rate.to_s
+      base_currencies_array = CurrencyConversionRate.base_currencies.keys
+
+      data_to_cache = ::CurrencyConversionRate.new.fetch_default_price_points(:base_currencies => base_currencies_array)
+
+      # check if all base_currencies which were needed were found. for any missing again fire next query with missing base currencies
+      missing_base_currencies_array = base_currencies_array - data_to_cache.keys
+
+      while missing_base_currencies_array.length > 0 do
+        fresh_data_to_cache = ::CurrencyConversionRate.new.fetch_default_price_points(:base_currencies => missing_base_currencies_array)
+        data_to_cache = data_to_cache.merge(fresh_data_to_cache)
+        missing_base_currencies_array = base_currencies_array - data_to_cache.keys
       end
+
       data_to_cache
     end
 
