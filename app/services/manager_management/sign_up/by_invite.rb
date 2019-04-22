@@ -14,6 +14,7 @@ module ManagerManagement
       # @params [String] password (mandatory) - user password
       # @params [String] confirm_password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
+      # @params [Hash] utm_params (optional) - UTM params if client joins using marketing link.
       #
       # @return [ManagerManagement::SignUp::ByInvite]
       #
@@ -25,6 +26,7 @@ module ManagerManagement
         @marcomm = @params[:marcomm]
         @first_name = @params[:first_name]
         @last_name = @params[:last_name]
+        @utm_params = @params[:utm_params]
 
         @decrypted_invite_token = nil
         @manager_validation_hash = nil
@@ -84,6 +86,9 @@ module ManagerManagement
           return r unless r.success?
 
           r = enqueue_job
+          return r unless r.success?
+
+          r = create_utm_info
           return r unless r.success?
 
           success_with_data(
