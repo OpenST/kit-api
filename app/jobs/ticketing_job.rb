@@ -18,6 +18,8 @@ class TicketingJob < ApplicationJob
     r = create_deal_in_pipedrive
     return r unless r.success?
 
+    notify_devs
+
     success
   end
 
@@ -64,7 +66,9 @@ class TicketingJob < ApplicationJob
 
       r = Ticketing::Jira::Issue.new(issue_params).perform
 
-      @failed_logs[:error_in_jira_issue_creation] = r.to_hash unless r.success?
+      @failed_logs = {
+        debug_params: issue_params.to_hash
+      }  unless r.success?
 
       success
 
@@ -83,19 +87,46 @@ class TicketingJob < ApplicationJob
   def create_deal_in_pipedrive
 
     create_organization_resp = Ticketing::PipeDrive::Organization.new.create(@company_name)
-    @failed_logs[:error_in_pipedrive_org_creation] = create_organization_resp.to_hash unless create_organization_resp.success?
+
+    @failed_logs = {
+      error_msg:create_organization_resp.to_hash,
+      debug_params: @company_name
+    } unless create_organization_resp.success?
 
     org_id = create_organization_resp[:data][:org_id]
 
     create_person_resp = Ticketing::PipeDrive::Person.new.create(@first_name, @last_name, @email_address, org_id)
-    @failed_logs[:error_in_pipedrive_person_creation] = create_person_resp.to_hash unless create_person_resp.success?
+
+    @failed_logs = {
+      error_msg:create_organization_resp.to_hash,
+      debug_params: {
+        'first_name' => @first_name,
+        'last_name' => @last_name,
+        'email_address' => @email_address,
+        'org_id' => org_id
+      }
+    } unless create_person_resp.success?
 
     person_id = create_person_resp[:data][:person_id]
 
     format_company_info_fields
 
     create_deal_resp = Ticketing::PipeDrive::Deal.new.create(@company_name, person_id, org_id, @one_m_users_flag_str, @mobile_app_flag_str)
-    @failed_logs[:error_in_pipedrive_deal_creation] = create_deal_resp.to_hash unless create_deal_resp.success?
+
+    @failed_logs = {
+      error_msg:create_deal_resp.to_hash,
+      debug_params: {
+        'company_name' => @company_name,
+        'first_name' => @first_name,
+        'last_name' => @last_name,
+        'email_address' => @email_address,
+        'person_id' => person_id,
+        'org_id' => org_id,
+        'one_m_users_flag_str' => @one_m_users_flag_str,
+        'mobile_app_flag_str' => @mobile_app_flag_str
+      }
+    } unless create_deal_resp.success?
+
     deal_id = create_deal_resp[:data][:deal_id]
 
     success
