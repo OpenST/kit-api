@@ -144,10 +144,10 @@ module ClientManagement
         return success
       end
       
-      #BackgroundJob.enqueue(
-      #  TicketingJob,
-      #  get_platform_registration
-      #)
+      BackgroundJob.enqueue(
+        TicketingJob,
+        get_platform_registration
+      )
 
       success
 
