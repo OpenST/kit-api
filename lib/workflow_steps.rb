@@ -109,7 +109,7 @@ class WorkflowSteps
   def calculate_progress
 
     @workflow_steps_data_map.each do |workflow_id,kind_to_data_map|
-      percentage_completed = 0
+      percentage_completed = 3 # loaders starting from 3%
 
       workflow_kind = @workflow_data_map[workflow_id][:kind]
       r = fetch_economy_setup_config(workflow_kind)
