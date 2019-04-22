@@ -106,7 +106,6 @@ export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
 export KA_JIRA_USERNAME='anagha@ost.com'
 export KA_JIRA_PASSWWORD='Atlassianana@1797'
 export KA_JIRA_PROJECT_NAME='TP'
-export KA_JIRA_CONTEXT_PATH=""
 export KA_JIRA_AUTH_TYPE=':basic'
 export KA_JIRA_ASSIGNEE_NAME='anagha'
 
