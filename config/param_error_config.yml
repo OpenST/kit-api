@@ -392,3 +392,13 @@ invalid_one_m_users_flag:
   parameter: 'one_m_users_flag'
   code: 'invalid'
   message: 'Invalid one million users flag.'
+
+invalid_stake_currency_symbol:
+  parameter: 'stake_currency_symbol'
+  code: 'invalid'
+  message: 'Invalid stake currency symbol'
+
+missing_stake_currency_symbol:
+  parameter: 'stake_currency_symbol'
+  code: 'missing'
+  message: 'Missing stake currency symbol'

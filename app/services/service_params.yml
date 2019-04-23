@@ -171,6 +171,7 @@
     - :name
     - :symbol
     - :conversion_factor
+    - :stake_currency_symbol
   :optional:
 'TokenManagement::StartDeployment':
   :mandatory:
