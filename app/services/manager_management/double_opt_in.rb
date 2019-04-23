@@ -54,7 +54,7 @@ module ManagerManagement
           if @manager_obj.send("#{GlobalConstant::Manager.has_verified_email_property}?")
             return success_with_data({}, fetch_go_to)
           elsif @r_t.blank?
-            return success_with_data({manager: @manager_obj.formated_cache_data})
+            return success_with_data({manager: @manager_obj.formatted_cache_data})
           end
         else
           return success_with_data({}, fetch_go_to) if @r_t.blank?
@@ -297,7 +297,7 @@ module ManagerManagement
                         is_password_auth_cookie_valid: @is_password_auth_cookie_valid,
                         is_multi_auth_cookie_valid: @is_multi_auth_cookie_valid,
                         client: @client,
-                        manager: @manager_obj.present? ? @manager_obj.formated_cache_data : nil
+                        manager: @manager_obj.present? ? @manager_obj.formatted_cache_data : nil
                     }).fetch_by_manager_state
     end
     

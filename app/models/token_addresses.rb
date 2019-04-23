@@ -45,7 +45,7 @@ class TokenAddresses < DbConnection::KitSaasSubenv
   #
   # @return [Hash]
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
       token_id: token_id,
       kind: kind,

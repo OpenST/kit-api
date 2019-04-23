@@ -8,7 +8,7 @@ class StakeCurrency < DbConnection::KitSaasSubenv
   #
   # @return [Hash]
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
         id: id,
         name: name,
@@ -29,7 +29,7 @@ class StakeCurrency < DbConnection::KitSaasSubenv
   def self.fetch_from_db
     data = []
     StakeCurrency.all.each do |row|
-      data << row.formated_cache_data
+      data << row.formatted_cache_data
     end
     data
   end

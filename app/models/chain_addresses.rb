@@ -62,7 +62,7 @@ class ChainAddresses < DbConnection::KitSaasSubenv
   #
   # @return [Hash]
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
       deployed_chain_id: deployed_chain_id,
       kind: kind,

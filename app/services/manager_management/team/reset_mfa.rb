@@ -56,10 +56,10 @@ module ManagerManagement
           success_with_data({
             result_type: result_type,
             result_type => [
-              @to_update_client_manager.formated_cache_data
+              @to_update_client_manager.formatted_cache_data
             ],
             managers: {
-                @to_update_manager_obj.id => @to_update_manager_obj.formated_cache_data
+                @to_update_manager_obj.id => @to_update_manager_obj.formatted_cache_data
             }
           })
 

@@ -51,7 +51,7 @@ module TokenManagement
         r = create_api_credentials
         return r unless r.success?
 
-        success_with_data({token: @token_details.formated_cache_data})
+        success_with_data({token: @token_details.formatted_cache_data})
 
       end
 
