@@ -12,6 +12,7 @@ class CreateStakeCurrencies < DbMigrationConnection
       end
 
       add_index :stake_currencies, [:contract_address], name: 'sc_ca_1', unique: true
+      add_index :stake_currencies, [:symbol], name: 'sc_sym_1', unique: true
 
     end
 

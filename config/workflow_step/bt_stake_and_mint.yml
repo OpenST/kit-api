@@ -1,6 +1,6 @@
 step_config:
   - kind: <%= GlobalConstant::WorkflowStep.bt_stake_and_mint_init%>
-    weight: 3
+    weight: 0
     group: 1
   - kind: <%= GlobalConstant::WorkflowStep.approve_gateway_composer_trx%>
     weight: 6

@@ -14,6 +14,7 @@ module ManagerManagement
       # @params [String] browser_user_agent (mandatory) - browser user agent
       # @params [String] email (mandatory) - the email of the user which is to be signed up
       # @params [String] agreed_terms_of_service (mandatory) - if terms of service was accepted
+      # @params [Hash] utm_params (optional) - UTM params if client joins using marketing link.
       #
       # @return [ManagerManagement::SignUp::WithoutInvite]
       #
@@ -26,6 +27,7 @@ module ManagerManagement
         @marcomm = @params[:marcomm]
         @first_name = @params[:first_name]
         @last_name = @params[:last_name]
+        @utm_params = @params[:utm_params]
 
         @authentication_salt_hash = nil
         @authentication_salt_d = nil
@@ -64,6 +66,9 @@ module ManagerManagement
           return r unless r.success?
 
           r = enqueue_job
+          return r unless r.success?
+
+          r = create_utm_info
           return r unless r.success?
 
           success_with_data(

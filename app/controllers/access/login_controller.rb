@@ -37,7 +37,17 @@ class Access::LoginController < AuthenticationController
   # * Reviewed By: Sunil
   #
   def sign_up_post
-    
+
+    utm_params_cookie = cookies[GlobalConstant::Cookie.utm_params_cookie_name.to_sym]
+    if utm_params_cookie
+      begin
+        utm_params_cookie = JSON.parse(utm_params_cookie)
+        params[:utm_params] = sanitize_params_recursively(utm_params_cookie)
+      rescue
+        Rails.logger.info "UTM cookie json parse failed. value is: #{utm_params_cookie}"
+      end
+    end
+
     if params[:i_t].present?
       service_response = ManagerManagement::SignUp::ByInvite.new(params).perform
     else

@@ -22,6 +22,7 @@ module ManagerManagement
 
         @decrypted_invite_token = nil
         @manager_validation_hash = nil
+        @utm_params = {}
 
       end
 
