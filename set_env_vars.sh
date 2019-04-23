@@ -104,7 +104,7 @@ export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
 
 # Jira Details
 export KA_JIRA_USERNAME=''
-export KA_JIRA_PASSWWORD=''
+export KA_JIRA_PASSWORD=''
 export KA_JIRA_PROJECT_NAME='TP'
 export KA_JIRA_AUTH_TYPE=':basic'
 export KA_JIRA_ASSIGNEE_NAME=''
