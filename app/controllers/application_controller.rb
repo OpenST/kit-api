@@ -228,20 +228,12 @@ class ApplicationController < ActionController::API
 
     rescue => se
 
-      Rails.logger.error("Exception in API: #{se.message}")
+      Rails.logger.error("Exception in API: #{se.message} trace: #{se.backtrace}")
 
-      ApplicationMailer.notify(
-          body: {
-              exception: {
-                  message: se.message,
-                  backtrace: se.backtrace
-              }
-          },
-          data: {
-              params: params
-          },
-          subject: 'Exception in API'
-      ).deliver
+      ExceptionNotifier.notify_exception(
+          se,
+          data: {params: params}
+      )
 
       r = Result::Base.error(
           internal_id: 'ac_3',
