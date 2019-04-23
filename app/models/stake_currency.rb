@@ -1,13 +1,13 @@
 class StakeCurrency < DbConnection::KitSaasSubenv
 
-# Format data to a format which goes into cache
-#
-# * Author: Santhosh
-# * Date: 11/04/2019
-# * Reviewed By:
-#
-# @return [Hash]
-#
+  # Format data to a format which goes into cache
+  #
+  # * Author: Santhosh
+  # * Date: 11/04/2019
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
   def formated_cache_data
     {
         id: id,
@@ -18,17 +18,56 @@ class StakeCurrency < DbConnection::KitSaasSubenv
     }
   end
 
-  after_commit :flush_cache
-
-# Flush caches
-#
-# * Author: Santhosh
-# * Date: 11/04/2019
-# * Reviewed By:
-#
-  def flush_cache
-    KitSaasSharedCacheManagement::StakeCurrencies.new([id]).clear
+  # Fetch from db
+  #
+  # * Author: Santhosh
+  # * Date: 11/04/2019
+  # * Reviewed By:
+  #
+  # @return [Array]
+  #
+  def self.fetch_from_db
+    data = []
+    StakeCurrency.all.each do |row|
+      data << row.formated_cache_data
+    end
+    data
   end
 
+  # Id to details cache
+  #
+  # * Author: Santhosh
+  # * Date: 11/04/2019
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
+  def self.ids_to_details_cache
+    @ids_to_details_cache ||= begin
+      data = {}
+      StakeCurrency.fetch_from_db.each do |row|
+        data[row[:id]] = row
+      end
+      data
+    end
+  end
+
+  # Symbol to details cache
+  #
+  # * Author: Santhosh
+  # * Date: 11/04/2019
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
+  def self.symbols_to_details_cache
+    @symbols_to_details_cache ||= begin
+      data = {}
+      StakeCurrency.fetch_from_db.each do |row|
+        data[row[:symbol]] = row
+      end
+      data
+    end
+  end
 
 end
