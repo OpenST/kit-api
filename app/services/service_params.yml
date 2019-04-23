@@ -8,6 +8,7 @@
     - :last_name
   :optional:
     - :marcomm
+    - :utm_params
 'ManagerManagement::SignUp::ByInvite':
   :mandatory:
     - :i_t
@@ -18,6 +19,7 @@
     - :last_name
   :optional:
     - :marcomm
+    - :utm_params
 'ManagerManagement::SignUp::GetDetails':
   :mandatory:
     - :i_t
