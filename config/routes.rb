@@ -70,6 +70,7 @@ Rails.application.routes.draw do
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses', :format => false do
     match '' => :token_addresses_post, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'create-managed-address' => :create_ost_managed_address, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/mint", controller: 'token/mint', :format => false do

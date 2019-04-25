@@ -229,7 +229,13 @@ module TokenManagement
 
       token_id = @token_details.id
       ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name ).destroy_all
-      TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).destroy_all
+      token_addresses = TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).first
+
+      if token_addresses[:known_address_id].present?
+        SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: token_addresses[:known_address_id]})
+      end
+
+      token_addresses.destroy!
 
       KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
 

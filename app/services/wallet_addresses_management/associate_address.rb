@@ -1,5 +1,5 @@
 module WalletAddressesManagement
-  class AssociateAddress < ServicesBase
+  class AssociateAddress < WalletAddressesManagement::Base
 
     # Initialize
     #
@@ -42,6 +42,9 @@ module WalletAddressesManagement
         r = validate_and_sanitize
         return r unless r.success?
 
+        r = fetch_token_details
+        return r unless r.success?
+
         #Check if the given address is associated in db
         r = is_address_available_check
         return r unless r.success?
@@ -63,10 +66,10 @@ module WalletAddressesManagement
         r = create_entries
         return r unless r.success?
 
-        success_with_data({
-                            origin_addresses: @origin_addresses,
-                            auxiliary_addresses: @auxiliary_addresses
-                          })
+        r = update_token_properties
+        return r unless r.success?
+
+        return_addresses_entity
 
       end
 
@@ -110,9 +113,6 @@ module WalletAddressesManagement
           GlobalConstant::ErrorAction.default
         )
       end
-
-      @origin_addresses = {owner_address: @owner_address, admin: '', whitelisted: [], workers: []}
-      @auxiliary_addresses = {owner_address: @owner_address, admin: '', whitelisted: [], workers: []}
 
       success
 
@@ -237,7 +237,6 @@ module WalletAddressesManagement
       if clientWalletAddress.present?
         #update the new address
         clientWalletAddress.address = @owner_address
-        clientWalletAddress.sub_environment = GlobalConstant::Base.sub_environment_name
         clientWalletAddress.save!
       else
         ClientWalletAddress.create!(
@@ -248,16 +247,24 @@ module WalletAddressesManagement
         )
       end
 
-      token_id = @token_details[:id]
+      @token_id = @token_details[:id]
 
-      tokenAddresses = TokenAddresses.where('token_id = ?', token_id)
+      tokenAddresses = TokenAddresses.where(
+        token_id: @token_id,
+        kind: GlobalConstant::TokenAddresses.owner_address_kind
+      ).first
 
       if tokenAddresses.present?
-        TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).update_all(address:@owner_address)
-        KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
+
+        if tokenAddresses[:known_address_id].present?
+          request_saas_to_remove_known_address(tokenAddresses[:known_address_id])
+        end
+
+        TokenAddresses.where(token_id: @token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).update_all(address:@owner_address,known_address_id: null)
+        KitSaasSharedCacheManagement::TokenAddresses.new([@token_id]).clear
       else
         TokenAddresses.create!(
-          token_id: token_id,
+          token_id: @token_id,
           kind: GlobalConstant::TokenAddresses.owner_address_kind,
           address: @owner_address
         )
@@ -266,6 +273,35 @@ module WalletAddressesManagement
 
       success
     end
+
+    # Request saas to remove knwon address
+    #
+    #
+    # * Author: Ankit
+    # * Date: 24/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def request_saas_to_remove_known_address(known_address_id)
+      SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: known_address_id})
+    end
+
+    # Update token properties. Mark the token as non has_ost_managed_owner
+    #
+    #
+    # * Author: Ankit
+    # * Date: 24/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def update_token_properties
+
+      @token.send("unset_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
+      @token.save!
+
+      success
+    end
+
 
   end
 end

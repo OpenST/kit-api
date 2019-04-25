@@ -20,6 +20,14 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/signer/verify"
     end
 
+    def self.generate_known_address
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/generate-known-address"
+    end
+
+    def self.remove_known_address
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/remove-known-address"
+    end
+
     def self.fetch_token_details
       "#{GlobalConstant::Environment.url_prefix}/internal/token/details"
     end
