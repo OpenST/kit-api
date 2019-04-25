@@ -231,8 +231,8 @@ class ApplicationController < ActionController::API
       Rails.logger.error("Exception in API: #{se.message} trace: #{se.backtrace}")
 
       ExceptionNotifier.notify_exception(
-          se,
-          data: {params: params}
+        se,
+        env: request.env
       )
 
       r = Result::Base.error(
