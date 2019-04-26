@@ -23,6 +23,14 @@ module GlobalConstant
         'OST'
       end
 
+      def usdc_currency
+        'USDC'
+      end
+
+      def eur_currency
+        'EUR'
+      end
+
       # *******************************************************
 
       # ***************** Status ****************************

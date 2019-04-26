@@ -3,7 +3,8 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
   include Util::ResultHelper
 
   enum base_currency: {
-    GlobalConstant::ConversionRates.ost_currency => 1
+    GlobalConstant::ConversionRates.ost_currency => 1,
+    GlobalConstant::ConversionRates.usdc_currency => 2
   }
 
   enum quote_currency: {
