@@ -9,12 +9,20 @@ module GlobalConstant
         config[:api_token]
       end
 
-      def ost_pipedrive_user_id
-        config[:user_id]
+      def ost_pipedrive_enterprise_user_id
+        config[:enterprise_user_id]
       end
       
-      def ost_platform_stage_id
-        config[:stage_id]
+      def ost_pipedrive_business_user_id
+        config[:business_user_id]
+      end
+      
+      def ost_platform_enterprise_stage_id
+        config[:enterprise_stage_id]
+      end
+      
+      def ost_platform_business_stage_id
+        config[:business_stage_id]
       end
       
       def pipedrive_deal_enterprise_custom_field_key

@@ -21,7 +21,6 @@ module Ticketing
       #
       def initialize
         @api_version = GlobalConstant::PipeDrive.pipedrive_api_version
-        @ost_pipedrive_user_id = GlobalConstant::PipeDrive.ost_pipedrive_user_id
     
         @timeouts = {write: 10, connect: 5, read: 10}
       end

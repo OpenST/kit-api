@@ -42,7 +42,7 @@ module Ticketing
         validation_errors.push('invalid_org_id') unless Util::CommonValidator.is_integer?(org_id)
         validation_errors.push('invalid_one_m_users_flag_str') unless Util::CommonValidator.is_string?(one_m_users_flag_str)
         validation_errors.push('invalid_mobile_app_flag_str') unless Util::CommonValidator.is_string?(mobile_app_flag_str)
-
+        
         return validation_error(
           'l_t_pd_d_1',
           'something_went_wrong',
@@ -54,11 +54,16 @@ module Ticketing
         mobile_app_custom_field_key = GlobalConstant::PipeDrive.pipedrive_deal_mobile_app_custom_field_key
 
         url_path = create_request_path(@deals_endpoint)
+        
+        stage_id = one_m_users_flag_str  == 'YES' ? GlobalConstant::PipeDrive.ost_platform_enterprise_stage_id : GlobalConstant::PipeDrive.ost_platform_business_stage_id
+        user_id = one_m_users_flag_str  == 'YES' ? GlobalConstant::PipeDrive.ost_pipedrive_enterprise_user_id : GlobalConstant::PipeDrive.ost_pipedrive_business_user_id
+        
         custom_params = {
           title: deal_title,
+          user_id: user_id,
           person_id: person_id,
           org_id: org_id,
-          stage_id: GlobalConstant::PipeDrive.ost_platform_stage_id   # ID of the stage where this deal will be placed in a pipeline
+          stage_id: stage_id   # ID of the stage where this deal will be placed in a pipeline
         }
         custom_params[enterprise_custom_field_key.to_sym] = one_m_users_flag_str
         custom_params[mobile_app_custom_field_key.to_sym] = mobile_app_flag_str
