@@ -54,9 +54,16 @@ module Ticketing
         mobile_app_custom_field_key = GlobalConstant::PipeDrive.pipedrive_deal_mobile_app_custom_field_key
 
         url_path = create_request_path(@deals_endpoint)
+
+        is_enterprise = one_m_users_flag_str  == 'Enterprise'
         
-        stage_id = one_m_users_flag_str  == 'YES' ? GlobalConstant::PipeDrive.ost_platform_enterprise_stage_id : GlobalConstant::PipeDrive.ost_platform_business_stage_id
-        user_id = one_m_users_flag_str  == 'YES' ? GlobalConstant::PipeDrive.ost_pipedrive_enterprise_user_id : GlobalConstant::PipeDrive.ost_pipedrive_business_user_id
+        stage_id = is_enterprise ?
+                     GlobalConstant::PipeDrive.ost_platform_enterprise_stage_id :
+                     GlobalConstant::PipeDrive.ost_platform_business_stage_id
+
+        user_id = is_enterprise ?
+                    GlobalConstant::PipeDrive.ost_pipedrive_enterprise_user_id :
+                    GlobalConstant::PipeDrive.ost_pipedrive_business_user_id
         
         custom_params = {
           title: deal_title,
