@@ -159,7 +159,7 @@ module TokenManagement
         staker_address: @staker_address,
         token_id: @token_id,
         client_id: @client_id,
-        fe_ost_to_stake: @fe_ost_to_stake,
+        fe_stake_currency_to_stake: @fe_ost_to_stake,
         fe_bt_to_mint: @fe_bt_to_mint
       }
 
