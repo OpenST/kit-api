@@ -132,3 +132,8 @@ mfa_mandatory_for_client:
   http_code: 422
   code: 'invalid'
   message: 'You have been whitelisted on Mainnet, please set up your <a href="/mfa">2FA</a> to proceed.'
+
+error_in_issue_creation:
+  http_code: 422
+  code: 'UNPROCESSABLE_ENTITY'
+  message: 'Could not create issue.'
