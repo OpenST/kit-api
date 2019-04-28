@@ -22,6 +22,7 @@ module ClientManagement
       @mobile_app_flag = @params[:mobile_app_flag]
       @one_m_users_flag = @params[:one_m_users_flag]
       @client_id = @params[:client_id]
+      @manager = @params[:manager]
     end
 
     # Perform
@@ -40,6 +41,9 @@ module ClientManagement
         return r unless r.success?
 
         r = update_client_info
+        return r unless r.success?
+
+        r = enqueue_ticketing_job
         return r unless r.success?
 
         success_with_data({}, fetch_go_to)
@@ -101,6 +105,49 @@ module ClientManagement
       client.send("set_#{GlobalConstant::Client.has_one_million_users_property}") if(@one_m_users_flag.to_i == 1)
       client.send("set_#{GlobalConstant::Client.has_company_info_property}")
       client.save!
+
+      success
+
+    end
+
+    # Update client info in clients table.
+    #
+    # * Author: Anagha
+    # * Date: 15/04/2019
+    # * Reviewed By:
+    #
+    # @return [Hash]
+    # 
+    def get_platform_registration
+      {
+        company_name: @company_name,
+        first_name: @manager[:first_name],
+        last_name: @manager[:last_name],
+        email_address: @manager[:email],
+        mobile_app_flag: @mobile_app_flag,
+        one_m_users_flag: @one_m_users_flag
+      }
+    end
+
+    # Enqueue job to sidekiq.
+    #
+    # * Author: Anagha
+    # * Date: 16/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    # 
+    def enqueue_ticketing_job
+      
+      # Skip creating jira ticket and deal in pipe-drive for development env.
+      if GlobalConstant::Base.environment_name == 'development'
+        return success
+      end
+      
+      BackgroundJob.enqueue(
+        TicketingJob,
+        get_platform_registration
+      )
 
       success
 
