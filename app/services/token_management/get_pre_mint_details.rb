@@ -1,5 +1,6 @@
-module ContractManagement
-  class GetGatewayComposerAddress < ServicesBase
+module TokenManagement
+
+  class GetPreMintDetails < TokenManagement::Base
 
     # Initialize
     #
@@ -9,8 +10,10 @@ module ContractManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [String] staker_address (mandatory) - Staker Address
+    # @params [String] stake_amount (mandatory) - Stake Amount
+    # @params [String] bt_amount (mandatory) - Bt Amount
     #
-    # @return [ContractManagement::GetGatewayComposerAddress]
+    # @return [GetPreMintDetails]
     #
     def initialize(params)
 
@@ -18,9 +21,10 @@ module ContractManagement
 
       @api_response_data = {}
 
+      @stake_amount = params[:stake_amount]
+      @bt_amount = params[:bt_amount]
       @staker_address = @params[:staker_address]
       @client_id = @params[:client_id]
-
 
     end
 
@@ -87,6 +91,9 @@ module ContractManagement
 
       @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
 
+      @stake_amount = @stake_amount.to_s
+      @bt_amount = @bt_amount.to_s
+
       success
 
     end
@@ -127,10 +134,12 @@ module ContractManagement
       params_for_saas_api = {
         token_id: @token_id,
         staker_address: @staker_address,
-        client_id: @client_id
+        client_id: @client_id,
+        stake_amount: @stake_amount,
+        bt_amount: @bt_amount
       }
 
-      saas_response = SaasApi::Contract::GatewayComposer.new.perform(params_for_saas_api)
+      saas_response = SaasApi::Token::PreMintDetails.new.perform(params_for_saas_api)
       return saas_response unless saas_response.success?
 
       saas_response_data = saas_response.data
@@ -150,8 +159,9 @@ module ContractManagement
         stake_and_mint_beneficiary: saas_response_data['stake_and_mint_beneficiary']
       }
 
+      @api_response_data[:precise_amounts] = saas_response_data['precise_amounts']
+
       success
     end
-
   end
 end

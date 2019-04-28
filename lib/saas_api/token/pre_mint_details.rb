@@ -1,15 +1,15 @@
 module SaasApi
 
-  module Contract
+  module Token
 
-    class GatewayComposer < SaasApi::Base
+    class PreMintDetails < SaasApi::Base
       # Initialize
       #
       # * Author: Ankit
-      # * Date: 15/01/2019
+      # * Date: 26/04/2019
       # * Reviewed By:
       #
-      # @return [SaasApi::Token::Deploy]
+      # @return [SaasApi::Token::Mint]
       #
       def initialize
         super
@@ -18,7 +18,7 @@ module SaasApi
       # Perform
       #
       # * Author: Ankit
-      # * Date: 15/01/2019
+      # * Date: 26/04/2019
       # * Reviewed By:
       #
       # @return [Result::Base]
@@ -26,7 +26,7 @@ module SaasApi
       def perform(params = {})
         send_request_of_type(
           'get',
-          GlobalConstant::SaasApi.get_gateway_composer,
+          GlobalConstant::SaasApi.pre_mint_details,
           params
         )
       end
