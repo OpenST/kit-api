@@ -107,19 +107,22 @@ module TestEconomyManagement
         end
       end
 
-      return error_with_data(
-        'tem_i_1',
-        'token_demo_invite_invalid_email',
-        GlobalConstant::ErrorAction.default
+      return validation_error(
+          'tem_i_1',
+          'invalid_api_params',
+          ['token_demo_invite_invalid_email'],
+          GlobalConstant::ErrorAction.default
       ) if invalid_emails_present
 
-      return error_with_data(
-        'tem_i_2',
-        'token_demo_invite_no_email',
-        GlobalConstant::ErrorAction.default
+      return validation_error(
+          'tem_i_2',
+          'invalid_api_params',
+          ['token_demo_invite_no_email'],
+          GlobalConstant::ErrorAction.default
       ) if @email_arr.blank?
 
       success
+
     end
 
     # Check if activation is complete or not
@@ -153,10 +156,11 @@ module TestEconomyManagement
 
       ::TestEconomyInvite.where(email: @email_arr, token_id: @token_id).all.each do |invite_obj|
         if invite_obj.last_invitation_timestamp + 24.hours.to_i >= Time.now.to_i
-          return error_with_data(
-            'tem_i_4',
-            'token_demo_reinvite_too_early',
-            GlobalConstant::ErrorAction.default
+          return validation_error(
+              'tem_i_4',
+              'invalid_api_params',
+              ['token_demo_reinvite_too_early'],
+              GlobalConstant::ErrorAction.default
           )
         else
           @already_invited_emails_map[invite_obj.email] = invite_obj
