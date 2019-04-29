@@ -2,7 +2,7 @@ module SaasApi
 
   module Token
 
-    class GrantEthOst < SaasApi::Base
+    class GrantEthStakeCurrency < SaasApi::Base
 
       # Initialize
       #
@@ -10,7 +10,7 @@ module SaasApi
       # * Date: 24/01/2019
       # * Reviewed By:
       #
-      # @return [SaasApi::Token::Grant]
+      # @return [SaasApi::Token::GrantEthStakeCurrency]
       #
       def initialize
         super
@@ -27,7 +27,7 @@ module SaasApi
       def perform(params = {})
         send_request_of_type(
             'get',
-            GlobalConstant::SaasApi.grant_eth_ost,
+            GlobalConstant::SaasApi.grant_eth_stake_currency,
             params
         )
       end

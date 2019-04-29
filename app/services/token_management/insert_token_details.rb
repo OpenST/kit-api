@@ -55,7 +55,7 @@ module TokenManagement
         r = create_api_credentials
         return r unless r.success?
 
-        success_with_data({token: @token_details.formated_cache_data})
+        success_with_data({token: @token_details.formatted_cache_data})
 
       end
 
@@ -187,6 +187,7 @@ module TokenManagement
       end
 
       @stake_currency_id = stake_currency_data[@stake_currency_symbol][:id]
+      @stake_currency_decimal = stake_currency_data[@stake_currency_symbol][:decimal]
 
       success
     end
@@ -207,6 +208,7 @@ module TokenManagement
       @token_details.conversion_factor = @conversion_factor
       @token_details.delayed_recovery_interval = GlobalConstant::ClientToken.delayed_recovery_interval
       @token_details.stake_currency_id = @stake_currency_id
+      @token_details.decimal = @stake_currency_decimal
 
       @token_details.save!
 

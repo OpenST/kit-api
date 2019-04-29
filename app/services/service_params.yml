@@ -258,7 +258,7 @@
     - :client_manager
     - :manager
   :optional:
-'TokenManagement::GrantEthOst':
+'TokenManagement::GrantEthStakeCurrency':
   :mandatory:
     - :client_id
     - :staker_address

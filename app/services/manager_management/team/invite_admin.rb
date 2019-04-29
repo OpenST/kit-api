@@ -63,10 +63,10 @@ module ManagerManagement
           success_with_data({
                                 result_type: result_type,
                                 result_type => [
-                                    @invitee_client_manager.formated_cache_data
+                                    @invitee_client_manager.formatted_cache_data
                                 ],
                                 managers: {
-                                    @invitee_manager.id => @invitee_manager.formated_cache_data
+                                    @invitee_manager.id => @invitee_manager.formatted_cache_data
                                 }
                             })
 

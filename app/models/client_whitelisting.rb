@@ -10,7 +10,7 @@ class ClientWhitelisting < DbConnection::KitSaasSubenv
   #
   # @return [Hash]
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
       id: id
     }

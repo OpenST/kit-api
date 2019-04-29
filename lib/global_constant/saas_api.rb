@@ -52,7 +52,7 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/token/pre-mint"
     end
 
-    def self.grant_eth_ost
+    def self.grant_eth_stake_currency
       "#{GlobalConstant::Environment.url_prefix}/internal/token/mint/grant"
     end
 
