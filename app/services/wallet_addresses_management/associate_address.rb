@@ -22,7 +22,7 @@ module WalletAddressesManagement
       @owner_address = @params[:owner]
       @personal_sign = @params[:personal_sign]
 
-      @isRequestFromSameClient = false
+      @is_request_from_same_client = false
       @signed_by_address = nil
 
     end
@@ -50,7 +50,7 @@ module WalletAddressesManagement
         return r unless r.success?
 
         #This check is added for a scenario when same client calls the associate address more than once.
-        if @isRequestFromSameClient
+        if @is_request_from_same_client
           return success_with_data({
                                      origin_addresses: @origin_addresses,
                                      auxiliary_addresses: @auxiliary_addresses
@@ -212,7 +212,7 @@ module WalletAddressesManagement
             GlobalConstant::ErrorAction.default
           )
         else
-          @isRequestFromSameClient = true
+          @is_request_from_same_client = true
           success
         end
       else
@@ -232,12 +232,12 @@ module WalletAddressesManagement
     def create_entries
 
       #check if the same client has some address associated with it. Update the address if already present
-      clientWalletAddress = ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name).first
+      client_wallet_address = ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name).first
 
-      if clientWalletAddress.present?
+      if client_wallet_address.present?
         #update the new address
-        clientWalletAddress.address = @owner_address
-        clientWalletAddress.save!
+        client_wallet_address.address = @owner_address
+        client_wallet_address.save!
       else
         ClientWalletAddress.create!(
           client_id: @client_id,
@@ -249,19 +249,21 @@ module WalletAddressesManagement
 
       @token_id = @token_details[:id]
 
-      tokenAddresses = TokenAddresses.where(
+      token_addresses = TokenAddresses.where(
         token_id: @token_id,
         kind: GlobalConstant::TokenAddresses.owner_address_kind
       ).first
 
-      if tokenAddresses.present?
+      if token_addresses.present?
 
-        if tokenAddresses[:known_address_id].present?
-          request_saas_to_remove_known_address(tokenAddresses[:known_address_id])
+        if token_addresses[:known_address_id].present?
+          request_saas_to_remove_known_address(token_addresses[:known_address_id])
         end
 
-        TokenAddresses.where(token_id: @token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).update_all(address:@owner_address,known_address_id: null)
-        KitSaasSharedCacheManagement::TokenAddresses.new([@token_id]).clear
+        token_addresses[:address] = @owner_address
+        token_addresses[:known_address_id] = null
+
+        token_addresses.save!
       else
         TokenAddresses.create!(
           token_id: @token_id,
@@ -283,7 +285,11 @@ module WalletAddressesManagement
     #
     # @return [Result::Base]
     def request_saas_to_remove_known_address(known_address_id)
-      SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: known_address_id})
+      response = SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: known_address_id})
+      unless response.success?
+        @failed_logs = response
+        notify_devs
+      end
     end
 
     # Update token properties. Mark the token as non has_ost_managed_owner
@@ -302,6 +308,19 @@ module WalletAddressesManagement
       success
     end
 
+    # Send mail
+    #
+    # * Author: Puneet
+    # * Date: 09/12/2018
+    # * Reviewed By:
+    #
+    def notify_devs
+      ApplicationMailer.notify(
+        data: @failed_logs,
+        body: {client_id: @client_id},
+        subject: 'Exception in associate address'
+      ).deliver if @failed_logs.present?
+    end
 
   end
 end

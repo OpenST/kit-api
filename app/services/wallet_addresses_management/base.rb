@@ -15,7 +15,7 @@ module WalletAddressesManagement
 
 
     # Fetch token details
-    # Note: Need the row object to perform an update later
+    # Note: Need the row object to perform an update later. Thus data is fetched directly from database
     #
     # * Author: Ankit
     # * Date: 23/04/2019

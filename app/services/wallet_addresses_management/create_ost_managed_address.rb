@@ -87,7 +87,8 @@ module WalletAddressesManagement
     #
     def check_token_status
 
-      #check if token setup is not deployed or completely failed
+      #check if token's status is not any of [not deployed, completely failed]
+      # This API is allowed only if token's status is either not deployed or
       if @token[:status] != GlobalConstant::ClientToken.not_deployed && @token[:status] != GlobalConstant::ClientToken.deployment_failed
         return validation_error(
           'a_s_wam_coma_2',
@@ -137,7 +138,7 @@ module WalletAddressesManagement
       return r unless r.success?
 
       @new_known_address = r.data[:address].downcase
-      @address_known_id = r.data[:knownAddressId]
+      @known_address_id = r.data[:knownAddressId]
 
       @owner_address = @new_known_address
       success
@@ -154,7 +155,7 @@ module WalletAddressesManagement
     def update_token_owner_addresses
       token_address = TokenAddresses.where(token_id: @token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).first_or_initialize
       token_address[:address] = @new_known_address
-      token_address[:known_address_id] = @address_known_id
+      token_address[:known_address_id] = @known_address_id
 
       token_address.save!
 
