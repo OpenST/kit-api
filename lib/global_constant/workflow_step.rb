@@ -435,9 +435,9 @@ module GlobalConstant
 
       # Bt stake and mint steps: finish
 
-      # Grant Eth Ost steps: start
-      def grant_eth_ost_init
-        'grant_eth_ost_init'
+      # Grant eth stake currency steps: start
+      def grant_eth_stake_currency_init
+        'grant_eth_stake_currency_init'
       end
 
       def grant_eth
@@ -448,15 +448,15 @@ module GlobalConstant
         'verify_grant_eth'
       end
 
-      def grant_ost
-        'grant_ost'
+      def grant_stake_currency
+        'grant_stake_currency'
       end
 
-      def verify_grant_ost
-        'verify_grant_ost'
+      def verify_grant_stake_currency
+        'verify_grant_stake_currency'
       end
 
-      # Grant Eth Ost steps: finish
+      # Grant eth stake currency steps: finish
 
       # Common Steps start
 

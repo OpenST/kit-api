@@ -5,7 +5,7 @@ class Workflow < DbConnection::KitSaasSubenv
     GlobalConstant::Workflow.state_root_sync => 2,
     GlobalConstant::Workflow.st_prime_stake_and_mint => 3,
     GlobalConstant::Workflow.bt_stake_and_mint => 4,
-    GlobalConstant::Workflow.grant_eth_ost => 5
+    GlobalConstant::Workflow.grant_eth_stake_currency => 5
   }
 
   enum status: {

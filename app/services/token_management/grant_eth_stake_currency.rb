@@ -1,6 +1,6 @@
 module TokenManagement
 
-  class GrantEthOst < TokenManagement::Base
+  class GrantEthStakeCurrency < TokenManagement::Base
 
     # Initialize
     #
@@ -11,7 +11,7 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [String] address (mandatory) - Address
     #
-    # @return [TokenManagement::GrantEthOst]
+    # @return [TokenManagement::GrantEthStakeCurrency]
     #
     def initialize(params)
 
@@ -93,7 +93,8 @@ module TokenManagement
     # * Date: 24/01/2019
     # * Reviewed By:
     #
-    # @return
+    # @return [Result::Base]
+    #
     def check_environment_validation
       #check if env is non production
       if GlobalConstant::Base.main_sub_environment?
@@ -113,13 +114,14 @@ module TokenManagement
     # * Date: 24/01/2019
     # * Reviewed By:
     #
-    # @return
+    # @return [Result::Base]
+    #
     def check_time_validation
       workflows = CacheManagement::WorkflowByClient.new([@client_id]).fetch
 
       if workflows[@client_id].present?
         workflows[@client_id].each do |wf|
-          if wf.kind == GlobalConstant::Workflow.grant_eth_ost && (wf.status == GlobalConstant::Workflow.completed || wf.status == GlobalConstant::Workflow.in_progress)
+          if wf.kind == GlobalConstant::Workflow.grant_eth_stake_currency && (wf.status == GlobalConstant::Workflow.completed || wf.status == GlobalConstant::Workflow.in_progress)
             last_updated_at_epoch = wf.updated_at.to_datetime.to_i
 
             #If the row is updated in last 24 hours then throw error
@@ -137,13 +139,14 @@ module TokenManagement
       success
     end
 
-    # check if the given address is associated with client id which is provided
+    # Check if the given address is associated with client id which is provided
     #
     # * Author: Ankit
     # * Date: 24/01/2019
     # * Reviewed By:
     #
-    # @return
+    # @return [Result::Base]
+    #
     def check_address_association_with_client
 
       client_wallet_address = ClientWalletAddress.where('address = ?' , @address).first
@@ -170,13 +173,14 @@ module TokenManagement
     end
 
 
-    # directs request to grant eth and ost to saas api
+    # Directs request to grant eth and stake currency to saas api
     #
     # * Author: Ankit
     # * Date: 24/01/2019
     # * Reviewed By:
     #
-    # @return
+    # @return [Result::Base]
+    #
     def direct_request_to_saas_api
       #if success then render success response
       params_for_saas_api = {
@@ -184,12 +188,12 @@ module TokenManagement
         client_id: @client_id
       }
 
-      saas_response = SaasApi::Token::GrantEthOst.new.perform(params_for_saas_api)
+      saas_response = SaasApi::Token::GrantEthStakeCurrency.new.perform(params_for_saas_api)
       return saas_response unless saas_response.success?
 
       @api_response_data[:workflow] = {
         id: saas_response.data[:workflow_id],
-        kind: GlobalConstant::Workflow.grant_eth_ost
+        kind: GlobalConstant::Workflow.grant_eth_stake_currency
       }
 
       success

@@ -20,8 +20,8 @@ module GlobalConstant
         'st_prime_stake_and_mint'
       end
 
-      def grant_eth_ost
-        'grant_eth_ost'
+      def grant_eth_stake_currency
+        'grant_eth_stake_currency'
       end
 
       # Workflow kind constants End #
