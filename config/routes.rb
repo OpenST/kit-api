@@ -65,6 +65,7 @@ Rails.application.routes.draw do
     match '' => :token_details_post, via: :POST, constraints: lambda { |request| request.xhr? }
     match 'deploy' => :deploy_get, via: :GET
     match 'deploy' => :deploy_post, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'balance' => :balance_get, via: :GET, constraints: lambda { |request| request.xhr? }
     match 'request-whitelist' => :request_whitelist, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 

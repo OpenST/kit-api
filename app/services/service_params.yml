@@ -271,6 +271,11 @@
   :optional:
     - :sandbox_token_name
     - :sandbox_token_symbol
+'TokenManagement::GetBalance':
+  :mandatory:
+    - :currencies
+    - :address
+  :optional:
 'DeveloperManagement::FetchDetails':
   :mandatory:
     - :client_id

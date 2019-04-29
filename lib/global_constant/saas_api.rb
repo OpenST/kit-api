@@ -32,6 +32,10 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/token/details"
     end
 
+    def self.get_balance
+      "#{GlobalConstant::Environment.url_prefix}/internal/token/balance"
+    end
+
     def self.token_deploy
       "#{GlobalConstant::Environment.url_prefix}/internal/token/deploy"
     end
