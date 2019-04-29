@@ -26,7 +26,7 @@ module TokenManagement
       @approve_tx_hash = @params[:approve_transaction_hash]
       @request_stake_tx_hash = @params[:request_stake_transaction_hash]
       @staker_address = @params[:staker_address]
-      @fe_ost_to_stake = @params[:fe_ost_to_stake]
+      @fe_stake_currency_to_stake = @params[:fe_ost_to_stake]
       @fe_bt_to_mint = @params[:fe_bt_to_mint]
 
       @api_response_data = {}
@@ -159,7 +159,7 @@ module TokenManagement
         staker_address: @staker_address,
         token_id: @token_id,
         client_id: @client_id,
-        fe_ost_to_stake: @fe_ost_to_stake,
+        fe_stake_currency_to_stake: @fe_stake_currency_to_stake,
         fe_bt_to_mint: @fe_bt_to_mint
       }
 

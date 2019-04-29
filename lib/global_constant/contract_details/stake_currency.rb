@@ -1,6 +1,6 @@
 module GlobalConstant
   module ContractDetails
-    class SimpleToken
+    class StakeCurrency
 
       def self.gas
         return {
