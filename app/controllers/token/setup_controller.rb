@@ -70,8 +70,8 @@ class Token::SetupController < AuthenticationController
   # Get Balance
   #
   # * Author: Ankit
-  # * Date: 30/01/2019
-  # * Reviewed By: Sunil
+  # * Date: 29/04/2019
+  # * Reviewed By:
   #
   def balance_get
     service_response = TokenManagement::GetBalance.new(params).perform
