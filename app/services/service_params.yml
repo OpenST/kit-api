@@ -294,3 +294,10 @@
    - :manager
  :optional:
    - :auth_token
+'TestEconomyManagement::Invite':
+ :mandatory:
+   - :client_id
+   - :client
+   - :manager
+   - :emails
+ :optional:

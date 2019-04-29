@@ -83,6 +83,31 @@ token_demo_already_setup:
   code: "UNPROCESSABLE_ENTITY"
   message: "Token demo has already been setup."
 
+token_demo_setup_incomplete:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Token demo setup is not yet done."
+
+token_demo_invite_invalid_email:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Some of the invited emails are invalid."
+
+token_demo_invite_no_email:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Emails are mandatory for invite."
+
+token_demo_reinvite_too_early:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Emails can be re-invited after 24 hours."
+
+token_demo_too_many_invites:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "You have already invited 1000 Emails in last 30 days."
+
 aux_chain_id_not_found:
   http_code: 404
   code: "NOT_FOUND"
