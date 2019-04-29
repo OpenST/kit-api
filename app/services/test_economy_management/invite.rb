@@ -11,7 +11,7 @@ module TestEconomyManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client (mandatory) - Client cache data
     # @params [Hash] manager (mandatory) - Manager cache data
-    # @params [String] emails (mandatory) - invited emails
+    # @params [String] email_addresses (mandatory) - invited emails
     #
     # @return [TestEconomyManagement::Invite]
     #
@@ -19,7 +19,7 @@ module TestEconomyManagement
 
       super
 
-      @emails = @params[:emails]
+      @emails_str = @params[:email_addresses]
 
       @email_arr = []
       @already_invited_emails_map = {}
@@ -95,7 +95,7 @@ module TestEconomyManagement
 
       invalid_emails_present = false
 
-      @emails.split(',').each do |email|
+      @emails_str.split(',').each do |email|
         email = email.downcase.strip
         next if email.blank?
 
