@@ -195,7 +195,7 @@ module TestEconomyManagement
         'tem_i_5',
         'token_demo_too_many_invites',
         GlobalConstant::ErrorAction.default
-      ) if total_invites > 1000
+      ) if (total_invites + @email_arr.length) > 1000
 
       success
 
