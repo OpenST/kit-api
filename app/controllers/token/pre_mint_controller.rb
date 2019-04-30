@@ -7,7 +7,7 @@ class Token::PreMintController < AuthenticationController
   # * Reviewed By:
   #
   def get_pre_mint_details
-    service_response = ::GetPreMintDetails.new(params).perform
+    service_response = TokenManagement::GetPreMintDetails.new(params).perform
     return render_api_response(service_response)
   end
 end

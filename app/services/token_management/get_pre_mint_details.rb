@@ -119,7 +119,7 @@ module TokenManagement
     # @return [Result::Base]
     def direct_request_to_saas_api
 
-      token_has_ost_managed_owner = @token[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
+      token_has_ost_managed_owner = @token_details[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
 
       params_for_saas_api = {
         token_id: @token_id,
