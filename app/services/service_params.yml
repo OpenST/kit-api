@@ -247,7 +247,6 @@
   :optional:
 'TokenManagement::GetPreMintDetails':
   :mandatory:
-    - :staker_address
     - :client_id
     - :stake_amount
     - :bt_amount

@@ -4,7 +4,7 @@ module GlobalConstant
 
       def self.gas
         return {
-          requestStake: '0x61A80'# 300000
+          requestStake: '0x61A80'# 400000
         }
       end
 

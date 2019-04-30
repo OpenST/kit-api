@@ -26,7 +26,7 @@ module GlobalConstant
       end
 
       def has_ost_managed_owner
-        'has_ost_managed_owner'
+        'hasOstManagedOwner'
       end
 
     end

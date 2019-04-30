@@ -1,4 +1,5 @@
 module WalletAddressesManagement
+
   class AssociateAddress < WalletAddressesManagement::Base
 
     # Initialize
@@ -261,7 +262,7 @@ module WalletAddressesManagement
         end
 
         token_addresses[:address] = @owner_address
-        token_addresses[:known_address_id] = null
+        token_addresses[:known_address_id] = nil
 
         token_addresses.save!
       else

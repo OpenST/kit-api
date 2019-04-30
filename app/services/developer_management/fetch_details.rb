@@ -55,6 +55,7 @@ module DeveloperManagement
 
         @api_response_data = {
           token: @token,
+          stake_currencies: {@token[:stake_currency_id] => StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]},
           client_manager: @client_manager,
           manager: @manager,
           sub_env_payloads: @sub_env_payload_data,

@@ -9,7 +9,6 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
-    # @params [String] staker_address (mandatory) - Staker Address
     # @params [String] stake_amount (mandatory) - Stake Amount
     # @params [String] bt_amount (mandatory) - Bt Amount
     #
@@ -23,7 +22,6 @@ module TokenManagement
 
       @stake_amount = params[:stake_amount]
       @bt_amount = params[:bt_amount]
-      @staker_address = @params[:staker_address]
       @client_id = @params[:client_id]
 
     end
@@ -69,18 +67,9 @@ module TokenManagement
       r = validate
       return r unless r.success?
 
-      unless Util::CommonValidator.is_ethereum_address?(@staker_address)
-        return validation_error(
-          'a_s_cm_ggca_1',
-          'invalid_api_params',
-          ['invalid_staker_address'],
-          GlobalConstant::ErrorAction.default
-        )
-      end
-
       unless Util::CommonValidator.is_integer?(@client_id)
         return validation_error(
-          'a_s_cm_ggca_2',
+          'a_s_cm_ggca_1',
           'invalid_api_params',
           ['invalid_client_id'],
           GlobalConstant::ErrorAction.default
@@ -88,8 +77,6 @@ module TokenManagement
       end
 
       @client_id = @client_id.to_i
-
-      @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
 
       @stake_amount = @stake_amount.to_s
       @bt_amount = @bt_amount.to_s
@@ -131,33 +118,39 @@ module TokenManagement
     #
     # @return [Result::Base]
     def direct_request_to_saas_api
+
+      token_has_ost_managed_owner = @token[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
+
       params_for_saas_api = {
         token_id: @token_id,
-        staker_address: @staker_address,
         client_id: @client_id,
         stake_amount: @stake_amount,
-        bt_amount: @bt_amount
+        bt_amount: @bt_amount,
+        fetch_request_stake_tx_params: !token_has_ost_managed_owner
       }
 
       saas_response = SaasApi::Token::PreMintDetails.new.perform(params_for_saas_api)
       return saas_response unless saas_response.success?
 
       saas_response_data = saas_response.data
-      @api_response_data[:contract_details] = {
-        gateway_composer: {
-          abi: GlobalConstant::ContractDetails::GatewayComposer.abi,
-          address: saas_response_data['gateway_composer_contract_address'],
-          gas: GlobalConstant::ContractDetails::GatewayComposer.gas
+
+      unless token_has_ost_managed_owner
+        @api_response_data[:contract_details] = {
+            gateway_composer: {
+                abi: GlobalConstant::ContractDetails::GatewayComposer.abi,
+                address: saas_response_data['request_stake_tx_params']['gateway_composer_contract_address'],
+                gas: GlobalConstant::ContractDetails::GatewayComposer.gas
+            }
         }
-      }
-      @api_response_data[:gas_price] = saas_response_data['origin_chain_gas_price']
-      @api_response_data[:request_stake_tx_params] = {
-        gateway_contract: saas_response_data['gateway_contract_address'],
-        gas_price: '0',
-        gas_limit: '0',
-        staker_gateway_nonce: saas_response_data['staker_gateway_nonce'],
-        stake_and_mint_beneficiary: saas_response_data['stake_and_mint_beneficiary']
-      }
+        @api_response_data[:gas_price] = saas_response_data['request_stake_tx_params']['origin_chain_gas_price']
+        @api_response_data[:request_stake_tx_params] = {
+            gateway_contract: saas_response_data['request_stake_tx_params']['gateway_contract_address'],
+            gas_price: saas_response_data['request_stake_tx_params']['gas_price'],
+            gas_limit: saas_response_data['request_stake_tx_params']['gas_limit'],
+            staker_gateway_nonce: saas_response_data['request_stake_tx_params']['staker_gateway_nonce'],
+            stake_and_mint_beneficiary: saas_response_data['request_stake_tx_params']['stake_and_mint_beneficiary']
+        }
+      end
 
       @api_response_data[:precise_amounts] = saas_response_data['precise_amounts']
 

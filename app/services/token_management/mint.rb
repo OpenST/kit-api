@@ -183,6 +183,8 @@ module TokenManagement
       saas_response = SaasApi::Token::MintDetails.new.perform(params)
       return saas_response unless saas_response.success?
 
+      #Todo: Check if we need to send simple_token abi/gas when owner is ost managed
+
       @api_response_data[:contract_details] = {
         simple_token: { # TODO:@Shlok Replace 'simple_token' -> 'stake_currency'
           abi: GlobalConstant::ContractDetails::StakeCurrency.abi,

@@ -22,14 +22,14 @@ class Token < DbConnection::KitSaasSubenv
   # Note : always include this after declaring bit_wise_columns_config method
   include BitWiseConcern
 
-# Format data to a format which goes into cache
-#
-# * Author: Puneet
-# * Date: 01/02/2018
-# * Reviewed By:
-#
-# @return [Hash]
-#
+  # Format data to a format which goes into cache
+  #
+  # * Author: Puneet
+  # * Date: 01/02/2018
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
   def formatted_cache_data
     {
         id: id,
@@ -39,21 +39,21 @@ class Token < DbConnection::KitSaasSubenv
         conversion_factor: conversion_factor.present? ? conversion_factor.to_s : conversion_factor, # should be string as it goes to FE
         decimal: decimal,
         status: status,
+        stake_currency_id: stake_currency_id,
         properties: properties.present? ? Token.get_bits_set_for_properties(properties) : [],
     }
   end
 
   after_commit :flush_cache
 
-# Flush caches
-#
-# * Author: Shlok
-# * Date: 22/01/2019
-# * Reviewed By:
-#
+  # Flush caches
+  #
+  # * Author: Shlok
+  # * Date: 22/01/2019
+  # * Reviewed By:
+  #
   def flush_cache
     KitSaasSharedCacheManagement::TokenDetails.new([client_id]).clear
   end
-
 
 end

@@ -11,6 +11,7 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [String] name (mandatory) - Token name
     # @params [String] symbol (mandatory) - Token symbol
+    # @params [String] stake_currency_symbol (mandatory) - stake currency symbol
     # @params [String] conversion_factor (mandatory) - Conversion factor
     # @params [Hash] client_manager (mandatory) - logged in client manager object
     #
@@ -55,7 +56,10 @@ module TokenManagement
         r = create_api_credentials
         return r unless r.success?
 
-        success_with_data({token: @token_details.formatted_cache_data})
+        success_with_data({
+          token: @token_details.formatted_cache_data,
+          stake_currencies: {@token_details.stake_currency_id => StakeCurrency.ids_to_details_cache[@token_details.stake_currency_id]}
+         })
 
       end
 
@@ -210,7 +214,7 @@ module TokenManagement
       @token_details.stake_currency_id = @stake_currency_id
       @token_details.decimal = @stake_currency_decimal
 
-      @token_details.save!
+      @token_details.save! if @token_details.changed?
 
       KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).clear
 
@@ -226,6 +230,7 @@ module TokenManagement
     #
     # @return [Result::Base]
     def delete_old_addresses
+
       # Fetch token id
       # delete if any address present in token addresses table and client_wallet_addresses table
 
@@ -233,15 +238,13 @@ module TokenManagement
       ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name ).destroy_all
       token_addresses = TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).first
 
-      if token_addresses[:known_address_id].present?
-        SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: token_addresses[:known_address_id]})
+      if token_addresses.present? && token_addresses.known_address_id.present?
+        SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: token_addresses.known_address_id})
+        token_addresses.destroy!
       end
 
-      token_addresses.destroy!
-
-      KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
-
       success
+
     end
 
     # Create api credentials

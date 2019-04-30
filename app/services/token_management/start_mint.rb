@@ -49,9 +49,6 @@ module TokenManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        r = fetch_token
-        return r unless r.success?
-
         r = add_token_to_response
         return r unless r.success?
 
@@ -73,12 +70,30 @@ module TokenManagement
       r = validate
       return r unless r.success?
 
-      # Santize
-      @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)
-      @request_stake_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@request_stake_tx_hash)
-      @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
+      r = fetch_token
+      return r unless r.success?
 
-      validation_errors = validate_input_params
+      validation_errors = []
+
+      # Santize
+      if @token[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
+        validation_errors.push('invalid_approve_transaction_hash') if @approve_tx_hash.present?
+        validation_errors.push('invalid_request_stake_transaction_hash') if @request_stake_tx_hash.present?
+      else
+        @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)
+        @request_stake_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@request_stake_tx_hash)
+        unless Util::CommonValidator.is_transaction_hash?(@approve_tx_hash)
+          validation_errors.push('invalid_approve_transaction_hash')
+        end
+        unless Util::CommonValidator.is_transaction_hash?(@request_stake_tx_hash)
+          validation_errors.push('invalid_request_stake_transaction_hash')
+        end
+      end
+
+      @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
+      unless Util::CommonValidator.is_ethereum_address?(@staker_address)
+        validation_errors.push('invalid_staker_address')
+      end
 
       if validation_errors.present?
         return validation_error(
@@ -118,32 +133,6 @@ module TokenManagement
       success
     end
 
-    # Validate input params
-    #
-    # * Author: Ankit
-    # * Date: 18/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def validate_input_params
-      validation_errors = []
-
-      unless Util::CommonValidator.is_transaction_hash?(@approve_tx_hash)
-        validation_errors.push('invalid_approve_transaction_hash')
-      end
-
-      unless Util::CommonValidator.is_transaction_hash?(@request_stake_tx_hash)
-        validation_errors.push('invalid_request_stake_transaction_hash')
-      end
-
-      unless Util::CommonValidator.is_ethereum_address?(@staker_address)
-        validation_errors.push('invalid_staker_address')
-      end
-
-      validation_errors
-    end
-
     # direct request to saas api
     #
     #
@@ -153,15 +142,21 @@ module TokenManagement
     #
     # @return [Result::Base]
     def direct_request_to_saas_api
+
       params_for_saas_api = {
-        approve_transaction_hash: @approve_tx_hash,
-        request_stake_transaction_hash:@request_stake_tx_hash,
         staker_address: @staker_address,
         token_id: @token_id,
         client_id: @client_id,
         fe_stake_currency_to_stake: @fe_stake_currency_to_stake,
         fe_bt_to_mint: @fe_bt_to_mint
       }
+
+      unless @token[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
+        params_for_saas_api.merge!(
+          approve_transaction_hash: @approve_tx_hash,
+          request_stake_transaction_hash:@request_stake_tx_hash,
+        )
+      end
 
       r = SaasApi::Token::StartMint.new.perform(params_for_saas_api)
       return r unless r.success?

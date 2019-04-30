@@ -54,16 +54,22 @@ module TokenManagement
           wallet_association: GlobalConstant::MessageToSign.wallet_association
         }
 
-        success_with_data(
-          {
+        api_response_data = {
             token: @token,
             sign_messages: @sign_message,
             client_manager: @client_manager,
             manager: @manager,
             price_points: @price_points,
             sub_env_payloads: @sub_env_payload_data
-          }
-        )
+        }
+
+        if @token[:stake_currency_id].present?
+          api_response_data[:stake_currencies] = {@token[:stake_currency_id] => StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]}
+        else
+          api_response_data[:all_stake_currencies] = StakeCurrency.ids_to_details_cache.keys
+        end
+
+        success_with_data(api_response_data)
 
       end
 

@@ -223,6 +223,7 @@ module DashboardManagement
       success_with_data(
         {
           token: @token,
+          stake_currencies: {@token[:stake_currency_id] => StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]},
           dashboard_details: {
             total_supply: @total_supply,
             total_supply_dollar: @total_supply_dollar,
