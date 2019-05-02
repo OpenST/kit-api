@@ -408,6 +408,11 @@ token_demo_invite_too_many_email:
   parameter: 'email_addresses'
   message: "Max of 10 emails are allowed in one go."
 
+token_demo_invite_duplicate_email:
+  code: 'invalid'
+  parameter: 'email_addresses'
+  message: "Duplicate emails found."
+
 token_demo_reinvite_too_early:
   code: 'invalid'
   parameter: 'email_addresses'

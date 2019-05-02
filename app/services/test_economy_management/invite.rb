@@ -124,6 +124,13 @@ module TestEconomyManagement
       return validation_error(
           'tem_i_6',
           'invalid_api_params',
+          ['token_demo_invite_duplicate_email'],
+          GlobalConstant::ErrorAction.default
+      ) if @email_arr.length != @email_arr.uniq.length
+
+      return validation_error(
+          'tem_i_7',
+          'invalid_api_params',
           ['token_demo_invite_too_many_email'],
           GlobalConstant::ErrorAction.default
       ) if @email_arr.length > 10
