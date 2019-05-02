@@ -13,9 +13,10 @@ module TokenManagement
     # @params [String] approve_transaction_hash (mandatory)
     # @params [String] request_stake_transaction_hash (mandatory)
     # @params [String] staker_address (mandatory)
-    # @params [String] fe_ost_to_stake (mandatory)
-    # @params [String] fe_bt_to_mint (mandatory)
-    #
+    # @params [String] stake_currency_to_stake (mandatory) : in wei amount of stake currency to be staked
+    # @params [String] bt_to_mint (mandatory) : in wei amount of BT to be minted
+    # @params [String] fe_stake_currency_to_stake (mandatory) : in non wei amount of stake currency to be staked
+    # @params [String] fe_bt_to_mint (mandatory) : in non wei amount of BT to be minted
     #
     # @return [TokenManagement::StartMint]
     #
@@ -26,8 +27,10 @@ module TokenManagement
       @approve_tx_hash = @params[:approve_transaction_hash]
       @request_stake_tx_hash = @params[:request_stake_transaction_hash]
       @staker_address = @params[:staker_address]
-      @fe_stake_currency_to_stake = @params[:fe_ost_to_stake]
+      @fe_stake_currency_to_stake = @params[:fe_stake_currency_to_stake]
       @fe_bt_to_mint = @params[:fe_bt_to_mint]
+      @stake_currency_to_stake_in_wei = @params[:stake_currency_to_stake]
+      @bt_to_mint_in_wei = @params[:bt_to_mint]
 
       @api_response_data = {}
       @token_id = nil
@@ -148,7 +151,9 @@ module TokenManagement
         token_id: @token_id,
         client_id: @client_id,
         fe_stake_currency_to_stake: @fe_stake_currency_to_stake,
-        fe_bt_to_mint: @fe_bt_to_mint
+        fe_bt_to_mint: @fe_bt_to_mint,
+        stake_currency_to_stake: @stake_currency_to_stake_in_wei,
+        bt_to_mint: @bt_to_mint_in_wei
       }
 
       unless @token[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
