@@ -107,6 +107,12 @@ module TokenManagement
         )
       end
 
+      # as these values may be big big int, convert to string to avoid sending as e power
+      @fe_stake_currency_to_stake = @fe_stake_currency_to_stake.to_s
+      @fe_bt_to_mint = @fe_bt_to_mint.to_s
+      @bt_to_mint_in_wei = @bt_to_mint_in_wei.to_s
+      @stake_currency_to_stake_in_wei = @stake_currency_to_stake_in_wei.to_s
+
       success
     end
 

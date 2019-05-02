@@ -9,7 +9,6 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
-    # @params [String] stake_currency_to_stake (mandatory) - in wei Stake Amount
     # @params [String] bt_to_mint (mandatory) - in wei Bt Amount
     #
     # @return [GetPreMintDetails]
@@ -20,7 +19,6 @@ module TokenManagement
 
       @api_response_data = {}
 
-      @stake_currency_to_stake_in_wei = params[:stake_currency_to_stake]
       @bt_to_mint_in_wei = params[:bt_to_mint]
       @client_id = @params[:client_id]
 
@@ -78,7 +76,7 @@ module TokenManagement
 
       @client_id = @client_id.to_i
 
-      @stake_currency_to_stake_in_wei = @stake_currency_to_stake_in_wei.to_s
+      # as these values may be big big int, convert to string to avoid sending as e power
       @bt_to_mint_in_wei = @bt_to_mint_in_wei.to_s
 
       success
@@ -124,7 +122,6 @@ module TokenManagement
       params_for_saas_api = {
         token_id: @token_id,
         client_id: @client_id,
-        stake_currency_to_stake: @stake_currency_to_stake_in_wei,
         bt_to_mint: @bt_to_mint_in_wei,
         fetch_request_stake_tx_params: !token_has_ost_managed_owner
       }

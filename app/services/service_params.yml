@@ -251,7 +251,6 @@
   :mandatory:
     - :client_id
     - :bt_to_mint
-    - :stake_currency_to_stake
   :optional:
 'TokenManagement::MintProgress':
   :mandatory:
