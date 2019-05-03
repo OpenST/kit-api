@@ -2,7 +2,7 @@ class AddColumnStakeCurrencyIdInTokensTable < DbMigrationConnection
   def up
 
     run_migration_for_db(DbConnection::KitSaasSubenv) do
-      add_column :tokens, :stake_currency_id, :tinyint, after: :delayed_recovery_interval, null: false
+      add_column :tokens, :stake_currency_id, :tinyint, after: :delayed_recovery_interval, null: false, default: 1
     end
 
   end
