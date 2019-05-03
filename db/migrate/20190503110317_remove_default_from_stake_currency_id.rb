@@ -1,7 +1,7 @@
 class RemoveDefaultFromStakeCurrencyId < DbMigrationConnection
   def up
     run_migration_for_db(DbConnection::KitSaasSubenv) do
-      change_column :tokens, :stake_currency_id, :integer, default: nil
+      change_column :tokens, :stake_currency_id, :integer, default: nil, null: false
     end
   end
 
