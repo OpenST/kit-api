@@ -118,6 +118,8 @@ module ManagerManagement
         return unauthorized_access_response('am_vc_5') unless @manager.present? &&
             (@manager[:status] == GlobalConstant::Manager.active_status)
 
+        return unauthorized_access_response('am_vc_10') if token_s.blank?
+
         evaluated_token = Manager.get_cookie_token(
             manager_id: @manager_id,
             current_client_id: @manager[:current_client_id],

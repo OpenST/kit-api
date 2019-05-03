@@ -41,6 +41,10 @@ module GlobalConstant
         1.year
       end
 
+      def utm_params_cookie_name
+        'ost_up'
+      end
+
     end
 
   end

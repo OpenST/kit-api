@@ -231,6 +231,30 @@ module ManagerManagement
         success
       end
 
+      # insert UTM params
+      #
+      # * Author: Alpesh
+      # * Date: 15/04/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def create_utm_info
+        return success if @utm_params.blank? || @utm_params[:utm_source].blank?
+        UtmLogs.create(
+          {
+            client_manager_id: @client_manager_obj.id,
+            utm_source: @utm_params[:utm_source],
+            utm_type: @utm_params[:utm_type],
+            utm_medium: @utm_params[:utm_medium],
+            utm_term: @utm_params[:utm_term],
+            utm_campaign: @utm_params[:utm_campaign],
+            utm_content: @utm_params[:utm_content]
+          }
+        )
+        success
+      end
+
       # Sanitize marcomm flag
       #
       # * Author: Ankit

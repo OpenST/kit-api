@@ -99,6 +99,10 @@ module GlobalConstant
       @company_other_product_urls ||= fetch_config.fetch('company_other_product_urls', {}).with_indifferent_access
     end
 
+    def self.jira_config
+      @jira_config ||= fetch_config.fetch('jira', {}).with_indifferent_access
+    end
+
     def self.grant_timeout
       86400 #24 hours
     end
@@ -109,6 +113,10 @@ module GlobalConstant
 
     def self.current_api_version
       'v2'
+    end
+
+    def self.pipedrive
+      @pipedrive ||= fetch_config.fetch('pipedrive', {}).with_indifferent_access
     end
 
     private

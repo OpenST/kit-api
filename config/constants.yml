@@ -75,6 +75,23 @@ constants:
   usage_report_recipients:
     email_ids: <%= ENV['KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS'] %>
 
+  jira:
+    username: <%= ENV['KA_JIRA_USERNAME'] %>
+    password: <%= ENV['KA_JIRA_PASSWORD'] %>
+    site: <%= ENV['KA_JIRA_SITE'] %>
+    auth_type: <%= ENV['KA_JIRA_AUTH_TYPE'] %>
+    project_name: <%= ENV['KA_JIRA_PROJECT_NAME'] %>
+    assignee_name: <%= ENV['KA_JIRA_ASSIGNEE_NAME'] %>
+
+  pipedrive:
+    api_token: <%= ENV['KA_OST_PD_API_TOKEN'] %>
+    enterprise_user_id: <%= ENV['KA_OST_ENTERPRISE_PD_USER_ID'] %>
+    business_user_id: <%= ENV['KA_OST_BUSINESS_PD_USER_ID'] %>
+    enterprise_stage_id: <%= ENV['KA_OST_ENTERPRISE_PD_STAGE_ID'] %>
+    business_stage_id: <%= ENV['KA_OST_BUSINESS_PD_STAGE_ID'] %>
+    pipedrive_deal_enterprise_custom_field: <%= ENV['KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD'] %>
+    pipedrive_deal_mobile_app_custom_field: <%= ENV['KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD'] %>
+
   demo_mappy_server:
     endpoint: <%= ENV['KA_DEMO_MAPPY_SERVER_API_ENDPOINT'] %>
 
