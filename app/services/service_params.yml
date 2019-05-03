@@ -283,3 +283,24 @@
 'AdminManagement::Whitelist::Email':
  :mandatory:
    - :e
+'TestEconomyManagement::Activate':
+ :mandatory:
+   - :client_id
+   - :client
+   - :manager
+ :optional:
+   - :auth_token
+'TestEconomyManagement::Get':
+ :mandatory:
+   - :client_id
+   - :client
+   - :manager
+ :optional:
+   - :auth_token
+'TestEconomyManagement::Invite':
+ :mandatory:
+   - :client_id
+   - :client
+   - :manager
+   - :email_addresses
+ :optional:

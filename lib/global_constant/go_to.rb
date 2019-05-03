@@ -89,6 +89,12 @@ module GlobalConstant
         }
       end
 
+      def test_economy
+        {
+            by_screen_name: :test_economy
+        }
+      end
+
       def logout
         {
           by_screen_name: :logout

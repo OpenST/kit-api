@@ -157,6 +157,11 @@ module GlobalConstant
         'platform_whitelist_done'
       end
 
+      # Platform test economy invite  - sent when user is invited to platform test economy
+      def platform_test_economy_invite_template
+        'platform_test_economy_invite'
+      end
+
       # Initiate Recovery - sent when recovery is initiated from saas-api
       def recovery_request_submission_template
         'recovery_request_submission'
@@ -201,6 +206,7 @@ module GlobalConstant
           platform_forgot_password_template,
           platform_invite_manager_template,
           platform_mainnet_access_request_template,
+          platform_test_economy_invite_template,
           recovery_request_submission_template,
           platform_whitelisting_done_template,
           platform_token_setup_status_success_template,
@@ -277,6 +283,20 @@ module GlobalConstant
       def is_recovery_request_submission_template?(template_name)
         [
           GlobalConstant::PepoCampaigns.recovery_request_submission_template
+        ].include?(template_name)
+      end
+
+      # Is this template of test economy invite
+      #
+      # * Author: Sunil
+      # * Date: 25/04/2019
+      # * Reviewed By: Puneet
+      #
+      # @return [Boolean]
+      #
+      def is_test_economy_invite_template?(template_name)
+        [
+          GlobalConstant::PepoCampaigns.platform_test_economy_invite_template
         ].include?(template_name)
       end
 

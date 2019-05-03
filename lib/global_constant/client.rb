@@ -15,12 +15,28 @@ module GlobalConstant
         'sandbox_whitelist_requested_status'
       end
 
+      def sandbox_test_economy_qr_code_uploaded_status
+        'sandbox_test_economy_qr_code_uploaded_status'
+      end
+
+      def sandbox_registered_in_mappy_server_status
+        'sandbox_registered_in_mappy_server_status'
+      end
+
       def mainnet_whitelisted_status
         'mainnet_whitelisted_status'
       end
 
       def mainnet_whitelist_requested_status
         'mainnet_whitelist_requested_status'
+      end
+
+      def mainnet_test_economy_qr_code_uploaded_status
+        'mainnet_test_economy_qr_code_uploaded_status'
+      end
+
+      def mainnet_registered_in_mappy_server_status
+        'mainnet_registered_in_mappy_server_status'
       end
 
       ### Status End ###

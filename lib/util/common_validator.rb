@@ -412,6 +412,20 @@ module Util
       return company_name.count('«') == company_name.count('»')
     end
 
+    # check if email is an OST email
+    #
+    # * Author: Puneet
+    # * Date: 15/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_ost_email?(email)
+      return false unless is_valid_email?(email)
+      buffer = email.split('@')
+      buffer[1].downcase == 'ost.com'
+    end
+
   end
 
 end

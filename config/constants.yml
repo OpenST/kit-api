@@ -3,6 +3,7 @@ constants:
   env_identifier: <%= ENV['ENV_IDENTIFIER'] %>
   cookie_domain: <%= ENV['KA_COOKIE_DOMAIN'] %>
   support_email: <%= ENV['KA_SUPPORT_EMAIL'] %>
+  activate_test_economy_auth_token: <%= ENV['KA_ACTIVATE_TEST_ECONOMY_AUTH_TOKEN'] %>
 
   admin_basic_auth:
     username: <%= ENV['KA_ADMIN_BASIC_AUTH_USERNAME'] %>
@@ -15,13 +16,20 @@ constants:
       secret_key: <%= ENV['KA_USER_AWS_SECRET_KEY']%>
 
   s3:
-    access_key: <%= ENV['KA_S3_ACCESS_KEY']%>
-    secret_key: <%= ENV['KA_S3_SECRET_KEY']%>
-    analytics_bucket: <%= ENV['KA_S3_ANALYTICS_BUCKET']%>
-    reports_bucket: <%= ENV['KA_S3_REPORTS_BUCKET']%>
+    domain: <%= ENV['KA_S3_DOMAIN']%>
     master_folder: <%= ENV['KA_S3_MASTER_FOLDER']%>
-    platform_usage_reports_folder: <%= ENV['KA_S3_REPORTS_PLATFORM_USAGE_FOLDER']%>
-    analytics_graphs_folder: <%= ENV['KA_S3_ANALYTICS_GRAPHS_FOLDER']%>
+    private:
+      access_key: <%= ENV['KA_S3_ACCESS_KEY']%>
+      secret_key: <%= ENV['KA_S3_SECRET_KEY']%>
+      analytics_bucket: <%= ENV['KA_S3_ANALYTICS_BUCKET']%>
+      reports_bucket: <%= ENV['KA_S3_REPORTS_BUCKET']%>
+      platform_usage_reports_folder: <%= ENV['KA_S3_REPORTS_PLATFORM_USAGE_FOLDER']%>
+      analytics_graphs_folder: <%= ENV['KA_S3_ANALYTICS_GRAPHS_FOLDER']%>
+    public:
+      access_key: <%= ENV['KA_S3_PUBLIC_ACCESS_KEY']%>
+      secret_key: <%= ENV['KA_S3_PUBLIC_SECRET_KEY']%>
+      bucket: <%= ENV['KA_S3_PUBLIC_BUCKET']%>
+      test_economy_qr_code_folder: <%= ENV['KA_S3_PUBLIC_TEST_ECONOMY_QR_CODE_FOLDER']%>
 
   kms:
     login:
@@ -36,6 +44,7 @@ constants:
     email_tokens_decriptor_key: <%= ENV['KA_EMAIL_TOKENS_DECRIPTOR_KEY'] %>
     generic_sha_key: <%= ENV['KA_GENERIC_SHA_KEY'] %>
     cache_data_sha_key: <%= ENV['KA_CACHE_DATA_SHA_KEY'] %>
+    token_demo_sha_key: <%= ENV['KA_TOKEN_DEMO_SHA_KEY'] %>
 
   recaptcha:
     site_key: <%= ENV['KA_RECAPTCHA_SITE_KEY'] %>
@@ -57,7 +66,7 @@ constants:
       master_list: <%= ENV['KA_CAMPAIGN_MASTER_LIST']%>
 
   saas_api:
-    endpoint: '<%= ENV['KA_SAAS_API_ENDPOINT'] %>/'
+    endpoint: <%= ENV['KA_SAAS_API_ENDPOINT'] %>
     secret_key: <%= ENV['KA_SAAS_API_SECRET_KEY'] %>
 
   company_web:
@@ -82,3 +91,13 @@ constants:
     business_stage_id: <%= ENV['KA_OST_BUSINESS_PD_STAGE_ID'] %>
     pipedrive_deal_enterprise_custom_field: <%= ENV['KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD'] %>
     pipedrive_deal_mobile_app_custom_field: <%= ENV['KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD'] %>
+
+  demo_mappy_server:
+    endpoint: <%= ENV['KA_DEMO_MAPPY_SERVER_API_ENDPOINT'] %>
+
+  demo_app:
+    ios_url: <%= ENV['KA_DEMO_IOS_APP_URL'] %>
+    android_url: <%= ENV['KA_DEMO_ANDROID_APP_URL'] %>
+
+  company_other_product_urls:
+    view_root_url: <%= ENV['KA_VIEW_ROOT_URL'] %>
