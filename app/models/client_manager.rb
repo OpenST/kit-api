@@ -22,6 +22,14 @@ class ClientManager < DbConnection::KitClient
 
   after_commit :flush_cache
 
+  scope :super_admins, ->(client_id) {
+    where(
+        'client_id = ? AND privileges | ? > 0',
+        client_id,
+        ClientManager.privileges_config[GlobalConstant::ClientManager.is_super_admin_privilege]
+    )
+  }
+
   # Format data to a format which goes into cache
   #
   # * Author: Puneet

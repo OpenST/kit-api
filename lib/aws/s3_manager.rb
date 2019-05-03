@@ -10,10 +10,12 @@ module Aws
     # * Date: 01/04/2019
     # * Reviewed By:
     #
+    # @param [String] access - public / private which would determine params to be used
+    #
     # @return [Aws::S3Manager]
     #
-    def initialize
-
+    def initialize(access)
+      @access = access
     end
 
     # Get signed url for
@@ -242,7 +244,15 @@ module Aws
     # @return [Hash] returns Hash of AWS credentials
     #
     def credentials
-      @credentials ||= GlobalConstant::S3.credentials
+      @credentials ||= begin
+        if @access == GlobalConstant::S3.private_access
+          GlobalConstant::S3.private_bucket_credentials
+        elsif @access == GlobalConstant::S3.public_access
+          GlobalConstant::S3.public_bucket_credentials
+        else
+          fail "invalid access: #{@access}"
+        end
+      end
     end
 
   end

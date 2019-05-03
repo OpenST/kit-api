@@ -53,21 +53,30 @@ export KA_ADMIN_BASIC_AUTH_PASSWORD='dAss$14nflkn!'
 # Redis Details
 export KA_REDIS_ENDPOINT='redis://ca:st123@127.0.0.1:6379'
 
-# AWS Details
+# AWS Defaults
 export KA_DEFAULT_AWS_REGION="us-east-1"
-export KA_USER_AWS_ACCESS_KEY="AKIAJUDRALNURKAVS5IQ"
-export KA_USER_AWS_SECRET_KEY="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"
+export KA_S3_MASTER_FOLDER="d-sandbox"
 
 # S3 Details
+export KA_S3_DOMAIN="https://s3.amazonaws.com"
+
+# Private S3 Details
 export KA_S3_ACCESS_KEY="AKIAIG7G5KJ53INDY36A"
 export KA_S3_SECRET_KEY="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"
-export KA_S3_MASTER_FOLDER="d-sandbox"
 export KA_S3_REPORTS_BUCKET="reports.stagingost.com"
 export KA_S3_REPORTS_PLATFORM_USAGE_FOLDER="platform-usage"
 export KA_S3_ANALYTICS_BUCKET="graphs.stagingost.com"
 export KA_S3_ANALYTICS_GRAPHS_FOLDER="graphs"
 
+# Public S3 Details
+export KA_S3_PUBLIC_ACCESS_KEY="AKIA2IE3EXDCMPSHH3ZA"
+export KA_S3_PUBLIC_SECRET_KEY="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"
+export KA_S3_PUBLIC_BUCKET="public.stagingost.com"
+export KA_S3_PUBLIC_TEST_ECONOMY_QR_CODE_FOLDER="test-economy/qr-code"
+
 # KMS Details
+export KA_USER_AWS_ACCESS_KEY="AKIAJUDRALNURKAVS5IQ"
+export KA_USER_AWS_SECRET_KEY="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"
 export KA_LOGIN_KMS_ARN='arn:aws:kms:us-east-1:604850698061:key'
 export KA_LOGIN_KMS_ID='eab8148d-fd9f-451d-9eb9-16c115645635'
 export KA_API_KEY_KMS_ARN='arn:aws:kms:us-east-1:604850698061:key'
@@ -78,6 +87,12 @@ export KA_COOKIE_SECRET_KEY='byfd#ss@#4nflkn%^!~wkk^^&71o{23dpi~@jwe$pi'
 export KA_EMAIL_TOKENS_DECRIPTOR_KEY='3d3w6fs0983ab6b1e37d1c1fs64hm8g9'
 export KA_GENERIC_SHA_KEY='9fa6baa9f1ab7a805b80721b65d34964170b1494'
 export KA_CACHE_DATA_SHA_KEY='805a65cbc02c97a567481414a7cb8bf4'
+
+# Key which is used to encrypt url id which is used for Token Demo
+export KA_TOKEN_DEMO_SHA_KEY='814a56744a7cb8bf4805a651cbc02c97'
+
+# Auth token to allow activation of test economy even in Main Sub Env
+export KA_ACTIVATE_TEST_ECONOMY_AUTH_TOKEN='814a56744a7cb8bf4805a651cbc02c97'
 
 # Captcha Details
 export KA_RECAPTCHA_SITE_KEY='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
@@ -99,5 +114,31 @@ export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 # Company Web Details
 export KA_CW_DOMAIN='developmentost.com'
 
+# Company Other Product URL
+export KA_VIEW_ROOT_URL='http://view.developmentost.com:8080'
+
+# Demo Mappy Server Details
+export KA_DEMO_MAPPY_SERVER_API_ENDPOINT='http://127.0.0.1:3000/demo'
+
+# Demo App URL's
+export KA_DEMO_IOS_APP_URL=''
+export KA_DEMO_ANDROID_APP_URL=''
+
 # Usage report recipient's email ids
 export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
+
+# Jira Details
+export KA_JIRA_USERNAME=''
+export KA_JIRA_PASSWORD=''
+export KA_JIRA_PROJECT_NAME='TP'
+export KA_JIRA_AUTH_TYPE=':basic'
+export KA_JIRA_ASSIGNEE_NAME=''
+
+# Pipedrive Details
+export KA_OST_PD_API_TOKEN="0c5740a0fa913e7e06683d12934fc8e71e3706ba"
+export KA_OST_ENTERPRISE_PD_USER_ID="8857041"
+export KA_OST_BUSINESS_PD_USER_ID="8966142"
+export KA_OST_ENTERPRISE_PD_STAGE_ID="7"
+export KA_OST_BUSINESS_PD_STAGE_ID="8"
+export KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD='4c4a5c203f18967271754c0cf8d0ad79f8ca2c32'
+export KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD='7b052508c4d2918872c156ae8c8f124c210ab4f3'

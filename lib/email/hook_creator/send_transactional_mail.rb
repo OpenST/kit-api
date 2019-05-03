@@ -138,6 +138,17 @@ module Email
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:manager_email_id].blank?
 
+        elsif GlobalConstant::PepoCampaigns.is_test_economy_invite_template?(@template_name)
+
+          return error_with_data(
+            'e_hc_stm_9',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+          ) if @template_vars[:qr_code_url].blank?
+          #TODO: Open this up when we have these links set in ENV vars
+          #   || @template_vars[:ios_app_download_link].blank? ||
+          #   @template_vars[:android_app_download_link].blank?
+
         end
 
         success

@@ -22,6 +22,10 @@ module GlobalConstant
       def whitelisting_requester_kind
         'whitelisting_requester'
       end
+
+      def test_economy_invite_receiver_entity_kind
+        'test_economy_invite'
+      end
   
       ########## receiver_entity_kinds #############
 
