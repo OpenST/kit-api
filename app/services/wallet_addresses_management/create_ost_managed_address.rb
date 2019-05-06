@@ -65,7 +65,7 @@ module WalletAddressesManagement
       @client_id = @client_id.to_i
 
       #check environment
-      if GlobalConstant::Base.environment_name == GlobalConstant::Environment.production_environment
+      if GlobalConstant::Base.sub_environment_name == GlobalConstant::Environment.main_sub_environment
         return validation_error(
           'a_s_wam_coma_1',
           'unauthorized_access_response',
@@ -121,6 +121,7 @@ module WalletAddressesManagement
         update_client_wallet_address
         update_token_properties
       end
+      @owner_address = @new_known_address
       success
     end
 
@@ -138,9 +139,9 @@ module WalletAddressesManagement
       return r unless r.success?
 
       @new_known_address = r.data[:address].downcase
-      @known_address_id = r.data[:knownAddressId]
+      @known_address_id = r.data[:known_address_id]
 
-      @owner_address = @new_known_address
+
       success
     end
 
@@ -153,11 +154,20 @@ module WalletAddressesManagement
     #
     # @return [Result::Base]
     def update_token_owner_addresses
-      token_address = TokenAddresses.where(token_id: @token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).first_or_initialize
-      token_address[:address] = @new_known_address
-      token_address[:known_address_id] = @known_address_id
 
-      token_address.save!
+      if @owner_address.present?
+        token_address = TokenAddresses.where(token_id: @token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).first
+        token_address[:address] = @new_known_address
+        token_address[:known_address_id] = @known_address_id
+        token_address.save!
+      else
+        TokenAddresses.create!(
+          token_id: @token_id,
+          kind: GlobalConstant::TokenAddresses.owner_address_kind,
+          address: @new_known_address,
+          known_address_id: @known_address_id
+        )
+      end
 
     end
 

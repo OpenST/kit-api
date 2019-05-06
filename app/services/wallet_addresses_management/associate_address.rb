@@ -52,10 +52,7 @@ module WalletAddressesManagement
 
         #This check is added for a scenario when same client calls the associate address more than once.
         if @is_request_from_same_client
-          return success_with_data({
-                                     origin_addresses: @origin_addresses,
-                                     auxiliary_addresses: @auxiliary_addresses
-                                   })
+          return return_addresses_entity
         end
 
         r = redirect_request_to_saas_api
@@ -145,7 +142,7 @@ module WalletAddressesManagement
       success
     end
 
-    # Redirect request to saas api
+    # Redirect request to saas api to validate the personal sign
     #
     #
     # * Author: Ankit
@@ -286,7 +283,7 @@ module WalletAddressesManagement
     #
     # @return [Result::Base]
     def request_saas_to_remove_known_address(known_address_id)
-      response = SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: known_address_id})
+      response = SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: known_address_id, client_id: @client_id})
       unless response.success?
         @failed_logs = response
         notify_devs
