@@ -14,7 +14,7 @@ namespace :one_timers do
 
       token_batches.each do |token|
 
-        token.send("set_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
+        token.send("unset_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
 
         puts "Token: #{token.inspect}"
         token.save!
