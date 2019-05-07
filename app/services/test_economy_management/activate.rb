@@ -284,7 +284,7 @@ module TestEconomyManagement
       success_with_data(
         {
           token: @token,
-          client: @client_obj.formated_cache_data,
+          client: @client_obj.formatted_cache_data,
           manager: @manager,
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {
