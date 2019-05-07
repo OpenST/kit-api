@@ -137,3 +137,8 @@ token_status_invalid:
   http_code: 422
   code: "INVALID_REQUEST"
   message: "Token status is invalid."
+
+stake_currency_id_not_found:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "Stake currency id not found."

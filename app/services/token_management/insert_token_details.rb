@@ -56,9 +56,15 @@ module TokenManagement
         r = create_api_credentials
         return r unless r.success?
 
+        r = fetch_token_details
+        return r unless r.success?
+
+        r = fetch_stake_currency_details
+        return r unless r.success?
+
         success_with_data({
-          token: @token_details.formatted_cache_data,
-          stake_currencies: {@token_details.stake_currency_id => StakeCurrency.ids_to_details_cache[@token_details.stake_currency_id]}
+          token: @token,
+          stake_currencies: @stake_currencies
          })
 
       end
@@ -257,6 +263,37 @@ module TokenManagement
     # @return [Result::Base]
     def create_api_credentials
       ::ApiCredentials::Create.new({client_id:@client_id}).perform
+    end
+
+    # Fetch token details
+    #
+    # * Author: Anagha
+    # * Date: 08/03/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def fetch_token_details
+      @token = @token_details.formatted_cache_data
+      puts "@token==========#{@token}"
+      success
+    end
+
+    # Fetch stake currency details.
+    #
+    # * Author: Anagha
+    # * Date: 06/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def fetch_stake_currency_details
+      if @token[:stake_currency_id].present?
+        stake_currency_id = @token[:stake_currency_id]
+        @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
+
+        @token[:stake_currency_symbols] = @stake_currencies.keys
+      end
+
+      success
     end
 
   end

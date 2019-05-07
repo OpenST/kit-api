@@ -50,23 +50,25 @@ module TokenManagement
         r = fetch_default_price_points
         return r unless r.success?
 
+        r = fetch_stake_currency_details
+        return r unless r.success?
+
         @sign_message = {
           wallet_association: GlobalConstant::MessageToSign.wallet_association
         }
 
         api_response_data = {
-            token: @token,
-            sign_messages: @sign_message,
-            client_manager: @client_manager,
-            manager: @manager,
-            price_points: @price_points,
-            sub_env_payloads: @sub_env_payload_data
+          token: @token,
+          sign_messages: @sign_message,
+          client_manager: @client_manager,
+          manager: @manager,
+          price_points: @price_points,
+          sub_env_payloads: @sub_env_payload_data,
+          all_stake_currencies: @all_stake_currencies
         }
 
         if @token[:stake_currency_id].present?
-          api_response_data[:stake_currencies] = {@token[:stake_currency_id] => StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]}
-        else
-          api_response_data[:all_stake_currencies] = StakeCurrency.ids_to_details_cache.keys
+          api_response_data[:stake_currencies] = @stake_currencies
         end
 
         success_with_data(api_response_data)
@@ -134,6 +136,26 @@ module TokenManagement
       return r unless r.success?
 
       @sub_env_payload_data = r.data[:sub_env_payloads]
+
+      success
+    end
+
+    # Fetch stake currency details.
+    #
+    # * Author: Anagha
+    # * Date: 06/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def fetch_stake_currency_details
+      @all_stake_currencies = Util::EntityHelper.fetch_stake_currency_details.data
+
+      if @token[:stake_currency_id].present?
+        stake_currency_id = @token[:stake_currency_id]
+        @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
+        @token[:stake_currency_symbols] = @stake_currencies.keys
+
+      end
 
       success
     end

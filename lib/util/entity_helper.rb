@@ -112,6 +112,33 @@ module Util
         success_with_data(aux_chain_id: aux_chain_id)
       end
 
+      # Fetch stake currency details
+      #
+      # * Author: Anagha
+      # * Date: 06/05/2019
+      # * Reviewed By:
+      #
+      # @param [Integer] stake_currency_id (optional) - Stake currency id
+      #
+      # @return [Result::Base]
+      #
+      def fetch_stake_currency_details(stake_currency_id = nil)
+        stake_currencies_details = {}
+        cache_data = StakeCurrency.ids_to_details_cache
+
+        if stake_currency_id.present?
+          stake_currencies_details[cache_data[stake_currency_id][:symbol]] = cache_data[stake_currency_id]
+          return success_with_data(stake_currencies_details)
+        end
+
+        cache_data.each do |id, row_value|
+          stake_currencies_details[row_value[:symbol]] = row_value
+        end
+
+        puts "stake_currencies_details========#{stake_currencies_details}"
+        success_with_data(stake_currencies_details)
+      end
+
       private
       
       # no client associated response
@@ -165,6 +192,24 @@ module Util
             err,
             'token_not_found',
             GlobalConstant::ErrorAction.default
+        )
+      end
+
+      # No stake currency id found
+      #
+      # * Author: Dhananjay
+      # * Date: 21/01/2019
+      # * Reviewed By: Anagha
+      #
+      # @param [String] err (mandatory) - err code
+      #
+      # @return [Result::Base]
+      #
+      def stake_currency_id_not_found_response(err)
+        error_with_data(
+          err,
+          'stake_currency_id_not_found',
+          GlobalConstant::ErrorAction.default
         )
       end
 

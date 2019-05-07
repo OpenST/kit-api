@@ -53,9 +53,12 @@ module DeveloperManagement
         r = fetch_addresses
         return r unless r.success?
 
+        r = fetch_stake_currencies
+        return r unless r.success
+
         @api_response_data = {
           token: @token,
-          stake_currencies: {@token[:stake_currency_id] => StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]},
+          stake_currencies: @stake_currencies,
           client_manager: @client_manager,
           manager: @manager,
           sub_env_payloads: @sub_env_payload_data,
@@ -105,6 +108,8 @@ module DeveloperManagement
       end
 
       @token = token
+
+
       success
     end
 
@@ -163,8 +168,9 @@ module DeveloperManagement
       @token[:aux_chain_id] = aux_chain_id
 
       # Fetch chain addresses.
-      chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
-      @addresses['erc20_contract_address'] = chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
+      #chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
+      @addresses['erc20_contract_address'] = fetch_erc20_contract_address
+        #chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
 
       if token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract].nil?
         return success
@@ -180,6 +186,21 @@ module DeveloperManagement
       @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
 
       success
+    end
+
+    def fetch_stake_currencies
+      stake_currency_id = @token[:stake_currency_id]
+      @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
+
+      for symbol in @stake_currencies
+
+      end
+      @addresses['erc20_contract_address']
+      success
+    end
+
+    def fetch_erc20_contract_address
+
     end
 
   end
