@@ -21,6 +21,10 @@ module GlobalConstant
         GlobalConstant::Base.secret_encryptor['cache_data_sha_key']
       end
 
+      def token_demo_sha_key
+        GlobalConstant::Base.secret_encryptor['token_demo_sha_key']
+      end
+
     end
 
   end

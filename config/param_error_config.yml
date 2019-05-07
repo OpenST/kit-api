@@ -467,3 +467,28 @@ missing_address:
   parameter: 'address'
   code: 'missing'
   message: 'Missing address'
+
+token_demo_invite_invalid_email:
+  code: 'invalid'
+  parameter: 'email_addresses'
+  message: "Some of the invited emails are invalid."
+
+token_demo_invite_no_email:
+  code: 'invalid'
+  parameter: 'email_addresses'
+  message: "Emails are mandatory for invite."
+
+token_demo_invite_too_many_email:
+  code: 'invalid'
+  parameter: 'email_addresses'
+  message: "Max of 10 emails are allowed in one go."
+
+token_demo_invite_duplicate_email:
+  code: 'invalid'
+  parameter: 'email_addresses'
+  message: "Duplicate emails found."
+
+token_demo_reinvite_too_early:
+  code: 'invalid'
+  parameter: 'email_addresses'
+  message: "Emails can be re-invited after 24 hours."

@@ -235,6 +235,7 @@
     - :mobile_app_flag
     - :one_m_users_flag
     - :client_id
+    - :manager
   :optional:
 'ClientManagement::GetClientInfo':
   :mandatory:
@@ -294,3 +295,24 @@
 'WalletAddressesManagement::CreateOSTManagedAddress':
  :mandatory:
    - :client_id
+'TestEconomyManagement::Activate':
+ :mandatory:
+   - :client_id
+   - :client
+   - :manager
+ :optional:
+   - :auth_token
+'TestEconomyManagement::Get':
+ :mandatory:
+   - :client_id
+   - :client
+   - :manager
+ :optional:
+   - :auth_token
+'TestEconomyManagement::Invite':
+ :mandatory:
+   - :client_id
+   - :client
+   - :manager
+   - :email_addresses
+ :optional:

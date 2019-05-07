@@ -157,7 +157,7 @@ module DashboardManagement
                         GlobalConstant::GraphConstants.duration_type_month,
                         GlobalConstant::GraphConstants.duration_type_year]
       
-      s3_manager = Aws::S3Manager.new
+      s3_manager = Aws::S3Manager.new(GlobalConstant::S3.private_access)
       
       @graph_urls = {total_tx: {}, tx_by_name: {}, tx_by_type: {}}
 
@@ -175,6 +175,7 @@ module DashboardManagement
             expires_in: 120.minutes.to_i
           }
         )
+
         unless r.success?
           Rails.logger.error('generate_pre_signed_url_error', r.to_json)
         end
