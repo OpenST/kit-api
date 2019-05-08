@@ -86,7 +86,7 @@ module TokenManagement
       if @token[:stake_currency_id].present?
         stake_currencies = Util::EntityHelper.fetch_stake_currency_details(@token[:stake_currency_id]).data
         @api_response_data[:stake_currencies] = stake_currencies
-        @token[:stake_currency_symbols] = stake_currencies.keys
+        @token[:stake_currency_symbol] = stake_currencies.keys[0]
       end
       success
     end

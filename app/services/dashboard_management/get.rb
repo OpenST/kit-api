@@ -40,6 +40,9 @@ module DashboardManagement
         r = fetch_token
         return r unless r.success?
 
+        r = fetch_stake_currency_details
+        return r unless r.success?
+
         r = fetch_goto
         return r unless r.success?
 
@@ -77,6 +80,23 @@ module DashboardManagement
       ) unless token_resp.success?
 
       @token = token_resp.data
+      success
+    end
+
+    # Fetch stake currency details.
+    #
+    # * Author: Anagha
+    # * Date: 06/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_stake_currency_details
+      stake_currency_id = @token[:stake_currency_id]
+      @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
+
+      @token[:stake_currency_symbol] = @stake_currencies.keys[0]
+
       success
     end
 
@@ -211,19 +231,20 @@ module DashboardManagement
       success
     end
 
-    # direct request to saas api
+    # Direct request to saas api.
     #
     # * Author: Alpesh
-    # * Date: 6/03/2019
+    # * Date: 06/03/2019
     # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
     def prepare_response
+
       success_with_data(
         {
           token: @token,
-          stake_currencies: {@token[:stake_currency_id] => StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]},
+          stake_currencies: @stake_currencies,
           dashboard_details: {
             total_supply: @total_supply,
             total_supply_dollar: @total_supply_dollar,

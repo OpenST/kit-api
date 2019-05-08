@@ -53,8 +53,8 @@ module DeveloperManagement
         r = fetch_addresses
         return r unless r.success?
 
-        r = fetch_stake_currencies
-        return r unless r.success
+        r = fetch_stake_currency_details
+        return r unless r.success?
 
         @api_response_data = {
           token: @token,
@@ -167,11 +167,6 @@ module DeveloperManagement
       @token[:ubt_address] = @addresses['utility_branded_token_contract'] #This is needed as we are sending ubt address in token entity
       @token[:aux_chain_id] = aux_chain_id
 
-      # Fetch chain addresses.
-      #chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
-      @addresses['erc20_contract_address'] = fetch_erc20_contract_address
-        #chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
-
       if token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract].nil?
         return success
       end
@@ -188,19 +183,24 @@ module DeveloperManagement
       success
     end
 
-    def fetch_stake_currencies
+    # Fetch stake currency details.
+    #
+    # * Author: Anagha
+    # * Date: 06/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_stake_currency_details
       stake_currency_id = @token[:stake_currency_id]
       @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
 
-      for symbol in @stake_currencies
-
+      @stake_currencies.each do |key, value|
+        @token[:stake_currency_symbol] = key
+        @addresses['erc20_contract_address'] = value[:contract_address]
       end
-      @addresses['erc20_contract_address']
+
       success
-    end
-
-    def fetch_erc20_contract_address
-
     end
 
   end
