@@ -166,15 +166,6 @@ module DeveloperManagement
       @token[:ubt_address] = @addresses['utility_branded_token_contract'] #This is needed as we are sending ubt address in token entity
       @token[:aux_chain_id] = aux_chain_id
 
-      # Fetch chain addresses.
-      chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
-      @addresses['erc20_contract_address'] = chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
-
-      if token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract].nil?
-        return success
-      end
-      @addresses['token_holder_address'] = token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address]
-
       # Fetch company user uuid.
       company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
       @addresses['company_user_id'] = company_user_ids[token_id].first || ""
