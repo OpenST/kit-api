@@ -11,7 +11,6 @@ module GlobalConstant
       GlobalConstant::Base.saas_api[:secret_key]
     end
 
-
     def self. fetch_client_stats
       "#{GlobalConstant::Environment.url_prefix}/internal/client/fetch-stats"
     end
@@ -58,6 +57,14 @@ module GlobalConstant
 
     def self.get_dashboard
       "#{GlobalConstant::Environment.url_prefix}/internal/token/get-dashboard"
+    end
+
+    def self.get_user_detail
+      "#{GlobalConstant::Environment.url_prefix}/internal/user/get"
+    end
+
+    def self.api_endpoint_for_current_version
+      "#{GlobalConstant::SaasApi.base_url}/#{GlobalConstant::Environment.url_prefix}/#{GlobalConstant::Base.current_api_version}/"
     end
 
   end

@@ -18,6 +18,30 @@ module Util
       return is_numeric?(object) && Float(object) == Integer(object) rescue false
     end
 
+    # Check if input is an array
+    #
+    # * Author: Anagha
+    # * Date: 16/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_array?(object)
+      return object.is_a?(Array)
+    end
+
+    # Check if input is string
+    #
+    # * Author: Anagha
+    # * Date: 16/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_string?(object)
+      return object.is_a?(String)
+    end
+
     # Check for numeric-ness of an input
     #
     # * Author: Puneet
@@ -386,6 +410,20 @@ module Util
     def self.is_valid_guillemet?(company_name)
       return true unless (company_name.include?('«') || company_name.include?('»'))
       return company_name.count('«') == company_name.count('»')
+    end
+
+    # check if email is an OST email
+    #
+    # * Author: Puneet
+    # * Date: 15/04/2019
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_ost_email?(email)
+      return false unless is_valid_email?(email)
+      buffer = email.split('@')
+      buffer[1].downcase == 'ost.com'
     end
 
   end

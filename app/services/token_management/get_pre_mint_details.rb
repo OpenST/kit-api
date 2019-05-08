@@ -19,7 +19,7 @@ module TokenManagement
 
       @api_response_data = {}
 
-      @bt_to_mint_in_wei = params[:bt_to_mint]
+      @bt_to_mint_in_wei = @params[:bt_to_mint]
       @client_id = @params[:client_id]
 
     end

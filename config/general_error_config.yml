@@ -73,6 +73,26 @@ token_not_found:
   code: "NOT_FOUND"
   message: "Token not found."
 
+token_not_setup:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Token not setup."
+
+token_demo_already_setup:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Token demo has already been setup."
+
+token_demo_setup_incomplete:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Token demo setup is not yet done."
+
+token_demo_too_many_invites:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "You have already invited 1000 Emails in last 30 days."
+
 aux_chain_id_not_found:
   http_code: 404
   code: "NOT_FOUND"
@@ -132,6 +152,11 @@ mfa_mandatory_for_client:
   http_code: 422
   code: 'invalid'
   message: 'You have been whitelisted on Mainnet, please set up your <a href="/mfa">2FA</a> to proceed.'
+
+error_in_issue_creation:
+  http_code: 422
+  code: 'UNPROCESSABLE_ENTITY'
+  message: 'Could not create issue.'
 
 token_status_invalid:
   http_code: 422

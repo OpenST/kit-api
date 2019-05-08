@@ -92,6 +92,13 @@ Rails.application.routes.draw do
     match '' => :workflow_status, via: :GET, constraints: lambda { |request| request.xhr? }
   end
 
+  scope "#{GlobalConstant::Environment.url_prefix}/api/test-economy", controller: 'test_economy', :format => false do
+    match '' => :get, via: :GET
+    match 'invite' => :invite, via: :POST, constraints: lambda { |request| request.xhr? }
+    match '' => :activate, via: :POST, constraints: lambda { |request| request.xhr? ||
+        request.params[:auth_token] == GlobalConstant::Base.activate_test_economy_auth_token }
+  end
+
   # Handle any other routes
   match '*permalink', to: 'application#not_found', via: :all
 

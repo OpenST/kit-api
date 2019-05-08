@@ -245,7 +245,7 @@ module TokenManagement
       token_addresses = TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).first
 
       if token_addresses.present? && token_addresses.known_address_id.present?
-        SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: token_addresses.known_address_id})
+        SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: token_addresses.known_address_id, client_id: @client_id})
         token_addresses.destroy!
       end
 

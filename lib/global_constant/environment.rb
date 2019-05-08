@@ -27,6 +27,10 @@ module GlobalConstant
       GlobalConstant::Base.main_sub_environment? ? mainnet_url_prefix : testnet_url_prefix
     end
 
+    def self.is_development_env?
+      Rails.env.development?
+    end
+
   end
 
 end

@@ -10,11 +10,11 @@ namespace :one_timers do
 
   task :set_ost_managed_owner_property => :environment do
 
-    Token.find_in_batches(batch_size: 100) do |token_batches|
+    Token.where(properties: nil).find_in_batches(batch_size: 100) do |token_batches|
 
       token_batches.each do |token|
 
-        token.send("set_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
+        token.send("unset_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
 
         puts "Token: #{token.inspect}"
         token.save!

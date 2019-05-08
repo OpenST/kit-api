@@ -36,12 +36,15 @@ module SaasApi
     def send_request_of_type(request_type, path, params)
       begin
 
-        request_path = GlobalConstant::SaasApi.base_url + path
+        request_path = "#{GlobalConstant::SaasApi.base_url}/#{path}"
+
         Rails.logger.info("-------------request_path----#{request_path}")
 
-        # It overrides verification of SSL certificates
-        ssl_context = OpenSSL::SSL::SSLContext.new
-        ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        if GlobalConstant::Environment.is_development_env?
+          # It overrides verification of SSL certificates
+          ssl_context = OpenSSL::SSL::SSLContext.new
+          ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
 
         parameterized_token = {token: get_jwt_token(params)}
 

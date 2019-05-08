@@ -66,4 +66,19 @@ sidekiq -C ./config/sidekiq.yml -q sk_api_high_task  -q sk_api_med_task -q sk_ap
     ```mysql
     update workflows set unique_hash = NULL where kind = 1;
     ```
+5. For all client ids which have been been impacted we would need to unset demo economy setup related bits according to the sub env
+    ```ruby
+     fail if affected_client_ids.blank?
+     clients = Client.where(id: affected_client_ids).all
+     clients.each do |client|
+       if GlobalConstant::Base.main_sub_environment?  
+         client.send("unset_#{GlobalConstant::Client.mainnet_test_economy_qr_code_uploaded_status}")
+         client.send("unset_#{GlobalConstant::Client.mainnet_registered_in_mappy_server_status}")
+       else
+         client.send("unset_#{GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status}")
+         client.send("unset_#{GlobalConstant::Client.sandbox_registered_in_mappy_server_status}")
+       end
+       client.save!
+     end
+    ```
     

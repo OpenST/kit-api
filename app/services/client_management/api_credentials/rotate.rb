@@ -44,7 +44,10 @@ module ClientManagement
           r = create_new_keys
           return r unless r.success?
 
-          ClientManagement::ApiCredentials::Fetch.new(client_id:@client_id).perform
+          r = enqueue_job_to_update_in_mappy_server
+          return r unless r.success?
+
+          ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id).perform
 
         end
 
@@ -152,6 +155,27 @@ module ClientManagement
       #
       def create_new_keys
         ::ApiCredentials::Create.new(client_id: @client_id).create_and_insert_new_keys
+      end
+
+      # Enqueue Job to update the API keys in Mappy Server
+      #
+      # * Author: Puneet
+      # * Date: 13/04/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def enqueue_job_to_update_in_mappy_server
+
+        BackgroundJob.enqueue(
+            SyncApiKeysInDemoMappyJob,
+            {
+              client_id: @client_id
+            }
+        )
+
+        success
+
       end
 
     end
