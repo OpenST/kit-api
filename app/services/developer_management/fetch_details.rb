@@ -165,18 +165,36 @@ module DeveloperManagement
       chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
       @addresses['erc20_contract_address'] = chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
 
-      if token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract].nil?
-        return success
-      end
-      @addresses['token_holder_address'] = token_addresses[GlobalConstant::TokenAddresses.token_holder_master_copy_contract][:address]
-
       # Fetch company user uuid.
       company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
       @addresses['company_user_id'] = company_user_ids[token_id].first || ""
+      @company_uuid = @addresses['company_user_id']
+
+      # Fetch company token holder
+      fetch_company_token_holder
 
       # Fetch gateway composer address.
       staker_whitelisted_addresses = KitSaasSharedCacheManagement::StakerWhitelistedAddress.new([token_id]).fetch || {}
       @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
+
+      success
+    end
+
+    # Fetch company token holder address
+    #
+    # * Author: Santhosh
+    # * Date: 08/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_company_token_holder
+      params = { user_id: @company_uuid, client_id: @client_id }
+
+      saas_response = SaasApi::User::Get.new.perform(params)
+      user_data = saas_response.data
+
+      @addresses['token_holder_address'] = user_data['user']['tokenHolderAddress'] if user_data['user']
 
       success
     end

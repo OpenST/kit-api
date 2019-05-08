@@ -47,6 +47,10 @@ module GlobalConstant
       "#{GlobalConstant::Environment.url_prefix}/internal/token/get-dashboard"
     end
 
+    def self.get_user_detail
+      "#{GlobalConstant::Environment.url_prefix}/internal/user/get"
+    end
+
     def self.api_endpoint_for_current_version
       "#{GlobalConstant::SaasApi.base_url}/#{GlobalConstant::Environment.url_prefix}/#{GlobalConstant::Base.current_api_version}/"
     end
