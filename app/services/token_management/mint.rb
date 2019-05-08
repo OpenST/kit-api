@@ -206,6 +206,8 @@ module TokenManagement
         }
       }
 
+      @api_response_data[:min_stake_currency_in_lower_unit] = saas_response.data["minimum_stake_currency_required"]
+      @api_response_data[:min_eth_in_wei] = saas_response.data["minimum_eth_required"]
 
       @api_response_data[:min_balances] = {
         @token[:stake_currency_symbol] => saas_response.data["minimum_stake_currency_required"],
