@@ -13,6 +13,7 @@ class StakeCurrency < DbConnection::KitSaasSubenv
         id: id,
         name: name,
         symbol: symbol,
+        internal_code: internal_code,
         decimal: decimal,
         contract_address: contract_address
     }
