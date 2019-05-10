@@ -1,7 +1,5 @@
 class StakeCurrency < DbConnection::KitSaasSubenv
 
-  serialize :constants, JSON
-
   # Format data to a format which goes into cache
   #
   # * Author: Santhosh
@@ -16,8 +14,7 @@ class StakeCurrency < DbConnection::KitSaasSubenv
       name: name,
       symbol: symbol,
       decimal: decimal,
-      contract_address: contract_address,
-      constants: constants
+      contract_address: contract_address
     }
   end
 
