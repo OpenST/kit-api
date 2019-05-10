@@ -51,7 +51,7 @@ manager_not_invited:
 email_auto_blocked:
   parameter: 'email'
   code: 'invalid'
-  message: 'Your password has been reset. Please use Forgot Password to access your account.'
+  message: 'Your account is blocked due to multiple false passwords or 2FA code attempts. Please reset your password using the "forgot password" option and try again.'
 
 email_inactive:
   parameter: 'email'
@@ -137,6 +137,11 @@ password_incorrect:
   parameter: 'password'
   code: 'invalid'
   message: 'You have entered an invalid email or password.'
+
+mfa_limit_reached:
+  parameter: 'otp'
+  code: 'invalid'
+  message: 'Maximum attempts for mfa has been reached. You will be logout in next attempt.'
 
 password_invalid:
   parameter: 'password'
