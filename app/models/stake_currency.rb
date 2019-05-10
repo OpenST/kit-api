@@ -17,6 +17,7 @@ class StakeCurrency < DbConnection::KitSaasSubenv
       symbol: symbol,
       decimal: decimal,
       contract_address: contract_address,
+      price_oracle_contract_address: price_oracle_contract_address,
       constants: constants
     }
   end
