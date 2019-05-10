@@ -14,7 +14,7 @@ module CacheManagement
     #
     def fetch_from_db(cache_miss_ids)
       data_to_cache = ::Client.where(id: cache_miss_ids).inject({}) do |clients_data, client|
-        clients_data[client.id] = client.formated_cache_data
+        clients_data[client.id] = client.formatted_cache_data
         clients_data
       end
       success_with_data(data_to_cache)

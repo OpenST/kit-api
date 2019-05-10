@@ -14,7 +14,7 @@ module KitSaasSharedCacheManagement
       tokens = ::Token.where(client_id: client_ids).all
       data_to_cache = {}
       tokens.each do |token|
-        data_to_cache[token.client_id] = token.formated_cache_data
+        data_to_cache[token.client_id] = token.formatted_cache_data
       end
       success_with_data(data_to_cache)
     end

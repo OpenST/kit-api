@@ -1,15 +1,15 @@
 module SaasApi
 
-  module Contract
+  module WalletAddress
 
-    class GatewayComposer < SaasApi::Base
+    class RemoveKnownAddress < SaasApi::Base
       # Initialize
       #
-      # * Author: Ankit
-      # * Date: 15/01/2019
+      # * Author: Aman
+      # * Date: 17/02/2018
       # * Reviewed By:
       #
-      # @return [SaasApi::Token::Deploy]
+      # @return [SaasApi::Transaction::FetchDetails]
       #
       def initialize
         super
@@ -17,16 +17,16 @@ module SaasApi
 
       # Perform
       #
-      # * Author: Ankit
-      # * Date: 15/01/2019
+      # * Author: Aman
+      # * Date: 17/02/2018
       # * Reviewed By:
       #
       # @return [Result::Base]
       #
       def perform(params = {})
         send_request_of_type(
-          'get',
-          GlobalConstant::SaasApi.get_gateway_composer,
+          'post',
+          GlobalConstant::SaasApi.remove_known_address,
           params
         )
       end

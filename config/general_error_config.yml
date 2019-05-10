@@ -141,7 +141,7 @@ data_validation_failed:
 grant_limit_reached:
   http_code: 422
   code: "INVALID_REQUEST"
-  message: "OST-Test is granted only once every 24 hours. This error also comes up due to a metamask issue. Please try re-enabling the metamask browser extension and hit refresh."
+  message: "Stake currency is granted only once every 24 hours. This error also comes up due to a metamask issue. Please try re-enabling the metamask browser extension and hit refresh."
 
 request_not_xhr:
   http_code: 422
@@ -157,3 +157,8 @@ error_in_issue_creation:
   http_code: 422
   code: 'UNPROCESSABLE_ENTITY'
   message: 'Could not create issue.'
+
+token_status_invalid:
+  http_code: 422
+  code: "INVALID_REQUEST"
+  message: "Token status is invalid."

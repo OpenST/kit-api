@@ -67,4 +67,14 @@ class Token::SetupController < AuthenticationController
     return render_api_response(service_response)
   end
 
+  # Get Balance
+  #
+  # * Author: Ankit
+  # * Date: 29/04/2019
+  # * Reviewed By:
+  #
+  def balance_get
+    service_response = TokenManagement::GetBalance.new(params).perform
+    return render_api_response(service_response)
+  end
 end

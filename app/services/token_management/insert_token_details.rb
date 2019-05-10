@@ -11,6 +11,7 @@ module TokenManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [String] name (mandatory) - Token name
     # @params [String] symbol (mandatory) - Token symbol
+    # @params [String] stake_currency_symbol (mandatory) - stake currency symbol
     # @params [String] conversion_factor (mandatory) - Conversion factor
     # @params [Hash] client_manager (mandatory) - logged in client manager object
     #
@@ -24,6 +25,7 @@ module TokenManagement
       @name = @params[:name]
       @symbol = @params[:symbol]
       @conversion_factor = @params[:conversion_factor]
+      @stake_currency_symbol = @params[:stake_currency_symbol]
 
     end
 
@@ -42,6 +44,9 @@ module TokenManagement
         r = validate_and_sanitize
         return r unless r.success?
 
+        r = fetch_staking_currency_id
+        return r unless r.success?
+
         r = insert_update_token_details
         return r unless r.success?
 
@@ -51,7 +56,10 @@ module TokenManagement
         r = create_api_credentials
         return r unless r.success?
 
-        success_with_data({token: @token_details.formated_cache_data})
+        success_with_data({
+          token: @token_details.formatted_cache_data,
+          stake_currencies: {@token_details.stake_currency_id => StakeCurrency.ids_to_details_cache[@token_details.stake_currency_id]}
+         })
 
       end
 
@@ -74,6 +82,7 @@ module TokenManagement
 
       @name = @name.to_s.strip
       @symbol = @symbol.to_s.strip.upcase
+      @stake_currency_symbol = @stake_currency_symbol.to_s.strip.upcase
 
       validation_errors = validate_token_creation_params
 
@@ -161,6 +170,32 @@ module TokenManagement
 
     end
 
+    # Fetch staking currency id
+    #
+    # * Author: Ankit
+    # * Date: 23/04/2019
+    # * Reviewed By:
+    #
+    # @return [Array]
+    #
+    def fetch_staking_currency_id
+
+      stake_currency_data = StakeCurrency.symbols_to_details_cache
+      unless stake_currency_data[@stake_currency_symbol].present?
+        return validation_error(
+          'a_tm_itd_3',
+          'invalid_api_params',
+          ['invalid_stake_currency_symbol'],
+          GlobalConstant::ErrorAction.default
+        )
+      end
+
+      @stake_currency_id = stake_currency_data[@stake_currency_symbol][:id]
+      @stake_currency_decimal = stake_currency_data[@stake_currency_symbol][:decimal]
+
+      success
+    end
+
     # Insert token details
     #
     # * Author: Ankit
@@ -176,8 +211,10 @@ module TokenManagement
       @token_details.symbol = @symbol
       @token_details.conversion_factor = @conversion_factor
       @token_details.delayed_recovery_interval = GlobalConstant::ClientToken.delayed_recovery_interval
+      @token_details.stake_currency_id = @stake_currency_id
+      @token_details.decimal = @stake_currency_decimal
 
-      @token_details.save!
+      @token_details.save! if @token_details.changed?
 
       KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).clear
 
@@ -193,16 +230,21 @@ module TokenManagement
     #
     # @return [Result::Base]
     def delete_old_addresses
+
       # Fetch token id
       # delete if any address present in token addresses table and client_wallet_addresses table
 
       token_id = @token_details.id
       ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name ).destroy_all
-      TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).destroy_all
+      token_addresses = TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).first
 
-      KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
+      if token_addresses.present? && token_addresses.known_address_id.present?
+        SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: token_addresses.known_address_id, client_id: @client_id})
+        token_addresses.destroy!
+      end
 
       success
+
     end
 
     # Create api credentials

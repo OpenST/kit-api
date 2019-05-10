@@ -102,7 +102,7 @@ module TokenManagement
 
       if workflows.present? && workflows[@client_id].present?
         workflows[@client_id].each do |wf|
-          if wf.kind == GlobalConstant::Workflow.grant_eth_ost && wf.status == GlobalConstant::Workflow.in_progress
+          if wf.kind == GlobalConstant::Workflow.grant_eth_stake_currency && wf.status == GlobalConstant::Workflow.in_progress
             @api_response_data[:workflow] = {id: wf.id, kind: wf.kind}
           elsif wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
             @mint_workflow ||= wf
@@ -175,7 +175,7 @@ module TokenManagement
     # @sets @api_response_data[:contract_details], @api_response_data[:gas_price]
     #
     def get_details_from_saas
-      total_gas_for_mint = GlobalConstant::ContractDetails::SimpleToken.gas[:approve].to_i(16) + GlobalConstant::ContractDetails::GatewayComposer.gas[:requestStake].to_i(16)
+      total_gas_for_mint = GlobalConstant::ContractDetails::StakeCurrency.gas[:approve].to_i(16) + GlobalConstant::ContractDetails::GatewayComposer.gas[:requestStake].to_i(16)
       params = {
         client_id: @client_id,
         total_gas_for_mint: total_gas_for_mint
@@ -183,11 +183,13 @@ module TokenManagement
       saas_response = SaasApi::Token::MintDetails.new.perform(params)
       return saas_response unless saas_response.success?
 
+      #Todo: Check if we need to send simple_token abi/gas when owner is ost managed
+
       @api_response_data[:contract_details] = {
-        simple_token: {
-          abi: GlobalConstant::ContractDetails::SimpleToken.abi,
-          gas: GlobalConstant::ContractDetails::SimpleToken.gas,
-          address: saas_response.data["contract_address"]["simple_token"]
+        simple_token: { # TODO:@Shlok Replace 'simple_token' -> 'stake_currency'
+          abi: GlobalConstant::ContractDetails::StakeCurrency.abi,
+          gas: GlobalConstant::ContractDetails::StakeCurrency.gas,
+          address: saas_response.data["contract_address"]["stake_currency"]
         },
         branded_token: {
           abi: GlobalConstant::ContractDetails::BrandedToken.abi,
@@ -197,7 +199,8 @@ module TokenManagement
       }
 
 
-      @api_response_data[:min_ost_in_wei] = saas_response.data["minimum_ost_required"]
+      @api_response_data[:min_ost_in_wei] = saas_response.data["minimum_stake_currency_required"]
+      # TODO:@Shlok Replace 'min_ost_in_wei' -> 'minimum_stake_currency_in_wei'
       @api_response_data[:min_eth_in_wei] = saas_response.data["minimum_eth_required"]
 
       @api_response_data[:gas_price] = saas_response.data["gas_price"]

@@ -14,7 +14,7 @@ module KitSaasSharedCacheManagement
       db_rows = ::ClientWhitelisting.where(client_id: client_ids).all
       data_to_cache = {}
       db_rows.each do |db_row|
-        data_to_cache[db_row.client_id] = db_row.formated_cache_data
+        data_to_cache[db_row.client_id] = db_row.formatted_cache_data
       end
       success_with_data(data_to_cache)
     end

@@ -32,7 +32,7 @@ class Manager < DbConnection::KitClient
   #
   # @return [Hash]
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
         id: id,
         first_name: first_name,

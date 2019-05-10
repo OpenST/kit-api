@@ -150,7 +150,7 @@ module ManagerManagement
         # Format the managers info
         client_managers_info = []
         client_info.each do |client_manager|
-          client_manager = client_manager.formated_cache_data
+          client_manager = client_manager.formatted_cache_data
           client_managers_info.push(client_manager)
         end
 

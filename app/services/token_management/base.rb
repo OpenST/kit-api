@@ -82,7 +82,10 @@ module TokenManagement
     #
     def add_token_to_response
       @api_response_data[:token] = @token
-
+      @api_response_data[:stake_currencies] = {}
+      if @token[:stake_currency_id].present?
+        @api_response_data[:stake_currencies][@token[:stake_currency_id]] = StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]
+      end
       success
     end
 

@@ -65,11 +65,13 @@ Rails.application.routes.draw do
     match '' => :token_details_post, via: :POST, constraints: lambda { |request| request.xhr? }
     match 'deploy' => :deploy_get, via: :GET
     match 'deploy' => :deploy_post, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'balance' => :balance_get, via: :GET, constraints: lambda { |request| request.xhr? }
     match 'request-whitelist' => :request_whitelist, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/addresses", controller: 'token/addresses', :format => false do
     match '' => :token_addresses_post, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'create-managed-address' => :create_ost_managed_address, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/mint", controller: 'token/mint', :format => false do
@@ -82,8 +84,8 @@ Rails.application.routes.draw do
     match '' => :get, via: :GET, constraints: lambda { |request| request.xhr? }
   end
 
-  scope "#{GlobalConstant::Environment.url_prefix}/api/contracts", controller: 'contracts/gateway_composer', :format => false do
-    match 'gateway-composer' => :get_details, via: :GET, constraints: lambda { |request| request.xhr? }
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/pre_mint', :format => false do
+    match 'pre-mint' => :get_pre_mint_details, via: :GET, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/workflow/:workflow_id", controller: 'workflow', :format => false do

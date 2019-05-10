@@ -200,7 +200,7 @@ module ManagerManagement
 
         @client_id = client.id
 
-        @client = client.formated_cache_data
+        @client = client.formatted_cache_data
 
         success
       end

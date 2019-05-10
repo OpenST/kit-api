@@ -25,16 +25,16 @@ module GlobalConstant
         bt_stake_and_mint_config['group_config']
       end
 
-      def grant_eth_ost_step_config
-        grant_eth_ost_config['step_config']
+      def grant_eth_stake_currency_step_config
+        grant_eth_stake_currency_config['step_config']
       end
 
-      def grant_eth_ost_group_config
-        grant_eth_ost_config['group_config']
+      def grant_eth_stake_currency_group_config
+        grant_eth_stake_currency_config['group_config']
       end
 
 
-      private_class_method
+      private
 
       def economy_setup_config
         @escnf ||= begin
@@ -50,9 +50,9 @@ module GlobalConstant
         end
       end
 
-      def grant_eth_ost_config
-        @grantethost ||= begin
-          template = ERB.new File.new("#{Rails.root}/config/workflow_step/grant_eth_ost.yml").read
+      def grant_eth_stake_currency_config
+        @grantethstakecurrency ||= begin
+          template = ERB.new File.new("#{Rails.root}/config/workflow_step/grant_eth_stake_currency.yml").read
           YAML.load(template.result(binding))
         end
       end

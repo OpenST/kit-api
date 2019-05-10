@@ -73,7 +73,7 @@ task :usage_report => :environment do
           mobile_app: ''
         }
 
-        client_manager_entity = client_manager_row.formated_cache_data
+        client_manager_entity = client_manager_row.formatted_cache_data
 
         if client_manager_entity[:privileges].exclude?(GlobalConstant::ClientManager.has_been_deleted_privilege)
 
@@ -155,7 +155,7 @@ task :usage_report => :environment do
     
     dashboard_service_response = DashboardManagement::Get.new({
                                                                 client_id: client_id,
-                                                                manager: row.formated_cache_data
+                                                                manager: row.formatted_cache_data
                                                               }).perform
     
     if dashboard_service_response.success?
@@ -379,7 +379,7 @@ task :usage_report => :environment do
   Client.where(id: client_ids).find_in_batches(batch_size: 100) do |client_batches|
 
     client_batches.each do |row|
-      client_entity = row.formated_cache_data
+      client_entity = row.formatted_cache_data
 
       if client_entity[:company_name]
         client_details[client_entity[:id]][:company_name] = client_entity[:company_name]

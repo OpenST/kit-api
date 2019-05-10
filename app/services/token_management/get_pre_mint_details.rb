@@ -1,5 +1,6 @@
-module ContractManagement
-  class GetGatewayComposerAddress < ServicesBase
+module TokenManagement
+
+  class GetPreMintDetails < TokenManagement::Base
 
     # Initialize
     #
@@ -8,9 +9,9 @@ module ContractManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
-    # @params [String] staker_address (mandatory) - Staker Address
+    # @params [String] bt_to_mint (mandatory) - in wei Bt Amount
     #
-    # @return [ContractManagement::GetGatewayComposerAddress]
+    # @return [GetPreMintDetails]
     #
     def initialize(params)
 
@@ -18,9 +19,8 @@ module ContractManagement
 
       @api_response_data = {}
 
-      @staker_address = @params[:staker_address]
+      @bt_to_mint_in_wei = @params[:bt_to_mint]
       @client_id = @params[:client_id]
-
 
     end
 
@@ -65,18 +65,9 @@ module ContractManagement
       r = validate
       return r unless r.success?
 
-      unless Util::CommonValidator.is_ethereum_address?(@staker_address)
-        return validation_error(
-          'a_s_cm_ggca_1',
-          'invalid_api_params',
-          ['invalid_staker_address'],
-          GlobalConstant::ErrorAction.default
-        )
-      end
-
       unless Util::CommonValidator.is_integer?(@client_id)
         return validation_error(
-          'a_s_cm_ggca_2',
+          'a_s_cm_ggca_1',
           'invalid_api_params',
           ['invalid_client_id'],
           GlobalConstant::ErrorAction.default
@@ -85,7 +76,8 @@ module ContractManagement
 
       @client_id = @client_id.to_i
 
-      @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
+      # as these values may be big big int, convert to string to avoid sending as e power
+      @bt_to_mint_in_wei = @bt_to_mint_in_wei.to_s
 
       success
 
@@ -124,34 +116,42 @@ module ContractManagement
     #
     # @return [Result::Base]
     def direct_request_to_saas_api
+
+      token_has_ost_managed_owner = @token_details[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
+
       params_for_saas_api = {
         token_id: @token_id,
-        staker_address: @staker_address,
-        client_id: @client_id
+        client_id: @client_id,
+        bt_to_mint: @bt_to_mint_in_wei,
+        fetch_request_stake_tx_params: !token_has_ost_managed_owner
       }
 
-      saas_response = SaasApi::Contract::GatewayComposer.new.perform(params_for_saas_api)
+      saas_response = SaasApi::Token::PreMintDetails.new.perform(params_for_saas_api)
       return saas_response unless saas_response.success?
 
       saas_response_data = saas_response.data
-      @api_response_data[:contract_details] = {
-        gateway_composer: {
-          abi: GlobalConstant::ContractDetails::GatewayComposer.abi,
-          address: saas_response_data['gateway_composer_contract_address'],
-          gas: GlobalConstant::ContractDetails::GatewayComposer.gas
+
+      unless token_has_ost_managed_owner
+        @api_response_data[:contract_details] = {
+            gateway_composer: {
+                abi: GlobalConstant::ContractDetails::GatewayComposer.abi,
+                address: saas_response_data['request_stake_tx_params']['gateway_composer_contract_address'],
+                gas: GlobalConstant::ContractDetails::GatewayComposer.gas
+            }
         }
-      }
-      @api_response_data[:gas_price] = saas_response_data['origin_chain_gas_price']
-      @api_response_data[:request_stake_tx_params] = {
-        gateway_contract: saas_response_data['gateway_contract_address'],
-        gas_price: '0',
-        gas_limit: '0',
-        staker_gateway_nonce: saas_response_data['staker_gateway_nonce'],
-        stake_and_mint_beneficiary: saas_response_data['stake_and_mint_beneficiary']
-      }
+        @api_response_data[:gas_price] = saas_response_data['request_stake_tx_params']['origin_chain_gas_price']
+        @api_response_data[:request_stake_tx_params] = {
+            gateway_contract: saas_response_data['request_stake_tx_params']['gateway_contract_address'],
+            gas_price: saas_response_data['request_stake_tx_params']['gas_price'],
+            gas_limit: saas_response_data['request_stake_tx_params']['gas_limit'],
+            staker_gateway_nonce: saas_response_data['request_stake_tx_params']['staker_gateway_nonce'],
+            stake_and_mint_beneficiary: saas_response_data['request_stake_tx_params']['stake_and_mint_beneficiary']
+        }
+      end
+
+      @api_response_data[:precise_amounts] = saas_response_data['precise_amounts']
 
       success
     end
-
   end
 end

@@ -48,7 +48,7 @@ class Client < DbConnection::KitClient
   #
   # @return [Hash]
   #
-  def formated_cache_data
+  def formatted_cache_data
     {
         id: id,
         company_name: company_name.present? ? company_name : nil,

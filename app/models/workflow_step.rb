@@ -106,11 +106,11 @@ class WorkflowStep < DbConnection::KitSaasSubenv
     GlobalConstant::WorkflowStep.set_internal_actor_for_facilitator_in_ubt => 136,
     GlobalConstant::WorkflowStep.verify_set_internal_actor_for_facilitator_in_ubt => 137,
 
-    GlobalConstant::WorkflowStep.grant_eth_ost_init => 171,
+    GlobalConstant::WorkflowStep.grant_eth_stake_currency_init => 171,
     GlobalConstant::WorkflowStep.grant_eth => 172,
     GlobalConstant::WorkflowStep.verify_grant_eth => 173,
-    GlobalConstant::WorkflowStep.grant_ost => 174,
-    GlobalConstant::WorkflowStep.verify_grant_ost => 175,
+    GlobalConstant::WorkflowStep.grant_stake_currency => 174,
+    GlobalConstant::WorkflowStep.verify_grant_stake_currency => 175,
 
     GlobalConstant::WorkflowStep.fund_token_user_ops_worker => 189,
     GlobalConstant::WorkflowStep.verify_fund_token_user_ops_worker => 190,

@@ -1,5 +1,6 @@
 module WalletAddressesManagement
-  class AssociateAddress < ServicesBase
+
+  class AssociateAddress < WalletAddressesManagement::Base
 
     # Initialize
     #
@@ -22,7 +23,7 @@ module WalletAddressesManagement
       @owner_address = @params[:owner]
       @personal_sign = @params[:personal_sign]
 
-      @isRequestFromSameClient = false
+      @is_request_from_same_client = false
       @signed_by_address = nil
 
     end
@@ -42,16 +43,16 @@ module WalletAddressesManagement
         r = validate_and_sanitize
         return r unless r.success?
 
+        r = fetch_token_details
+        return r unless r.success?
+
         #Check if the given address is associated in db
         r = is_address_available_check
         return r unless r.success?
 
         #This check is added for a scenario when same client calls the associate address more than once.
-        if @isRequestFromSameClient
-          return success_with_data({
-                                     origin_addresses: @origin_addresses,
-                                     auxiliary_addresses: @auxiliary_addresses
-                                   })
+        if @is_request_from_same_client
+          return return_addresses_entity
         end
 
         r = redirect_request_to_saas_api
@@ -63,10 +64,10 @@ module WalletAddressesManagement
         r = create_entries
         return r unless r.success?
 
-        success_with_data({
-                            origin_addresses: @origin_addresses,
-                            auxiliary_addresses: @auxiliary_addresses
-                          })
+        r = update_token_properties
+        return r unless r.success?
+
+        return_addresses_entity
 
       end
 
@@ -111,9 +112,6 @@ module WalletAddressesManagement
         )
       end
 
-      @origin_addresses = {owner_address: @owner_address, admin: '', whitelisted: [], workers: []}
-      @auxiliary_addresses = {owner_address: @owner_address, admin: '', whitelisted: [], workers: []}
-
       success
 
     end
@@ -144,7 +142,7 @@ module WalletAddressesManagement
       success
     end
 
-    # Redirect request to saas api
+    # Redirect request to saas api to validate the personal sign
     #
     #
     # * Author: Ankit
@@ -212,7 +210,7 @@ module WalletAddressesManagement
             GlobalConstant::ErrorAction.default
           )
         else
-          @isRequestFromSameClient = true
+          @is_request_from_same_client = true
           success
         end
       else
@@ -232,13 +230,12 @@ module WalletAddressesManagement
     def create_entries
 
       #check if the same client has some address associated with it. Update the address if already present
-      clientWalletAddress = ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name).first
+      client_wallet_address = ClientWalletAddress.where(client_id: @client_id, sub_environment: GlobalConstant::Base.sub_environment_name).first
 
-      if clientWalletAddress.present?
+      if client_wallet_address.present?
         #update the new address
-        clientWalletAddress.address = @owner_address
-        clientWalletAddress.sub_environment = GlobalConstant::Base.sub_environment_name
-        clientWalletAddress.save!
+        client_wallet_address.address = @owner_address
+        client_wallet_address.save!
       else
         ClientWalletAddress.create!(
           client_id: @client_id,
@@ -248,16 +245,26 @@ module WalletAddressesManagement
         )
       end
 
-      token_id = @token_details[:id]
+      @token_id = @token_details[:id]
 
-      tokenAddresses = TokenAddresses.where('token_id = ?', token_id)
+      token_addresses = TokenAddresses.where(
+        token_id: @token_id,
+        kind: GlobalConstant::TokenAddresses.owner_address_kind
+      ).first
 
-      if tokenAddresses.present?
-        TokenAddresses.where(token_id: token_id, kind: GlobalConstant::TokenAddresses.owner_address_kind).update_all(address:@owner_address)
-        KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).clear
+      if token_addresses.present?
+
+        if token_addresses[:known_address_id].present?
+          request_saas_to_remove_known_address(token_addresses[:known_address_id])
+        end
+
+        token_addresses[:address] = @owner_address
+        token_addresses[:known_address_id] = nil
+
+        token_addresses.save!
       else
         TokenAddresses.create!(
-          token_id: token_id,
+          token_id: @token_id,
           kind: GlobalConstant::TokenAddresses.owner_address_kind,
           address: @owner_address
         )
@@ -265,6 +272,52 @@ module WalletAddressesManagement
       end
 
       success
+    end
+
+    # Request saas to remove knwon address
+    #
+    #
+    # * Author: Ankit
+    # * Date: 24/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def request_saas_to_remove_known_address(known_address_id)
+      response = SaasApi::WalletAddress::RemoveKnownAddress.new.perform({known_address_id: known_address_id, client_id: @client_id})
+      unless response.success?
+        @failed_logs = response
+        notify_devs
+      end
+    end
+
+    # Update token properties. Mark the token as non has_ost_managed_owner
+    #
+    #
+    # * Author: Ankit
+    # * Date: 24/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def update_token_properties
+
+      @token.send("unset_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
+      @token.save!
+
+      success
+    end
+
+    # Send mail
+    #
+    # * Author: Puneet
+    # * Date: 09/12/2018
+    # * Reviewed By:
+    #
+    def notify_devs
+      ApplicationMailer.notify(
+        data: @failed_logs,
+        body: {client_id: @client_id},
+        subject: 'Exception in associate address'
+      ).deliver if @failed_logs.present?
     end
 
   end

@@ -13,9 +13,10 @@ module TokenManagement
     # @params [String] approve_transaction_hash (mandatory)
     # @params [String] request_stake_transaction_hash (mandatory)
     # @params [String] staker_address (mandatory)
-    # @params [String] fe_ost_to_stake (mandatory)
-    # @params [String] fe_bt_to_mint (mandatory)
-    #
+    # @params [String] stake_currency_to_stake (mandatory) : in wei amount of stake currency to be staked
+    # @params [String] bt_to_mint (mandatory) : in wei amount of BT to be minted
+    # @params [String] fe_stake_currency_to_stake (mandatory) : in non wei amount of stake currency to be staked
+    # @params [String] fe_bt_to_mint (mandatory) : in non wei amount of BT to be minted
     #
     # @return [TokenManagement::StartMint]
     #
@@ -26,8 +27,10 @@ module TokenManagement
       @approve_tx_hash = @params[:approve_transaction_hash]
       @request_stake_tx_hash = @params[:request_stake_transaction_hash]
       @staker_address = @params[:staker_address]
-      @fe_ost_to_stake = @params[:fe_ost_to_stake]
+      @fe_stake_currency_to_stake = @params[:fe_stake_currency_to_stake]
       @fe_bt_to_mint = @params[:fe_bt_to_mint]
+      @stake_currency_to_stake_in_wei = @params[:stake_currency_to_stake]
+      @bt_to_mint_in_wei = @params[:bt_to_mint]
 
       @api_response_data = {}
       @token_id = nil
@@ -47,9 +50,6 @@ module TokenManagement
       handle_errors_and_exceptions do
 
         r = validate_and_sanitize
-        return r unless r.success?
-
-        r = fetch_token
         return r unless r.success?
 
         r = add_token_to_response
@@ -73,12 +73,30 @@ module TokenManagement
       r = validate
       return r unless r.success?
 
-      # Santize
-      @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)
-      @request_stake_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@request_stake_tx_hash)
-      @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
+      r = fetch_token
+      return r unless r.success?
 
-      validation_errors = validate_input_params
+      validation_errors = []
+
+      # Santize
+      if @token[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
+        validation_errors.push('invalid_approve_transaction_hash') if @approve_tx_hash.present?
+        validation_errors.push('invalid_request_stake_transaction_hash') if @request_stake_tx_hash.present?
+      else
+        @approve_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@approve_tx_hash)
+        @request_stake_tx_hash = Util::CommonValidator.sanitize_transaction_hash(@request_stake_tx_hash)
+        unless Util::CommonValidator.is_transaction_hash?(@approve_tx_hash)
+          validation_errors.push('invalid_approve_transaction_hash')
+        end
+        unless Util::CommonValidator.is_transaction_hash?(@request_stake_tx_hash)
+          validation_errors.push('invalid_request_stake_transaction_hash')
+        end
+      end
+
+      @staker_address = Util::CommonValidator.sanitize_ethereum_address(@staker_address)
+      unless Util::CommonValidator.is_ethereum_address?(@staker_address)
+        validation_errors.push('invalid_staker_address')
+      end
 
       if validation_errors.present?
         return validation_error(
@@ -88,6 +106,12 @@ module TokenManagement
           GlobalConstant::ErrorAction.default
         )
       end
+
+      # as these values may be big big int, convert to string to avoid sending as e power
+      @fe_stake_currency_to_stake = @fe_stake_currency_to_stake.to_s
+      @fe_bt_to_mint = @fe_bt_to_mint.to_s
+      @bt_to_mint_in_wei = @bt_to_mint_in_wei.to_s
+      @stake_currency_to_stake_in_wei = @stake_currency_to_stake_in_wei.to_s
 
       success
     end
@@ -118,32 +142,6 @@ module TokenManagement
       success
     end
 
-    # Validate input params
-    #
-    # * Author: Ankit
-    # * Date: 18/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def validate_input_params
-      validation_errors = []
-
-      unless Util::CommonValidator.is_transaction_hash?(@approve_tx_hash)
-        validation_errors.push('invalid_approve_transaction_hash')
-      end
-
-      unless Util::CommonValidator.is_transaction_hash?(@request_stake_tx_hash)
-        validation_errors.push('invalid_request_stake_transaction_hash')
-      end
-
-      unless Util::CommonValidator.is_ethereum_address?(@staker_address)
-        validation_errors.push('invalid_staker_address')
-      end
-
-      validation_errors
-    end
-
     # direct request to saas api
     #
     #
@@ -153,15 +151,23 @@ module TokenManagement
     #
     # @return [Result::Base]
     def direct_request_to_saas_api
+
       params_for_saas_api = {
-        approve_transaction_hash: @approve_tx_hash,
-        request_stake_transaction_hash:@request_stake_tx_hash,
         staker_address: @staker_address,
         token_id: @token_id,
         client_id: @client_id,
-        fe_ost_to_stake: @fe_ost_to_stake,
-        fe_bt_to_mint: @fe_bt_to_mint
+        fe_stake_currency_to_stake: @fe_stake_currency_to_stake,
+        fe_bt_to_mint: @fe_bt_to_mint,
+        stake_currency_to_stake: @stake_currency_to_stake_in_wei,
+        bt_to_mint: @bt_to_mint_in_wei
       }
+
+      unless @token[:properties].include?(GlobalConstant::ClientToken.has_ost_managed_owner)
+        params_for_saas_api.merge!(
+          approve_transaction_hash: @approve_tx_hash,
+          request_stake_transaction_hash:@request_stake_tx_hash,
+        )
+      end
 
       r = SaasApi::Token::StartMint.new.perform(params_for_saas_api)
       return r unless r.success?
