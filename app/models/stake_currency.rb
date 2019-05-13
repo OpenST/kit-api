@@ -1,7 +1,5 @@
 class StakeCurrency < DbConnection::KitSaasSubenv
 
-  serialize :constants, JSON
-
   # Format data to a format which goes into cache
   #
   # * Author: Santhosh
