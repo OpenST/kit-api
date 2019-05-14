@@ -43,10 +43,16 @@ redis-server --port 6379  --requirepass 'st123'
 ```
 
 Start Sidekiq
-For local setup remove the line ':pidfile: ./tmp/pids/sidekiq.pid' from config/sidekiq.yml
 ```bash
 source set_env_vars.sh
 sidekiq -C ./config/sidekiq.yml -q sk_api_high_task  -q sk_api_med_task -q sk_api_default
+```
+
+Start Rails
+```bash
+> bundle install
+> source set_env_vars.sh
+> rails s -p 4001
 ```
 
 ## Run the following steps in order to de-link a token and client.

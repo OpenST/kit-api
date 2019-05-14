@@ -135,7 +135,6 @@ module Util
           stake_currencies_details[row_value[:symbol]] = row_value
         end
 
-        puts "stake_currencies_details========#{stake_currencies_details}"
         success_with_data(stake_currencies_details)
       end
 
