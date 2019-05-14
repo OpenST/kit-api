@@ -190,15 +190,13 @@ module DeveloperManagement
     # @return [Result::Base]
     #
     def fetch_stake_currency_details
-      stake_currency_id = @token[:stake_currency_id]
-      @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
 
-      @stake_currencies.each do |key, value|
-        @token[:stake_currency_symbol] = key
-        @addresses['erc20_contract_address'] = value[:contract_address]
-      end
+      @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(@token[:stake_currency_id]).data
+
+      @addresses['erc20_contract_address'] = @stake_currencies[@token[:stake_currency_symbol]][:contract_address]
 
       success
+
     end
 
     # Fetch company token holder address

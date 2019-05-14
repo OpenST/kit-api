@@ -65,7 +65,12 @@ module Util
           token[:aux_chain_id] = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id].to_s
         end
 
+        if token[:stake_currency_id]
+          token[:stake_currency_symbol] = StakeCurrency.ids_to_details_cache[token[:stake_currency_id]][:symbol]
+        end
+
         success_with_data(token)
+
       end
 
       # Find & validate ubt address for token

@@ -148,16 +148,18 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_stake_currency_details
-      @all_stake_currencies = Util::EntityHelper.fetch_stake_currency_details.data
+
+      @all_stake_currencies = StakeCurrency.symbols_to_details_cache.select { |_,data| data[:status] == GlobalConstant::StakeCurrency.active_status}
 
       if @token[:stake_currency_id].present?
         stake_currency_id = @token[:stake_currency_id]
         @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
-        @token[:stake_currency_symbol] = @stake_currencies.keys[0]
-
+      else
+        @stake_currencies = {}
       end
 
       success
+
     end
 
   end

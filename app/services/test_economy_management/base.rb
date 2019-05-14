@@ -188,8 +188,9 @@ module TestEconomyManagement
       @aux_chain_id = @token[:aux_chain_id]
 
       if @token[:stake_currency_id].present?
-          @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(@token[:stake_currency_id]).data
-          @token[:stake_currency_symbol] = @stake_currencies.keys[0]
+        @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(@token[:stake_currency_id]).data
+      else
+        @stake_currencies = {}
       end
 
       success

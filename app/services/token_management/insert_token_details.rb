@@ -289,10 +289,9 @@ module TokenManagement
       if @token[:stake_currency_id].present?
         stake_currency_id = @token[:stake_currency_id]
         @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(stake_currency_id).data
-
-        @token[:stake_currency_symbol] = @stake_currencies.keys[0]
+      else
+        @stake_currencies = {}
       end
-
       success
     end
 
