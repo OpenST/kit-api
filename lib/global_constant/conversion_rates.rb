@@ -24,7 +24,7 @@ module GlobalConstant
       end
 
       def usdc_currency
-        'PAX'
+        'USDC'
       end
 
       def eur_currency

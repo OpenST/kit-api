@@ -1,5 +1,11 @@
 class StakeCurrency < DbConnection::KitSaasSubenv
 
+  enum status: {
+    GlobalConstant::StakeCurrency.setup_in_progress_status => 1,
+    GlobalConstant::StakeCurrency.active_status => 2,
+    GlobalConstant::StakeCurrency.inactive_status => 3
+  }
+
   serialize :constants, JSON
 
   # Format data to a format which goes into cache
@@ -18,7 +24,8 @@ class StakeCurrency < DbConnection::KitSaasSubenv
       decimal: decimal,
       contract_address: contract_address,
       price_oracle_contract_address: price_oracle_contract_address,
-      constants: constants
+      constants: constants,
+      status: status
     }
   end
 
