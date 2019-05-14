@@ -93,14 +93,13 @@ module ManagerManagement
           r = rotp_obj.verify_with_drift_and_prior(@otp)
 
           unless r.success?
-            manager = Manager.where(id: @manager_obj.id).first
-            manager.failed_mfa_attempt_count ||= 0
-            manager.failed_mfa_attempt_count += 1
+            @manager_obj.failed_mfa_attempt_count ||= 0
+            @manager_obj.failed_mfa_attempt_count += 1
 
 
-            if manager.failed_mfa_attempt_count >= 5
-              manager.status = GlobalConstant::Manager.auto_blocked_status
-              manager.save!
+            if @manager_obj.failed_mfa_attempt_count >= 5
+              @manager_obj.status = GlobalConstant::Manager.auto_blocked_status
+              @manager_obj.save!
 
               return validation_error(
                   'mm_l_mf_a_1',
@@ -110,7 +109,7 @@ module ManagerManagement
               )
             end
 
-            manager.save!
+            @manager_obj.save!
             return r
           end
 
