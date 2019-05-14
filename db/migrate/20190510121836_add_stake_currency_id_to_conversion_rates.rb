@@ -1,7 +1,7 @@
 class AddStakeCurrencyIdToConversionRates < DbMigrationConnection
   def up
     run_migration_for_db(DbConnection::KitSaasSubenv) do
-      add_column :currency_conversion_rates, :stake_currency_id, :bigint, after: :chain_id , null: true
+      add_column :currency_conversion_rates, :stake_currency_id, :tinyint, after: :chain_id , null: true
 
       symbolToIdHash = []
       StakeCurrency.all.each do |row|
