@@ -92,16 +92,28 @@ module ManagerManagement
           rotp_obj = Google::Authenticator.new(@ga_secret_d)
           r = rotp_obj.verify_with_drift_and_prior(@otp)
 
-          return r unless r.success?
+          unless r.success?
+            @manager_obj.failed_mfa_attempt_count ||= 0
+            @manager_obj.failed_mfa_attempt_count += 1
 
-          # return error_with_data(
-          #   'am_l_ma_7',
-          #   'something_went_wrong',
-          #   GlobalConstant::ErrorAction.default,
-          #   {}
-          # ) unless r.success?
 
-          # Update last_otp_at
+            if @manager_obj.failed_mfa_attempt_count >= 5
+              @manager_obj.status = GlobalConstant::Manager.auto_blocked_status
+              @manager_obj.save!
+
+              return validation_error(
+                  'mm_l_mf_a_1',
+                  'invalid_api_params',
+                  ['mfa_limit_reached'],
+                  GlobalConstant::ErrorAction.default
+              )
+            end
+
+            @manager_obj.save!
+            return r
+          end
+
+          @manager_obj.failed_mfa_attempt_count = 0
           @manager_obj.last_session_updated_at = r.data[:verified_at_timestamp]
           @manager_obj.send("set_#{GlobalConstant::Manager.has_setup_mfa_property}")
           @manager_obj.save!

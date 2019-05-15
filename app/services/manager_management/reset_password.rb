@@ -239,6 +239,7 @@ module ManagerManagement
         # now we should reset it to active
         @manager_obj.status = GlobalConstant::Manager.active_status
         @manager_obj.failed_login_attempt_count = 0
+        @manager_obj.failed_mfa_attempt_count = 0
       end
       @manager_obj.save!
 
