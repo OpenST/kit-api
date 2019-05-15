@@ -92,19 +92,22 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_and_set_token_id
-      @token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
 
-      if @token_details.blank?
-        return validation_error(
-          'a_s_cm_ggca_3',
-          'invalid_api_params',
-          ['invalid_client_id'],
-          GlobalConstant::ErrorAction.default
-        )
-      end
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'a_s_cm_ggca')
+
+      return validation_error(
+        'a_s_cm_ggca_3',
+        'invalid_api_params',
+        ['invalid_client_id'],
+        GlobalConstant::ErrorAction.default
+      ) unless token_resp.success?
+
+      @token_details = token_resp.data
 
       @token_id = @token_details[:id]
+
       success
+
     end
 
     # Direct request to saas api

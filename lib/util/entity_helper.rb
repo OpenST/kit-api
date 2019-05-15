@@ -67,6 +67,8 @@ module Util
 
         if token[:stake_currency_id]
           token[:stake_currency_symbol] = StakeCurrency.ids_to_details_cache[token[:stake_currency_id]][:symbol]
+        else
+          token[:stake_currency_symbol] = nil
         end
 
         success_with_data(token)

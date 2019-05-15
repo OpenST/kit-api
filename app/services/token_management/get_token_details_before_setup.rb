@@ -86,9 +86,15 @@ module TokenManagement
     #
     # @return [Result::Base]
     def fetch_token_details
-      @token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
+
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'a_s_tm_gtdbs')
+
+      # as the above method would return error if token was not found.
+      # it is a valid scenario here, this ignoring error
+      @token = token_resp.data
 
       success
+
     end
 
     # Fetch token details

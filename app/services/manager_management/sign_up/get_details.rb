@@ -56,9 +56,12 @@ module ManagerManagement
           r = fetch_and_validate_inviter_manager
           return r unless r.success?
 
+          r = fetch_token_details
+          return r unless r.success?
+
           success_with_data(
             client: @client,
-            token: KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id],
+            token: @token,
             inviter_manager: {
               email: Util::CommonSanitizer.secure_email(@inviter_manager[:email])
             },
@@ -102,6 +105,25 @@ module ManagerManagement
           end
 
         end
+
+        success
+      end
+
+
+      # Fetch token details
+      #
+      # * Author: Anagha
+      # * Date: 15/05/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_token_details
+
+        token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'a_s_mm_su_gd')
+        return token_resp unless token_resp.success?
+
+        @token = token_resp.data
 
         success
       end

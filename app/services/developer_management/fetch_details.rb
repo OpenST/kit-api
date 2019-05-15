@@ -96,10 +96,11 @@ module DeveloperManagement
     # @return [Result::Base]
     #
     def fetch_token_details
-      token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
+
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'a_s_dm_fd')
 
       # Take user to token setup if not yet setup
-      if token.blank? || token[:status] == GlobalConstant::ClientToken.not_deployed
+      unless token_resp.success? || token_resp.data[:status] == GlobalConstant::ClientToken.not_deployed
         @go_to = GlobalConstant::GoTo.token_setup
         return error_with_go_to(
           'a_s_dm_fd_1',
@@ -107,9 +108,10 @@ module DeveloperManagement
           @go_to)
       end
 
-      @token = token
+      @token = token_resp.data
       
       success
+
     end
 
     # fetch the sub env response data entity
