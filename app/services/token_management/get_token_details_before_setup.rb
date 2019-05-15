@@ -155,7 +155,7 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_stake_currency_details
 
-      @all_stake_currencies = StakeCurrency.symbols_to_details_cache.select { |_,data| data[:status] == GlobalConstant::StakeCurrency.active_status}
+      @all_stake_currencies = StakeCurrency.active_stake_currencies_by_symbol
 
       if @token[:stake_currency_id].present?
         stake_currency_id = @token[:stake_currency_id]

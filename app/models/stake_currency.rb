@@ -23,7 +23,6 @@ class StakeCurrency < DbConnection::KitSaasSubenv
       symbol: symbol,
       decimal: decimal,
       contract_address: contract_address,
-      price_oracle_contract_address: price_oracle_contract_address,
       constants: constants,
       status: status
     }
@@ -78,6 +77,20 @@ class StakeCurrency < DbConnection::KitSaasSubenv
         data[row[:symbol]] = row
       end
       data
+    end
+  end
+
+  # Symbol to details cache ONLY of active stake currencies
+  #
+  # * Author: Shlok
+  # * Date: 15/05/2019
+  # * Reviewed By:
+  #
+  # @return [Hash]
+  #
+  def self.active_stake_currencies_by_symbol
+    @active_stake_currencies_by_symbol ||= begin
+      StakeCurrency.symbols_to_details_cache.select { |_,data| data[:status] == GlobalConstant::StakeCurrency.active_status}
     end
   end
 

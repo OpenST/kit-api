@@ -28,17 +28,26 @@ module CacheManagement
     # @return [Result::Base]
     #
     def fetch_from_db
-      base_currencies_array = CurrencyConversionRate.base_currencies.keys
+      stake_currency_id_to_symbol_map = {}
+      data_to_cache = {}
 
-      data_to_cache = ::CurrencyConversionRate.new.fetch_default_price_points(:base_currencies => base_currencies_array)
+      active_stake_currency_details = StakeCurrency.active_stake_currencies_by_symbol
 
-      # check if all base_currencies which were needed were found. for any missing again fire next query with missing base currencies
-      missing_base_currencies_array = base_currencies_array - data_to_cache.keys
+      active_stake_currency_details.each do | symbol, details |
+        stake_currency_id_to_symbol_map[details[:id]] = symbol
+      end
 
-      while missing_base_currencies_array.length > 0 do
-        fresh_data_to_cache = ::CurrencyConversionRate.new.fetch_default_price_points(:base_currencies => missing_base_currencies_array)
-        data_to_cache = data_to_cache.merge(fresh_data_to_cache)
-        missing_base_currencies_array = base_currencies_array - data_to_cache.keys
+      missing_stake_currency_id_to_symbol_map = stake_currency_id_to_symbol_map.deep_dup
+
+      while missing_stake_currency_id_to_symbol_map.present?
+
+        fresh_price_points_data = ::CurrencyConversionRate.new.fetch_default_price_points(:stake_currency_id_to_symbol_map => missing_stake_currency_id_to_symbol_map)
+
+        data_to_cache.merge!(fresh_price_points_data)
+
+        fresh_price_points_data.each do |symbol, _|
+          missing_stake_currency_id_to_symbol_map.delete(active_stake_currency_details[symbol][:id])
+        end
       end
 
       data_to_cache
