@@ -170,7 +170,7 @@ module DeveloperManagement
 
       # Fetch company user uuid.
       company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
-      @addresses['company_user_id'] = company_user_ids[token_id].first || ""
+      @addresses['company_user_id'] = company_user_ids[token_id].first
       @company_uuid = @addresses['company_user_id']
 
       # Fetch company token holder
@@ -178,7 +178,7 @@ module DeveloperManagement
 
       # Fetch gateway composer address.
       staker_whitelisted_addresses = KitSaasSharedCacheManagement::StakerWhitelistedAddress.new([token_id]).fetch || {}
-      @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
+      @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address]
 
       success
     end
