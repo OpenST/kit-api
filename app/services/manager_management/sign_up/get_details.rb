@@ -120,10 +120,12 @@ module ManagerManagement
       #
       def fetch_token_details
 
+        @token = {}
         token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'a_s_mm_su_gd')
-        return token_resp unless token_resp.success?
 
-        @token = token_resp.data
+        if token_resp.success?
+          @token = token_resp.data
+        end
 
         success
       end
