@@ -1,4 +1,4 @@
-class Manager < DbConnection::KitClient
+class ManagerDevice < DbConnection::KitClient
 
   enum status: {
       GlobalConstant::ManagerDevice.authorized_status => 1,

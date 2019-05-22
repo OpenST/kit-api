@@ -82,6 +82,9 @@ module ManagerManagement
           r = create_update_contact_email_service_hook
           return r unless r.success?
 
+          r = create_authorized_device
+          return r unless r.success?
+
           r = set_cookie_value
           return r unless r.success?
 
