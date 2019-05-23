@@ -196,7 +196,7 @@ module ManagerManagement
                                              fingerprint_type: @fingerprint_type,
                                              unique_hash: unique_hash,
                                              expiration_timestamp: Time.now.to_time.to_i,
-                                             status: GlobalConstant::ManagerDevice.authorized_status
+                                             status: GlobalConstant::ManagerDevice.active_status
         )
 
         @manager_device.save!

@@ -1,8 +1,8 @@
 class ManagerDevice < DbConnection::KitClient
 
   enum status: {
-      GlobalConstant::ManagerDevice.authorized_status => 1,
-      GlobalConstant::ManagerDevice.registered_status => 2
+      GlobalConstant::ManagerDevice.inactive_status => 1,
+      GlobalConstant::ManagerDevice.active_status => 2
   }
 
   after_commit :flush_cache

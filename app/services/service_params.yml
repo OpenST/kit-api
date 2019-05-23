@@ -322,3 +322,17 @@
    - :manager
    - :email_addresses
  :optional:
+'ManagerManagement::SendDeviceVerificationLink':
+ :mandatory:
+   - :manager_id
+   - :manager_device_id
+ :optional:
+'ManagerManagement::DeviceVerification':
+  :mandatory:
+    - :is_logged_in_manager
+  :optional:
+    - :d_t
+    - :client
+    - :manager_id
+    - :is_multi_auth_cookie_valid
+    - :is_password_auth_cookie_valid

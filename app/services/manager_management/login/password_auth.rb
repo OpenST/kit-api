@@ -291,7 +291,7 @@ module ManagerManagement
         device = CacheManagement::ManagerDevice.new([unique_hash]).fetch[unique_hash]
 
         device_expired = (device[:expiration_timestamp] - GlobalConstant::ManagerDevice.device_expiration_time) < 0
-        device_not_authorized = (device.nil? || device[:status] == GlobalConstant::ManagerDevice.registered_status)
+        device_not_authorized = (device.nil? || device[:status] == GlobalConstant::ManagerDevice.inactive_status)
 
         if device_not_authorized || device_expired
 
@@ -300,7 +300,7 @@ module ManagerManagement
                                               fingerprint_type: @fingerprint_type,
                                               unique_hash: unique_hash,
                                               expiration_timestamp: Time.now.to_time.to_i,
-                                              status: GlobalConstant::ManagerDevice.registered_status)
+                                              status: GlobalConstant::ManagerDevice.inactive_status)
 
           @manager_device.save! #TODO - It has to be an update here - @santhosh
 

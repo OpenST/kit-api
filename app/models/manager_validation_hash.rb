@@ -3,7 +3,8 @@ class ManagerValidationHash < DbConnection::KitClient
   enum kind: {
       GlobalConstant::ManagerValidationHash.reset_password_kind => 1,
       GlobalConstant::ManagerValidationHash.double_optin_kind => 2,
-      GlobalConstant::ManagerValidationHash.manager_invite_kind => 3
+      GlobalConstant::ManagerValidationHash.manager_invite_kind => 3,
+      GlobalConstant::ManagerValidationHash.device_verification_kind => 4
   }
 
   enum status: {
@@ -30,6 +31,8 @@ class ManagerValidationHash < DbConnection::KitClient
       GlobalConstant::ManagerValidationHash.invite_in_expiry_interval
     when GlobalConstant::ManagerValidationHash.reset_password_kind
       GlobalConstant::ManagerValidationHash.reset_token_expiry_interval
+    when GlobalConstant::ManagerValidationHash.device_verification_kind
+      GlobalConstant::ManagerValidationHash.device_verification_expiry_interval
     else
       fail "no expiry found for : #{self.kind}"
     end

@@ -137,6 +137,11 @@ module GlobalConstant
         'platform_double_optin'
       end
 
+      # double optin email - sent when user is adding email for the first time
+      def platform_device_verification_template
+        'platform_device_verification'
+      end
+
       # reset password email - sent when user clicks on forgot password
       def platform_forgot_password_template
         'platform_forgot_password'
@@ -205,6 +210,7 @@ module GlobalConstant
           platform_double_optin_template,
           platform_forgot_password_template,
           platform_invite_manager_template,
+          platform_device_verification_template,
           platform_mainnet_access_request_template,
           platform_test_economy_invite_template,
           recovery_request_submission_template,
@@ -214,6 +220,20 @@ module GlobalConstant
           platform_stake_and_mint_status_success_template,
           platform_stake_and_mint_status_failed_template
         ]
+      end
+
+      # is this template related to device verification email
+      #
+      # * Author: Ankit
+      # * Date: 21/05/2019
+      # * Reviewed By:
+      #
+      # @return [Boolean]
+      #
+      def is_device_verification_related_template?(template_name)
+        [
+          GlobalConstant::PepoCampaigns.platform_device_verification_template
+        ].include?(template_name)
       end
 
       # is this template related to double opt in email

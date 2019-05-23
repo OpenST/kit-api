@@ -16,6 +16,10 @@ Rails.application.routes.draw do
     match 'request-link' => :send_verify_email_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
+  scope 'api/verify-device', controller: 'access/verify_device', :format => false do
+    match '' => :verify_device, via: :GET
+  end
+
   scope 'api/mfa', controller: 'access/mfa', :format => false do
     match '' => :mfa, via: :GET, as: :mfa
     match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
