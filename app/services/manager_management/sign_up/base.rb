@@ -13,7 +13,8 @@ module ManagerManagement
       # @params [String] password (mandatory) - user password
       # @params [String] confirm_password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
-      # @params [String] browser_fingerprint (mandatory) - browser fingerprint
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type
       #
       # @return [ManagerManagement::SignUp::Base]
       #
@@ -24,7 +25,8 @@ module ManagerManagement
         @password = @params[:password]
         @confirm_password = @params[:confirm_password]
         @browser_user_agent = @params[:browser_user_agent]
-        @browser_fingerprint = @params[:browser_fingerprint]
+        @fingerprint = @params[:fingerprint]
+        @fingerprint_type = @params[:fingerprint_type]
 
         @client_id = nil
         @manager_id = nil
@@ -186,13 +188,14 @@ module ManagerManagement
       # * Reviewed By:
       #
       def create_authorized_device
-        key = "#{@manager_id}:#{@browser_fingerprint}"
-        string_to_sign = Rails.application.secrets.secret_key_base
-        unique_hash = OpenSSL::HMAC.hexdigest("SHA256", key, string_to_sign)
+        key = "#{@manager_id}:#{@fingerprint}:#{@fingerprint_type}"
+        unique_hash = LocalCipher.get_sha_hashed_text(key)
+
         @manager_device = ManagerDevice.new( manager_id: @manager_obj.id,
-                                             browser_fingerprint: @browser_fingerprint,
+                                             fingerprint: @fingerprint,
+                                             fingerprint_type: @fingerprint_type,
                                              unique_hash: unique_hash,
-                                             last_logged_in_at: Time.now.to_s,
+                                             expiration_timestamp: Time.now.to_time.to_i,
                                              status: GlobalConstant::ManagerDevice.authorized_status
         )
 
@@ -215,7 +218,7 @@ module ManagerManagement
             current_client_id: @manager_obj.current_client_id,
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
-            is_deviced_authorized: true,
+            is_device_authorized: 1,
             last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )

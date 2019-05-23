@@ -19,9 +19,10 @@ class ManagerDevice < DbConnection::KitClient
     {
         id: id,
         manager_id: manager_id,
-        browser_fingerprint: browser_fingerprint,
+        fingerprint: fingerprint,
+        fingerprint_type: fingerprint_type,
         unique_hash: unique_hash,
-        last_logged_in_at: last_logged_in_at,
+        expiration_timestamp: expiration_timestamp,
         status: status
     }
   end

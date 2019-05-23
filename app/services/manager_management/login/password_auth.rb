@@ -13,6 +13,8 @@ module ManagerManagement
       # @params [String] email (mandatory) - the email of the user which is to be signed up
       # @params [String] password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type
       #
       # @return [ManagerManagement::Login::PasswordAuth]
       #
@@ -22,6 +24,8 @@ module ManagerManagement
         @email = @params[:email]
         @password = @params[:password]
         @browser_user_agent = @params[:browser_user_agent]
+        @fingerprint = @params[:fingerprint]
+        @fingerprint_type = @params[:fingerprint_type]
 
         @client = nil
         @client_manager = nil
@@ -61,6 +65,9 @@ module ManagerManagement
           return r unless r.success?
 
           r = update_manager
+          return r unless r.success?
+
+          r = validate_device_fingerprint
           return r unless r.success?
 
           set_cookie_value
@@ -268,6 +275,53 @@ module ManagerManagement
 
       end
 
+      # Validate device fingerprint
+      #
+      # * Author: Santhosh
+      # * Date: 23/06/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def validate_device_fingerprint
+
+        key = "#{@manager_obj.id}:#{@fingerprint}:#{@fingerprint_type}"
+        unique_hash = LocalCipher.get_sha_hashed_text(key)
+
+        device = CacheManagement::ManagerDevice.new([unique_hash]).fetch[unique_hash]
+
+        device_expired = (device[:expiration_timestamp] - GlobalConstant::ManagerDevice.device_expiration_time) < 0
+        device_not_authorized = (device.nil? || device[:status] == GlobalConstant::ManagerDevice.registered_status)
+
+        if device_not_authorized || device_expired
+
+          @manager_device = ManagerDevice.new(manager_id: @manager_obj.id,
+                                              fingerprint: @fingerprint,
+                                              fingerprint_type: @fingerprint_type,
+                                              unique_hash: unique_hash,
+                                              expiration_timestamp: Time.now.to_time.to_i,
+                                              status: GlobalConstant::ManagerDevice.registered_status)
+
+          @manager_device.save! #TODO - It has to be an update here - @santhosh
+
+          BackgroundJob.enqueue(
+            DeviceRegistrationJob,
+            {
+                manager_id: @manager_obj.id,
+                manager_device_id: @manager_device.id
+            }
+          )
+
+          return error_with_go_to(
+              'm_l_pa_10',
+              'device_not_authorized',
+              GlobalConstant::GoTo.verify_device
+          )
+        end
+
+        success
+      end
+
       # Set cookie value
       #
       # * Author: Puneet
@@ -283,6 +337,7 @@ module ManagerManagement
             current_client_id: @manager_obj.current_client_id,
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
+            is_device_authorized: 1,
             last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )

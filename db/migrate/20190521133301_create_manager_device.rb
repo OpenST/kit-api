@@ -3,9 +3,10 @@ class CreateManagerDevice < DbMigrationConnection
     run_migration_for_db(DbConnection::KitClient) do
       create_table :manager_devices do |t|
         t.column :manager_id, :integer, null: false
-        t.column :browser_fingerprint, :string, limit: 256, null: false
+        t.column :fingerprint, :string, limit: 256, null: false
+        t.column :fingerprint_type, :tinyint, null: false
         t.column :unique_hash, :string, null: false
-        t.column :last_logged_in_at, :datetime, null: false
+        t.column :expiration_timestamp, :string, null: false
         t.column :status, :tinyint, null: false
         t.timestamps
       end

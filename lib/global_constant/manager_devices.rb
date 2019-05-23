@@ -15,5 +15,9 @@ module GlobalConstant
 
       ### status end ###
     end
+
+    def device_expiration_time
+      30 * 24 * 60 * 60
+    end
   end
 end
