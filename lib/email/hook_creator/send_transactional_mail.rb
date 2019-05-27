@@ -140,12 +140,18 @@ module Email
 
         elsif GlobalConstant::PepoCampaigns.is_test_economy_invite_template?(@template_name)
 
-          return error_with_data(
-            'e_hc_stm_9',
-            'something_went_wrong',
-            GlobalConstant::ErrorAction.default
-          ) if @template_vars[:qr_code_url].blank? || @template_vars[:ios_app_download_link].blank? ||
+          if @template_vars[:qr_code_url].blank? || @template_vars[:ios_app_download_link].blank? ||
             @template_vars[:android_app_download_link].blank? || @template_vars[:deep_link_demo_app_launch_url].blank?
+
+            Rails.logger.error("invalid template_vars: #{@template_vars.inspect} for template_name: #{@template_name}")
+
+            return error_with_data(
+                'e_hc_stm_9',
+                'something_went_wrong',
+                GlobalConstant::ErrorAction.default
+            )
+
+          end
 
         end
 
