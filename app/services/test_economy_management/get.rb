@@ -87,9 +87,7 @@ module TestEconomyManagement
           manager: @manager,
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {
-            qr_code_url: test_economy_qr_code_uploaded? ? qr_code_s3_url : nil,
-            ios_app_download_link: GlobalConstant::DemoApp.ios_url,
-            android_app_download_link: GlobalConstant::DemoApp.android_url
+            qr_code_url: test_economy_qr_code_uploaded? ? qr_code_s3_url : nil
           }
         }
       )

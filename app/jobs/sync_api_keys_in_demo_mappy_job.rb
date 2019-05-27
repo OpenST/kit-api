@@ -16,6 +16,16 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
 
     init_params(params)
 
+    r = fetch_client
+    return notify_devs(r) unless r.success?
+
+    has_setup_demo_app = GlobalConstant::Base.main_sub_environment? ?
+        @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_registered_in_mappy_server_status) :
+        @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
+
+    # return if token has not been registered in Mappy
+    return success unless has_setup_demo_app
+
     r = fetch_token
     return notify_devs(r) unless r.success?
 
@@ -39,8 +49,26 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   #
   def init_params(params)
     @client_id = params[:client_id].to_i
+    @client = nil
     @token_id = nil
     @last_expiring_api_credentials = nil
+  end
+
+  # Fetch Client
+  #
+  # * Author: Puneet
+  # * Date: 13/04/2019
+  # * Reviewed By:
+  #
+  def fetch_client
+
+    client_fetch_resp = Util::EntityHelper.fetch_and_validate_client(@client_id, 'j_sakidmj')
+    return client_fetch_resp unless client_fetch_resp.success?
+
+    @client = client_fetch_resp.data
+
+    success
+
   end
 
   # Fetch Token

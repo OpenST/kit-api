@@ -222,7 +222,8 @@ module TestEconomyManagement
         qr_code_url: qr_code_s3_url,
         ios_app_download_link: GlobalConstant::DemoApp.ios_url,
         android_app_download_link: GlobalConstant::DemoApp.android_url,
-        company_web_domain: GlobalConstant::CompanyWeb.domain
+        company_web_domain: GlobalConstant::CompanyWeb.domain,
+        deep_link_demo_app_launch_url: "#{GlobalConstant::CompanyOtherProductUrls.ost_web_root_url}/demo-wallet/launch/?#{qr_code_data.to_query}"
       }
 
       @email_arr.each do |email|
