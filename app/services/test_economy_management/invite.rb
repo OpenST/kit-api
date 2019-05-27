@@ -223,7 +223,7 @@ module TestEconomyManagement
         qr_code_url: qr_code_s3_url,
         ios_app_download_link: GlobalConstant::DemoApp.ios_url,
         android_app_download_link: GlobalConstant::DemoApp.android_url,
-        deep_link_demo_app_launch_url: "#{GlobalConstant::CompanyOtherProductUrls.ost_web_root_url}/demo-wallet/launch/?#{qr_code_data.to_query}",
+        deep_link_demo_app_launch_url: URI.encode("#{GlobalConstant::CompanyOtherProductUrls.ost_web_root_url}/demo-wallet/launch/?ld=#{qr_code_data.to_json}"),
         token_name: @token[:name],
         inviter_name: @client[:company_name] || "#{@manager[:first_name]} #{@manager[:last_name]}"
       }
