@@ -45,6 +45,10 @@ module GlobalConstant
         'ost_up'
       end
 
+      def device_authorized_value
+        1
+      end
+
     end
 
   end

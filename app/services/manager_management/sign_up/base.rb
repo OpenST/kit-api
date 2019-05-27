@@ -181,10 +181,10 @@ module ManagerManagement
 
       end
 
-      # Create update contact email hook
+      # Create entry in manager device with active status
       #
       # * Author: Santhosh
-      # * Date: 22/06/2019
+      # * Date: 22/05/2019
       # * Reviewed By:
       #
       def create_authorized_device
@@ -218,7 +218,7 @@ module ManagerManagement
             current_client_id: @manager_obj.current_client_id,
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
-            is_device_authorized: 1,
+            is_device_authorized: GlobalConstant::Cookie.device_authorized_value,
             last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )
