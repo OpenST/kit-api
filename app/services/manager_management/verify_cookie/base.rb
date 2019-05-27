@@ -88,7 +88,7 @@ module ManagerManagement
       #
       def set_parts
         parts = @cookie_value.split(':')
-        return unauthorized_access_response('am_vc_1') unless parts.length == 4
+        return unauthorized_access_response('am_vc_1') unless parts.length == 5
         return unauthorized_access_response('am_vc_2') unless parts[2] == auth_level
 
         @manager_id = parts[0].to_i
@@ -97,7 +97,7 @@ module ManagerManagement
         @created_ts = parts[1].to_i
         return unauthorized_access_response('am_vc_4') unless @created_ts + valid_upto >= current_timestamp
 
-        @token = parts[3]
+        @token = parts[4]
 
         success
       end

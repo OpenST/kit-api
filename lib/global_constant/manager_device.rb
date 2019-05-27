@@ -7,19 +7,30 @@ module GlobalConstant
 
       ### Status Start ###
 
-      def active_status
-        'active'
+      def authorized
+        'authorized'
       end
 
-      def inactive_status
-        'inactive_status'
+      def un_authorized
+        'un_authorized'
       end
 
+      # 30 day expiry
       def device_expiration_time
         30 * 24 * 60 * 60
       end
 
       ### Status End ###
+
+      ### Fingerprint types ###
+
+      def fingerprint_js
+        'fingerprint_js'
+      end
+
+      def browser_agent
+        'browser_agent'
+      end
 
     end
 

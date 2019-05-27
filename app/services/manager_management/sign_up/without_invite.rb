@@ -14,6 +14,8 @@ module ManagerManagement
       # @params [String] browser_user_agent (mandatory) - browser user agent
       # @params [String] email (mandatory) - the email of the user which is to be signed up
       # @params [String] agreed_terms_of_service (mandatory) - if terms of service was accepted
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type (1/0)
       # @params [Hash] utm_params (optional) - UTM params if client joins using marketing link.
       #
       # @return [ManagerManagement::SignUp::WithoutInvite]

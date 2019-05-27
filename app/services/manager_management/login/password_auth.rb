@@ -14,7 +14,7 @@ module ManagerManagement
       # @params [String] password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
       # @params [String] fingerprint (mandatory) - device fingerprint
-      # @params [String] fingerprint_type (mandatory) - device fingerprint type
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type (1/0)
       #
       # @return [ManagerManagement::Login::PasswordAuth]
       #
@@ -25,7 +25,8 @@ module ManagerManagement
         @password = @params[:password]
         @browser_user_agent = @params[:browser_user_agent]
         @fingerprint = @params[:fingerprint]
-        @fingerprint_type = @params[:fingerprint_type]
+        @fingerprint_type = @params[:fingerprint_type] == 1 ? GlobalConstant::ManagerDevice.fingerprint_js
+                                : GlobalConstant::ManagerDevice.browser_agent
 
         @client = nil
         @client_manager = nil
@@ -287,22 +288,39 @@ module ManagerManagement
 
         key = "#{@manager_obj.id}:#{@fingerprint}:#{@fingerprint_type}"
         unique_hash = LocalCipher.get_sha_hashed_text(key)
+        expiration_timestamp = Time.now.to_time.to_i + GlobalConstant::ManagerDevice.device_expiration_time
+        device_expired = nil
+        device_not_authorized = nil
 
         device = CacheManagement::ManagerDevice.new([unique_hash]).fetch[unique_hash]
 
-        device_expired = (device[:expiration_timestamp] - GlobalConstant::ManagerDevice.device_expiration_time) < 0
-        device_not_authorized = (device.nil? || device[:status] == GlobalConstant::ManagerDevice.inactive_status)
+        new_device = device[:manager_id].nil?
 
-        if device_not_authorized || device_expired
-
+        # Create new model object if there is no device
+        if new_device
           @manager_device = ManagerDevice.new(manager_id: @manager_obj.id,
                                               fingerprint: @fingerprint,
                                               fingerprint_type: @fingerprint_type,
                                               unique_hash: unique_hash,
-                                              expiration_timestamp: Time.now.to_time.to_i,
-                                              status: GlobalConstant::ManagerDevice.inactive_status)
+                                              expiration_timestamp: expiration_timestamp,
+                                              status: GlobalConstant::ManagerDevice.un_authorized)
+        else
+          puts device.inspect
+          device_expired = (device[:expiration_timestamp].to_i - Time.now.to_time.to_i) <= 0
+          device_not_authorized = device[:status] == GlobalConstant::ManagerDevice.un_authorized
+        end
 
-          @manager_device.save! #TODO - It has to be an update here - @santhosh
+        # Change expiration and status if device is expired
+        if device_expired
+          @manager_device = ManagerDevice.find_by(unique_hash: unique_hash)
+
+          @manager_device[:expiration_timestamp] = expiration_timestamp
+          @manager_device[:status] = GlobalConstant::ManagerDevice.un_authorized
+        end
+
+        if new_device || device_not_authorized || device_expired
+
+          @manager_device.save!
 
           BackgroundJob.enqueue(
             DeviceRegistrationJob,

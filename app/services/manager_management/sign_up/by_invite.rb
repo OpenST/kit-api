@@ -14,6 +14,8 @@ module ManagerManagement
       # @params [String] password (mandatory) - user password
       # @params [String] confirm_password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type (1/0)
       # @params [Hash] utm_params (optional) - UTM params if client joins using marketing link.
       #
       # @return [ManagerManagement::SignUp::ByInvite]

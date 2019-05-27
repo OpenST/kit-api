@@ -194,7 +194,7 @@ module ManagerManagement
     # * Reviewed By:
     #
     def mark_manager_device_verified
-      @manager_device_obj.status = GlobalConstant::ManagerDevice.active_status
+      @manager_device_obj.status = GlobalConstant::ManagerDevice.authorized
       @manager_device_obj.expiration_timestamp = current_timestamp + 30.days.to_i
       @manager_device_obj.save!
 

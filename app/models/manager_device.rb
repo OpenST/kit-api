@@ -1,8 +1,13 @@
 class ManagerDevice < DbConnection::KitClient
 
   enum status: {
-      GlobalConstant::ManagerDevice.inactive_status => 1,
-      GlobalConstant::ManagerDevice.active_status => 2
+      GlobalConstant::ManagerDevice.authorized => 1,
+      GlobalConstant::ManagerDevice.un_authorized => 2
+  }
+
+  enum fingerprint_type: {
+      GlobalConstant::ManagerDevice.fingerprint_js => 1,
+      GlobalConstant::ManagerDevice.browser_agent => 2
   }
 
   after_commit :flush_cache

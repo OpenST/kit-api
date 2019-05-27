@@ -75,7 +75,7 @@ module ManagerManagement
         'a_s_mm_sdv_1',
         'something_went_wrong',
         GlobalConstant::ErrorAction.default
-      ) unless @manager_device.present? && @manager_device[:status] == GlobalConstant::ManagerDevice.inactive_status
+      ) unless @manager_device.present? && @manager_device[:status] == GlobalConstant::ManagerDevice.un_authorized
 
       success
 
