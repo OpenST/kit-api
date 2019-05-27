@@ -1,8 +1,8 @@
 class RemoveBaseCurrencyFromCurrencyConversionRates < DbMigrationConnection
   def up
     run_migration_for_db(DbConnection::KitSaasSubenv) do
-      remove_column :currency_conversion_rates, :base_currency
       remove_index :currency_conversion_rates, name: 'cuk_1'
+      remove_column :currency_conversion_rates, :base_currency
     end
   end
 
