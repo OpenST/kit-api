@@ -211,7 +211,11 @@ module ManagerManagement
       @manager_validation_hash_obj.status = GlobalConstant::ManagerValidationHash.used_status
       @manager_validation_hash_obj.save!
 
-      ManagerValidationHash.where(manager_id: @manager_id, kind: GlobalConstant::ManagerValidationHash.device_verification_kind, status: GlobalConstant::ManagerValidationHash.active_status).find_in_batches(batch_size: 100) do |manager_validation_hashes|
+      ManagerValidationHash.where(
+        manager_id: @manager_id,
+        kind: GlobalConstant::ManagerValidationHash.device_verification_kind,
+        status: GlobalConstant::ManagerValidationHash.active_status
+      ).find_in_batches(batch_size: 100) do |manager_validation_hashes|
       manager_validation_hashes_ids_to_deactivate = []
         manager_validation_hashes.each do |manager_validation_hash|
           if manager_validation_hash.extra_data[:manager_device_id] == @manager_device_id

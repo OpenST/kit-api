@@ -117,8 +117,8 @@ module ManagerManagement
 
     # Send Device Verification mail
     #
-    # * Author: Puneet
-    # * Date: 15/01/2018
+    # * Author: Ankit
+    # * Date: 27/05/2018
     # * Reviewed By:
     #
     def send_device_verification_token
