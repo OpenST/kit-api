@@ -28,17 +28,27 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
   def fetch_price_points(params)
     chain_id = params[:chain_id]
     data_to_cache = {}
-    base_currencies_array = CurrencyConversionRate.base_currencies.keys
+    stake_currency_id_to_symbol_map = {}
+    price_points_data = {}
 
-    price_points_data = fetch_default_price_points(:base_currencies => base_currencies_array, :chain_id => chain_id)
+    active_stake_currency_details = StakeCurrency.active_stake_currencies_by_symbol
 
-    missing_base_currencies_array = base_currencies_array - price_points_data.keys
-    data_to_cache[chain_id] = price_points_data
+    active_stake_currency_details.each do | symbol, details |
+      stake_currency_id_to_symbol_map[details[:id]] = symbol
+    end
 
-    while missing_base_currencies_array.length > 0 do
-      fresh_price_points_data = fetch_default_price_points(:base_currencies => missing_base_currencies_array, :chain_id => chain_id)
-      price_points_data = price_points_data.merge(fresh_price_points_data)
-      missing_base_currencies_array = base_currencies_array - price_points_data.keys
+    missing_stake_currency_id_to_symbol_map = stake_currency_id_to_symbol_map.deep_dup
+
+    while missing_stake_currency_id_to_symbol_map.present?
+      
+      fresh_price_points_data = fetch_default_price_points(:stake_currency_id_to_symbol_map => missing_stake_currency_id_to_symbol_map,
+                                                           :chain_id => chain_id)
+
+      price_points_data.merge!(fresh_price_points_data)
+
+      fresh_price_points_data.each do |symbol, _|
+        missing_stake_currency_id_to_symbol_map.delete(active_stake_currency_details[symbol][:id])
+      end
     end
 
     data_to_cache[chain_id] = price_points_data
@@ -54,13 +64,15 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
   # @return [Hash]
   #
   def fetch_default_price_points(params)
-    base_currencies = params[:base_currencies]
+    stake_currency_id_to_symbol_map = params[:stake_currency_id_to_symbol_map]
     chain_id = params[:chain_id] || nil
     data_to_return = {}
 
+    stake_currency_ids_array = stake_currency_id_to_symbol_map.keys
+
     records = ::CurrencyConversionRate.where(
       status: GlobalConstant::ConversionRates.active_status,
-      base_currency: base_currencies,
+      stake_currency_id: stake_currency_ids_array,
       quote_currency: GlobalConstant::ConversionRates.usd_currency
     ).order('timestamp desc').limit(10)
 
@@ -69,13 +81,13 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
     end
 
     if records.length == 0
-      fail "base currency's record not found" #TEMP. Need to decide what should be the course of action if this happens.
+      fail "Base currency's record not found." #TEMP. Need to decide what should be the course of action if this happens.
     end
 
     records.each do |record|
-      next if data_to_return[record.base_currency].present?
-      data_to_return[record.base_currency] = {}
-      data_to_return[record.base_currency][record.quote_currency] = record.conversion_rate.to_s
+      next if data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]].present?
+      data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]] = {}
+      data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]][record.quote_currency] = record.conversion_rate.to_s
     end
     data_to_return
   end

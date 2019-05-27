@@ -53,9 +53,12 @@ module DeveloperManagement
         r = fetch_addresses
         return r unless r.success?
 
+        r = fetch_stake_currency_details
+        return r unless r.success?
+
         @api_response_data = {
           token: @token,
-          stake_currencies: {@token[:stake_currency_id] => StakeCurrency.ids_to_details_cache[@token[:stake_currency_id]]},
+          stake_currencies: @stake_currencies,
           client_manager: @client_manager,
           manager: @manager,
           sub_env_payloads: @sub_env_payload_data,
@@ -93,10 +96,11 @@ module DeveloperManagement
     # @return [Result::Base]
     #
     def fetch_token_details
-      token = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id] || {}
+
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'a_s_dm_fd')
 
       # Take user to token setup if not yet setup
-      if token.blank? || token[:status] == GlobalConstant::ClientToken.not_deployed
+      unless token_resp.success? || token_resp.data[:status] == GlobalConstant::ClientToken.not_deployed
         @go_to = GlobalConstant::GoTo.token_setup
         return error_with_go_to(
           'a_s_dm_fd_1',
@@ -104,8 +108,10 @@ module DeveloperManagement
           @go_to)
       end
 
-      @token = token
+      @token = token_resp.data
+      
       success
+
     end
 
     # fetch the sub env response data entity
@@ -162,13 +168,9 @@ module DeveloperManagement
       @token[:ubt_address] = @addresses['utility_branded_token_contract'] #This is needed as we are sending ubt address in token entity
       @token[:aux_chain_id] = aux_chain_id
 
-      # Fetch chain addresses.
-      chain_addresses_data = KitSaasSharedCacheManagement::ChainAddresses.new([aux_chain_id]).fetch || {}
-      @addresses['erc20_contract_address'] = chain_addresses_data[aux_chain_id][GlobalConstant::ChainAddresses.st_prime_contract_kind][:address] || ""
-
       # Fetch company user uuid.
       company_user_ids = KitSaasSharedCacheManagement::TokenCompanyUser.new([token_id]).fetch || {}
-      @addresses['company_user_id'] = company_user_ids[token_id].first || ""
+      @addresses['company_user_id'] = company_user_ids[token_id].first
       @company_uuid = @addresses['company_user_id']
 
       # Fetch company token holder
@@ -176,9 +178,27 @@ module DeveloperManagement
 
       # Fetch gateway composer address.
       staker_whitelisted_addresses = KitSaasSharedCacheManagement::StakerWhitelistedAddress.new([token_id]).fetch || {}
-      @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address] || ""
+      @addresses['gateway_composer_address'] = staker_whitelisted_addresses[token_id][:gateway_composer_address]
 
       success
+    end
+
+    # Fetch stake currency details.
+    #
+    # * Author: Anagha
+    # * Date: 06/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_stake_currency_details
+
+      @stake_currencies = Util::EntityHelper.fetch_stake_currency_details(@token[:stake_currency_id]).data
+
+      @addresses['erc20_contract_address'] = @stake_currencies[@token[:stake_currency_symbol]][:contract_address]
+
+      success
+
     end
 
     # Fetch company token holder address

@@ -210,7 +210,19 @@ class ApplicationController < ActionController::API
       response_hash[:err][:go_to] = service_response.go_to
     end
 
-    (render plain: Oj.dump(response_hash, mode: :compat), status: http_status_code)
+    formatted_response_hash = response_hash.deep_dup
+    if service_response.success?
+      final_response = {}
+      if formatted_response_hash[:data]
+        formatted_response_hash[:data].each do |key, value|
+          formatter_instance = Formatter::Factory.get_instance(key, value)
+          final_response[key] = formatter_instance.perform
+        end
+      end
+      formatted_response_hash[:data] = final_response
+    end
+
+    (render plain: Oj.dump(formatted_response_hash, mode: :compat), status: http_status_code)
 
   end
 

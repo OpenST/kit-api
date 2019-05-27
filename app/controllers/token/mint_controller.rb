@@ -1,6 +1,6 @@
 class Token::MintController < AuthenticationController
 
-  # token start mint
+  # Token start mint
   #
   # * Author: Alpesh
   # * Date: 19/01/2019

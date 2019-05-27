@@ -82,6 +82,7 @@ module TestEconomyManagement
       success_with_data(
         {
           token: @token,
+          stake_currencies: @stake_currencies,
           client: @client,
           manager: @manager,
           sub_env_payloads: @sub_env_payloads,

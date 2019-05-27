@@ -65,7 +65,14 @@ module Util
           token[:aux_chain_id] = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract][:deployed_chain_id].to_s
         end
 
+        if token[:stake_currency_id]
+          token[:stake_currency_symbol] = StakeCurrency.ids_to_details_cache[token[:stake_currency_id]][:symbol]
+        else
+          token[:stake_currency_symbol] = nil
+        end
+
         success_with_data(token)
+
       end
 
       # Find & validate ubt address for token
@@ -110,6 +117,32 @@ module Util
           return aux_chain_id_not_found_response("#{err_prefix}:l_u_eh_fciti_2")
         end
         success_with_data(aux_chain_id: aux_chain_id)
+      end
+
+      # Fetch stake currency details
+      #
+      # * Author: Anagha
+      # * Date: 06/05/2019
+      # * Reviewed By:
+      #
+      # @param [Integer] stake_currency_id (optional) - Stake currency id
+      #
+      # @return [Result::Base]
+      #
+      def fetch_stake_currency_details(stake_currency_id = nil)
+        stake_currencies_details = {}
+        cache_data = StakeCurrency.ids_to_details_cache
+
+        if stake_currency_id.present?
+          stake_currencies_details[cache_data[stake_currency_id][:symbol]] = cache_data[stake_currency_id]
+          return success_with_data(stake_currencies_details)
+        end
+
+        cache_data.each do |id, row_value|
+          stake_currencies_details[row_value[:symbol]] = row_value
+        end
+
+        success_with_data(stake_currencies_details)
       end
 
       private
@@ -165,6 +198,24 @@ module Util
             err,
             'token_not_found',
             GlobalConstant::ErrorAction.default
+        )
+      end
+
+      # No stake currency id found
+      #
+      # * Author: Dhananjay
+      # * Date: 21/01/2019
+      # * Reviewed By: Anagha
+      #
+      # @param [String] err (mandatory) - err code
+      #
+      # @return [Result::Base]
+      #
+      def stake_currency_id_not_found_response(err)
+        error_with_data(
+          err,
+          'stake_currency_id_not_found',
+          GlobalConstant::ErrorAction.default
         )
       end
 

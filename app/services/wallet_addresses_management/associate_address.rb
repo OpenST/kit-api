@@ -101,16 +101,16 @@ module WalletAddressesManagement
         )
       end
 
-      @token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
+      token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 's_wam_aa')
 
-      if @token_details.blank?
-        return validation_error(
-          's_wam_aa_2',
-          'invalid_api_params',
-          ['invalid_client_id'],
-          GlobalConstant::ErrorAction.default
-        )
-      end
+      return validation_error(
+        's_wam_aa_2',
+        'invalid_api_params',
+        ['invalid_client_id'],
+        GlobalConstant::ErrorAction.default
+      ) unless token_resp.success?
+
+      @token_details = token_resp.data
 
       success
 

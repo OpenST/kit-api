@@ -53,6 +53,9 @@ module TokenManagement
         r = add_token_to_response
         return r unless r.success?
 
+        r = fetch_stake_currency_details
+        return r unless r.success?
+
         r = fetch_addresses
         return r unless r.success?
 
@@ -132,6 +135,11 @@ module TokenManagement
 
     end
 
+
+    def fetch_stake_currency_details
+      success
+    end
+
     # Fetch addresses details
     #
     # * Author: Alpesh
@@ -186,7 +194,7 @@ module TokenManagement
       #Todo: Check if we need to send simple_token abi/gas when owner is ost managed
 
       @api_response_data[:contract_details] = {
-        simple_token: { # TODO:@Shlok Replace 'simple_token' -> 'stake_currency'
+        stake_currency: {
           abi: GlobalConstant::ContractDetails::StakeCurrency.abi,
           gas: GlobalConstant::ContractDetails::StakeCurrency.gas,
           address: saas_response.data["contract_address"]["stake_currency"]
@@ -198,10 +206,13 @@ module TokenManagement
         }
       }
 
-
-      @api_response_data[:min_ost_in_wei] = saas_response.data["minimum_stake_currency_required"]
-      # TODO:@Shlok Replace 'min_ost_in_wei' -> 'minimum_stake_currency_in_wei'
+      @api_response_data[:min_stake_currency_in_lower_unit] = saas_response.data["minimum_stake_currency_required"]
       @api_response_data[:min_eth_in_wei] = saas_response.data["minimum_eth_required"]
+
+      @api_response_data[:min_balances] = {
+        @token[:stake_currency_symbol] => saas_response.data["minimum_stake_currency_required"],
+        "ETH" => saas_response.data["minimum_eth_required"]
+      }
 
       @api_response_data[:gas_price] = saas_response.data["gas_price"]
 

@@ -284,6 +284,7 @@ module TestEconomyManagement
       success_with_data(
         {
           token: @token,
+          stake_currencies: @stake_currencies,
           client: @client_obj.formatted_cache_data,
           manager: @manager,
           sub_env_payloads: @sub_env_payloads,
