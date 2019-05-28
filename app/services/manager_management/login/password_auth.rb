@@ -311,7 +311,7 @@ module ManagerManagement
         end
 
         # Change expiration and status if device is expired
-        if device_expired
+        if device_expired || device_not_authorized
           @manager_device = ManagerDevice.find_by(unique_hash: unique_hash)
 
           @manager_device[:expiration_timestamp] = expiration_timestamp
