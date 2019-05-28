@@ -48,6 +48,9 @@ module ManagerManagement
             r = validate
             return r unless r.success?
 
+            r = set_parts
+            return r unless r.success?
+
             r = fetch_manager
             return r unless r.success?
 
@@ -122,6 +125,35 @@ module ManagerManagement
 
         end
 
+        # Set parts
+        #
+        # * Author: Santhosh
+        # * Date: 28/09/2019
+        # * Reviewed By:
+        #
+        # Sets @manager_id, @created_ts, @token
+        #
+        # @return [Result::Base]
+        #
+        def set_parts
+          parts = @cookie_value.split(':')
+
+          return unauthorized_access_response('mm_l_mf_a_2') unless parts.length == 5
+          return unauthorized_access_response('mm_l_mf_a_3') unless parts[2] == GlobalConstant::Cookie.password_auth_prefix
+
+          @manager_id = parts[0].to_i
+          return unauthorized_access_response('mm_l_mf_a_4') unless @manager_id > 0
+
+          @created_ts = parts[1].to_i
+          return unauthorized_access_response('mm_l_mf_a_5') unless @created_ts + valid_upto >= current_timestamp
+
+          @manager_device_id = parts[3].to_i
+
+          @token = parts[4]
+
+          success
+        end
+
         # Set Double auth cookie
         #
         # * Author: Puneet
@@ -134,11 +166,17 @@ module ManagerManagement
         #
         def set_double_auth_cookie_value
 
+          device = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
+
+          return unauthorized_access_response('mm_l_mf_a_6') if device.nil?
+
           @double_auth_cookie_value = Manager.get_cookie_value(
               manager_id: @manager_obj.id,
               current_client_id: @manager_obj.current_client_id,
               token_s: @manager_obj.mfa_token,
               browser_user_agent: @browser_user_agent,
+              fingerprint: device[:fingerprint],
+              manager_device_id: @manager_device_id,
               last_session_updated_at: @manager_obj.last_session_updated_at,
               auth_level: GlobalConstant::Cookie.mfa_auth_prefix
           )

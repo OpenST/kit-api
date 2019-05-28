@@ -160,6 +160,18 @@ module ManagerManagement
 
         end
 
+        # Valid upto
+        #
+        # * Author: Santhosh
+        # * Date: 29/06/2019
+        # * Reviewed By:
+        #
+        # @return [Time]
+        #
+        def valid_upto
+          GlobalConstant::Cookie.mfa_auth_expiry
+        end
+
       end
 
     end

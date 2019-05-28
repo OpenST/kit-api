@@ -355,7 +355,6 @@ module ManagerManagement
             current_client_id: @manager_obj.current_client_id,
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
-            is_device_authorized: GlobalConstant::Cookie.device_authorized_value,
             manager_device_id: @manager_device_id,
             fingerprint: @fingerprint,
             last_session_updated_at: @manager_obj.last_session_updated_at,

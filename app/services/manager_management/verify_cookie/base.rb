@@ -89,7 +89,7 @@ module ManagerManagement
       def set_parts
         parts = @cookie_value.split(':')
 
-        return unauthorized_access_response('am_vc_1') unless parts.length == 6
+        return unauthorized_access_response('am_vc_1') unless parts.length == 5
         return unauthorized_access_response('am_vc_2') unless parts[2] == auth_level
 
         @manager_id = parts[0].to_i
@@ -98,9 +98,9 @@ module ManagerManagement
         @created_ts = parts[1].to_i
         return unauthorized_access_response('am_vc_4') unless @created_ts + valid_upto >= current_timestamp
 
-        @manager_device_id = parts[4].to_i
+        @manager_device_id = parts[3].to_i
 
-        @token = parts[5]
+        @token = parts[4]
 
         success
       end
@@ -134,7 +134,6 @@ module ManagerManagement
             current_client_id: @manager[:current_client_id],
             token_s: token_s,
             browser_user_agent: @browser_user_agent,
-            is_device_authorized: GlobalConstant::Cookie.device_authorized_value,
             manager_device_id: @manager_device_id,
             fingerprint: @fingerprint,
             last_session_updated_at: @manager_s[:last_session_updated_at],
@@ -206,7 +205,6 @@ module ManagerManagement
             current_client_id: @manager[:current_client_id],
             token_s: token_s,
             browser_user_agent: @browser_user_agent,
-            is_device_authorized: GlobalConstant::Cookie.device_authorized_value,
             manager_device_id: @manager_device_id,
             fingerprint: @fingerprint,
             last_session_updated_at: @manager_s[:last_session_updated_at],
