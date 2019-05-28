@@ -13,7 +13,7 @@ module ManagerManagement
     # @params [Boolean] is_password_auth_cookie_valid (optional)
     # @params [Boolean] is_logged_in_manager (optional) - is logged in manager
     # @params [Integer] manager_id (optional) - manager id
-    # @params [String] r_t (optional) - token for double opt in
+    # @params [String] d_t (optional) - token for device verification
     #
     # @return [ManagerManagement::DoubleOptIn]
     #
@@ -49,6 +49,12 @@ module ManagerManagement
 
         r = fetch_logged_in_manager
         return r unless r.success?
+
+        if @d_t.blank?
+          return success_with_data({manager: @manager_obj.formatted_cache_data}) if is_logged_in_manager?
+
+          success_with_data({}, fetch_go_to)
+        end
 
         r = validate_and_sanitize
         return r unless r.success?

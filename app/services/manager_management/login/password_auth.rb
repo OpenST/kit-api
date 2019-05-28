@@ -32,6 +32,7 @@ module ManagerManagement
         @client_manager = nil
         @manager_obj = nil
         @authentication_salt_d = nil
+        @is_device_unauthorized = false
         
       end
 
@@ -288,7 +289,7 @@ module ManagerManagement
 
         key = "#{@manager_obj.id}:#{@fingerprint}:#{@fingerprint_type}"
         unique_hash = LocalCipher.get_sha_hashed_text(key)
-        expiration_timestamp = Time.now.to_time.to_i + GlobalConstant::ManagerDevice.device_expiration_time
+        expiration_timestamp = current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
         device_expired = nil
         device_not_authorized = nil
 
@@ -306,7 +307,7 @@ module ManagerManagement
                                               expiration_timestamp: expiration_timestamp,
                                               status: GlobalConstant::ManagerDevice.un_authorized)
         else
-          device_expired = (device[:expiration_timestamp].to_i - Time.now.to_time.to_i) <= 0
+          device_expired = (device[:expiration_timestamp].to_i - current_timestamp) <= 0
           device_not_authorized = device[:status] == GlobalConstant::ManagerDevice.un_authorized
         end
 
@@ -330,11 +331,8 @@ module ManagerManagement
             }
           )
 
-          return error_with_go_to(
-              'm_l_pa_10',
-              'device_not_authorized',
-              GlobalConstant::GoTo.verify_device
-          )
+          @is_device_unauthorized = true
+
         end
 
         @manager_device_id = @manager_device.nil? ? @manager_device_id : @manager_device[:id]
@@ -377,12 +375,17 @@ module ManagerManagement
       # @return [Hash]
       #
       def fetch_go_to
+
+        return GlobalConstant::GoTo.verify_device if @is_device_unauthorized
+
         FetchGoTo.new({
-                          is_password_auth_cookie_valid: true,
-                          is_multi_auth_cookie_valid: false,
-                          client: @client,
-                          manager: @manager_obj.formatted_cache_data
+                        is_password_auth_cookie_valid: true,
+                        is_multi_auth_cookie_valid: false,
+                        client: @client,
+                        manager: @manager_obj.formatted_cache_data
                       }).fetch_by_manager_state
+
+
       end
 
     end
