@@ -119,7 +119,7 @@ class Manager < DbConnection::KitClient
     cookie_creation_time = Time.now.to_i
     params[:cookie_creation_time] = cookie_creation_time
     token_e = self.get_cookie_token(params)
-    return "#{params[:manager_id]}:#{cookie_creation_time}:#{params[:auth_level]}:#{params[:is_device_authorized]}:#{token_e}"
+    return "#{params[:manager_id]}:#{cookie_creation_time}:#{params[:auth_level]}:#{params[:is_device_authorized]}:#{params[:manager_device_id]}:#{token_e}"
   end
 
   # generate login cookie
@@ -132,7 +132,7 @@ class Manager < DbConnection::KitClient
   #
   def self.get_cookie_token(params)
     string_to_sign = "#{params[:manager_id]}:#{params[:token_s]}:#{params[:last_session_updated_at]}:#{params[:browser_user_agent]}:#{params[:cookie_creation_time]}:#{params[:auth_level]}"
-    key="#{params[:manager_id]}:#{params[:cookie_creation_time]}:#{params[:last_session_updated_at]}:#{params[:browser_user_agent]}:#{params[:is_device_authorized]}:#{params[:token_s][-12..-1]}:#{GlobalConstant::SecretEncryptor.cookie_key}"
+    key="#{params[:manager_id]}:#{params[:cookie_creation_time]}:#{params[:last_session_updated_at]}:#{params[:browser_user_agent]}:#{params[:is_device_authorized]}:#{params[:manager_device_id]}:#{params[:fingerprint]}:#{params[:token_s][-12..-1]}:#{GlobalConstant::SecretEncryptor.cookie_key}"
     OpenSSL::HMAC.hexdigest("SHA256", key, string_to_sign)
   end
 

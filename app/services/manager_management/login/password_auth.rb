@@ -294,6 +294,7 @@ module ManagerManagement
 
         device = CacheManagement::ManagerDevice.new([unique_hash]).fetch[unique_hash]
 
+        @manager_device_id = device[:id]
         new_device = device[:manager_id].nil?
 
         # Create new model object if there is no device
@@ -305,7 +306,6 @@ module ManagerManagement
                                               expiration_timestamp: expiration_timestamp,
                                               status: GlobalConstant::ManagerDevice.un_authorized)
         else
-          puts device.inspect
           device_expired = (device[:expiration_timestamp].to_i - Time.now.to_time.to_i) <= 0
           device_not_authorized = device[:status] == GlobalConstant::ManagerDevice.un_authorized
         end
@@ -337,6 +337,8 @@ module ManagerManagement
           )
         end
 
+        @manager_device_id = @manager_device.nil? ? @manager_device_id : @manager_device[:id]
+
         success
       end
 
@@ -356,6 +358,8 @@ module ManagerManagement
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
             is_device_authorized: GlobalConstant::Cookie.device_authorized_value,
+            manager_device_id: @manager_device_id,
+            fingerprint: @fingerprint,
             last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )

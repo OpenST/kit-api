@@ -223,6 +223,8 @@ module ManagerManagement
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
             is_device_authorized: GlobalConstant::Cookie.device_authorized_value,
+            manager_device_id: @manager_device.id,
+            fingerprint: @fingerprint,
             last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )
