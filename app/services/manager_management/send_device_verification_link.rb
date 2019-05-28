@@ -9,8 +9,9 @@ module ManagerManagement
     # * Reviewed By:
     #
     # @params [String] manager_id (mandatory) - id of manager to which mail is to be sent
+    # @params [String] manager_device_id (mandatory) - manager device id
     #
-    # @return [ManagerManagement::SendDoubleOptInLink]
+    # @return [ManagerManagement::SendDeviceVerificationLink]
     #
     def initialize(params)
       super
@@ -62,7 +63,7 @@ module ManagerManagement
     # * Date: 21/05/2019
     # * Reviewed By:
     #
-    # Sets @manager, @manager_s
+    # Sets @manager, @manager_device
     #
     # @return [Result::Base]
     #

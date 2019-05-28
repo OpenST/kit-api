@@ -64,6 +64,7 @@ module ManagerManagement
           success_with_data(
             extended_cookie_value: @extended_cookie_value,
             manager_id: @manager_id,
+            manager_device_id: @manager_device_id,
             manager: @manager,
             client_id: @manager[:current_client_id],
             client: @client,

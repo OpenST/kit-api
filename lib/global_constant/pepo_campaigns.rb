@@ -137,9 +137,9 @@ module GlobalConstant
         'platform_double_optin'
       end
 
-      # double optin email - sent when user is adding email for the first time
+      # device authorization email - sent when user is trying to access platform from a new device or browser.
       def platform_device_verification_template
-        'platform_device_verification'
+        'platform_authorize_new_device'
       end
 
       # reset password email - sent when user clicks on forgot password

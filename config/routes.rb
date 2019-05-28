@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   scope 'api/verify-device', controller: 'access/verify_device', :format => false do
     match '' => :verify_device, via: :GET
+    match 'request-link' => :send_verify_device_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope 'api/mfa', controller: 'access/mfa', :format => false do

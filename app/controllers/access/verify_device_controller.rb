@@ -21,4 +21,15 @@ class Access::VerifyDeviceController < AuthenticationController
 
   end
 
+  # Send Device Verification Link
+  #
+  # * Author: Ankit
+  # * Date: 28/05/2018
+  # * Reviewed By:
+  #
+  def send_verify_device_link
+    service_response = ManagerManagement::SendDeviceVerificationLink.new(params).perform
+    return render_api_response(service_response)
+  end
+
 end
