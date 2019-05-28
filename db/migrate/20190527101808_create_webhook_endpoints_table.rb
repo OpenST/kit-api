@@ -10,7 +10,7 @@ class CreateWebhookEndpointsTable < DbMigrationConnection
         t.column :secret, :text, null: false #encrypted
         t.column :grace_secret, :text, null: true #encrypted
         t.column :secret_salt, :blob, null: false #kms_encrypted
-        t.integer :grace_expiry_at, null: false
+        t.integer :grace_expiry_at, null: true
         t.column :status, :tinyint, null: false, limit: 1
         t.timestamps
       end
