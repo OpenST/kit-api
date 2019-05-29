@@ -301,8 +301,8 @@ module ManagerManagement
         @manager_device_id = device[:id]
         new_device = device[:manager_id].nil?
 
-        # Create new model object if there is no device
         if new_device
+          # Create new model object if there is no device
           @manager_device = ManagerDevice.new(manager_id: @manager_obj.id,
                                               fingerprint: @fingerprint,
                                               fingerprint_type: @fingerprint_type,
@@ -336,6 +336,11 @@ module ManagerManagement
 
           @is_device_unauthorized = true
 
+        else
+          # Update expiration timestamp for a valid device on every login
+          @manager_device = ManagerDevice.find_by(unique_hash: unique_hash)
+          @manager_device[:expiration_timestamp] = expiration_timestamp
+          @manager_device.save!
         end
 
         @manager_device_id = @manager_device.nil? ? @manager_device_id : @manager_device[:id]
