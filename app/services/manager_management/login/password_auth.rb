@@ -97,7 +97,7 @@ module ManagerManagement
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
 
-        validation_errors.push('invalid_fingerprint') unless @fingerprint.length != 32
+        validation_errors.push('invalid_fingerprint') unless @fingerprint.length == 32
 
         return validation_error(
           'm_l_pa_1',
