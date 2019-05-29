@@ -22,7 +22,7 @@ module GlobalConstant
 
       ### Status End ###
 
-      ### Fingerprint types ###
+      ### Fingerprint types start ###
 
       def fingerprint_js
         'fingerprint_js'
@@ -32,6 +32,7 @@ module GlobalConstant
         'browser_agent'
       end
 
+      ### Fingerprint types end ###
     end
 
   end
