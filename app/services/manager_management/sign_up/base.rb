@@ -192,7 +192,7 @@ module ManagerManagement
         key = "#{@manager_obj.id}:#{@fingerprint}:#{@fingerprint_type}"
 
         unique_hash = LocalCipher.get_sha_hashed_text(key)
-        expiration_timestamp = Time.now.to_time.to_i + GlobalConstant::ManagerDevice.device_expiration_time
+        expiration_timestamp = current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
 
         @manager_device = ManagerDevice.new( manager_id: @manager_obj.id,
                                              fingerprint: @fingerprint,
