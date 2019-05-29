@@ -246,7 +246,7 @@ module ManagerManagement
       validation_error(
         err,
         'invalid_api_params',
-        ['invalid_r_t'],
+        ['invalid_d_t'],
         GlobalConstant::ErrorAction.default
       )
     end
@@ -263,7 +263,7 @@ module ManagerManagement
       validation_error(
         code,
         'invalid_api_params',
-        ['invalid_r_t'],
+        ['invalid_d_t'],
         GlobalConstant::ErrorAction.default
       )
     end

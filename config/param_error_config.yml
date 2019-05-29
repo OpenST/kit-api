@@ -502,3 +502,8 @@ invalid_fingerprint:
   parameter: 'fingerprint'
   code: 'invalid'
   message: 'The browser fingerprint is invalid.'
+
+invalid_d_t:
+  parameter: 'd_t'
+  code: 'invalid'
+  message: 'The device verification link has expired.'
