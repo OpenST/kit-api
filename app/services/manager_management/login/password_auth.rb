@@ -147,6 +147,8 @@ module ManagerManagement
             GlobalConstant::ErrorAction.default
         ) if (@manager_obj.status != GlobalConstant::Manager.active_status)
 
+        @mfa_enabled = @manager_obj.formatted_cache_data[:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
+
         success
 
       end
@@ -330,7 +332,7 @@ module ManagerManagement
                 manager_id: @manager_obj.id,
                 manager_device_id: @manager_device.id
             }
-          )
+          ) unless @mfa_enabled
 
           @is_device_unauthorized = true
 
@@ -376,7 +378,7 @@ module ManagerManagement
       #
       def fetch_go_to
 
-        return GlobalConstant::GoTo.verify_device if @is_device_unauthorized
+        return GlobalConstant::GoTo.verify_device if @is_device_unauthorized && !@mfa_enabled
 
         FetchGoTo.new({
                         is_password_auth_cookie_valid: true,

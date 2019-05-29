@@ -68,6 +68,9 @@ module ManagerManagement
             r = validate_otp
             return r unless r.success?
 
+            r = validate_and_send_device_verification_mail
+            return r unless r.success?
+
             r = set_double_auth_cookie_value
             return r unless r.success?
 
@@ -125,31 +128,29 @@ module ManagerManagement
 
         end
 
-        # Set parts
+        # Send email for device verification if required
         #
         # * Author: Santhosh
-        # * Date: 28/09/2019
+        # * Date: 29/09/2019
         # * Reviewed By:
-        #
-        # Sets @manager_id, @created_ts, @token
         #
         # @return [Result::Base]
         #
-        def set_parts
-          parts = @cookie_value.split(':')
+        def validate_and_send_device_verification_mail
 
-          return unauthorized_access_response('mm_l_mf_a_2') unless parts.length == 5
-          return unauthorized_access_response('mm_l_mf_a_3') unless parts[2] == GlobalConstant::Cookie.password_auth_prefix
+          device = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
 
-          @manager_id = parts[0].to_i
-          return unauthorized_access_response('mm_l_mf_a_4') unless @manager_id > 0
+          return unauthorized_access_response('mm_l_mf_a_7') if device.nil?
 
-          @created_ts = parts[1].to_i
-          return unauthorized_access_response('mm_l_mf_a_5') unless @created_ts + valid_upto >= current_timestamp
+          @device_authorized = (device[:status] == GlobalConstant::ManagerDevice.authorized)
 
-          @manager_device_id = parts[3].to_i
-
-          @token = parts[4]
+          BackgroundJob.enqueue(
+              DeviceRegistrationJob,
+              {
+                  manager_id: @manager_obj.id,
+                  manager_device_id: @manager_device_id
+              }
+          ) unless device[:status] == GlobalConstant::ManagerDevice.authorized
 
           success
         end
@@ -197,6 +198,8 @@ module ManagerManagement
           unless @client[:properties].include?(GlobalConstant::Client.has_company_info_property)
             return GlobalConstant::GoTo.company_information
           end
+
+          return GlobalConstant::GoTo.verify_device unless @device_authorized
 
           #check the luse cookie value here and redirect accordingly
           if @luse_cookie_value == GlobalConstant::Cookie.mainnet_env

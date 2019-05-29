@@ -36,6 +36,35 @@ module ManagerManagement
 
         private
 
+        # Set parts
+        #
+        # * Author: Santhosh
+        # * Date: 28/09/2019
+        # * Reviewed By:
+        #
+        # Sets @manager_id, @created_ts, @token
+        #
+        # @return [Result::Base]
+        #
+        def set_parts
+          parts = @cookie_value.split(':')
+
+          return unauthorized_access_response('mm_l_mf_a_2') unless parts.length == 5
+          return unauthorized_access_response('mm_l_mf_a_3') unless parts[2] == GlobalConstant::Cookie.password_auth_prefix
+
+          @manager_id = parts[0].to_i
+          return unauthorized_access_response('mm_l_mf_a_4') unless @manager_id > 0
+
+          @created_ts = parts[1].to_i
+          return unauthorized_access_response('mm_l_mf_a_5') unless @created_ts + valid_upto >= current_timestamp
+
+          @manager_device_id = parts[3].to_i
+
+          @token = parts[4]
+
+          success
+        end
+
         # Fetch admin
         #
         # * Author: Puneet
