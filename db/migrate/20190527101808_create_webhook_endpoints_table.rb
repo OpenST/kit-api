@@ -16,6 +16,7 @@ class CreateWebhookEndpointsTable < DbMigrationConnection
       end
 
       add_index :webhook_endpoints, [:client_id, :endpoint], name: 'uk_1', unique: true
+      add_index :webhook_endpoints, [:client_id, :uuid], name: 'uk_2', unique: true
     end
 
   end
