@@ -216,6 +216,7 @@ class AuthenticationController < ApplicationController
     # set authenticated param in params hash
     params[:manager_id] = cookie_verify_rsp.data[:manager_id]
     params[:manager] = cookie_verify_rsp.data[:manager]
+    params[:manager_device_id] = cookie_verify_rsp.data[:manager_device_id]
     params[:client_id] = cookie_verify_rsp.data[:client_id]
     params[:client] = cookie_verify_rsp.data[:client]
     params[:client_manager] = cookie_verify_rsp.data[:client_manager]
