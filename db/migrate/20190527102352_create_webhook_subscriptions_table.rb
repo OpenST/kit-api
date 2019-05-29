@@ -17,8 +17,6 @@ class CreateWebhookSubscriptionsTable < DbMigrationConnection
 
   def down
     run_migration_for_db(DbConnection::KitSaasSubenv) do
-      remove_index :webhook_subscriptions, name: 'i_1'
-      remove_index :webhook_subscriptions, name: 'uk_1'
       drop_table :webhook_subscriptions if DbConnection::KitSaasSubenv.connection.table_exists? :webhook_subscriptions
     end
   end
