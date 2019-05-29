@@ -26,8 +26,7 @@ module ManagerManagement
         @confirm_password = @params[:confirm_password]
         @browser_user_agent = @params[:browser_user_agent]
         @fingerprint = @params[:fingerprint]
-        @fingerprint_type = @params[:fingerprint_type] == 1 ? GlobalConstant::ManagerDevice.fingerprint_js
-                                : GlobalConstant::ManagerDevice.browser_agent
+        @fingerprint_type = ManagerDevice.fingerprint_types[@params[:fingerprint_type]]
 
         @client_id = nil
         @manager_id = nil

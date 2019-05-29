@@ -497,3 +497,8 @@ token_demo_reinvite_too_early:
   code: 'invalid'
   parameter: 'email_addresses'
   message: "Emails can be re-invited after 24 hours."
+
+invalid_fingerprint:
+  parameter: 'fingerprint'
+  code: 'invalid'
+  message: 'The browser fingerprint is invalid.'

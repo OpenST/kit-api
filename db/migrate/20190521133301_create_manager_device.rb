@@ -6,7 +6,7 @@ class CreateManagerDevice < DbMigrationConnection
         t.column :fingerprint, :string, limit: 256, null: false
         t.column :fingerprint_type, :tinyint, null: false
         t.column :unique_hash, :string, null: false
-        t.column :expiration_timestamp, :string, null: false
+        t.column :expiration_timestamp, :integer, null: false
         t.column :status, :tinyint, null: false
         t.timestamps
       end

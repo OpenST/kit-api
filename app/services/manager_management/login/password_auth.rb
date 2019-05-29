@@ -25,8 +25,7 @@ module ManagerManagement
         @password = @params[:password]
         @browser_user_agent = @params[:browser_user_agent]
         @fingerprint = @params[:fingerprint]
-        @fingerprint_type = @params[:fingerprint_type] == 1 ? GlobalConstant::ManagerDevice.fingerprint_js
-                                : GlobalConstant::ManagerDevice.browser_agent
+        @fingerprint_type = ManagerDevice.fingerprint_types[@params[:fingerprint_type]]
 
         @client = nil
         @client_manager = nil
@@ -97,6 +96,8 @@ module ManagerManagement
 
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
+
+        validation_errors.push('invalid_fingerprint') unless @fingerprint.length != 32
 
         return validation_error(
           'm_l_pa_1',
@@ -293,7 +294,7 @@ module ManagerManagement
         device_expired = nil
         device_not_authorized = nil
 
-        device = CacheManagement::ManagerDevice.new([unique_hash]).fetch[unique_hash]
+        device = CacheManagement::ManagerDeviceByUniqueHash.new([unique_hash]).fetch[unique_hash]
 
         @manager_device_id = device[:id]
         new_device = device[:manager_id].nil?

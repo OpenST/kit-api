@@ -231,9 +231,7 @@ module GlobalConstant
       # @return [Boolean]
       #
       def is_device_verification_related_template?(template_name)
-        [
-          GlobalConstant::PepoCampaigns.platform_device_verification_template
-        ].include?(template_name)
+        GlobalConstant::PepoCampaigns.platform_device_verification_template == template_name
       end
 
       # is this template related to double opt in email
@@ -245,9 +243,7 @@ module GlobalConstant
       # @return [Boolean]
       #
       def is_double_opt_in_related_template?(template_name)
-        [
-          GlobalConstant::PepoCampaigns.platform_double_optin_template
-        ].include?(template_name)
+        GlobalConstant::PepoCampaigns.platform_double_optin_template == template_name
       end
 
       # Is this template of forgot password
@@ -259,9 +255,7 @@ module GlobalConstant
       # @return [Boolean]
       #
       def is_forgot_password_template?(template_name)
-        [
-            GlobalConstant::PepoCampaigns.platform_forgot_password_template
-        ].include?(template_name)
+        GlobalConstant::PepoCampaigns.platform_forgot_password_template == template_name
       end
 
       # Is this template of manager invite
@@ -273,9 +267,7 @@ module GlobalConstant
       # @return [Boolean]
       #
       def is_manager_invite_template?(template_name)
-        [
-            GlobalConstant::PepoCampaigns.platform_invite_manager_template
-        ].include?(template_name)
+        GlobalConstant::PepoCampaigns.platform_invite_manager_template == template_name
       end
 
       # Is this template of whitelist request
@@ -287,9 +279,7 @@ module GlobalConstant
       # @return [Boolean]
       #
       def is_mainnet_whitelisting_template?(template_name)
-        [
-          GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template
-        ].include?(template_name)
+        GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template == template_name
       end
 
       # Is this template of initiate recovery
@@ -301,9 +291,7 @@ module GlobalConstant
       # @return [Boolean]
       #
       def is_recovery_request_submission_template?(template_name)
-        [
-          GlobalConstant::PepoCampaigns.recovery_request_submission_template
-        ].include?(template_name)
+        GlobalConstant::PepoCampaigns.recovery_request_submission_template == template_name
       end
 
       # Is this template of test economy invite
@@ -315,9 +303,7 @@ module GlobalConstant
       # @return [Boolean]
       #
       def is_test_economy_invite_template?(template_name)
-        [
-          GlobalConstant::PepoCampaigns.platform_test_economy_invite_template
-        ].include?(template_name)
+        GlobalConstant::PepoCampaigns.platform_test_economy_invite_template == template_name
       end
 
       private

@@ -1,6 +1,6 @@
 module CacheManagement
 
-  class ManagerDevice < CacheManagement::Base
+  class ManagerDeviceByUniqueHash < CacheManagement::Base
 
     private
 

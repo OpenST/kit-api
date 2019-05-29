@@ -39,6 +39,7 @@ class ManagerDevice < DbConnection::KitClient
   # * Reviewed By:
   #
   def flush_cache
-    CacheManagement::ManagerDevice.new([unique_hash]).clear
+    CacheManagement::ManagerDeviceByUniqueHash.new([unique_hash]).clear
+    CacheManagement::ManagerDeviceById.new([id]).clear
   end
 end
