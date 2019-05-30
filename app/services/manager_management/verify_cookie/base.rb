@@ -65,6 +65,7 @@ module ManagerManagement
             extended_cookie_value: @extended_cookie_value,
             manager_id: @manager_id,
             manager_device_id: @manager_device_id,
+            manager_device: @manager_device,
             manager: @manager,
             client_id: @manager[:current_client_id],
             client: @client,
@@ -124,11 +125,11 @@ module ManagerManagement
 
         return unauthorized_access_response('am_vc_10') if token_s.blank?
 
-        device = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
+        @manager_device = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
 
-        return unauthorized_access_response('am_vc_13') if device.nil?
+        return unauthorized_access_response('am_vc_13') if @manager_device.nil?
 
-        @fingerprint = device[:fingerprint]
+        @fingerprint = @manager_device[:fingerprint]
 
         evaluated_token = Manager.get_cookie_token(
             manager_id: @manager_id,

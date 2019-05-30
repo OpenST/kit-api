@@ -27,6 +27,7 @@ module ManagerManagement
       @is_logged_in_manager = @params[:is_logged_in_manager]
       @d_t = @params[:d_t]
       @manager_id = @params[:manager_id]
+      @manager_device = @params[:manager_device]
 
       @device_verification_token = nil
       @manager_validation_hash_id = nil
@@ -51,9 +52,12 @@ module ManagerManagement
         return r unless r.success?
 
         if @d_t.blank?
+
+          return success_with_data({}, fetch_go_to) if @manager_device[:status] == GlobalConstant::ManagerDevice.authorized
+
           return success_with_data({manager: @manager_obj.formatted_cache_data}) if is_logged_in_manager?
 
-          success_with_data({}, fetch_go_to)
+          return success_with_data({}, fetch_go_to)
         end
 
         r = validate_and_sanitize
