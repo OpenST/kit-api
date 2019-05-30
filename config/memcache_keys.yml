@@ -124,3 +124,9 @@ keys:
       key_template: 'c_stk_cur_%{id}'
       expiry_in_seconds: 259200
       <<: *kit_saas_subenv
+
+  manager_validation_hash:
+    details:
+      key_template: 'mvh_d_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit
