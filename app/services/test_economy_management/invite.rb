@@ -218,12 +218,17 @@ module TestEconomyManagement
     #
     def create_email_hook
 
+      app_launch_data = qr_code_data.merge(
+        ios_app_download_link: GlobalConstant::DemoApp.ios_url,
+        android_app_download_link: GlobalConstant::DemoApp.android_url
+      )
+
       email_template_vars = {
         company_web_domain: GlobalConstant::CompanyWeb.domain,
         qr_code_url: qr_code_s3_url,
         ios_app_download_link: GlobalConstant::DemoApp.ios_url,
         android_app_download_link: GlobalConstant::DemoApp.android_url,
-        deep_link_demo_app_launch_url: URI.encode("#{GlobalConstant::CompanyOtherProductUrls.ost_web_root_url}/demo-wallet/launch/?ld=#{qr_code_data.to_json}"),
+        deep_link_demo_app_launch_url: URI.encode("#{GlobalConstant::CompanyOtherProductUrls.ost_web_root_url}/demo-wallet/launch/?ld=#{app_launch_data.to_json}"),
         token_name: @token[:name],
         inviter_name: @client[:company_name] || "#{@manager[:first_name]} #{@manager[:last_name]}"
       }
