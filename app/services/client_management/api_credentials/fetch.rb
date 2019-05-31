@@ -17,6 +17,7 @@ module ClientManagement
       def initialize(params)
         super
         @client_id = @params[:client_id]
+        @show_keys_enable_flag = @params[:show_keys_enable_flag]
       end
 
       # Perform
@@ -32,6 +33,9 @@ module ClientManagement
         handle_errors_and_exceptions do
 
           r = validate_and_sanitize
+          return r unless r.success?
+
+          r = check_if_show_keys_enable
           return r unless r.success?
 
           r = fetch_api_credentials
@@ -58,6 +62,18 @@ module ClientManagement
 
         success
 
+      end
+
+      def check_if_show_keys_enable
+        if @show_keys_enable_flag == 1
+          success
+        end
+        error_with_data(
+          's_cm_ac_f_3',
+          'unauthorized_access_response',
+          GlobalConstant::ErrorAction.default,
+          @client_id
+        )
       end
 
       # Fetch existing api credentials

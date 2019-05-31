@@ -220,6 +220,7 @@
   :mandatory:
     - :client_id
   :optional:
+    - :show_keys_enable_flag
 'ClientManagement::ApiCredentials::Rotate':
   :mandatory:
     - :client_id
@@ -288,6 +289,8 @@
     - :client_id
     - :client_manager
     - :manager
+  :optional:
+    - :show_keys_enable_flag
 'DashboardManagement::Get':
   :mandatory:
     - :client_id
@@ -337,3 +340,12 @@
     - :manager_device
     - :is_multi_auth_cookie_valid
     - :is_password_auth_cookie_valid
+'DeveloperManagement::VerifyCookie::SecureDataAccess':
+  :mandatory:
+    - action_name
+  :optional:
+    - :sda_cookie_value
+'DeveloperManagement::SendSecureDataAccessLink':
+  :mandatory:
+    - :manager_id
+  :optional:
