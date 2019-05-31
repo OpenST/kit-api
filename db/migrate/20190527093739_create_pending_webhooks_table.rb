@@ -6,7 +6,7 @@ class CreatePendingWebhooksTable < DbMigrationConnection
       create_table :pending_webhooks do |t|
         t.column :client_id, :integer, null: false
         t.column :event_uuid, :string, limit: 40, null: false
-        t.column :topic, :tinyint, limit: 1, null: false
+        t.column :webhook_topic_kind, :tinyint, limit: 1, null: false
         t.text :extra_data, default: nil
         t.column :status, :tinyint, null: false, limit: 1
         t.column :retry_count, :integer, default: 0
