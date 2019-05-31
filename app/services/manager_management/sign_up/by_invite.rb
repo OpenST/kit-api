@@ -131,7 +131,7 @@ module ManagerManagement
         @last_name = @last_name.to_s.strip
         validation_errors.push('invalid_last_name') unless Util::CommonValidator.is_valid_name?(@last_name)
 
-        validation_errors.push('invalid_fingerprint') unless @fingerprint.length != 32
+        validation_errors.push('invalid_fingerprint') unless @fingerprint.length == 32
 
         if @invite_token.blank?
 
