@@ -65,7 +65,7 @@ module GlobalConstant
       end
 
       def secure_data_access_expiry_interval
-        30.minutes
+        15.minutes
       end
 
       ########## Kinds ###########
