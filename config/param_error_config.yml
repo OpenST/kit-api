@@ -507,3 +507,13 @@ invalid_d_t:
   parameter: 'd_t'
   code: 'invalid'
   message: 'The device verification link has expired.'
+
+missing_fingerprint:
+  parameter: 'fingerprint'
+  code: 'missing'
+  message: 'The browser fingerprint is missing.'
+
+missing_fingerprint_type:
+  parameter: 'fingerprint type'
+  code: 'missing'
+  message: 'The browser fingerprint type is missing.'

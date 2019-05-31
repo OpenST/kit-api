@@ -334,5 +334,6 @@
     - :d_t
     - :client
     - :manager_id
+    - :manager_device
     - :is_multi_auth_cookie_valid
     - :is_password_auth_cookie_valid

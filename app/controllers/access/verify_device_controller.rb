@@ -17,6 +17,15 @@ class Access::VerifyDeviceController < AuthenticationController
     params[:is_logged_in_manager] = cookie_verify_response.success? ? 1 : 0
 
     service_response = ManagerManagement::DeviceVerification.new(params).perform
+
+    if service_response.success? && params[:is_logged_in_manager] && params[:d_t].present?
+      set_cookie(
+        GlobalConstant::Cookie.device_verification_toast_cookie_name,
+        '1',
+        GlobalConstant::Cookie.device_verification_toast_expiry.from_now
+      )
+    end
+
     return render_api_response(service_response)
 
   end
