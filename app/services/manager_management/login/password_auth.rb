@@ -31,8 +31,8 @@ module ManagerManagement
         @client_manager = nil
         @manager_obj = nil
         @authentication_salt_d = nil
-        @is_device_unauthorized = false
-        
+        @manager_device_id = nil
+        @is_enqueue_job_needed = false
       end
 
       # Perform
@@ -69,6 +69,9 @@ module ManagerManagement
           return r unless r.success?
 
           r = validate_device_fingerprint
+          return r unless r.success?
+
+          r = enqueue_job
           return r unless r.success?
 
           set_cookie_value
@@ -292,58 +295,70 @@ module ManagerManagement
 
         key = "#{@manager_obj.id}:#{@fingerprint}:#{@fingerprint_type}"
         unique_hash = LocalCipher.get_sha_hashed_text(key)
-        expiration_timestamp = current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
-        device_expired = nil
-        device_not_authorized = nil
+        future_timestamp = current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
 
-        device = CacheManagement::ManagerDeviceByUniqueHash.new([unique_hash]).fetch[unique_hash]
+        device_db_obj = nil
 
-        @manager_device_id = device[:id]
-        new_device = device[:manager_id].nil?
+        device_cache_obj = CacheManagement::ManagerDeviceByUniqueHash.new([unique_hash]).fetch[unique_hash]
+        is_new_device = !device_cache_obj.present?
 
-        if new_device
-          # Create new model object if there is no device
-          @manager_device = ManagerDevice.new(manager_id: @manager_obj.id,
+        if is_new_device
+          # Insert into manager_devices for new device
+          device_db_obj = ManagerDevice.new(manager_id: @manager_obj.id,
                                               fingerprint: @fingerprint,
                                               fingerprint_type: @fingerprint_type,
                                               unique_hash: unique_hash,
-                                              expiration_timestamp: expiration_timestamp,
+                                              expiration_timestamp: future_timestamp,
                                               status: GlobalConstant::ManagerDevice.un_authorized)
+
+          device_db_obj.save!
+
+          @is_enqueue_job_needed = true
         else
-          device_expired = (device[:expiration_timestamp].to_i - current_timestamp) <= 0
-          device_not_authorized = device[:status] == GlobalConstant::ManagerDevice.un_authorized
+          is_device_expired = (device_cache_obj[:expiration_timestamp].to_i - current_timestamp) <= 0
+          is_device_not_authorized = device_cache_obj[:status] == GlobalConstant::ManagerDevice.un_authorized
+
+          # update the manager device using id for expiration_timestamp and status (if needed)
+          update_params = {
+            expiration_timestamp: future_timestamp
+          }
+
+          if is_device_expired
+            update_params[:status] = GlobalConstant::ManagerDevice.un_authorized
+          end
+
+          if is_device_expired || is_device_not_authorized
+            @is_enqueue_job_needed = true
+          end
+
+          ManagerDevice.where(id: device_cache_obj[:id]).update_all(update_params)
+          CacheManagement::ManagerDeviceByUniqueHash.new([device_cache_obj[:unique_hash]]).clear
+          CacheManagement::ManagerDeviceById.new([device_cache_obj[:id]]).clear
         end
 
-        # Change expiration and status if device is expired
-        if device_expired || device_not_authorized
-          @manager_device = ManagerDevice.find_by(unique_hash: unique_hash)
+        @manager_device_id = device_cache_obj[:id] || device_db_obj[:id]
 
-          @manager_device[:expiration_timestamp] = expiration_timestamp
-          @manager_device[:status] = GlobalConstant::ManagerDevice.un_authorized
-        end
+        success
+      end
 
-        if new_device || device_not_authorized || device_expired
+      # Enqueue job
+      #
+      # * Author: Ankit
+      # * Date: 31/05/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def enqueue_job
+        return success unless @is_enqueue_job_needed
 
-          @manager_device.save!
-
-          BackgroundJob.enqueue(
-            DeviceRegistrationJob,
-            {
-                manager_id: @manager_obj.id,
-                manager_device_id: @manager_device.id
-            }
-          ) unless @mfa_enabled
-
-          @is_device_unauthorized = true
-
-        else
-          # Update expiration timestamp for a valid device on every login
-          @manager_device = ManagerDevice.find_by(unique_hash: unique_hash)
-          @manager_device[:expiration_timestamp] = expiration_timestamp
-          @manager_device.save!
-        end
-
-        @manager_device_id = @manager_device.nil? ? @manager_device_id : @manager_device[:id]
+        BackgroundJob.enqueue(
+          DeviceRegistrationJob,
+          {
+            manager_id: @manager_obj.id,
+            manager_device_id: @manager_device_id
+          }
+        ) unless @mfa_enabled
 
         success
       end
@@ -383,7 +398,7 @@ module ManagerManagement
       #
       def fetch_go_to
 
-        return GlobalConstant::GoTo.verify_device if @is_device_unauthorized && !@mfa_enabled
+        return GlobalConstant::GoTo.verify_device if @is_enqueue_job_needed && !@mfa_enabled
 
         FetchGoTo.new({
                         is_password_auth_cookie_valid: true,

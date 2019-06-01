@@ -17,7 +17,7 @@ module GlobalConstant
 
       # 30 day expiry
       def device_expiration_time
-        30 * 24 * 60 * 60
+        30.days.to_i
       end
 
       ### Status End ###

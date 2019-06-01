@@ -115,6 +115,8 @@ module ManagerManagement
         @last_name = @last_name.to_s.strip
         validation_errors.push('invalid_last_name') unless Util::CommonValidator.is_valid_name?(@last_name)
 
+        validation_errors.push('invalid_fingerprint') unless @fingerprint.length == 32
+
         return validation_error(
           'mm_su_wi_1',
           'invalid_api_params',
@@ -221,7 +223,7 @@ module ManagerManagement
       def update_manager
 
         @manager_obj.current_client_id = @client_id
-        @manager_obj.save
+        @manager_obj.save!
 
         success
       end

@@ -194,6 +194,7 @@ module ManagerManagement
         unique_hash = LocalCipher.get_sha_hashed_text(key)
         expiration_timestamp = current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
 
+        # marking the first device for the manager as authorized
         @manager_device = ManagerDevice.new( manager_id: @manager_obj.id,
                                              fingerprint: @fingerprint,
                                              fingerprint_type: @fingerprint_type,
