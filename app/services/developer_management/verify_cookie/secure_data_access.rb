@@ -51,8 +51,6 @@ module DeveloperManagement
               GlobalConstant::ErrorAction.default
             ) unless Util::CommonValidator.is_string?(@sda_cookie_value)
 
-            @sda_cookie_value = @sda_cookie_value.to_s
-
             r = set_parts
             return r unless r.success?
 
@@ -290,7 +288,7 @@ module DeveloperManagement
       #
       def valid_upto
         
-        GlobalConstant::Cookie.secure_data_access_cookie_expiry
+        GlobalConstant::Cookie.secure_data_access_cookie_expiry.to_i
       
       end
 

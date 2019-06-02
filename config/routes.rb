@@ -61,6 +61,11 @@ Rails.application.routes.draw do
     match 'api-keys/delete' => :api_keys_deactivate, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
+  scope 'api/verify-sda', controller: 'access/verify_sda', :format => false do
+    match '' => :verify_secure_data_access, via: :GET
+    match 'request-link' => :send_secure_data_access_link, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard", controller: 'dashboard', :format => false do
     match '' => :get, via: :GET
   end

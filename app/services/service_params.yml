@@ -349,3 +349,9 @@
   :mandatory:
     - :manager_id
   :optional:
+'DeveloperManagement::SecureDataAccessVerification':
+  :mandatory:
+    - :is_logged_in_manager
+  :optional:
+    - :a_t
+    - :manager_id

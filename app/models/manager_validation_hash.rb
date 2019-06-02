@@ -14,6 +14,8 @@ class ManagerValidationHash < DbConnection::KitClient
       GlobalConstant::ManagerValidationHash.used_status => 3
   }
 
+  after_commit :flush_cache
+
   serialize :extra_data, Hash
 
   def self.token_delimitter
@@ -60,6 +62,16 @@ class ManagerValidationHash < DbConnection::KitClient
       extra_data: extra_data,
       created_at: created_at
     }
+  end
+
+  # Flush caches
+  #
+  # * Author: Puneet
+  # * Date: 01/02/2018
+  # * Reviewed By:
+  #
+  def flush_cache
+    CacheManagement::ManagerValidationHash.new([id]).clear
   end
 
   # generate secure data access cookie
