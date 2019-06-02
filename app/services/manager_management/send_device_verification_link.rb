@@ -70,13 +70,13 @@ module ManagerManagement
     def fetch_manager_device
 
       @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
-      @manager_device = ManagerDevice.where(id: @manager_device_id).first
+      @manager_device = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
 
       return error_with_data(
         'a_s_mm_sdv_1',
         'something_went_wrong',
         GlobalConstant::ErrorAction.default
-      ) unless @manager_device.present? && @manager_device[:status] == GlobalConstant::ManagerDevice.un_authorized
+      ) if !@manager_device.present? || @manager_device[:status] != GlobalConstant::ManagerDevice.un_authorized
 
       success
 

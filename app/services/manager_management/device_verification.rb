@@ -55,7 +55,7 @@ module ManagerManagement
 
           return success_with_data({}, fetch_go_to) if @manager_device[:status] == GlobalConstant::ManagerDevice.authorized
 
-          return success_with_data({manager: @manager_obj.formatted_cache_data}) if is_logged_in_manager?
+          return success_with_data({manager: @manager_obj}) if is_logged_in_manager?
 
           return success_with_data({}, fetch_go_to)
         end
@@ -67,6 +67,9 @@ module ManagerManagement
         return r unless r.success?
 
         r = validate_device_verification_token
+        return r unless r.success?
+
+        r = fetch_manager_device
         return r unless r.success?
 
         r = update_manager_validation_hashes_status
@@ -102,8 +105,6 @@ module ManagerManagement
       r = validate
       return r unless r.success?
 
-      return invalid_url_error('mm_dv_1') if @d_t.blank?
-
       return invalid_url_error('mm_dv_2') unless Util::CommonValidator.is_valid_token?(@d_t)
 
       decryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
@@ -136,7 +137,7 @@ module ManagerManagement
 
       return success unless is_logged_in_manager?
 
-      @manager_obj = Manager.where(id: @manager_id).first
+      @manager_obj = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
 
       return validation_error(
         'mm_dv_4',
@@ -183,17 +184,31 @@ module ManagerManagement
       return invalid_url_error('mm_dv_9') if @manager_validation_hash_obj.kind != GlobalConstant::ManagerValidationHash.device_verification_kind
 
       if is_logged_in_manager?
+        # if somebody is logged in and link is of another manager, then error out
         return unauthorized_access_response('mm_dv_10') if @manager_validation_hash_obj.manager_id != @manager_id
       else
-        @manager_obj = Manager.where(id: @manager_validation_hash_obj.manager_id).first
+        # if user is not logged-in, we fetch manager id from manager validation hash table
         @manager_id = @manager_validation_hash_obj.manager_id
       end
 
-      @manager_device_id = @manager_validation_hash_obj.extra_data[:manager_device_id]
-      @manager_device_obj = ManagerDevice.where(id: @manager_device_id).first
-
       success
 
+    end
+
+    # Fetch manager
+    #
+    # * Author: Ankit
+    # * Date: 31/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_manager_device
+
+      @manager_device_id = @manager_validation_hash_obj.extra_data[:manager_device_id]
+      @manager_device_obj = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
+
+      success
     end
 
 
@@ -204,9 +219,13 @@ module ManagerManagement
     # * Reviewed By:
     #
     def mark_manager_device_verified
-      @manager_device_obj.status = GlobalConstant::ManagerDevice.authorized
-      @manager_device_obj.expiration_timestamp = current_timestamp + 30.days.to_i
-      @manager_device_obj.save!
+      ManagerDevice.where(id: @manager_device_id).update_all(
+        status: GlobalConstant::ManagerDevice.authorized,
+        expiration_timestamp: current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
+      )
+      unique_hash = @manager_device_obj[:unique_hash]
+      CacheManagement::ManagerDeviceById.new([@manager_device_id]).clear
+      CacheManagement::ManagerDeviceByUniqueHash.new([unique_hash]).clear
 
       success
     end
@@ -285,7 +304,7 @@ module ManagerManagement
                         is_password_auth_cookie_valid: @is_password_auth_cookie_valid,
                         is_multi_auth_cookie_valid: @is_multi_auth_cookie_valid,
                         client: @client,
-                        manager: @manager_obj.present? ? @manager_obj.formatted_cache_data : nil
+                        manager: @manager_obj.present? ? @manager_obj : nil
                     }).fetch_by_manager_state
     end
 
