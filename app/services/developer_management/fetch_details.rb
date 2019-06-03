@@ -229,9 +229,9 @@ module DeveloperManagement
 
     # Fetch existing api credentials
     #
-    # * Author: Ankit
-    # * Date: 05/02/2019
-    # * Reviewed By: Sunil
+    # * Author: Dhananjay
+    # * Date: 03/06/2019
+    # * Reviewed By:
     #
     # @return [Result::Base]
     #

@@ -18,7 +18,7 @@ module DeveloperManagement
         super
 
         @sda_cookie_value = @params[:sda_cookie_value]
-        @manager = @params[:manager]
+        @manager_id = @params[:manager_id]
         @action_name = @params[:action_name]
 
         @show_keys_enable_flag = 0
@@ -60,7 +60,7 @@ module DeveloperManagement
             r = validate_token
             return r unless r.success?
 
-            check_status
+            check_cookie_status
 
           else
 
@@ -77,11 +77,9 @@ module DeveloperManagement
 
               success_with_data({ cookie_value: @cookie_value, show_keys_enable_flag: @show_keys_enable_flag }, fetch_go_to)
             else
+
               success_with_data({ show_keys_enable_flag: @show_keys_enable_flag }, fetch_go_to)
             end
-
-
-
 
           end
       
@@ -178,7 +176,7 @@ module DeveloperManagement
       #
       # @return [Result::Base]
       #
-      def check_status
+      def check_cookie_status
 
         # if cookie status is expired
         if is_expired?(@created_at_timestamp)
@@ -218,9 +216,10 @@ module DeveloperManagement
       # @sets @manager_validation_hash_id
       #
       def send_secure_data_access_link
+
         # NOTE:- we can not send mail from sidekiq thread,
         # because we need to fetch 'manager_validation_hash_id' from the response of this enqueue job.
-        r = DeveloperManagement::SendSecureDataAccessLink.new(manager_id: @manager[:id]).perform
+        r = DeveloperManagement::SendSecureDataAccessLink.new(manager_id: @manager_id).perform
         @failed_logs[:send_device_verification_link] = r.to_hash unless r.success?
 
         @manager_validation_hash_id = r.data[:manager_validation_hash_id]
@@ -318,19 +317,18 @@ module DeveloperManagement
 
       # Send mail
       #
-      # * Author: Puneet
-      # * Date: 09/12/2018
+      # * Author: Dhananjay
+      # * Date: 03/06/2019
       # * Reviewed By:
       #
       def notify_devs
         ApplicationMailer.notify(
           data: @failed_logs,
-          body: {manager_id: @manager[:id]},
+          body: { manager_id: @manager_id},
           subject: 'Exception in InviteJob'
         ).deliver if @failed_logs.present?
       end
-      
-  
+
     end
 
   end

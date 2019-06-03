@@ -342,7 +342,8 @@
     - :is_password_auth_cookie_valid
 'DeveloperManagement::VerifyCookie::SecureDataAccess':
   :mandatory:
-    - action_name
+    - :manager_id
+    - :action_name
   :optional:
     - :sda_cookie_value
 'DeveloperManagement::SendSecureDataAccessLink':

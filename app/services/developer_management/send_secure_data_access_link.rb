@@ -108,7 +108,7 @@ module DeveloperManagement
 
       @manager_validation_hash_id = db_row.id
 
-      sda_token_str = "#{@manager_validation_hash_id.to_s}:#{sda_token}"
+      sda_token_str = "#{@manager_validation_hash_id.to_s}:#{current_timestamp}:#{sda_token}"
       encryptor_obj = EmailTokenEncryptor.new(GlobalConstant::SecretEncryptor.email_tokens_key)
       r = encryptor_obj.encrypt(sda_token_str, GlobalConstant::ManagerValidationHash::secure_data_access_kind)
       return r unless r.success?
