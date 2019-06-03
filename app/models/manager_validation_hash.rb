@@ -89,7 +89,7 @@ class ManagerValidationHash < DbConnection::KitClient
     return "#{params[:manager_validation_hash_id]}:#{cookie_creation_time}:#{token_e}"
   end
 
-  # generate secure data access cookie
+  # generate secure data access cookie specific to developer page cookie
   #
   # * Author: Dhananjay
   # * Date: 29/05/2019

@@ -70,6 +70,8 @@ module DeveloperManagement
         if @show_keys_enable_flag == 1
           r = fetch_api_credentials
           return r unless r.success?
+
+          @api_response_data['api_keys'] = @api_keys
         end
 
         success_with_data(@api_response_data)
@@ -247,7 +249,7 @@ module DeveloperManagement
         )
       end
 
-      @api_response_data['api_keys'] = api_credentials
+      @api_keys = api_credentials
 
       success
     end

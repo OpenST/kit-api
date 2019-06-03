@@ -60,7 +60,8 @@ module DeveloperManagement
             r = validate_token
             return r unless r.success?
 
-            check_cookie_status
+            r = check_cookie_status
+            return r unless r.success?
 
           else
 
@@ -68,16 +69,15 @@ module DeveloperManagement
               r = send_secure_data_access_link
               return r unless r.success?
 
-              r = fetch_validation_hash_details
+              # r = fetch_validation_hash_details
+              # return r unless r.success?
+
+              r = set_cookie_value
               return r unless r.success?
-
-              set_cookie_value
-
-              notify_devs
 
               success_with_data({ cookie_value: @cookie_value, show_keys_enable_flag: @show_keys_enable_flag }, fetch_go_to)
             else
-
+              #For developer page load when cookie was not present
               success_with_data({ show_keys_enable_flag: @show_keys_enable_flag }, fetch_go_to)
             end
 
@@ -184,9 +184,8 @@ module DeveloperManagement
           r = send_secure_data_access_link
           return r unless r.success?
 
-          set_cookie_value
-
-          notify_devs
+          r = set_cookie_value
+          return r unless r.success?
 
           success_with_data({cookie_value: @cookie_value, show_keys_enable_flag: @show_keys_enable_flag}, fetch_go_to)
 
@@ -220,7 +219,7 @@ module DeveloperManagement
         # NOTE:- we can not send mail from sidekiq thread,
         # because we need to fetch 'manager_validation_hash_id' from the response of this enqueue job.
         r = DeveloperManagement::SendSecureDataAccessLink.new(manager_id: @manager_id).perform
-        @failed_logs[:send_device_verification_link] = r.to_hash unless r.success?
+        return r unless r.success?
 
         @manager_validation_hash_id = r.data[:manager_validation_hash_id]
 
@@ -237,6 +236,10 @@ module DeveloperManagement
       #
       def set_cookie_value
 
+        manager_validation_hash_rsp = CacheManagement::ManagerValidationHash.new([@manager_validation_hash_id]).fetch[@manager_validation_hash_id]
+
+        #Set following values appropriately TODO
+
         @cookie_value = ManagerValidationHash.get_cookie_value(
           manager_validation_hash_id: @manager_validation_hash_id,
           validation_hash: @validation_hash,
@@ -244,6 +247,7 @@ module DeveloperManagement
           c_at_timestamp: @created_at_timestamp
         )
 
+        success
       end
 
       # fetch go to
@@ -312,21 +316,7 @@ module DeveloperManagement
       #
       #
       def is_expired?(created_at)
-        (created_at.to_i + expiry_interval.to_i) < Time.now.to_i
-      end
-
-      # Send mail
-      #
-      # * Author: Dhananjay
-      # * Date: 03/06/2019
-      # * Reviewed By:
-      #
-      def notify_devs
-        ApplicationMailer.notify(
-          data: @failed_logs,
-          body: { manager_id: @manager_id},
-          subject: 'Exception in InviteJob'
-        ).deliver if @failed_logs.present?
+        (created_at.to_i + expiry_interval.to_i) < current_timestamp
       end
 
     end
