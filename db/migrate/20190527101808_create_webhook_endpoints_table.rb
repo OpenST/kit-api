@@ -6,7 +6,7 @@ class CreateWebhookEndpointsTable < DbMigrationConnection
       create_table :webhook_endpoints do |t|
         t.column :uuid, :string, limit: 40, null: false
         t.column :client_id, :integer, null: false
-        t.column :endpoint, :string, limit: 1000, null: false
+        t.column :endpoint, :string, limit: 254, null: false
         t.column :secret, :text, null: false #encrypted
         t.column :grace_secret, :text, null: true #encrypted
         t.column :secret_salt, :blob, null: false #kms_encrypted
