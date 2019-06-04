@@ -27,8 +27,6 @@ module DeveloperManagement
         @show_keys_enable_flag = 0
         @email_already_sent_flag = 0
 
-        @failed_logs = {}
-    
       end
     
       # Perform
