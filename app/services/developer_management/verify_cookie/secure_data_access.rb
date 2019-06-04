@@ -10,7 +10,10 @@ module DeveloperManagement
       # * Date: 01/06/2019
       # * Reviewed By:
       #
-      # @params [String] sda_cookie_value (mandatory) - this is the admin cookie value
+      # @params [String] sda_cookie_value (mandatory) - this is the secure data access cookie value
+      # @params [Integer] manager_id (mandatory) - manager id
+      # @params [String] action_name (optional) - action name
+      #
       #
       # @return [DeveloperManagement::VerifyCookie::SecureDataAccess]
       #
@@ -66,7 +69,6 @@ module DeveloperManagement
           else
 
             if @action_name != 'developer_get'
-              puts "Here=======\n\n\n"
               r = send_secure_data_access_link
               return r unless r.success?
 
@@ -100,7 +102,7 @@ module DeveloperManagement
       # * Date: 28/05/2019
       # * Reviewed By:
       #
-      # Sets @manager_validation_hash_id, @created_ts, @token
+      # Sets @manager_validation_hash_id, @cookie_creation_timestamp, @token
       #
       # @return [Result::Base]
       #
@@ -112,8 +114,8 @@ module DeveloperManagement
         @manager_validation_hash_id = parts[0].to_i
         return unauthorized_access_response('s_dm_vc_sda_3') unless @manager_validation_hash_id > 0
       
-        @created_ts = parts[1].to_i
-        return unauthorized_access_response('s_dm_vc_sda_4') unless @created_ts + valid_upto >= current_timestamp
+        @cookie_creation_timestamp = parts[1].to_i
+        return unauthorized_access_response('s_dm_vc_sda_4') unless @cookie_creation_timestamp + valid_upto >= current_timestamp
       
         @token = parts[2]
       
@@ -126,29 +128,24 @@ module DeveloperManagement
       # * Date: 28/05/2019
       # * Reviewed By:
       #
-      # @sets @validation_hash, @salt, @kind, @status
+      # @Sets @manager_validation_hash_rsp
       #
       # @return [Result::Base]
       #
       def fetch_validation_hash_details
-        manager_validation_hash_rsp = CacheManagement::ManagerValidationHash.new([@manager_validation_hash_id]).fetch[@manager_validation_hash_id]
+        @manager_validation_hash_rsp = CacheManagement::ManagerValidationHash.new([@manager_validation_hash_id]).fetch[@manager_validation_hash_id]
 
-        return unauthorized_access_response('s_dm_vc_sda_5') unless manager_validation_hash_rsp.present?
-        return unauthorized_access_response('s_dm_vc_sda_6') unless manager_validation_hash_rsp[:kind].present? && (GlobalConstant::ManagerValidationHash.secure_data_access_kind == manager_validation_hash_rsp[:kind])
-        return unauthorized_access_response('s_dm_vc_sda_7') if manager_validation_hash_rsp[:validation_hash].nil?
-        return unauthorized_access_response('s_dm_vc_sda_8') if manager_validation_hash_rsp[:extra_data][:salt].nil?
-        return unauthorized_access_response('s_dm_vc_sda_9') if manager_validation_hash_rsp[:created_at].nil?
-        return unauthorized_access_response('s_dm_vc_sda_10') if manager_validation_hash_rsp[:status].nil?
-
-        @kind = manager_validation_hash_rsp[:kind]
-        @validation_hash = manager_validation_hash_rsp[:validation_hash]
-        @salt = manager_validation_hash_rsp[:extra_data][:salt]
-        @status = manager_validation_hash_rsp[:status]
+        return unauthorized_access_response('s_dm_vc_sda_5') unless @manager_validation_hash_rsp.present?
+        return unauthorized_access_response('s_dm_vc_sda_6') unless @manager_validation_hash_rsp[:kind].present? && (GlobalConstant::ManagerValidationHash.secure_data_access_kind == manager_validation_hash_rsp[:kind])
+        return unauthorized_access_response('s_dm_vc_sda_7') if @manager_validation_hash_rsp[:validation_hash].nil?
+        return unauthorized_access_response('s_dm_vc_sda_8') if @manager_validation_hash_rsp[:extra_data][:salt].nil?
+        return unauthorized_access_response('s_dm_vc_sda_9') if @manager_validation_hash_rsp[:created_at].nil?
+        return unauthorized_access_response('s_dm_vc_sda_10') if @manager_validation_hash_rsp[:status].nil?
 
         success
       end
     
-      # Validate token
+      # Validate secure data access token
       #
       # * Author: Dhananjay
       # * Date: 01/06/2019
@@ -160,9 +157,9 @@ module DeveloperManagement
       
         evaluated_token = ManagerValidationHash.get_sda_cookie_token(
           manager_validation_hash_id: @manager_validation_hash_id,
-          validation_hash: @validation_hash,
-          salt: @salt,
-          cookie_creation_time: @created_ts
+          validation_hash: @manager_validation_hash_rsp[:validation_hash],
+          salt: @manager_validation_hash_rsp[:extra_data][:salt],
+          cookie_creation_time: @cookie_creation_timestamp
         )
 
         return unauthorized_access_response('s_dm_vc_sda_11') unless (evaluated_token == @token)
@@ -171,7 +168,7 @@ module DeveloperManagement
     
       end
     
-      # check status
+      # check cookie status
       #
       # * Author: Dhananjay
       # * Date: 01/06/2019
@@ -181,8 +178,10 @@ module DeveloperManagement
       #
       def check_cookie_status
 
+        @status = @manager_validation_hash_rsp[:status]
+
         # if cookie status is expired - create new
-        if is_expired?(@created_ts)
+        if is_expired?(@cookie_creation_timestamp)
 
           r = send_secure_data_access_link
           return r unless r.success?
@@ -229,13 +228,13 @@ module DeveloperManagement
       # * Date: 01/06/2019
       # * Reviewed By:
       #
-      # @sets @manager_validation_hash_id, @email_already_sent_flag
+      # @Sets @manager_validation_hash_id, @email_already_sent_flag
       #
       def send_secure_data_access_link
 
         # NOTE:- we can not send mail from sidekiq thread,
         # because we need to fetch 'manager_validation_hash_id' from the response of this enqueue job.
-        r = DeveloperManagement::SendSecureDataAccessLink.new(manager_id: @manager_id, email_already_sent_flag: @email_already_sent_flag).perform
+        r = DeveloperManagement::SendSecureDataAccessLink.new(manager_id: @manager_id).perform
         return r unless r.success?
 
         @manager_validation_hash_id = r.data[:manager_validation_hash_id]

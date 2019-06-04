@@ -47,8 +47,9 @@ module ClientManagement
           success_with_data(
             {
               api_keys: @api_credentials_data,
-              email_already_sent_flag: @email_already_sent_flag,
-              show_keys_enable_flag: @show_keys_enable_flag
+              #show_keys_enable_flag: @show_keys_enable_flag,
+              email_already_sent_flag: @email_already_sent_flag
+
             })
 
         end
