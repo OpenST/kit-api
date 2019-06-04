@@ -134,7 +134,7 @@ module DeveloperManagement
         @manager_validation_hash_rsp = CacheManagement::ManagerValidationHash.new([@manager_validation_hash_id]).fetch[@manager_validation_hash_id]
 
         return unauthorized_access_response('s_dm_vc_sda_5') unless @manager_validation_hash_rsp.present?
-        return unauthorized_access_response('s_dm_vc_sda_6') unless @manager_validation_hash_rsp[:kind].present? && (GlobalConstant::ManagerValidationHash.secure_data_access_kind == manager_validation_hash_rsp[:kind])
+        return unauthorized_access_response('s_dm_vc_sda_6') unless @manager_validation_hash_rsp[:kind].present? && (GlobalConstant::ManagerValidationHash.secure_data_access_kind == @manager_validation_hash_rsp[:kind])
         return unauthorized_access_response('s_dm_vc_sda_7') if @manager_validation_hash_rsp[:validation_hash].nil?
         return unauthorized_access_response('s_dm_vc_sda_8') if @manager_validation_hash_rsp[:extra_data][:salt].nil?
         return unauthorized_access_response('s_dm_vc_sda_9') if @manager_validation_hash_rsp[:created_at].nil?
