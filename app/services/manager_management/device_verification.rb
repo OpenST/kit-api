@@ -53,7 +53,7 @@ module ManagerManagement
 
         if @d_t.blank?
 
-          return success_with_data({}, fetch_go_to) if @manager_device[:status] == GlobalConstant::ManagerDevice.authorized
+          return success_with_data({}, fetch_go_to) if @manager_device.present? && @manager_device[:status] == GlobalConstant::ManagerDevice.authorized
 
           return success_with_data({manager: @manager_obj}) if is_logged_in_manager?
 
