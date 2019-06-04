@@ -10,7 +10,7 @@ class CreateAuxPriceOracles < DbMigrationConnection
         t.timestamps
       end
 
-      add_index :aux_price_oracles, [:chain_id, :stake_currency_id, :quote_currency_id, :status], name: 'qc_uk_1', unique: true
+      add_index :aux_price_oracles, [:chain_id, :stake_currency_id, :quote_currency_id], name: 'qc_uk_1', unique: true
     end
   end
 
