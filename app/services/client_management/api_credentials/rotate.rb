@@ -13,6 +13,8 @@ module ClientManagement
       # @params [Integer] client_id (mandatory) -  client id
       # @params [Integer] buffer_time (optional) - in minutes time till which old keys could still be used
       # @params [Hash] client_manager (mandatory) - logged in client manager object
+      # @params [Hash] show_keys_enable_flag (mandatory) -
+      # @params [Hash] email_already_sent_flag (mandatory) -
       #
       # @return [ClientManagement::ApiCredentials::Rotate]
       #
@@ -21,6 +23,9 @@ module ClientManagement
         @client_id = @params[:client_id]
         @client_manager = @params[:client_manager]
         @buffer_time = @params[:buffer_time]
+
+        @show_keys_enable_flag = @params[:show_keys_enable_flag]
+        @email_already_sent_flag = @params[:email_already_sent_flag]
       end
 
       # Perform
@@ -170,7 +175,9 @@ module ClientManagement
         BackgroundJob.enqueue(
             SyncApiKeysInDemoMappyJob,
             {
-              client_id: @client_id
+              client_id: @client_id,
+              show_keys_enable_flag: @show_keys_enable_flag,
+              email_already_sent_flag: @email_already_sent_flag
             }
         )
 

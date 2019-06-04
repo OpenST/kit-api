@@ -39,6 +39,8 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   #
   def init_params(params)
     @client_id = params[:client_id].to_i
+    @show_keys_enable_flag = params[:show_keys_enable_flag].to_i
+    @email_already_sent_flag = params[:email_already_sent_flag].to_i
     @token_id = nil
     @last_expiring_api_credentials = nil
   end
@@ -68,7 +70,11 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   #
   def fetch_api_credentials
 
-    r = ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id).perform
+
+
+    r = ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id,
+                                                    show_keys_enable_flag: @show_keys_enable_flag,
+                                                    email_already_sent_flag: @email_already_sent_flag).perform
     return r unless r.success?
 
     api_credentials = r.data[:api_keys]

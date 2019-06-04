@@ -11,13 +11,17 @@ module ClientManagement
       # * Reviewed By: Sunil
       #
       # @params [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
+      # @params [Integer] show_keys_enable_flag(optional) - show keys enable flag
+      # @params [Integer] email_already_sent_flag(optional) - email already sent flag
       #
       # @return [ClientManagement::ApiCredentials::Fetch]
       #
       def initialize(params)
         super
         @client_id = @params[:client_id]
+
         @show_keys_enable_flag = @params[:show_keys_enable_flag]
+        @email_already_sent_flag = @params[:email_already_sent_flag]
       end
 
       # Perform
@@ -35,13 +39,17 @@ module ClientManagement
           r = validate_and_sanitize
           return r unless r.success?
 
-          r = check_if_show_keys_enable
-          return r unless r.success?
+          if @show_keys_enable_flag == 1 && @email_already_sent_flag == 1
+            r = fetch_api_credentials
+            return r unless r.success?
+          end
 
-          r = fetch_api_credentials
-          return r unless r.success?
-
-          success_with_data(api_keys: @api_credentials_data)
+          success_with_data(
+            {
+              api_keys: @api_credentials_data,
+              email_already_sent_flag: @email_already_sent_flag,
+              show_keys_enable_flag: @show_keys_enable_flag
+            })
 
         end
 
@@ -62,18 +70,6 @@ module ClientManagement
 
         success
 
-      end
-
-      def check_if_show_keys_enable
-        if @show_keys_enable_flag == 1
-          success
-        end
-        error_with_data(
-          's_cm_ac_f_3',
-          'unauthorized_access_response',
-          GlobalConstant::ErrorAction.default,
-          @client_id
-        )
       end
 
       # Fetch existing api credentials

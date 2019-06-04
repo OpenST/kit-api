@@ -11,7 +11,8 @@ module DeveloperManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client_manager (mandatory) - Client Manager
     # @params [Object] manager(mandatory) - manager
-    # @params [Integer] show_keys_enable_flag - show keys enable flag
+    # @params [Integer] show_keys_enable_flag(optional) - show keys enable flag
+    # @params [Integer] email_already_sent_flag(optional) - email already sent flag
     #
     # @return [DeveloperManagement::FetchDetails]
     #
@@ -22,7 +23,9 @@ module DeveloperManagement
       @client_id = @params[:client_id]
       @client_manager = @params[:client_manager]
       @manager = @params[:manager]
+
       @show_keys_enable_flag = @params[:show_keys_enable_flag]
+      @email_already_sent_flag = @params[:email_already_sent_flag]
 
       @token = nil
       @price_points = nil
@@ -64,9 +67,11 @@ module DeveloperManagement
           client_manager: @client_manager,
           manager: @manager,
           sub_env_payloads: @sub_env_payload_data,
-          developer_page_addresses: @addresses
+          developer_page_addresses: @addresses,
+          email_already_sent_flag: @email_already_sent_flag
         }
 
+        #if secure data access cookie is valid, sent api_keys in response
         if @show_keys_enable_flag == 1
           r = fetch_api_credentials
           return r unless r.success?

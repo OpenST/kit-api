@@ -172,8 +172,3 @@ device_not_authorized:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
   message: "Trying from an un-authorized device. Please authorize device."
-
-email_already_has_been_sent:
-  http_code: 422
-  code: "INVALID_REQUEST"
-  message: "Email already has been sent."

@@ -517,3 +517,8 @@ missing_fingerprint_type:
   parameter: 'fingerprint type'
   code: 'missing'
   message: 'The browser fingerprint type is missing.'
+
+invalid_a_t:
+  parameter: 'a_t'
+  code: 'invalid'
+  message: 'The secure data access verification link has expired.'

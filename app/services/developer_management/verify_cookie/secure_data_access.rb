@@ -22,6 +22,7 @@ module DeveloperManagement
         @action_name = @params[:action_name]
 
         @show_keys_enable_flag = 0
+        @email_already_sent_flag = 0
 
         @failed_logs = {}
     
@@ -60,25 +61,29 @@ module DeveloperManagement
             r = validate_token
             return r unless r.success?
 
-            r = check_cookie_status
-            return r unless r.success?
+            check_cookie_status
 
           else
 
             if @action_name != 'developer_get'
+              puts "Here=======\n\n\n"
               r = send_secure_data_access_link
               return r unless r.success?
-
-              # r = fetch_validation_hash_details
-              # return r unless r.success?
 
               r = set_cookie_value
               return r unless r.success?
 
-              success_with_data({ cookie_value: @cookie_value, show_keys_enable_flag: @show_keys_enable_flag }, fetch_go_to)
+              success_with_data({
+                                  cookie_value: @cookie_value,
+                                  show_keys_enable_flag: @show_keys_enable_flag,
+                                  email_already_sent_flag: @email_already_sent_flag
+                                }, fetch_go_to)
             else
               #For developer page load when cookie was not present
-              success_with_data({ show_keys_enable_flag: @show_keys_enable_flag }, fetch_go_to)
+              success_with_data({
+                                  show_keys_enable_flag: @show_keys_enable_flag,
+                                  email_already_sent_flag: @email_already_sent_flag
+                                }, fetch_go_to)
             end
 
           end
@@ -121,7 +126,7 @@ module DeveloperManagement
       # * Date: 28/05/2019
       # * Reviewed By:
       #
-      # @sets @validation_hash, @salt, @created_at_timestamp, @kind, @status
+      # @sets @validation_hash, @salt, @kind, @status
       #
       # @return [Result::Base]
       #
@@ -138,7 +143,6 @@ module DeveloperManagement
         @kind = manager_validation_hash_rsp[:kind]
         @validation_hash = manager_validation_hash_rsp[:validation_hash]
         @salt = manager_validation_hash_rsp[:extra_data][:salt]
-        @created_at_timestamp = manager_validation_hash_rsp[:created_at].to_time.to_i #converted created_at date-time to timestamp
         @status = manager_validation_hash_rsp[:status]
 
         success
@@ -154,14 +158,13 @@ module DeveloperManagement
       #
       def validate_token
       
-        evaluated_token = ManagerValidationHash.get_cookie_token(
+        evaluated_token = ManagerValidationHash.get_sda_cookie_token(
           manager_validation_hash_id: @manager_validation_hash_id,
           validation_hash: @validation_hash,
           salt: @salt,
-          cookie_creation_time: @created_ts,
-          c_at_timestamp: @created_at_timestamp
+          cookie_creation_time: @created_ts
         )
-      
+
         return unauthorized_access_response('s_dm_vc_sda_11') unless (evaluated_token == @token)
       
         success
@@ -178,8 +181,8 @@ module DeveloperManagement
       #
       def check_cookie_status
 
-        # if cookie status is expired
-        if is_expired?(@created_at_timestamp)
+        # if cookie status is expired - create new
+        if is_expired?(@created_ts)
 
           r = send_secure_data_access_link
           return r unless r.success?
@@ -187,19 +190,33 @@ module DeveloperManagement
           r = set_cookie_value
           return r unless r.success?
 
-          success_with_data({cookie_value: @cookie_value, show_keys_enable_flag: @show_keys_enable_flag}, fetch_go_to)
+          success_with_data({
+                              cookie_value: @cookie_value,
+                              show_keys_enable_flag: @show_keys_enable_flag,
+                              email_already_sent_flag: @email_already_sent_flag
+                            }, fetch_go_to)
 
-          # if cookie status is NOT expired AND it is used
+          # if cookie status is NOT expired AND it is used - show keys
         elsif @status == GlobalConstant::ManagerValidationHash.used_status
-          # show keys
 
           @show_keys_enable_flag = 1
-          success_with_data({cookie_value: @sda_cookie_value, show_keys_enable_flag: @show_keys_enable_flag}, fetch_go_to)
+          @email_already_sent_flag = 1
 
-        elsif @status != GlobalConstant::ManagerValidationHash.used_status
+          success_with_data({
+                              cookie_value: @sda_cookie_value,
+                              show_keys_enable_flag: @show_keys_enable_flag,
+                              email_already_sent_flag: @email_already_sent_flag
+                            }, fetch_go_to)
+
           # email already has been send
+        elsif @status != GlobalConstant::ManagerValidationHash.used_status
 
-          return error_with_go_to('s_dm_vc_sda_12', 'email_already_has_been_sent', fetch_go_to)
+          @email_already_sent_flag = 1
+          success_with_data({
+                              cookie_value: @sda_cookie_value,
+                              show_keys_enable_flag: @show_keys_enable_flag,
+                              email_already_sent_flag: @email_already_sent_flag
+                            }, fetch_go_to)
 
         end
     
@@ -212,16 +229,18 @@ module DeveloperManagement
       # * Date: 01/06/2019
       # * Reviewed By:
       #
-      # @sets @manager_validation_hash_id
+      # @sets @manager_validation_hash_id, @email_already_sent_flag
       #
       def send_secure_data_access_link
 
         # NOTE:- we can not send mail from sidekiq thread,
         # because we need to fetch 'manager_validation_hash_id' from the response of this enqueue job.
-        r = DeveloperManagement::SendSecureDataAccessLink.new(manager_id: @manager_id).perform
+        r = DeveloperManagement::SendSecureDataAccessLink.new(manager_id: @manager_id, email_already_sent_flag: @email_already_sent_flag).perform
         return r unless r.success?
 
         @manager_validation_hash_id = r.data[:manager_validation_hash_id]
+
+        @email_already_sent_flag = 1
 
         success
       end
@@ -238,13 +257,11 @@ module DeveloperManagement
 
         manager_validation_hash_rsp = CacheManagement::ManagerValidationHash.new([@manager_validation_hash_id]).fetch[@manager_validation_hash_id]
 
-        #Set following values appropriately TODO
-
-        @cookie_value = ManagerValidationHash.get_cookie_value(
+        @cookie_value = ManagerValidationHash.get_sda_cookie_value(
           manager_validation_hash_id: @manager_validation_hash_id,
-          validation_hash: @validation_hash,
-          salt: @salt,
-          c_at_timestamp: @created_at_timestamp
+          validation_hash: manager_validation_hash_rsp[:validation_hash],
+          salt: manager_validation_hash_rsp[:extra_data][:salt],
+          c_at_timestamp: manager_validation_hash_rsp[:created_at].to_i #converted created_at date-time to timestamp
         )
 
         success

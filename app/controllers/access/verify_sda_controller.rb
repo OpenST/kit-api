@@ -25,7 +25,7 @@ class Access::VerifySdaController < AuthenticationController
   # * Reviewed By:
   #
   def send_secure_data_access_link
-    service_response = DeveloperManagement::SendSecureDataAccessLink.new(params).perform
+    service_response = DeveloperManagement::ResendSecureDataAccessLink.new(params).perform
     return render_api_response(service_response)
   end
 

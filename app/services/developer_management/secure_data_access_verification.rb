@@ -5,11 +5,12 @@ module DeveloperManagement
     # Initialize
     #
     # * Author: Dhananjay
-    # * Date: 30/05/2019
-    # * Reviewed By:
+    # * Date: 04/06/2019
+    # * Reviewed By: Kedar
     #
     # @params [Object] manager(mandatory) - manager
-    # @params [String] a_t (optional) - token for device verification
+    # @params [Boolean] is_logged_in_manager (mandatory) - is logged in manager
+    # @params [String] a_t (optional) - token for secure data access verification
     #
     # @return [DeveloperManagement::SecureDataAccessVerification]
     #
@@ -17,8 +18,9 @@ module DeveloperManagement
 
       super
 
-      @is_logged_in_manager = @params[:is_logged_in_manager]
       @manager_id = @params[:manager_id]
+      @is_logged_in_manager = @params[:is_logged_in_manager]
+
       @a_t = @params[:a_t]
 
       @manager_validation_hash_id = nil
@@ -30,8 +32,8 @@ module DeveloperManagement
     # Perform
     #
     # * Author: Dhananjay
-    # * Date: 22/05/2018
-    # * Reviewed By:
+    # * Date: 04/06/2019
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -100,11 +102,13 @@ module DeveloperManagement
 
       splited_reset_token = decrypted_t.split(':')
 
-      return invalid_url_error('dm_sdav_3') if splited_reset_token.length != 2
+      return invalid_url_error('dm_sdav_3') if splited_reset_token.length != 3
 
       @manager_validation_hash_id = splited_reset_token[0].to_i
 
-      @sda_token = splited_reset_token[1]
+      @c_at_timestamp = splited_reset_token[1]
+
+      @sda_token = splited_reset_token[2]
 
       success
 
@@ -183,8 +187,8 @@ module DeveloperManagement
     # Update Manager Validation hash used for sda verification and make all others inactive for the same device id.
     #
     # * Author: Dhananjay
-    # * Date: 31/05/2019
-    # * Reviewed By:
+    # * Date: 04/06/2019
+    # * Reviewed By: Kedar
     #
     def update_manager_validation_hashes_status
       @manager_validation_hash_obj.status = GlobalConstant::ManagerValidationHash.used_status
@@ -208,8 +212,8 @@ module DeveloperManagement
     # Invalid Manager access response
     #
     # * Author: Dhananjay
-    # * Date: 31/05/2019
-    # * Reviewed By:
+    # * Date: 04/06/2019
+    # * Reviewed By: Kedar
     #
     # @return [Result::Base]
     #
@@ -217,7 +221,7 @@ module DeveloperManagement
       validation_error(
         err,
         'invalid_api_params',
-        ['invalid_d_t'],
+        ['invalid_a_t'],
         GlobalConstant::ErrorAction.default
       )
     end
@@ -234,12 +238,12 @@ module DeveloperManagement
       validation_error(
         code,
         'invalid_api_params',
-        ['invalid_d_t'],
+        ['invalid_a_t'],
         GlobalConstant::ErrorAction.default
       )
     end
 
-    # Get goto for developer page
+    # Get goto
     #
     # * Author: Dhananjay
     # * Date: 31/05/2019

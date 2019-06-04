@@ -9,7 +9,6 @@ class DeveloperController < AuthenticationController
   # * Reviewed By: Sunil
   #
   def developer_get
-    params[:show_keys_enable_flag] = @show_keys_enable_flag
     service_response = DeveloperManagement::FetchDetails.new(params).perform
     return render_api_response(service_response)
   end
@@ -21,7 +20,6 @@ class DeveloperController < AuthenticationController
   # * Reviewed By: Sunil
   #
   def api_keys_get
-    params[:show_keys_enable_flag] = @show_keys_enable_flag
     service_response = ClientManagement::ApiCredentials::Fetch.new(params).perform
     return render_api_response(service_response)
   end
@@ -62,6 +60,8 @@ class DeveloperController < AuthenticationController
     params[:action_name] = action_name
     service_response = DeveloperManagement::VerifyCookie::SecureDataAccess.new(params).perform
 
+    puts "authenticate_developer_page_access::::service_response=====#{service_response.to_json}"
+
     if service_response.success?
       # NOTE: delete cookie value from data
       cookie_value = service_response.data.delete(:cookie_value)
@@ -71,8 +71,13 @@ class DeveloperController < AuthenticationController
         GlobalConstant::Cookie.secure_data_access_cookie_expiry.from_now
       )
 
-      @show_keys_enable_flag = service_response.data[:show_keys_enable_flag]
+      params[:show_keys_enable_flag] = service_response.data[:show_keys_enable_flag]
+      params[:email_already_sent_flag] = service_response.data[:email_already_sent_flag]
+      puts "authenticate_developer_page_access:::PARAMS=========#{params.to_json}"
+    else
+      return render_api_response(service_response)
     end
+
   end
   
 end

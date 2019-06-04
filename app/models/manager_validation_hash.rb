@@ -78,14 +78,14 @@ class ManagerValidationHash < DbConnection::KitClient
   #
   # * Author: Dhananjay
   # * Date: 29/05/2019
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   # @return [String]
   #
-  def self.get_cookie_value(params)
+  def self.get_sda_cookie_value(params)
     cookie_creation_time = Time.now.to_i
     params[:cookie_creation_time] = cookie_creation_time
-    token_e = self.get_cookie_token(params)
+    token_e = self.get_sda_cookie_token(params)
     return "#{params[:manager_validation_hash_id]}:#{cookie_creation_time}:#{token_e}"
   end
 
@@ -93,13 +93,13 @@ class ManagerValidationHash < DbConnection::KitClient
   #
   # * Author: Dhananjay
   # * Date: 29/05/2019
-  # * Reviewed By:
+  # * Reviewed By: Kedar
   #
   # @return [String]
   #
-  def self.get_cookie_token(params)
-    string_to_sign = "#{params[:manager_validation_hash_id]}:#{params[:salt]}:#{params[:validation_hash]}:#{params[:cookie_creation_time]}:#{params[:c_at_timestamp]}"
-    key="#{params[:manager_validation_hash_id]}:#{params[:cookie_creation_time]}:#{params[:validation_hash]}:#{params[:salt]}:#{params[:c_at_timestamp]}:#{GlobalConstant::SecretEncryptor.cookie_key}"
+  def self.get_sda_cookie_token(params)
+    string_to_sign = "#{params[:manager_validation_hash_id]}:#{params[:salt]}:#{params[:validation_hash]}:#{params[:cookie_creation_time]}"
+    key="#{params[:manager_validation_hash_id]}:#{params[:cookie_creation_time]}:#{params[:validation_hash]}:#{params[:salt]}:#{GlobalConstant::SecretEncryptor.cookie_key}"
     OpenSSL::HMAC.hexdigest("SHA256", key, string_to_sign)
   end
 

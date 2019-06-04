@@ -221,16 +221,21 @@
     - :client_id
   :optional:
     - :show_keys_enable_flag
+    - :email_already_sent_flag
 'ClientManagement::ApiCredentials::Rotate':
   :mandatory:
     - :client_id
     - :client_manager
+    - :show_keys_enable_flag
+    - :email_already_sent_flag
   :optional:
     - :buffer_time
 'ClientManagement::ApiCredentials::Deactivate':
   :mandatory:
     - :client_id
     - :client_manager
+    - :show_keys_enable_flag
+    - :email_already_sent_flag
   :optional:
 'ClientManagement::IsWhitelistedForMainEnv':
   :mandatory:
@@ -291,6 +296,27 @@
     - :manager
   :optional:
     - :show_keys_enable_flag
+    - :email_already_sent_flag
+'DeveloperManagement::VerifyCookie::SecureDataAccess':
+  :mandatory:
+    - :manager_id
+    - :action_name
+  :optional:
+    - :sda_cookie_value
+'DeveloperManagement::SendSecureDataAccessLink':
+  :mandatory:
+    - :manager_id
+  :optional:
+'DeveloperManagement::ResendSecureDataAccessLink':
+  :mandatory:
+    - :manager_id
+  :optional:
+'DeveloperManagement::SecureDataAccessVerification':
+  :mandatory:
+    - :manager_id
+    - :is_logged_in_manager
+  :optional:
+    - :a_t
 'DashboardManagement::Get':
   :mandatory:
     - :client_id
@@ -340,19 +366,3 @@
     - :manager_device
     - :is_multi_auth_cookie_valid
     - :is_password_auth_cookie_valid
-'DeveloperManagement::VerifyCookie::SecureDataAccess':
-  :mandatory:
-    - :manager_id
-    - :action_name
-  :optional:
-    - :sda_cookie_value
-'DeveloperManagement::SendSecureDataAccessLink':
-  :mandatory:
-    - :manager_id
-  :optional:
-'DeveloperManagement::SecureDataAccessVerification':
-  :mandatory:
-    - :is_logged_in_manager
-  :optional:
-    - :a_t
-    - :manager_id
