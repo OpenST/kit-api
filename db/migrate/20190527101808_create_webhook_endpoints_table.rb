@@ -6,6 +6,7 @@ class CreateWebhookEndpointsTable < DbMigrationConnection
       create_table :webhook_endpoints do |t|
         t.column :uuid, :string, limit: 40, null: false
         t.column :client_id, :integer, null: false
+        t.column :api_version, :tinyint, null: false, limit: 1, default: 2
         t.column :endpoint, :string, limit: 254, null: false
         t.column :secret, :text, null: false #encrypted
         t.column :grace_secret, :text, null: true #encrypted
@@ -15,7 +16,7 @@ class CreateWebhookEndpointsTable < DbMigrationConnection
         t.timestamps
       end
 
-      add_index :webhook_endpoints, [:client_id, :endpoint], name: 'uk_1', unique: true
+      add_index :webhook_endpoints, [:client_id, :endpoint, :api_version], name: 'uk_1', unique: true
       add_index :webhook_endpoints, [:client_id, :uuid], name: 'uk_2', unique: true
     end
 
