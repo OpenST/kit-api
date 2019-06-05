@@ -25,8 +25,6 @@ class CreateWebhookEndpointsTable < DbMigrationConnection
   def down
     run_migration_for_db(DbConnection::KitSaasSubenv) do
 
-      remove_index :webhook_endpoints, name: 'uk_1'
-      remove_index :webhook_endpoints, name: 'uk_2'
       drop_table :webhook_endpoints if DbConnection::KitSaasSubenv.connection.table_exists? :webhook_endpoints
 
     end
