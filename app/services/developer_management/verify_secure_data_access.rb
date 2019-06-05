@@ -44,11 +44,11 @@ module DeveloperManagement
         if @sda_cookie_input_value.present?
           validate_cookie
         else
-          # for pageload of the developer page, just return success response
+          # for page-load of the developer page, just return success response
           if @action_name != 'developer_get'
-            send_auth_email
+            return send_auth_email
           else
-            success_response
+            return success_response
           end
         end
 
@@ -211,6 +211,8 @@ module DeveloperManagement
       else
         @email_already_sent_flag = 1
       end
+
+      @sda_cookie_output_value = @sda_cookie_input_value
     end
 
     # Generate and send secure data access verification token

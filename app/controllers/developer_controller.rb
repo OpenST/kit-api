@@ -61,25 +61,49 @@ class DeveloperController < AuthenticationController
       action_name: action_name,
       manager_id: params[:manager_id]
     }
-    service_response = DeveloperManagement::VerifySecureDataAccess.new(sda_cookie_verification_params).perform
+    cookie_verification_response = DeveloperManagement::VerifySecureDataAccess.new(sda_cookie_verification_params).perform
 
-    puts "authenticate_developer_page_access::::service_response=====#{service_response.to_json}"
+    puts "authenticate_developer_page_access::::service_response=====#{cookie_verification_response.to_json}"
 
-    if service_response.success?
+    if cookie_verification_response.success?
       # NOTE: delete cookie value from data
-      cookie_value = service_response.data.delete(:cookie_value)
+      cookie_value = cookie_verification_response.data.delete(:cookie_value)
       set_cookie(
         GlobalConstant::Cookie.secure_data_access_cookie_name,
         cookie_value,
         GlobalConstant::Cookie.secure_data_access_cookie_expiry.from_now
       )
 
-      params[:show_keys_enable_flag] = service_response.data[:show_keys_enable_flag]
-      params[:email_already_sent_flag] = service_response.data[:email_already_sent_flag]
+      params[:show_keys_enable_flag] = cookie_verification_response.data[:show_keys_enable_flag]
+      params[:email_already_sent_flag] = cookie_verification_response.data[:email_already_sent_flag]
       puts "authenticate_developer_page_access:::PARAMS=========#{params.to_json}"
     else
-      return render_api_response(service_response)
+      handle_sda_cookie_validation_failure(cookie_verification_response)
     end
+
+  end
+
+  # Handle secure data access cookie validation failure response
+  #
+  # 1. delete cookie
+  # 3. remove authentication related critical data to sent in response
+  #
+  # * Author: Dhananjay
+  # * Date: 05/06/2019
+  # * Reviewed By:
+  #
+  def handle_sda_cookie_validation_failure(cookie_verify_rsp)
+
+    # Clear cookie
+    delete_cookie(GlobalConstant::Cookie.secure_data_access_cookie_name)
+
+    # Set 401 header
+    cookie_verify_rsp.go_to = GlobalConstant::GoTo.developer
+    cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
+
+    cookie_verify_rsp.data = {}
+
+    return render_api_response(cookie_verify_rsp)
 
   end
   
