@@ -83,7 +83,7 @@ class ManagerValidationHash < DbConnection::KitClient
   # @return [String]
   #
   def self.get_sda_cookie_value(params)
-    cookie_creation_time = Time.now.to_i
+    cookie_creation_time = params[:c_at_timestamp]
     params[:cookie_creation_time] = cookie_creation_time
     token_e = self.get_sda_cookie_token(params)
     return "#{params[:manager_validation_hash_id]}:#{cookie_creation_time}:#{token_e}"

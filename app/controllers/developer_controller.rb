@@ -56,9 +56,12 @@ class DeveloperController < AuthenticationController
   # * Reviewed By:
   #
   def authenticate_developer_page_access
-    params[:sda_cookie_value] = cookies[GlobalConstant::Cookie.secure_data_access_cookie_name.to_sym]
-    params[:action_name] = action_name
-    service_response = DeveloperManagement::VerifyCookie::SecureDataAccess.new(params).perform
+    sda_cookie_verification_params = {
+      sda_cookie_value: cookies[GlobalConstant::Cookie.secure_data_access_cookie_name.to_sym],
+      action_name: action_name,
+      manager_id: params[:manager_id]
+    }
+    service_response = DeveloperManagement::VerifySecureDataAccess.new(sda_cookie_verification_params).perform
 
     puts "authenticate_developer_page_access::::service_response=====#{service_response.to_json}"
 

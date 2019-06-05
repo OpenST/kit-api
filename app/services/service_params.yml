@@ -297,7 +297,7 @@
   :optional:
     - :show_keys_enable_flag
     - :email_already_sent_flag
-'DeveloperManagement::VerifyCookie::SecureDataAccess':
+'DeveloperManagement::VerifySecureDataAccess':
   :mandatory:
     - :manager_id
     - :action_name
