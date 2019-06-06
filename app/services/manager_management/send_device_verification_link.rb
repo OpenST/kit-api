@@ -74,7 +74,7 @@ module ManagerManagement
 
       return error_with_data(
         'a_s_mm_sdv_1',
-        'something_went_wrong',
+        'device_already_whitelisted',
         GlobalConstant::ErrorAction.default
       ) if !@manager_device.present? || @manager_device[:status] != GlobalConstant::ManagerDevice.un_authorized
 
