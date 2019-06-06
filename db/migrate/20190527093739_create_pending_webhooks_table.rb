@@ -10,6 +10,7 @@ class CreatePendingWebhooksTable < DbMigrationConnection
         t.text :extra_data, default: nil
         t.column :status, :tinyint, null: false, limit: 1
         t.column :retry_count, :integer, default: 0
+        t.column :lock_id, :decimal, :precision => 22, :scale => 5, null: true
         t.integer :next_retry_at, null: true
         t.text :mappy_error, default: nil, limit: 1000
         t.timestamps
