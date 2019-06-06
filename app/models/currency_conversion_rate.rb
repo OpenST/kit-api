@@ -70,10 +70,12 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
 
     stake_currency_ids_array = stake_currency_id_to_symbol_map.keys
 
+    quote_currency_id = QuoteCurrency.symbols_to_details_cache[GlobalConstant::QuoteCurrency.USD][:id]
+
     records = ::CurrencyConversionRate.where(
       status: GlobalConstant::ConversionRates.active_status,
       stake_currency_id: stake_currency_ids_array,
-      quote_currency: GlobalConstant::ConversionRates.usd_currency
+      quote_currency_id: quote_currency_id
     ).order('timestamp desc').limit(10)
 
     if chain_id.present?
