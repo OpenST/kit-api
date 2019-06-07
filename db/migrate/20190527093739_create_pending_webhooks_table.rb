@@ -16,6 +16,8 @@ class CreatePendingWebhooksTable < DbMigrationConnection
         t.timestamps
       end
 
+      add_index :pending_webhooks, [:lock_id], name: 'i_1'
+
     end
 
   end
