@@ -9,6 +9,10 @@ module GlobalConstant
         config['view_root_url']
       end
 
+      def ost_web_root_url
+        config['ost_web_root_url']
+      end
+
       private
 
       def config
