@@ -5,8 +5,6 @@ class QuoteCurrency < DbConnection::KitSaasSubenv
       GlobalConstant::QuoteCurrency.inactive_status => 2
   }
 
-  serialize :constants, JSON
-
   # Format data to a format which goes into cache
   #
   # * Author: Santhosh

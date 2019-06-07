@@ -7,10 +7,6 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
     GlobalConstant::ConversionRates.usdc_currency => 2
   }
 
-  enum quote_currency: {
-    GlobalConstant::ConversionRates.usd_currency => 1
-  }
-
   enum status: {
     GlobalConstant::ConversionRates.active_status => 1,
     GlobalConstant::ConversionRates.inactive_status => 2,
@@ -89,7 +85,8 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
     records.each do |record|
       next if data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]].present?
       data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]] = {}
-      data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]][record.quote_currency] = record.conversion_rate.to_s
+      quote_currency_symbol = QuoteCurrency.ids_to_details_cache[record.quote_currency_id][:symbol]
+      data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]][quote_currency_symbol] = record.conversion_rate.to_s
     end
     data_to_return
   end
