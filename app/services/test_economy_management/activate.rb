@@ -122,9 +122,9 @@ module TestEconomyManagement
     #
     def perform_activation
 
-      perform_qr_code_task
+      perform_qr_code_task unless test_economy_qr_code_uploaded?
 
-      perform_registeration_in_mappy_task
+      perform_registeration_in_mappy_task unless registered_in_mappy_server?
 
       @client_obj.save! if @client_obj.changed?
 
