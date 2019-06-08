@@ -93,7 +93,7 @@ module Email
       def validate_template_vars
         
         return error_with_data(
-            'e_hc_stm_5',
+            'e_hc_stm_10',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
         ) if @template_vars[:company_web_domain].blank?
@@ -101,7 +101,7 @@ module Email
         if GlobalConstant::PepoCampaigns.is_double_opt_in_related_template?(@template_name)
 
           return error_with_data(
-            'e_hc_stm_6',
+            'e_hc_stm_4',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:double_opt_in_token].blank?
@@ -147,6 +147,12 @@ module Email
           ) if @template_vars[:manager_email_id].blank?
 
         elsif GlobalConstant::PepoCampaigns.is_test_economy_invite_template?(@template_name)
+
+          if @template_vars[:qr_code_url].blank? || @template_vars[:ios_app_download_link].blank? ||
+            @template_vars[:android_app_download_link].blank? || @template_vars[:deep_link_demo_app_launch_url].blank? ||
+            @template_vars[:token_name].blank? || @template_vars[:inviter_name].blank?
+
+            Rails.logger.error("invalid template_vars: #{@template_vars.inspect} for template_name: #{@template_name}")
 
           return error_with_data(
             'e_hc_stm_11',

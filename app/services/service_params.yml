@@ -269,6 +269,7 @@
   :mandatory:
     - :client_id
     - :client_manager
+    - :client
     - :manager
   :optional:
 'TokenManagement::GrantEthStakeCurrency':
