@@ -172,3 +172,8 @@ device_not_authorized:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
   message: "Trying from an un-authorized device. Please authorize device."
+
+device_already_whitelisted:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "The device which you attempted to whitelist is already whitelisted now."
