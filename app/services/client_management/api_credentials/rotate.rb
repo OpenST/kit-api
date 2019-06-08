@@ -52,7 +52,15 @@ module ClientManagement
           r = enqueue_job_to_update_in_mappy_server
           return r unless r.success?
 
-          ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id).perform
+          r = fetch_api_credentials_data
+          return r unless r.success?
+
+          success_with_data(
+            {
+              api_keys: @api_credentials_data,
+              email_already_sent_flag: @email_already_sent_flag
+
+            })
 
         end
 
@@ -183,6 +191,28 @@ module ClientManagement
 
         success
 
+      end
+
+      # Fetch api credentials data
+      #
+      # * Author: Dhananjay
+      # * Date: 08/06/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_api_credentials_data
+
+        #@api_credentials_data = ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id).perform
+
+        r = ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id,
+                                                        show_keys_enable_flag: @show_keys_enable_flag,
+                                                        email_already_sent_flag: @email_already_sent_flag).perform
+        return r unless r.success?
+
+        @api_credentials_data = r.data[:api_keys]
+
+        success
       end
 
     end
