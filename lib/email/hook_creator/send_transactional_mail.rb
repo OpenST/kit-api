@@ -163,6 +163,8 @@ module Email
           #   || @template_vars[:ios_app_download_link].blank? ||
           #   @template_vars[:android_app_download_link].blank?
 
+          end
+
         end
 
         success
