@@ -219,9 +219,9 @@
 'ClientManagement::ApiCredentials::Fetch':
   :mandatory:
     - :client_id
-  :optional:
     - :show_keys_enable_flag
     - :email_already_sent_flag
+  :optional:
 'ClientManagement::ApiCredentials::Rotate':
   :mandatory:
     - :client_id
