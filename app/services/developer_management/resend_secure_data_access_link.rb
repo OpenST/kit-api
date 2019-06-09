@@ -43,7 +43,7 @@ module DeveloperManagement
         r = send_mail
         return r unless r.success?
 
-        success_with_data({manager_validation_hash_id: @manager_validation_hash_id})
+        success_with_data({manager_validation_hash_id: @manager_validation_hash[:id]})
 
       end
 
@@ -61,16 +61,17 @@ module DeveloperManagement
     #
     def fetch_manager_validation_hash_details
 
-      @manager_validation_hash = ManagerValidationHash.where(
+      mvh_record = ManagerValidationHash.where(
         manager_id: @manager_id,
-        kind: GlobalConstant::ManagerValidationHash.secure_data_access_kind,
-        status: GlobalConstant::ManagerValidationHash.used_status ).first
+        kind: GlobalConstant::ManagerValidationHash.secure_data_access_kind).order('created_at desc').limit(1)
 
       return error_with_data(
         's_dm_rsdal_1',
         'something_went_wrong',
         GlobalConstant::ErrorAction.default
-      ) unless @manager_validation_hash.present?
+      ) unless mvh_record.present?
+
+      @manager_validation_hash = mvh_record[0]
 
       success
 

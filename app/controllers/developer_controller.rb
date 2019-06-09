@@ -99,7 +99,7 @@ class DeveloperController < AuthenticationController
 
     # Set 401 header
     cookie_verify_rsp.go_to = GlobalConstant::GoTo.developer
-    cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
+    #cookie_verify_rsp.http_code = GlobalConstant::ErrorCode.unauthorized_access
 
     cookie_verify_rsp.data = {}
 
