@@ -14,6 +14,8 @@ module ManagerManagement
       # @params [String] password (mandatory) - user password
       # @params [String] confirm_password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type (1/0)
       # @params [Hash] utm_params (optional) - UTM params if client joins using marketing link.
       #
       # @return [ManagerManagement::SignUp::ByInvite]
@@ -82,6 +84,9 @@ module ManagerManagement
           r = create_update_contact_email_service_hook
           return r unless r.success?
 
+          r = create_authorized_device
+          return r unless r.success?
+
           r = set_cookie_value
           return r unless r.success?
 
@@ -125,6 +130,8 @@ module ManagerManagement
 
         @last_name = @last_name.to_s.strip
         validation_errors.push('invalid_last_name') unless Util::CommonValidator.is_valid_name?(@last_name)
+
+        validation_errors.push('invalid_fingerprint') unless @fingerprint.length == 32
 
         if @invite_token.blank?
 

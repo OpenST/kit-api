@@ -3,6 +3,8 @@
     - :email
     - :password
     - :browser_user_agent
+    - :fingerprint
+    - :fingerprint_type
     - :agreed_terms_of_service
     - :first_name
     - :last_name
@@ -15,6 +17,8 @@
     - :password
     - :confirm_password
     - :browser_user_agent
+    - :fingerprint
+    - :fingerprint_type
     - :first_name
     - :last_name
   :optional:
@@ -54,6 +58,8 @@
     - :email
     - :password
     - :browser_user_agent
+    - :fingerprint
+    - :fingerprint_type
   :optional:
 'ManagerManagement::Logout':
   :mandatory:
@@ -317,3 +323,18 @@
    - :manager
    - :email_addresses
  :optional:
+'ManagerManagement::SendDeviceVerificationLink':
+ :mandatory:
+   - :manager_id
+   - :manager_device_id
+ :optional:
+'ManagerManagement::DeviceVerification':
+  :mandatory:
+    - :is_logged_in_manager
+  :optional:
+    - :d_t
+    - :client
+    - :manager_id
+    - :manager_device
+    - :is_multi_auth_cookie_valid
+    - :is_password_auth_cookie_valid

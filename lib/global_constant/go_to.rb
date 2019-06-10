@@ -101,6 +101,12 @@ module GlobalConstant
         }
       end
 
+      def verify_device
+        {
+          by_screen_name: :verify_device
+        }
+      end
+
       def identify_wf_goto(workflow)
         if workflow.kind == GlobalConstant::Workflow.token_deploy
           return token_deploy

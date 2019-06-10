@@ -36,6 +36,10 @@ module GlobalConstant
         'manager_invite'
       end
 
+      def device_verification_kind
+        'device_verification'
+      end
+
       ### Kind End ###
 
       ########## expiry intervals ###########
@@ -50,6 +54,10 @@ module GlobalConstant
 
       def double_opt_in_expiry_interval
         15.days
+      end
+
+      def device_verification_expiry_interval
+        30.minutes
       end
 
       ########## Kinds ###########

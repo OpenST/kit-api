@@ -13,6 +13,8 @@ module ManagerManagement
       # @params [String] password (mandatory) - user password
       # @params [String] confirm_password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type (1/0)
       #
       # @return [ManagerManagement::SignUp::Base]
       #
@@ -23,6 +25,8 @@ module ManagerManagement
         @password = @params[:password]
         @confirm_password = @params[:confirm_password]
         @browser_user_agent = @params[:browser_user_agent]
+        @fingerprint = @params[:fingerprint]
+        @fingerprint_type = ManagerDevice.fingerprint_types[@params[:fingerprint_type]]
 
         @client_id = nil
         @manager_id = nil
@@ -177,6 +181,33 @@ module ManagerManagement
 
       end
 
+      # Create entry in manager device with active status
+      #
+      # * Author: Santhosh
+      # * Date: 22/05/2019
+      # * Reviewed By:
+      #
+      def create_authorized_device
+
+        key = "#{@manager_obj.id}:#{@fingerprint}:#{@fingerprint_type}"
+
+        unique_hash = LocalCipher.get_sha_hashed_text(key)
+        expiration_timestamp = current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
+
+        # marking the first device for the manager as authorized
+        @manager_device = ManagerDevice.new( manager_id: @manager_obj.id,
+                                             fingerprint: @fingerprint,
+                                             fingerprint_type: @fingerprint_type,
+                                             unique_hash: unique_hash,
+                                             expiration_timestamp: expiration_timestamp,
+                                             status: GlobalConstant::ManagerDevice.authorized
+        )
+
+        @manager_device.save!
+
+        success
+      end
+
       # Set cookie value
       #
       # * Author: Puneet
@@ -191,6 +222,8 @@ module ManagerManagement
             current_client_id: @manager_obj.current_client_id,
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
+            manager_device_id: @manager_device.id,
+            fingerprint: @fingerprint,
             last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )

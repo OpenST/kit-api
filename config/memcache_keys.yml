@@ -31,6 +31,15 @@ keys:
       key_template: 'm_whlstd_dmns'
       expiry_in_seconds: 86400
       <<: *kit
+    devices:
+      key_template: 'm_dvc_%{u_h}'
+      expiry_in_seconds: 86400
+      <<: *kit
+    devices_by_id:
+      key_template: 'm_dvc_bid_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit
+
 
   client:
     details:

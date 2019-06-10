@@ -101,15 +101,23 @@ module Email
         if GlobalConstant::PepoCampaigns.is_double_opt_in_related_template?(@template_name)
 
           return error_with_data(
-            'e_hc_stm_4',
+            'e_hc_stm_6',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:double_opt_in_token].blank?
 
+        elsif GlobalConstant::PepoCampaigns.is_device_verification_related_template?(@template_name)
+
+          return error_with_data(
+            'e_hc_stm_4',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+          ) if @template_vars[:device_verification_token].blank?
+
         elsif GlobalConstant::PepoCampaigns.is_forgot_password_template?(@template_name)
 
           return error_with_data(
-              'e_hc_stm_5',
+              'e_hc_stm_7',
               'something_went_wrong',
               GlobalConstant::ErrorAction.default
           ) if @template_vars[:reset_password_token].blank?
@@ -117,7 +125,7 @@ module Email
         elsif GlobalConstant::PepoCampaigns.is_manager_invite_template?(@template_name)
 
           return error_with_data(
-              'e_hc_stm_6',
+              'e_hc_stm_8',
               'something_went_wrong',
               GlobalConstant::ErrorAction.default
           ) if @template_vars[:invite_token].blank?
@@ -125,7 +133,7 @@ module Email
         elsif GlobalConstant::PepoCampaigns.is_mainnet_whitelisting_template?(@template_name)
 
           return error_with_data(
-            'e_hc_stm_7',
+            'e_hc_stm_9',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:manager_email_id].blank?
@@ -133,7 +141,7 @@ module Email
         elsif GlobalConstant::PepoCampaigns.is_recovery_request_submission_template?(@template_name)
   
           return error_with_data(
-            'e_hc_stm_8',
+            'e_hc_stm_10',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:manager_email_id].blank?
