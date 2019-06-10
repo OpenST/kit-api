@@ -6,9 +6,6 @@ class ChainAddresses < DbConnection::KitSaasSubenv
 
     GlobalConstant::ChainAddresses.aux_deployer_kind => 1,
     GlobalConstant::ChainAddresses.origin_deployer_kind => 2,
-    GlobalConstant::ChainAddresses.st_contract_owner_kind => 3,
-    GlobalConstant::ChainAddresses.st_contract_admin_kind => 4,
-    GlobalConstant::ChainAddresses.st_contract_kind => 5,
     GlobalConstant::ChainAddresses.st_prime_contract_kind => 6,
     GlobalConstant::ChainAddresses.st_org_contract_kind => 7,
     GlobalConstant::ChainAddresses.st_prime_org_contract_kind => 8,

@@ -8,6 +8,7 @@ module TokenManagement
     # * Reviewed By:
     #
     # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Object] client (mandatory) - client
     # @params [Object] manager(mandatory) - manager
     #
     # @return [TokenManagement::MintProgress]
@@ -17,12 +18,14 @@ module TokenManagement
       super
       
       @client_manager = @params[:client_manager]
+      @client = @params[:client]
       @manager = @params[:manager]
       
-      @api_response_data = {}
+      @api_response_data = {
+        client: @client
+      }
       @mint_workflow = nil
     end
-
 
     # Perform
     #
