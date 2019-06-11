@@ -13,7 +13,7 @@ module GlobalConstant
         'inactive'
       end
 
-      def deleteStatus
+      def delete_status
         'delete'
       end
 
