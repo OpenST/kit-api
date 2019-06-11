@@ -14,7 +14,7 @@ module GlobalConstant
       end
 
       def delete_status
-        'delete'
+        'delete_status'
       end
 
     end
