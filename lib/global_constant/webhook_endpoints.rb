@@ -13,6 +13,10 @@ module GlobalConstant
         'inactive'
       end
 
+      def delete
+        'delete'
+      end
+
     end
 
   end
