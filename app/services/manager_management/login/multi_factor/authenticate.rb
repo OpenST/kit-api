@@ -48,6 +48,9 @@ module ManagerManagement
             r = validate
             return r unless r.success?
 
+            r = set_parts
+            return r unless r.success?
+
             r = fetch_manager
             return r unless r.success?
 
@@ -63,6 +66,9 @@ module ManagerManagement
             return r unless r.success?
 
             r = validate_otp
+            return r unless r.success?
+
+            r = validate_and_send_device_verification_mail
             return r unless r.success?
 
             r = set_double_auth_cookie_value
@@ -122,6 +128,33 @@ module ManagerManagement
 
         end
 
+        # Send email for device verification if required
+        #
+        # * Author: Santhosh
+        # * Date: 29/09/2019
+        # * Reviewed By:
+        #
+        # @return [Result::Base]
+        #
+        def validate_and_send_device_verification_mail
+
+          device = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
+
+          return unauthorized_access_response('mm_l_mf_a_7') if device.nil?
+
+          @device_authorized = (device[:status] == GlobalConstant::ManagerDevice.authorized)
+
+          BackgroundJob.enqueue(
+              DeviceRegistrationJob,
+              {
+                  manager_id: @manager_obj.id,
+                  manager_device_id: @manager_device_id
+              }
+          ) unless device[:status] == GlobalConstant::ManagerDevice.authorized
+
+          success
+        end
+
         # Set Double auth cookie
         #
         # * Author: Puneet
@@ -134,11 +167,17 @@ module ManagerManagement
         #
         def set_double_auth_cookie_value
 
+          device = CacheManagement::ManagerDeviceById.new([@manager_device_id]).fetch[@manager_device_id]
+
+          return unauthorized_access_response('mm_l_mf_a_6') if device.nil?
+
           @double_auth_cookie_value = Manager.get_cookie_value(
               manager_id: @manager_obj.id,
               current_client_id: @manager_obj.current_client_id,
               token_s: @manager_obj.mfa_token,
               browser_user_agent: @browser_user_agent,
+              fingerprint: device[:fingerprint],
+              manager_device_id: @manager_device_id,
               last_session_updated_at: @manager_obj.last_session_updated_at,
               auth_level: GlobalConstant::Cookie.mfa_auth_prefix
           )
@@ -159,6 +198,8 @@ module ManagerManagement
           unless @client[:properties].include?(GlobalConstant::Client.has_company_info_property)
             return GlobalConstant::GoTo.company_information
           end
+
+          return GlobalConstant::GoTo.verify_device unless @device_authorized
 
           #check the luse cookie value here and redirect accordingly
           if @luse_cookie_value == GlobalConstant::Cookie.mainnet_env

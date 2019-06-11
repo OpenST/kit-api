@@ -275,7 +275,6 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_token_details
       @token = @token_details.formatted_cache_data
-      puts "@token==========#{@token}"
       success
     end
 
