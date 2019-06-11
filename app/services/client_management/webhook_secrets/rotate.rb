@@ -17,6 +17,9 @@ module ClientManagement
       def initialize(params)
         super
         @client_id = @params[:client_id]
+
+        @show_keys_enable_flag = @params[:show_keys_enable_flag]
+        @email_already_sent_flag = @params[:email_already_sent_flag]
       end
 
       # Perform

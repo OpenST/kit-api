@@ -17,6 +17,9 @@ module ClientManagement
       def initialize(params)
         super
         @client_id = @params[:client_id]
+
+        @show_keys_enable_flag = @params[:show_keys_enable_flag]
+        @email_already_sent_flag = @params[:email_already_sent_flag]
       end
 
       # Perform
@@ -34,10 +37,14 @@ module ClientManagement
           r = validate_and_sanitize
           return r unless r.success?
 
-          r = fetch_webhook_secret
-          return r unless r.success?
+          if @show_keys_enable_flag == 1 && @email_already_sent_flag == 1
+            r = fetch_webhook_secret
+            return r unless r.success?
 
-          success_with_data(@webhook_secrets_data)
+            return success_with_data(@webhook_secrets_data)
+          end
+
+          return success_with_data(email_already_sent_flag: @email_already_sent_flag)
 
         end
 

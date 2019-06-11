@@ -77,6 +77,12 @@ module DeveloperManagement
           return r unless r.success?
 
           @api_response_data['api_keys'] = @api_keys
+
+          r = fetch_webhook_secret
+          return r unless r.success?
+
+          @api_response_data['webhook_secrets'] = @webhook_secrets_data
+
         end
 
         success_with_data(@api_response_data)
@@ -255,6 +261,31 @@ module DeveloperManagement
       end
 
       @api_keys = api_credentials
+
+      success
+    end
+
+    # Fetch existing api credentials
+    #
+    # * Author: Alpesh
+    # * Date: 07/06/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_webhook_secret
+
+      webhook_secrets = KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).fetch[@client_id]
+      if webhook_secrets.blank?
+        return error_with_data(
+          's_cm_ws_f_1',
+          'something_went_wrong',
+          GlobalConstant::ErrorAction.default,
+          @client_id
+        )
+      end
+
+      @webhook_secrets_data = webhook_secrets
 
       success
     end
