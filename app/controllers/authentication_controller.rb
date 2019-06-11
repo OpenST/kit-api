@@ -126,6 +126,11 @@ class AuthenticationController < ApplicationController
 
     if cookie_verify_rsp.success?
 
+      if cookie_verify_rsp.data[:manager_device][:status] != GlobalConstant::ManagerDevice.authorized
+        go_to = GlobalConstant::GoTo.verify_device
+        return error_with_go_to('wc_vmfc_1', 'unauthorized_access_response', go_to)
+      end
+
       handle_cookie_validation_success(cookie_verify_rsp, GlobalConstant::Cookie.mfa_auth_expiry.from_now)
 
       params[:is_multi_auth_cookie_valid] = true
@@ -143,13 +148,16 @@ class AuthenticationController < ApplicationController
       if password_cookie_verify_rsp.success?
         if password_cookie_verify_rsp.data[:manager][:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
           go_to = GlobalConstant::GoTo.verify_email
-          return error_with_go_to('wc_vmfc_1', 'unauthorized_access_response', go_to)
+          return error_with_go_to('wc_vmfc_2', 'unauthorized_access_response', go_to)
+        elsif password_cookie_verify_rsp.data[:manager_device][:status] != GlobalConstant::ManagerDevice.authorized
+          go_to = GlobalConstant::GoTo.verify_device
+          return error_with_go_to('wc_vmfc_3', 'unauthorized_access_response', go_to)
         elsif password_cookie_verify_rsp.data[:manager][:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
           go_to = GlobalConstant::GoTo.authenticate_mfa
-          return error_with_go_to('wc_vmfc_2', 'unauthorized_access_response', go_to)
+          return error_with_go_to('wc_vmfc_4', 'unauthorized_access_response', go_to)
         elsif password_cookie_verify_rsp.data[:client][:properties].include?(GlobalConstant::Client.has_enforced_mfa_property)
           go_to = GlobalConstant::GoTo.setup_mfa
-          return error_with_go_to('wc_vmfc_3', 'mfa_mandatory_for_client', go_to)
+          return error_with_go_to('wc_vmfc_5', 'mfa_mandatory_for_client', go_to)
         end
 
         handle_cookie_validation_success(password_cookie_verify_rsp,
@@ -163,7 +171,7 @@ class AuthenticationController < ApplicationController
       else
   
         go_to = GlobalConstant::GoTo.login
-        return error_with_go_to('wc_vmfc_4', 'unauthorized_access_response', go_to)
+        return error_with_go_to('wc_vmfc_6', 'unauthorized_access_response', go_to)
         
       end
       
@@ -216,6 +224,8 @@ class AuthenticationController < ApplicationController
     # set authenticated param in params hash
     params[:manager_id] = cookie_verify_rsp.data[:manager_id]
     params[:manager] = cookie_verify_rsp.data[:manager]
+    params[:manager_device_id] = cookie_verify_rsp.data[:manager_device_id]
+    params[:manager_device] = cookie_verify_rsp.data[:manager_device]
     params[:client_id] = cookie_verify_rsp.data[:client_id]
     params[:client] = cookie_verify_rsp.data[:client]
     params[:client_manager] = cookie_verify_rsp.data[:client_manager]

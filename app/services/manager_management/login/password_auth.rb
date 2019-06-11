@@ -13,6 +13,8 @@ module ManagerManagement
       # @params [String] email (mandatory) - the email of the user which is to be signed up
       # @params [String] password (mandatory) - user password
       # @params [String] browser_user_agent (mandatory) - browser user agent
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type (1/0)
       #
       # @return [ManagerManagement::Login::PasswordAuth]
       #
@@ -22,12 +24,15 @@ module ManagerManagement
         @email = @params[:email]
         @password = @params[:password]
         @browser_user_agent = @params[:browser_user_agent]
+        @fingerprint = @params[:fingerprint]
+        @fingerprint_type = ManagerDevice.fingerprint_types[@params[:fingerprint_type]]
 
         @client = nil
         @client_manager = nil
         @manager_obj = nil
         @authentication_salt_d = nil
-        
+        @manager_device_id = nil
+        @is_enqueue_job_needed = false
       end
 
       # Perform
@@ -63,6 +68,12 @@ module ManagerManagement
           r = update_manager
           return r unless r.success?
 
+          r = validate_device_fingerprint
+          return r unless r.success?
+
+          r = enqueue_job
+          return r unless r.success?
+
           set_cookie_value
           
         end
@@ -88,6 +99,8 @@ module ManagerManagement
 
         @email = @email.to_s.downcase.strip
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
+
+        validation_errors.push('invalid_fingerprint') unless @fingerprint.length == 32
 
         return validation_error(
           'm_l_pa_1',
@@ -136,6 +149,8 @@ module ManagerManagement
             ['email_inactive'],
             GlobalConstant::ErrorAction.default
         ) if (@manager_obj.status != GlobalConstant::Manager.active_status)
+
+        @mfa_enabled = @manager_obj.formatted_cache_data[:properties].include?(GlobalConstant::Manager.has_setup_mfa_property)
 
         success
 
@@ -268,6 +283,86 @@ module ManagerManagement
 
       end
 
+      # Validate device fingerprint
+      #
+      # * Author: Santhosh
+      # * Date: 23/06/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def validate_device_fingerprint
+
+        key = "#{@manager_obj.id}:#{@fingerprint}:#{@fingerprint_type}"
+        unique_hash = LocalCipher.get_sha_hashed_text(key)
+        future_timestamp = current_timestamp + GlobalConstant::ManagerDevice.device_expiration_time
+
+        device_db_obj = nil
+
+        device_cache_obj = CacheManagement::ManagerDeviceByUniqueHash.new([unique_hash]).fetch[unique_hash]
+        is_new_device = !device_cache_obj.present?
+
+        if is_new_device
+          # Insert into manager_devices for new device
+          device_db_obj = ManagerDevice.new(manager_id: @manager_obj.id,
+                                              fingerprint: @fingerprint,
+                                              fingerprint_type: @fingerprint_type,
+                                              unique_hash: unique_hash,
+                                              expiration_timestamp: future_timestamp,
+                                              status: GlobalConstant::ManagerDevice.un_authorized)
+
+          device_db_obj.save!
+
+          @is_enqueue_job_needed = true
+        else
+          is_device_expired = (device_cache_obj[:expiration_timestamp].to_i - current_timestamp) <= 0
+          is_device_not_authorized = device_cache_obj[:status] == GlobalConstant::ManagerDevice.un_authorized
+
+          # update the manager device using id for expiration_timestamp and status (if needed)
+          update_params = {
+            expiration_timestamp: future_timestamp
+          }
+
+          if is_device_expired
+            update_params[:status] = GlobalConstant::ManagerDevice.un_authorized
+          end
+
+          if is_device_expired || is_device_not_authorized
+            @is_enqueue_job_needed = true
+          end
+
+          ManagerDevice.where(id: device_cache_obj[:id]).update_all(update_params)
+          CacheManagement::ManagerDeviceByUniqueHash.new([device_cache_obj[:unique_hash]]).clear
+          CacheManagement::ManagerDeviceById.new([device_cache_obj[:id]]).clear
+        end
+
+        @manager_device_id = device_cache_obj[:id] || device_db_obj[:id]
+
+        success
+      end
+
+      # Enqueue job
+      #
+      # * Author: Ankit
+      # * Date: 31/05/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def enqueue_job
+        return success unless @is_enqueue_job_needed
+
+        BackgroundJob.enqueue(
+          DeviceRegistrationJob,
+          {
+            manager_id: @manager_obj.id,
+            manager_device_id: @manager_device_id
+          }
+        ) unless @mfa_enabled
+
+        success
+      end
+
       # Set cookie value
       #
       # * Author: Puneet
@@ -283,6 +378,8 @@ module ManagerManagement
             current_client_id: @manager_obj.current_client_id,
             token_s: @manager_obj.password,
             browser_user_agent: @browser_user_agent,
+            manager_device_id: @manager_device_id,
+            fingerprint: @fingerprint,
             last_session_updated_at: @manager_obj.last_session_updated_at,
             auth_level: GlobalConstant::Cookie.password_auth_prefix
         )
@@ -300,12 +397,17 @@ module ManagerManagement
       # @return [Hash]
       #
       def fetch_go_to
+
+        return GlobalConstant::GoTo.verify_device if @is_enqueue_job_needed && !@mfa_enabled
+
         FetchGoTo.new({
-                          is_password_auth_cookie_valid: true,
-                          is_multi_auth_cookie_valid: false,
-                          client: @client,
-                          manager: @manager_obj.formatted_cache_data
+                        is_password_auth_cookie_valid: true,
+                        is_multi_auth_cookie_valid: false,
+                        client: @client,
+                        manager: @manager_obj.formatted_cache_data
                       }).fetch_by_manager_state
+
+
       end
 
     end

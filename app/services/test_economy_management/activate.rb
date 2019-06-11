@@ -55,6 +55,9 @@ module TestEconomyManagement
         r = perform_activation
         return r unless r.success?
 
+        r = enqueue_job
+        return r unless r.success?
+
         prepare_response
 
       end
@@ -119,17 +122,9 @@ module TestEconomyManagement
     #
     def perform_activation
 
-      # tasks = []
-      #
-      # tasks.push(Thread.new {perform_qr_code_task()}) unless test_economy_qr_code_uploaded?
-      #
-      # tasks.push(Thread.new {perform_registeration_in_mappy_task()}) unless registered_in_mappy_server?
-      #
-      # tasks.each { |thread| thread.join } # make others wait for the one taking time
+      perform_qr_code_task unless test_economy_qr_code_uploaded?
 
-      perform_qr_code_task
-
-      perform_registeration_in_mappy_task
+      perform_registeration_in_mappy_task unless registered_in_mappy_server?
 
       @client_obj.save! if @client_obj.changed?
 
@@ -146,25 +141,37 @@ module TestEconomyManagement
 
     end
 
+    # Send invite to self
+    #
+    # * Author: Puneet
+    # * Date: 23/05/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def enqueue_job
+
+      BackgroundJob.enqueue(
+          PostTestEconomySetupJob,
+          {
+              manager_id: @manager[:id],
+              client_id: @client_id
+          }
+      )
+
+      success
+
+    end
+
     # Generate & Upload QR code
     # 
     # * Author: Puneet
     # * Date: 10/04/2019
     # * Reviewed By: Sunil
     #
-    # @return [Thread]
+    # @return [Result::Base]
     #
     def perform_qr_code_task
-
-      qr_code_data = {
-        token_id: @token_id,
-        token_name: @token[:name],
-        token_symbol: @token[:symbol],
-        url_id: url_id,
-        mappy_api_endpoint: "#{GlobalConstant::DemoMappyServer.api_endpoint}/",
-        saas_api_endpoint: GlobalConstant::SaasApi.api_endpoint_for_current_version,
-        view_api_endpoint: "#{GlobalConstant::CompanyOtherProductUrls.view_root_url}/#{GlobalConstant::Environment.url_prefix}/"
-      }
 
       qr_code_obj = RQRCode::QRCode.new(qr_code_data.to_json)
 
@@ -220,7 +227,7 @@ module TestEconomyManagement
     # * Date: 10/04/2019
     # * Reviewed By: Sunil
     #
-    # @return [Thread]
+    # @return [Result::Base]
     #
     def perform_registeration_in_mappy_task
 
@@ -289,9 +296,7 @@ module TestEconomyManagement
           manager: @manager,
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {
-            qr_code_url: qr_code_s3_url,
-            ios_app_download_link: GlobalConstant::DemoApp.ios_url,
-            android_app_download_link: GlobalConstant::DemoApp.android_url
+            qr_code_url: qr_code_s3_url
           }
         }
       )

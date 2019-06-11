@@ -9,6 +9,10 @@ module GlobalConstant
         'ost_platform_ca'
       end
 
+      def device_verification_toast_cookie_name
+        'ost_platform_dvt'
+      end
+
       def last_used_env_cookie_name
         'ost_platform_luse'
       end
@@ -35,6 +39,10 @@ module GlobalConstant
 
       def password_auth_expiry
         15.minute
+      end
+
+      def device_verification_toast_expiry
+        1.hour
       end
 
       def last_used_env_cookie_expiry
