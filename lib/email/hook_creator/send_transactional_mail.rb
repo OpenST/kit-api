@@ -75,7 +75,7 @@ module Email
       #
       def validate_template_name
         GlobalConstant::PepoCampaigns.supported_templates.include?(@template_name) ? success : error_with_data(
-          'e_hc_stm_3',
+          'e_hc_stm_1',
           'something_went_wrong',
           GlobalConstant::ErrorAction.default,
           {template_name: @template_name}
@@ -93,7 +93,7 @@ module Email
       def validate_template_vars
         
         return error_with_data(
-            'e_hc_stm_10',
+            'e_hc_stm_2',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
         ) if @template_vars[:company_web_domain].blank?
@@ -101,7 +101,7 @@ module Email
         if GlobalConstant::PepoCampaigns.is_double_opt_in_related_template?(@template_name)
 
           return error_with_data(
-            'e_hc_stm_4',
+            'e_hc_stm_3',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:double_opt_in_token].blank?
@@ -117,7 +117,7 @@ module Email
         elsif GlobalConstant::PepoCampaigns.is_forgot_password_template?(@template_name)
 
           return error_with_data(
-              'e_hc_stm_7',
+              'e_hc_stm_5',
               'something_went_wrong',
               GlobalConstant::ErrorAction.default
           ) if @template_vars[:reset_password_token].blank?
@@ -125,7 +125,7 @@ module Email
         elsif GlobalConstant::PepoCampaigns.is_manager_invite_template?(@template_name)
 
           return error_with_data(
-              'e_hc_stm_8',
+              'e_hc_stm_6',
               'something_went_wrong',
               GlobalConstant::ErrorAction.default
           ) if @template_vars[:invite_token].blank?
@@ -133,7 +133,7 @@ module Email
         elsif GlobalConstant::PepoCampaigns.is_mainnet_whitelisting_template?(@template_name)
 
           return error_with_data(
-            'e_hc_stm_9',
+            'e_hc_stm_7',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:manager_email_id].blank?
@@ -141,7 +141,7 @@ module Email
         elsif GlobalConstant::PepoCampaigns.is_recovery_request_submission_template?(@template_name)
   
           return error_with_data(
-            'e_hc_stm_10',
+            'e_hc_stm_8',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:manager_email_id].blank?
@@ -155,7 +155,7 @@ module Email
             Rails.logger.error("invalid template_vars: #{@template_vars.inspect} for template_name: #{@template_name}")
 
           return error_with_data(
-            'e_hc_stm_11',
+            'e_hc_stm_9',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:qr_code_url].blank?
