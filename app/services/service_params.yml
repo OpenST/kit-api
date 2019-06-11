@@ -225,6 +225,21 @@
     - :client_id
     - :client_manager
   :optional:
+'ClientManagement::WebhookSecrets::Fetch':
+  :mandatory:
+    - :client_id
+    - :client_manager
+  :optional:
+'ClientManagement::WebhookSecrets::Rotate':
+  :mandatory:
+    - :client_id
+    - :client_manager
+  :optional:
+'ClientManagement::WebhookSecrets::Delete':
+  :mandatory:
+    - :client_id
+    - :client_manager
+  :optional:
 'ClientManagement::IsWhitelistedForMainEnv':
   :mandatory:
     - :client_id

@@ -54,6 +54,10 @@ Rails.application.routes.draw do
     match 'api-keys' => :api_keys_get, via: :GET, constraints: lambda { |request| request.xhr? }
     match 'api-keys' => :api_keys_rotate, via: :POST, constraints: lambda { |request| request.xhr? }
     match 'api-keys/delete' => :api_keys_deactivate, via: :POST, constraints: lambda { |request| request.xhr? }
+
+    match 'webhook-secrets' => :webhook_secret_get, via: :GET, constraints: lambda { |request| request.xhr? }
+    match 'webhook-secrets' => :webhook_secret_rotate, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'delete-webhook-secrets' => :delete_webhook_secret, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard", controller: 'dashboard', :format => false do

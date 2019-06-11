@@ -44,4 +44,37 @@ class DeveloperController < AuthenticationController
     return render_api_response(service_response)
   end
 
+  # Deactivate key
+  #
+  # * Author: Alpesh
+  # * Date: 07/06/2019
+  # * Reviewed By:
+  #
+  def webhook_secret_get
+    service_response = ClientManagement::WebhookSecrets::Fetch.new(params).perform
+    return render_api_response(service_response)
+  end
+
+  # Deactivate key
+  #
+  # * Author: Alpesh
+  # * Date: 10/06/2019
+  # * Reviewed By:
+  #
+  def webhook_secret_rotate
+    service_response = ClientManagement::WebhookSecrets::Rotate.new(params).perform
+    return render_api_response(service_response)
+  end
+
+  # Deactivate key
+  #
+  # * Author: Alpesh
+  # * Date: 10/06/2019
+  # * Reviewed By:
+  #
+  def delete_webhook_secret
+    service_response = ClientManagement::WebhookSecrets::Delete.new(params).perform
+    return render_api_response(service_response)
+  end
+
 end

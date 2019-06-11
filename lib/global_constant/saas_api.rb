@@ -11,8 +11,16 @@ module GlobalConstant
       GlobalConstant::Base.saas_api[:secret_key]
     end
 
-    def self. fetch_client_stats
+    def self.fetch_client_stats
       "#{GlobalConstant::Environment.url_prefix}/internal/client/fetch-stats"
+    end
+
+    def self.rotate_webhook_secret
+      "#{GlobalConstant::Environment.url_prefix}/internal/webhook/rotate-secret"
+    end
+
+    def self.delete_webhook_grace_secret
+      "#{GlobalConstant::Environment.url_prefix}/internal/webhook/delete-grace-secret"
     end
 
     def self.associate_address

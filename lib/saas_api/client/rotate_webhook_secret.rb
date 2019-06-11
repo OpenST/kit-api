@@ -2,15 +2,15 @@ module SaasApi
 
   module Client
 
-    class FetchStats < SaasApi::Base
+    class RotateWebhookSecret < SaasApi::Base
 
       # Initialize
       #
-      # * Author: Aman
-      # * Date: 17/02/2018
+      # * Author: Alpesh
+      # * Date: 10/06/2018
       # * Reviewed By:
       #
-      # @return [SaasApi::Client::FetchDetails]
+      # @return [SaasApi::Client::RotateWebhookSecret]
       #
       def initialize
         super
@@ -18,8 +18,8 @@ module SaasApi
 
       # Perform
       #
-      # * Author: Aman
-      # * Date: 17/02/2018
+      # * Author: Alpesh
+      # * Date: 10/06/2018
       # * Reviewed By:
       #
       # @return [Result::Base]
@@ -27,7 +27,7 @@ module SaasApi
       def perform(params = {})
         send_request_of_type(
             'get',
-            GlobalConstant::SaasApi.fetch_client_stats,
+            GlobalConstant::SaasApi.rotate_webhook_secret,
             params
         )
       end

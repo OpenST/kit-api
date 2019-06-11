@@ -45,6 +45,10 @@ keys:
       key_template: 'c_ac_%{id}'
       expiry_in_seconds: 86400
       <<: *kit_saas_subenv
+    webhook_secret:
+      key_template: 'c_ws_%{id}'
+      expiry_in_seconds: 86402
+      <<: *kit_saas_subenv
 
   client_manager:
     details:
