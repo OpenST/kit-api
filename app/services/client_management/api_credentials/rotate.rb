@@ -13,6 +13,8 @@ module ClientManagement
       # @params [Integer] client_id (mandatory) -  client id
       # @params [Integer] buffer_time (optional) - in minutes time till which old keys could still be used
       # @params [Hash] client_manager (mandatory) - logged in client manager object
+      # @params [Hash] show_keys_enable_flag (mandatory) -
+      # @params [Hash] email_already_sent_flag (mandatory) -
       #
       # @return [ClientManagement::ApiCredentials::Rotate]
       #
@@ -21,6 +23,9 @@ module ClientManagement
         @client_id = @params[:client_id]
         @client_manager = @params[:client_manager]
         @buffer_time = @params[:buffer_time]
+
+        @show_keys_enable_flag = @params[:show_keys_enable_flag]
+        @email_already_sent_flag = @params[:email_already_sent_flag]
       end
 
       # Perform
@@ -47,7 +52,15 @@ module ClientManagement
           r = enqueue_job_to_update_in_mappy_server
           return r unless r.success?
 
-          ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id).perform
+          r = fetch_api_credentials_data
+          return r unless r.success?
+
+          success_with_data(
+            {
+              api_keys: @api_credentials_data,
+              email_already_sent_flag: @email_already_sent_flag
+
+            })
 
         end
 
@@ -170,12 +183,36 @@ module ClientManagement
         BackgroundJob.enqueue(
             SyncApiKeysInDemoMappyJob,
             {
-              client_id: @client_id
+              client_id: @client_id,
+              show_keys_enable_flag: @show_keys_enable_flag,
+              email_already_sent_flag: @email_already_sent_flag
             }
         )
 
         success
 
+      end
+
+      # Fetch api credentials data
+      #
+      # * Author: Dhananjay
+      # * Date: 08/06/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_api_credentials_data
+
+        #@api_credentials_data = ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id).perform
+
+        r = ClientManagement::ApiCredentials::Fetch.new(client_id: @client_id,
+                                                        show_keys_enable_flag: @show_keys_enable_flag,
+                                                        email_already_sent_flag: @email_already_sent_flag).perform
+        return r unless r.success?
+
+        @api_credentials_data = r.data[:api_keys]
+
+        success
       end
 
     end

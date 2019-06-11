@@ -219,17 +219,23 @@
 'ClientManagement::ApiCredentials::Fetch':
   :mandatory:
     - :client_id
+    - :show_keys_enable_flag
+    - :email_already_sent_flag
   :optional:
 'ClientManagement::ApiCredentials::Rotate':
   :mandatory:
     - :client_id
     - :client_manager
+    - :show_keys_enable_flag
+    - :email_already_sent_flag
   :optional:
     - :buffer_time
 'ClientManagement::ApiCredentials::Deactivate':
   :mandatory:
     - :client_id
     - :client_manager
+    - :show_keys_enable_flag
+    - :email_already_sent_flag
   :optional:
 'ClientManagement::WebhookSecrets::Fetch':
   :mandatory:
@@ -304,6 +310,29 @@
     - :client_id
     - :client_manager
     - :manager
+  :optional:
+    - :show_keys_enable_flag
+    - :email_already_sent_flag
+'DeveloperManagement::VerifySecureDataAccess':
+  :mandatory:
+    - :manager_id
+    - :action_name
+  :optional:
+    - :sda_cookie_value
+'DeveloperManagement::SendSecureDataAccessLink':
+  :mandatory:
+    - :manager_id
+  :optional:
+'DeveloperManagement::ResendSecureDataAccessLink':
+  :mandatory:
+    - :manager_id
+  :optional:
+'DeveloperManagement::SecureDataAccessVerification':
+  :mandatory:
+    - :manager_id
+    - :is_logged_in_manager
+  :optional:
+    - :a_t
 'DashboardManagement::Get':
   :mandatory:
     - :client_id

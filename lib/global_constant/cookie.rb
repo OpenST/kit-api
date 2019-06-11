@@ -16,6 +16,10 @@ module GlobalConstant
       def last_used_env_cookie_name
         'ost_platform_luse'
       end
+      
+      def secure_data_access_cookie_name
+        'ost_platform_sda'
+      end
 
       def mainnet_env
         'mainnet'
@@ -47,6 +51,10 @@ module GlobalConstant
 
       def last_used_env_cookie_expiry
         1.year
+      end
+
+      def secure_data_access_cookie_expiry
+        15.minutes
       end
 
       def utm_params_cookie_name

@@ -101,7 +101,7 @@ module Email
         if GlobalConstant::PepoCampaigns.is_double_opt_in_related_template?(@template_name)
 
           return error_with_data(
-            'e_hc_stm_6',
+            'e_hc_stm_4',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:double_opt_in_token].blank?
@@ -154,11 +154,14 @@ module Email
 
             Rails.logger.error("invalid template_vars: #{@template_vars.inspect} for template_name: #{@template_name}")
 
-            return error_with_data(
-                'e_hc_stm_9',
-                'something_went_wrong',
-                GlobalConstant::ErrorAction.default
-            )
+          return error_with_data(
+            'e_hc_stm_11',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+          ) if @template_vars[:qr_code_url].blank?
+          #TODO: Open this up when we have these links set in ENV vars
+          #   || @template_vars[:ios_app_download_link].blank? ||
+          #   @template_vars[:android_app_download_link].blank?
 
           end
 

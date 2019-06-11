@@ -40,6 +40,10 @@ module GlobalConstant
         'device_verification'
       end
 
+      def secure_data_access_kind
+        'secure_data_access'
+      end
+
       ### Kind End ###
 
       ########## expiry intervals ###########
@@ -58,6 +62,10 @@ module GlobalConstant
 
       def device_verification_expiry_interval
         30.minutes
+      end
+
+      def secure_data_access_expiry_interval
+        15.minutes
       end
 
       ########## Kinds ###########

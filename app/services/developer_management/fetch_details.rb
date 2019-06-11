@@ -11,6 +11,8 @@ module DeveloperManagement
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Hash] client_manager (mandatory) - Client Manager
     # @params [Object] manager(mandatory) - manager
+    # @params [Integer] show_keys_enable_flag(optional) - show keys enable flag
+    # @params [Integer] email_already_sent_flag(optional) - email already sent flag
     #
     # @return [DeveloperManagement::FetchDetails]
     #
@@ -21,6 +23,9 @@ module DeveloperManagement
       @client_id = @params[:client_id]
       @client_manager = @params[:client_manager]
       @manager = @params[:manager]
+
+      @show_keys_enable_flag = @params[:show_keys_enable_flag]
+      @email_already_sent_flag = @params[:email_already_sent_flag]
 
       @token = nil
       @price_points = nil
@@ -62,8 +67,17 @@ module DeveloperManagement
           client_manager: @client_manager,
           manager: @manager,
           sub_env_payloads: @sub_env_payload_data,
-          developer_page_addresses: @addresses
+          developer_page_addresses: @addresses,
+          email_already_sent_flag: @email_already_sent_flag
         }
+
+        #if secure data access cookie is valid, sent api_keys in response
+        if @show_keys_enable_flag == 1
+          r = fetch_api_credentials
+          return r unless r.success?
+
+          @api_response_data['api_keys'] = @api_keys
+        end
 
         success_with_data(@api_response_data)
 
@@ -216,6 +230,31 @@ module DeveloperManagement
       user_data = saas_response.data
 
       @addresses['token_holder_address'] = user_data['user']['tokenHolderAddress'] if user_data['user']
+
+      success
+    end
+
+    # Fetch existing api credentials
+    #
+    # * Author: Dhananjay
+    # * Date: 03/06/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch_api_credentials
+
+      api_credentials = KitSaasSharedCacheManagement::ApiCredentials.new([@client_id]).fetch[@client_id]
+      if api_credentials.length == 0
+        return error_with_data(
+          'a_s_dm_fd_2',
+          'something_went_wrong',
+          GlobalConstant::ErrorAction.default,
+          @client_id
+        )
+      end
+
+      @api_keys = api_credentials
 
       success
     end

@@ -157,6 +157,11 @@ module GlobalConstant
         'platform_mainnet_access_request'
       end
 
+      # Secure data access - sent when secure_data_access is required for developer's page
+      def platform_secure_data_access_template
+        'platform_secure_data_access'
+      end
+
       # Platform whitelisting done  - sent when platform whitelisting is done
       def platform_whitelisting_done_template
         'platform_whitelist_done'
@@ -212,6 +217,7 @@ module GlobalConstant
           platform_invite_manager_template,
           platform_device_verification_template,
           platform_mainnet_access_request_template,
+          platform_secure_data_access_template,
           platform_test_economy_invite_template,
           recovery_request_submission_template,
           platform_whitelisting_done_template,

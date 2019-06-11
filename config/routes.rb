@@ -21,6 +21,11 @@ Rails.application.routes.draw do
     match 'request-link' => :send_verify_device_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
+  scope "api/#{GlobalConstant::Environment.url_prefix}/verify-sda", controller: 'access/verify_sda', :format => false do
+    match '' => :verify_secure_data_access, via: :GET
+    match 'request-link' => :send_secure_data_access_link, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
   scope 'api/mfa', controller: 'access/mfa', :format => false do
     match '' => :mfa, via: :GET, as: :mfa
     match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
