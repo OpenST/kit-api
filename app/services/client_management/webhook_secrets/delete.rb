@@ -37,8 +37,17 @@ module ClientManagement
           r = validate_and_sanitize
           return r unless r.success?
 
-          r = saas_call_to_delete_secret
-          return r unless r.success?
+          if @show_keys_enable_flag == 1 && @email_already_sent_flag == 1
+            r = saas_call_to_delete_secret
+            return r unless r.success?
+          else
+            return error_with_data(
+              's_cm_ws_d_1',
+              'unauthorized_to_perform_action',
+              GlobalConstant::ErrorAction.default,
+              @client_id
+            )
+          end
 
           success_with_data({})
 

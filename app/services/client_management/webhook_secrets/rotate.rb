@@ -37,11 +37,24 @@ module ClientManagement
           r = validate_and_sanitize
           return r unless r.success?
 
-          r = saas_call_to_rotate_secret
-          return r unless r.success?
+          if @show_keys_enable_flag == 1 && @email_already_sent_flag == 1
 
-          r = fetch_webhook_secret
-          return r unless r.success?
+            r = saas_call_to_rotate_secret
+            return r unless r.success?
+
+            r = fetch_webhook_secret
+            return r unless r.success?
+
+          else
+
+            return error_with_data(
+              's_cm_ws_r_2',
+              'unauthorized_access_response',
+              GlobalConstant::ErrorAction.default,
+              @client_id
+            )
+
+          end
 
           success_with_data(@webhook_secrets_data)
 
@@ -101,7 +114,7 @@ module ClientManagement
         webhook_secrets = KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).fetch[@client_id]
         if webhook_secrets.blank?
           return error_with_data(
-                   's_cm_ws_f_1',
+                   's_cm_ws_r_1',
                    'something_went_wrong',
                    GlobalConstant::ErrorAction.default,
                    @client_id
