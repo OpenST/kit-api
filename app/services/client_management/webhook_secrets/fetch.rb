@@ -78,15 +78,6 @@ module ClientManagement
       def fetch_webhook_secret
 
         webhook_secrets = KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).fetch[@client_id]
-        if webhook_secrets.blank?
-          return error_with_data(
-                   's_cm_ws_f_1',
-                   'something_went_wrong',
-                   GlobalConstant::ErrorAction.default,
-                   @client_id
-          )
-        end
-
         @webhook_secrets_data = webhook_secrets
 
         success

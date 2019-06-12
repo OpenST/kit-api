@@ -20,23 +20,25 @@ module KitSaasSharedCacheManagement
 
         decrypted_api_credentials = {}
 
-        r = encryptor_obj.decrypt(secrets[:webhook_secret])
-
-        if r.success?
-          decrypted_api_credentials[:webhook_secret] = r.data[:plaintext]
-        else
-          fail OstCustomError.new(r)
-        end
-
-        if secrets[:grace_expiry_at].present? && secrets[:webhook_grace_secret].present?
-          decrypted_api_credentials[:grace_expiry_at] = secrets[:grace_expiry_at]
-
-          r = encryptor_obj.decrypt(secrets[:webhook_grace_secret])
+        if(secrets.present?)
+          r = encryptor_obj.decrypt(secrets[:webhook_secret])
 
           if r.success?
-            decrypted_api_credentials[:webhook_grace_secret] = r.data[:plaintext]
+            decrypted_api_credentials[:webhook_secret] = r.data[:plaintext]
           else
             fail OstCustomError.new(r)
+          end
+
+          if secrets[:grace_expiry_at].present? && secrets[:webhook_grace_secret].present?
+            decrypted_api_credentials[:grace_expiry_at] = secrets[:grace_expiry_at]
+
+            r = encryptor_obj.decrypt(secrets[:webhook_grace_secret])
+
+            if r.success?
+              decrypted_api_credentials[:webhook_grace_secret] = r.data[:plaintext]
+            else
+              fail OstCustomError.new(r)
+            end
           end
         end
 
@@ -65,7 +67,7 @@ module KitSaasSharedCacheManagement
       cache_miss_ids.each do |client_id|
 
         get_secrets_rsp = ::WebhookSecrets::FetchDecrypted.new(client_id: client_id).perform
-        return get_secrets_rsp unless get_secrets_rsp.success?
+        next unless get_secrets_rsp.success?
 
         webhook_secrets = get_secrets_rsp.data
 
