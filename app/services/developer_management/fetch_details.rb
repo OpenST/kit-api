@@ -71,15 +71,17 @@ module DeveloperManagement
           email_already_sent_flag: @email_already_sent_flag
         }
 
+        r = fetch_webhook_secret
+        return r unless r.success?
+
+        @api_response_data['webhook_enabled_flag'] = @webhook_secrets_data.present?? 1 : 0
+
         #if secure data access cookie is valid, sent api_keys in response
         if @show_keys_enable_flag == 1
           r = fetch_api_credentials
           return r unless r.success?
 
           @api_response_data['api_keys'] = @api_keys
-
-          r = fetch_webhook_secret
-          return r unless r.success?
 
           @api_response_data['webhook_secrets'] = @webhook_secrets_data
 
