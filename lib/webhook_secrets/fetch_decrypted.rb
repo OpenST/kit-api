@@ -38,7 +38,11 @@ module WebhookSecrets
 
       @webhook_endpoint = WebhookEndpoint.where('client_id = ?', @client_id).first
 
-      return success_with_data(@response_data) if @webhook_endpoint.blank?
+      return error_with_data(
+        'l_ws_fd_1',
+        'something_went_wrong',
+        GlobalConstant::ErrorAction.default
+      ) if @webhook_endpoint.blank?
 
       r = decrypt_webhook_secrets
       return r unless r.success?
