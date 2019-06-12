@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     match 'request-link' => :send_verify_device_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
-  scope "api/#{GlobalConstant::Environment.url_prefix}/verify-sda", controller: 'access/verify_sda', :format => false do
+  scope "#{GlobalConstant::Environment.url_prefix}/api/verify-sda", controller: 'access/verify_sda', :format => false do
     match '' => :verify_secure_data_access, via: :GET
     match 'request-link' => :send_secure_data_access_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
