@@ -19,8 +19,8 @@ class DeveloperController < AuthenticationController
   # * Date: 04/02/2019
   # * Reviewed By: Sunil
   #
-  def api_keys_get
-    service_response = ClientManagement::ApiCredentials::Fetch.new(params).perform
+  def show_keys_get
+    service_response = DeveloperManagement::ShowKeysEmail.new(params).perform
     return render_api_response(service_response)
   end
 
@@ -43,17 +43,6 @@ class DeveloperController < AuthenticationController
   #
   def api_keys_deactivate
     service_response = ClientManagement::ApiCredentials::Deactivate.new(params).perform
-    return render_api_response(service_response)
-  end
-
-  # Deactivate key
-  #
-  # * Author: Alpesh
-  # * Date: 07/06/2019
-  # * Reviewed By:
-  #
-  def webhook_secret_get
-    service_response = ClientManagement::WebhookSecrets::Fetch.new(params).perform
     return render_api_response(service_response)
   end
 

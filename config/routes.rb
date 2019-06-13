@@ -61,7 +61,8 @@ Rails.application.routes.draw do
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/developer", controller: 'developer', :format => false do
     match '' => :developer_get, via: :GET
-    match 'api-keys' => :api_keys_get, via: :GET, constraints: lambda { |request| request.xhr? }
+    match 'show-keys' => :show_keys_get, via: :GET, constraints: lambda { |request| request.xhr? }
+
     match 'api-keys' => :api_keys_rotate, via: :POST, constraints: lambda { |request| request.xhr? }
     match 'api-keys/delete' => :api_keys_deactivate, via: :POST, constraints: lambda { |request| request.xhr? }
 

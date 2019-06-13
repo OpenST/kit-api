@@ -237,13 +237,6 @@
     - :show_keys_enable_flag
     - :email_already_sent_flag
   :optional:
-'ClientManagement::WebhookSecrets::Fetch':
-  :mandatory:
-    - :client_id
-    - :client_manager
-    - :show_keys_enable_flag
-    - :email_already_sent_flag
-  :optional:
 'ClientManagement::WebhookSecrets::Rotate':
   :mandatory:
     - :client_id
@@ -318,6 +311,10 @@
     - :manager
   :optional:
     - :show_keys_enable_flag
+    - :email_already_sent_flag
+'DeveloperManagement::ShowKeysEmail':
+  :mandatory:
+  :optional:
     - :email_already_sent_flag
 'DeveloperManagement::VerifySecureDataAccess':
   :mandatory:
