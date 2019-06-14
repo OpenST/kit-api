@@ -96,8 +96,6 @@ module ClientManagement
         saas_response = SaasApi::Client::RotateWebhookSecret.new.perform(params_for_saas_api)
         return saas_response unless saas_response.success?
 
-        KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).clear
-
         success
       end
 
