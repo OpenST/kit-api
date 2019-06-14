@@ -149,7 +149,6 @@ module DeveloperManagement
     #
     def fetch_manager_validation_record
       @manager_validation_hash_obj = ManagerValidationHash.where(id: @manager_validation_hash_id,
-                                                                 manager_id: @manager_id,
                                                                  status: GlobalConstant::ManagerValidationHash.active_status).first
        success
     end

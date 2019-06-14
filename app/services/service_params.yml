@@ -332,9 +332,9 @@
   :optional:
 'DeveloperManagement::SecureDataAccessVerification':
   :mandatory:
-    - :manager_id
     - :is_logged_in_manager
   :optional:
+    - :manager_id
     - :a_t
 'DashboardManagement::Get':
   :mandatory:
