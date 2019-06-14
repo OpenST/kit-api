@@ -36,7 +36,10 @@ module WebhookSecrets
       r = validate_and_sanitize
       return r unless r.success?
 
-      @webhook_endpoint = WebhookEndpoint.where('client_id = ?', @client_id).first
+      @webhook_endpoint = WebhookEndpoint.where(
+        'client_id = ? AND status != ?',
+        @client_id, WebhookEndpoint.statuses[GlobalConstant::WebhookEndpoints.delete_status]
+      ).order("id DESC").first
 
       return error_with_data(
         'l_ws_fd_1',
