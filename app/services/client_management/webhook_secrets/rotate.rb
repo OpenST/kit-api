@@ -11,12 +11,14 @@ module ClientManagement
       # * Reviewed By:
       #
       # @params [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
+      # @params [Hash] client_manager (mandatory) - logged in client manager object
       #
       # @return [ClientManagement::WebhookSecrets::Rotate]
       #
       def initialize(params)
         super
         @client_id = @params[:client_id]
+        @client_manager = @params[:client_manager]
 
         @show_keys_enable_flag = @params[:show_keys_enable_flag]
         @email_already_sent_flag = @params[:email_already_sent_flag]
@@ -77,6 +79,32 @@ module ClientManagement
 
         success
 
+      end
+
+      # validate
+      #
+      # * Author: alpesh
+      # * Date: 18/06/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def validate
+        r = super
+        return r unless r.success?
+
+        r = ManagerManagement::Team::CheckSuperAdminRole.new(
+          {client_manager: @client_manager}).perform
+
+        unless r.success?
+          return error_with_data(
+            's_cm_ws_r_3',
+            'unauthorized_to_perform_action',
+            GlobalConstant::ErrorAction.default
+          )
+        end
+
+        success
       end
 
       # Call saas to rotate client webhook secret.
