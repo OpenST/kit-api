@@ -7,10 +7,6 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
     GlobalConstant::ConversionRates.usdc_currency => 2
   }
 
-  enum quote_currency: {
-    GlobalConstant::ConversionRates.usd_currency => 1
-  }
-
   enum status: {
     GlobalConstant::ConversionRates.active_status => 1,
     GlobalConstant::ConversionRates.inactive_status => 2,
@@ -70,10 +66,12 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
 
     stake_currency_ids_array = stake_currency_id_to_symbol_map.keys
 
+    quote_currency_id = QuoteCurrency.details_by_symbol(GlobalConstant::QuoteCurrency.USD)[:id]
+
     records = ::CurrencyConversionRate.where(
       status: GlobalConstant::ConversionRates.active_status,
       stake_currency_id: stake_currency_ids_array,
-      quote_currency: GlobalConstant::ConversionRates.usd_currency
+      quote_currency_id: quote_currency_id
     ).order('timestamp desc').limit(10)
 
     if chain_id.present?
@@ -87,7 +85,8 @@ class CurrencyConversionRate < DbConnection::KitSaasSubenv
     records.each do |record|
       next if data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]].present?
       data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]] = {}
-      data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]][record.quote_currency] = record.conversion_rate.to_s
+      quote_currency_symbol = QuoteCurrency.details_by_id(record.quote_currency_id)[:symbol]
+      data_to_return[stake_currency_id_to_symbol_map[record.stake_currency_id]][quote_currency_symbol] = record.conversion_rate.to_s
     end
     data_to_return
   end
