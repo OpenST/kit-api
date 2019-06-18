@@ -85,8 +85,6 @@ class DeveloperController < AuthenticationController
     }
     cookie_verification_response = DeveloperManagement::VerifySecureDataAccess.new(sda_cookie_verification_params).perform
 
-    puts "authenticate_developer_page_access::::service_response=====#{cookie_verification_response.to_json}"
-
     if cookie_verification_response.success?
       # NOTE: delete cookie value from data
       cookie_value = cookie_verification_response.data.delete(:cookie_value)
@@ -98,7 +96,6 @@ class DeveloperController < AuthenticationController
 
       params[:show_keys_enable_flag] = cookie_verification_response.data[:show_keys_enable_flag]
       params[:email_already_sent_flag] = cookie_verification_response.data[:email_already_sent_flag]
-      puts "authenticate_developer_page_access:::PARAMS=========#{params.to_json}"
     else
       handle_sda_cookie_validation_failure(cookie_verification_response)
     end
