@@ -16,6 +16,16 @@ Rails.application.routes.draw do
     match 'request-link' => :send_verify_email_link, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
+  scope 'api/verify-device', controller: 'access/verify_device', :format => false do
+    match '' => :verify_device, via: :GET
+    match 'request-link' => :send_verify_device_link, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
+  scope "#{GlobalConstant::Environment.url_prefix}/api/verify-sda", controller: 'access/verify_sda', :format => false do
+    match '' => :verify_secure_data_access, via: :GET
+    match 'request-link' => :send_secure_data_access_link, via: :POST, constraints: lambda { |request| request.xhr? }
+  end
+
   scope 'api/mfa', controller: 'access/mfa', :format => false do
     match '' => :mfa, via: :GET, as: :mfa
     match '' => :multi_factor_auth, via: :POST, as: :multi_factor_auth, constraints: lambda { |request| request.xhr? }
@@ -51,9 +61,14 @@ Rails.application.routes.draw do
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/developer", controller: 'developer', :format => false do
     match '' => :developer_get, via: :GET
-    match 'api-keys' => :api_keys_get, via: :GET, constraints: lambda { |request| request.xhr? }
+    match 'show-keys' => :show_keys_get, via: :GET, constraints: lambda { |request| request.xhr? }
+
     match 'api-keys' => :api_keys_rotate, via: :POST, constraints: lambda { |request| request.xhr? }
     match 'api-keys/delete' => :api_keys_deactivate, via: :POST, constraints: lambda { |request| request.xhr? }
+
+    match 'webhook-secrets' => :webhook_secret_get, via: :GET, constraints: lambda { |request| request.xhr? }
+    match 'webhook-secrets' => :webhook_secret_rotate, via: :POST, constraints: lambda { |request| request.xhr? }
+    match 'delete-webhook-secrets' => :delete_webhook_secret, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard", controller: 'dashboard', :format => false do

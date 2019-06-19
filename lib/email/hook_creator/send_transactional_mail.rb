@@ -75,7 +75,7 @@ module Email
       #
       def validate_template_name
         GlobalConstant::PepoCampaigns.supported_templates.include?(@template_name) ? success : error_with_data(
-          'e_hc_stm_3',
+          'e_hc_stm_1',
           'something_went_wrong',
           GlobalConstant::ErrorAction.default,
           {template_name: @template_name}
@@ -93,7 +93,7 @@ module Email
       def validate_template_vars
         
         return error_with_data(
-            'e_hc_stm_6',
+            'e_hc_stm_2',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
         ) if @template_vars[:company_web_domain].blank?
@@ -101,10 +101,18 @@ module Email
         if GlobalConstant::PepoCampaigns.is_double_opt_in_related_template?(@template_name)
 
           return error_with_data(
-            'e_hc_stm_4',
+            'e_hc_stm_3',
             'something_went_wrong',
             GlobalConstant::ErrorAction.default
           ) if @template_vars[:double_opt_in_token].blank?
+
+        elsif GlobalConstant::PepoCampaigns.is_device_verification_related_template?(@template_name)
+
+          return error_with_data(
+            'e_hc_stm_4',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+          ) if @template_vars[:device_verification_token].blank?
 
         elsif GlobalConstant::PepoCampaigns.is_forgot_password_template?(@template_name)
 
@@ -140,6 +148,12 @@ module Email
 
         elsif GlobalConstant::PepoCampaigns.is_test_economy_invite_template?(@template_name)
 
+          if @template_vars[:qr_code_url].blank? || @template_vars[:ios_app_download_link].blank? ||
+            @template_vars[:android_app_download_link].blank? || @template_vars[:deep_link_demo_app_launch_url].blank? ||
+            @template_vars[:token_name].blank? || @template_vars[:inviter_name].blank?
+
+            Rails.logger.error("invalid template_vars: #{@template_vars.inspect} for template_name: #{@template_name}")
+
           return error_with_data(
             'e_hc_stm_9',
             'something_went_wrong',
@@ -148,6 +162,8 @@ module Email
           #TODO: Open this up when we have these links set in ENV vars
           #   || @template_vars[:ios_app_download_link].blank? ||
           #   @template_vars[:android_app_download_link].blank?
+
+          end
 
         end
 

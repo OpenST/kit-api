@@ -56,36 +56,46 @@ class QuoteCurrency < DbConnection::KitSaasSubenv
     end
   end
 
-  # Symbol to details cache
+  # Id to details cache
   #
   # * Author: Santhosh
-  # * Date: 05/06/2019
+  # * Date: 12/06/2019
   # * Reviewed By:
   #
   # @return [Hash]
   #
-  def self.symbols_to_details_cache
-    @symbols_to_details_cache ||= begin
-      data = {}
-      QuoteCurrency.fetch_from_db.each do |row|
-        data[row[:symbol]] = row
-      end
-      data
-    end
+  def self.details_by_id(id)
+    @id_to_details_cache ||= {}
+
+    return @id_to_details_cache[id] unless @id_to_details_cache[id].nil?
+
+    row = QuoteCurrency.where(id: id).first
+    formatted_row = row.formatted_cache_data
+
+    @id_to_details_cache[id] = formatted_row unless (formatted_row[:status] != GlobalConstant::QuoteCurrency.active_status)
+
+    return formatted_row
   end
 
-  # Symbol to details cache ONLY of active quote currencies
+  # Details by symbol
   #
   # * Author: Santhosh
-  # * Date: 05/06/2019
+  # * Date: 12/06/2019
   # * Reviewed By:
   #
   # @return [Hash]
   #
-  def self.active_quote_currencies_by_symbol
-    @active_quote_currencies_by_symbol ||= begin
-      QuoteCurrency.symbols_to_details_cache.select { |_,data| data[:status] == GlobalConstant::QuoteCurrency.active_status}
-    end
+  def self.details_by_symbol(symbol)
+    @symbol_to_details_cache ||= {}
+
+    return @symbol_to_details_cache[symbol] unless @symbol_to_details_cache[symbol].nil?
+
+    row = QuoteCurrency.where(symbol: symbol).first
+    formatted_row = row.formatted_cache_data
+
+    @symbol_to_details_cache[symbol] = formatted_row unless (formatted_row[:status] != GlobalConstant::QuoteCurrency.active_status)
+
+    return formatted_row
   end
 
 end

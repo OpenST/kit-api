@@ -497,3 +497,28 @@ token_demo_reinvite_too_early:
   code: 'invalid'
   parameter: 'email_addresses'
   message: "Emails can be re-invited after 24 hours."
+
+invalid_fingerprint:
+  parameter: 'fingerprint'
+  code: 'invalid'
+  message: 'The browser fingerprint is invalid.'
+
+invalid_d_t:
+  parameter: 'd_t'
+  code: 'invalid'
+  message: 'The device verification link has expired.'
+
+missing_fingerprint:
+  parameter: 'fingerprint'
+  code: 'missing'
+  message: 'The browser fingerprint is missing.'
+
+missing_fingerprint_type:
+  parameter: 'fingerprint type'
+  code: 'missing'
+  message: 'The browser fingerprint type is missing.'
+
+invalid_a_t:
+  parameter: 'a_t'
+  code: 'invalid'
+  message: 'The secure data access verification link has expired.'

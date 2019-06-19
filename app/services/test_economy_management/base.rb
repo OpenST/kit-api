@@ -97,10 +97,10 @@ module TestEconomyManagement
       end
 
       if manager_ids_to_fetch.any?
-        super_admin_managers.merge!(CacheManagement::Manager.new(manager_ids_to_fetch))
+        super_admin_managers.merge!(CacheManagement::Manager.new(manager_ids_to_fetch).fetch)
       end
 
-      super_admin_managers.each do |manager|
+      super_admin_managers.each do |_, manager|
         return false unless Util::CommonValidator.is_valid_ost_email?(manager[:email])
       end
 
@@ -220,7 +220,7 @@ module TestEconomyManagement
     # * Date: 10/04/2019
     # * Reviewed By: Sunil
     #
-    # @return [Result::Base]
+    # @return [String]
     #
     def url_id
       @url_id ||= begin
@@ -228,6 +228,26 @@ module TestEconomyManagement
         OpenSSL::HMAC.hexdigest("SHA256",
                                 GlobalConstant::Base.activate_test_economy_auth_token, string_to_sign)
       end
+    end
+
+    # QR Code Data
+    #
+    # * Author: Puneet
+    # * Date: 23/05/2019
+    # * Reviewed By:
+    #
+    # @return [Hash]
+    #
+    def qr_code_data
+      {
+          token_id: @token_id,
+          token_name: @token[:name],
+          token_symbol: @token[:symbol],
+          url_id: url_id,
+          mappy_api_endpoint: "#{GlobalConstant::DemoMappyServer.api_endpoint}/",
+          saas_api_endpoint: GlobalConstant::SaasApi.api_endpoint_for_current_version,
+          view_api_endpoint: "#{GlobalConstant::CompanyOtherProductUrls.view_root_url}/#{GlobalConstant::Environment.url_prefix}/"
+      }
     end
 
     # Generate QR Code file S3 Path

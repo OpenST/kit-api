@@ -14,6 +14,8 @@ module ManagerManagement
       # @params [String] browser_user_agent (mandatory) - browser user agent
       # @params [String] email (mandatory) - the email of the user which is to be signed up
       # @params [String] agreed_terms_of_service (mandatory) - if terms of service was accepted
+      # @params [String] fingerprint (mandatory) - device fingerprint
+      # @params [String] fingerprint_type (mandatory) - device fingerprint type (1/0)
       # @params [Hash] utm_params (optional) - UTM params if client joins using marketing link.
       #
       # @return [ManagerManagement::SignUp::WithoutInvite]
@@ -60,6 +62,9 @@ module ManagerManagement
           return r unless r.success?
 
           r = create_client_manager
+          return r unless r.success?
+
+          r = create_authorized_device
           return r unless r.success?
 
           r = set_cookie_value
@@ -109,6 +114,8 @@ module ManagerManagement
 
         @last_name = @last_name.to_s.strip
         validation_errors.push('invalid_last_name') unless Util::CommonValidator.is_valid_name?(@last_name)
+
+        validation_errors.push('invalid_fingerprint') unless @fingerprint.length == 32
 
         return validation_error(
           'mm_su_wi_1',
@@ -216,7 +223,7 @@ module ManagerManagement
       def update_manager
 
         @manager_obj.current_client_id = @client_id
-        @manager_obj.save
+        @manager_obj.save!
 
         success
       end

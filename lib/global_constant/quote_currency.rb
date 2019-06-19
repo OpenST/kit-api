@@ -17,11 +17,11 @@ module GlobalConstant
 
       ### Statuses
       def active_status
-        'active_status'
+        'active'
       end
 
       def inactive_status
-        'inactive_status'
+        'inactive'
       end
 
     end

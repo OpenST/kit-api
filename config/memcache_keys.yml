@@ -31,6 +31,15 @@ keys:
       key_template: 'm_whlstd_dmns'
       expiry_in_seconds: 86400
       <<: *kit
+    devices:
+      key_template: 'm_dvc_%{u_h}'
+      expiry_in_seconds: 86400
+      <<: *kit
+    devices_by_id:
+      key_template: 'm_dvc_bid_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit
+
 
   client:
     details:
@@ -44,6 +53,10 @@ keys:
     api_credentials:
       key_template: 'c_ac_%{id}'
       expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
+    webhook_secret:
+      key_template: 'c_ws_%{id}'
+      expiry_in_seconds: 86402
       <<: *kit_saas_subenv
 
   client_manager:
@@ -115,3 +128,9 @@ keys:
       key_template: 'c_stk_cur_%{id}'
       expiry_in_seconds: 259200
       <<: *kit_saas_subenv
+
+  manager_validation_hash:
+    details:
+      key_template: 'mvh_d_%{id}'
+      expiry_in_seconds: 86400
+      <<: *kit

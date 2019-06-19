@@ -1,0 +1,40 @@
+# frozen_string_literal: true
+module GlobalConstant
+
+  class ManagerDevice
+
+    class << self
+
+      ### Status Start ###
+
+      def authorized
+        'authorized'
+      end
+
+      def un_authorized
+        'un_authorized'
+      end
+
+      # 30 day expiry
+      def device_expiration_time
+        30.days.to_i
+      end
+
+      ### Status End ###
+
+      ### Fingerprint types start ###
+
+      def fingerprint_js
+        'fingerprint_js'
+      end
+
+      def browser_agent
+        'browser_agent'
+      end
+
+      ### Fingerprint types end ###
+    end
+
+  end
+
+end

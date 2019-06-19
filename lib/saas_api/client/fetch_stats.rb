@@ -10,7 +10,7 @@ module SaasApi
       # * Date: 17/02/2018
       # * Reviewed By:
       #
-      # @return [SaasApi::Transaction::FetchDetails]
+      # @return [SaasApi::Client::FetchDetails]
       #
       def initialize
         super

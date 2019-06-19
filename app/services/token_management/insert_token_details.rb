@@ -219,7 +219,7 @@ module TokenManagement
       @token_details.delayed_recovery_interval = GlobalConstant::ClientToken.delayed_recovery_interval
       @token_details.stake_currency_id = @stake_currency_id
       @token_details.decimal = @stake_currency_decimal
-      @token_details.preferred_display_currency_id = QuoteCurrency.symbols_to_details_cache[GlobalConstant::QuoteCurrency.USD][:id]
+      @token_details.preferred_display_currency_id = QuoteCurrency.details_by_symbol(GlobalConstant::QuoteCurrency.USD)[:id]
 
       @token_details.save! if @token_details.changed?
 
@@ -275,7 +275,6 @@ module TokenManagement
     # @return [Result::Base]
     def fetch_token_details
       @token = @token_details.formatted_cache_data
-      puts "@token==========#{@token}"
       success
     end
 

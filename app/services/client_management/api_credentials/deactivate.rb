@@ -12,6 +12,8 @@ module ClientManagement
       #
       # @params [Integer] client_id (mandatory) - Client Id for which Api credentials has to be fetched
       # @params [Hash] client_manager (mandatory) - logged in client manager object
+      # @params [Hash] show_keys_enable_flag (mandatory) -
+      # @params [Hash] email_already_sent_flag (mandatory) -
       #
       # @return [ClientManagement::ApiCredentials::Deactivate]
       #
@@ -19,6 +21,9 @@ module ClientManagement
         super
         @client_id = @params[:client_id]
         @client_manager = @params[:client_manager]
+
+        @show_keys_enable_flag = @params[:show_keys_enable_flag]
+        @email_already_sent_flag = @params[:email_already_sent_flag]
 
         @deactivated_api_key = nil
       end
@@ -44,7 +49,10 @@ module ClientManagement
           r = deactivate
           return r unless r.success?
 
-          return ClientManagement::ApiCredentials::Fetch.new(client_id:@client_id).perform
+          return ClientManagement::ApiCredentials::Fetch.new(
+            client_id:@client_id,
+            show_keys_enable_flag: @show_keys_enable_flag,
+            email_already_sent_flag: @email_already_sent_flag).perform
 
         end
 
