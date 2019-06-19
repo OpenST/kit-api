@@ -370,6 +370,7 @@
    - :manager
    - :email_addresses
  :optional:
+   - :auth_token
 'ManagerManagement::SendDeviceVerificationLink':
  :mandatory:
    - :manager_id

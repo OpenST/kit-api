@@ -97,10 +97,10 @@ module TestEconomyManagement
       end
 
       if manager_ids_to_fetch.any?
-        super_admin_managers.merge!(CacheManagement::Manager.new(manager_ids_to_fetch))
+        super_admin_managers.merge!(CacheManagement::Manager.new(manager_ids_to_fetch).fetch)
       end
 
-      super_admin_managers.each do |manager|
+      super_admin_managers.each do |_, manager|
         return false unless Util::CommonValidator.is_valid_ost_email?(manager[:email])
       end
 
