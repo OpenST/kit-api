@@ -177,3 +177,8 @@ device_already_whitelisted:
   http_code: 422
   code: "UNPROCESSABLE_ENTITY"
   message: "The device which you attempted to whitelist is already whitelisted now."
+
+graph_data_not_found:
+  http_code: 404
+  code: "NOT_FOUND"
+  message: "Graph data not found for the given transaction and duration type."

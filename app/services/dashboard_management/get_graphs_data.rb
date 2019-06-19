@@ -19,9 +19,8 @@ module DashboardManagement
       super
 
       @client_id = @params[:client_id]
-      @manager = @params[:manager]
-      @manager = @params[:graph_type]
-      @manager = @params[:duration_type]
+      @graph_type = @params[:graph_type]
+      @duration_type = @params[:duration_type]
 
       @token = nil
     end
@@ -44,10 +43,10 @@ module DashboardManagement
         r = fetch_token
         return r unless r.success?
 
-        r = fetch_goto
+        r = fetch_graph_data
         return r unless r.success?
 
-        prepare_response
+        success_with_data(@response_data)
       end
 
     end
@@ -65,49 +64,36 @@ module DashboardManagement
     def fetch_token
 
       token_resp = Util::EntityHelper.fetch_and_validate_token(@client_id, 'dm_ggd_1')
-      return error_with_go_to(
-          token_resp.internal_id,
-          token_resp.general_error_identifier,
-          GlobalConstant::GoTo.token_setup
+      return error_with_data(
+          'a_s_dm_ggd_2',
+          'graph_data_not_found',
+          GlobalConstant::ErrorAction.default
       ) unless token_resp.success?
 
-      @token = token_resp.data
+      @token = token_resp.data[:id]
       success
     end
 
-    # Fetch go to by economy state
+    # Fetch graph data
     #
-    # * Author: Dhananjay
+    # * Author: Ankit
     # * Date: 19/06/2019
-    # * Reviewed By: Kedar
+    # * Reviewed By:
     #
     # @return [Result::Base]
     #
-    def fetch_goto
+    def fetch_graph_data
 
-      FetchGoToByEconomyState.new({
-                                    token: @token,
-                                    client_id: @client_id,
-                                    from_page: GlobalConstant::GoTo.token_dashboard
-                                  }).fetch_by_economy_state
+      graph_data = GraphData.select(:data).where(token_id: @token, graph_type: @graph_type, duration_type: @duration_type).first
+      return error_with_data(
+               'a_s_dm_ggd_1',
+               'graph_data_not_found',
+               GlobalConstant::ErrorAction.default
+      ) if graph_data.blank?
 
-    end
+      @response_data = graph_data.data
 
-    # Prepare final response
-    #
-    # * Author: Dhananjay
-    # * Date: 19/06/2019
-    # * Reviewed By: Kedar
-    #
-    # @return [Result::Base]
-    #
-    def prepare_response
-
-      success_with_data(
-        {
-          token: @token
-        }
-      )
+      success
     end
 
   end

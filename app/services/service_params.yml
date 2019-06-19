@@ -392,3 +392,8 @@
     - :manager_device
     - :is_multi_auth_cookie_valid
     - :is_password_auth_cookie_valid
+'DashboardManagement::GetGraphsData':
+  :mandatory:
+    - :client_id
+    - :graph_type
+    - :duration_type
