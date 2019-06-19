@@ -7,7 +7,7 @@ class SanitizePricePointData < DbMigrationConnection
         r.save!
       end
 
-      stake_currency = StakeCurrency.where(symbol: 'USDC')
+      stake_currency = StakeCurrency.where(symbol: 'USDC').first
 
       CurrencyConversionRate.where('stake_currency_id is NULL and conversion_rate > 1').all.each do |r|
         r[:stake_currency_id] = stake_currency[:id]
