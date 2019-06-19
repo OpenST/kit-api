@@ -16,11 +16,8 @@ class CleanupMultiPricer < DbMigrationConnection
       change_column :aux_price_oracles, :status, :tinyint, null: false
 
       remove_index :currency_conversion_rates, name: 'cuk_2'
-      remove_column :currency_conversion_rates, :quote_currency
       add_index :currency_conversion_rates, [:chain_id, :timestamp, :status, :stake_currency_id, :quote_currency_id], unique: true, name: 'cuk_1'
 
-      change_column :currency_conversion_rates, :stake_currency_id, :tinyint, null: false
-      change_column :currency_conversion_rates, :quote_currency_id, :tinyint, null: false
     end
   end
 
