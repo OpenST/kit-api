@@ -75,6 +75,10 @@ Rails.application.routes.draw do
     match '' => :get, via: :GET
   end
 
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard/:graph_type/:duration_type", controller: 'dashboard', :format => false do
+    match '' => :get_graphs_data, via: :GET, constraints: lambda { |request| request.xhr? }
+  end
+
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup', :format => false do
     match '' => :token_details_get, via: :GET
     match '' => :token_details_post, via: :POST, constraints: lambda { |request| request.xhr? }

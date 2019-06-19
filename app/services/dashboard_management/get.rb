@@ -51,9 +51,10 @@ module DashboardManagement
 
         r = fetch_sub_env_payloads
         return r unless r.success?
-        
-        r = generate_graph_urls
-        return r unless r.success?
+
+        # TODO - s3 upload change for graph data
+        # r = generate_graph_urls
+        # return r unless r.success?
 
         prepare_response
       end
@@ -253,7 +254,7 @@ module DashboardManagement
             economy_users: @economy_users
           },
           manager: @manager,
-          graph_urls: @graph_urls,
+          # graph_urls: @graph_urls,
           sub_env_payloads: @sub_env_payloads
         }
       )
