@@ -189,10 +189,6 @@ module GlobalConstant
         'inter_chain_facilitator_kind'
       end
 
-      def aux_price_oracle_contract_kind
-        'aux_price_oracle_contract_kind'
-      end
-
       def aux_price_oracle_contract_worker_kind
         'aux_price_oracle_contract_worker_kind'
       end
