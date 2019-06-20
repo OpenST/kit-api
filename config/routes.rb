@@ -71,12 +71,12 @@ Rails.application.routes.draw do
     match 'delete-webhook-secrets' => :delete_webhook_secret, via: :POST, constraints: lambda { |request| request.xhr? }
   end
 
-  scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard", controller: 'dashboard', :format => false do
-    match '' => :get, via: :GET
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard/:graph_type/:duration_type", controller: 'dashboard', :format => false do
+    match '' => :get_graphs_data, via: :GET#, constraints: lambda { |request| request.xhr? }
   end
 
-  scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard/:graph_type/:duration_type", controller: 'dashboard', :format => false do
-    match '' => :get_graphs_data, via: :GET, constraints: lambda { |request| request.xhr? }
+  scope "#{GlobalConstant::Environment.url_prefix}/api/token/dashboard", controller: 'dashboard', :format => false do
+    match '' => :get, via: :GET
   end
 
   scope "#{GlobalConstant::Environment.url_prefix}/api/token", controller: 'token/setup', :format => false do

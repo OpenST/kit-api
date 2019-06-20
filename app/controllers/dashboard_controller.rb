@@ -7,6 +7,7 @@ class DashboardController < AuthenticationController
   # * Reviewed By: Kedar
   #
   def get
+    params[:base_url] = request.base_url
     service_response = DashboardManagement::Get.new(params).perform
 
     # set last used env cookie

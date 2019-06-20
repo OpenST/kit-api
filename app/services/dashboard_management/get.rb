@@ -18,6 +18,7 @@ module DashboardManagement
 
       @client_id = @params[:client_id]
       @manager = @params[:manager]
+      @base_url = @params[:base_url]
 
       @token_id = nil
       @graph_urls = {}
@@ -240,7 +241,6 @@ module DashboardManagement
     #
     def generate_graph_urls
 
-      base_url = GlobalConstant::CompanyOtherProductUrls.ost_web_root_url
       sub_env_prefix = GlobalConstant::Base.main_sub_environment? ?
                          GlobalConstant::Environment.mainnet_url_prefix :
                          GlobalConstant::Environment.testnet_url_prefix
@@ -258,7 +258,8 @@ module DashboardManagement
 
         graph_types.each do |graph_type|
 
-          url = "#{base_url}/#{sub_env_prefix}/#{graph_type}/#{duration_type}"
+          url = "#{@base_url}/#{sub_env_prefix}/api/token/dashboard/#{graph_type}/#{duration_type}"
+          #url = "http://kit.developmentost.com:8080/#{sub_env_prefix}/api/token/dashboard/#{graph_type}/#{duration_type}"
 
           @graph_urls[graph_type.to_sym] ||= {}
           @graph_urls[graph_type.to_sym][duration_type.to_sym] = (url.to_s)
