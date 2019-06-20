@@ -181,4 +181,4 @@ device_already_whitelisted:
 graph_data_not_found:
   http_code: 404
   code: "NOT_FOUND"
-  message: "Graph data not found for the given transaction and duration type."
+  message: "Data not available."

@@ -522,3 +522,23 @@ invalid_a_t:
   parameter: 'a_t'
   code: 'invalid'
   message: 'The secure data access verification link has expired.'
+
+invalid_graph_type:
+  parameter: 'graph_type'
+  code: 'invalid'
+  message: 'Invalid graph type'
+
+invalid_duration_type:
+  parameter: 'duration_type'
+  code: 'invalid'
+  message: 'Invalid duration type'
+
+missing_graph_type:
+  parameter: 'graph_type'
+  code: 'missing'
+  message: 'Missing graph type'
+
+missing_duration_type:
+  parameter: 'duration_type'
+  code: 'missing'
+  message: 'Missing duration type'

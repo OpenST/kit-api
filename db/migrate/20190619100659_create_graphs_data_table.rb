@@ -9,7 +9,7 @@ class CreateGraphsDataTable < DbMigrationConnection
         t.timestamps
       end
 
-      add_index :graph_data, [:token_id, :graph_type, :duration_type], name: 'uk_1'
+      add_index :graph_data, [:token_id, :graph_type, :duration_type], name: 'uk_1', unique: true
     end
   end
 

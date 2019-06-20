@@ -10,6 +10,7 @@ module DashboardManagement
     #
     # @params [Integer] client_id (mandatory) - Client Id
     # @params [Object] manager(mandatory) - manager
+    # @params [String] base_url(mandatory) - API endpoint base url
     #
     # @return [TokenManagement::GetDeploymentDetail]
     #
@@ -258,8 +259,7 @@ module DashboardManagement
 
         graph_types.each do |graph_type|
 
-          url = "#{@base_url}/#{sub_env_prefix}/api/token/dashboard/#{graph_type}/#{duration_type}"
-          #url = "http://kit.developmentost.com:8080/#{sub_env_prefix}/api/token/dashboard/#{graph_type}/#{duration_type}"
+          url = "#{@base_url}/#{sub_env_prefix}/api/token/graph/#{graph_type}/#{duration_type}"
 
           @graph_urls[graph_type.to_sym] ||= {}
           @graph_urls[graph_type.to_sym][duration_type.to_sym] = (url.to_s)
@@ -268,10 +268,7 @@ module DashboardManagement
 
       end
 
-      puts "@graph_urls======#{@graph_urls.to_json}"
-
       success
-
     end
 
     # Direct request to saas api.

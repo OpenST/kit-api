@@ -9,7 +9,6 @@ module DashboardManagement
     # * Reviewed By: Kedar
     #
     # @params [Integer] client_id (mandatory) - Client Id
-    # @params [Object] manager(mandatory) - manager
     # @params [String] graph_type (mandatory) - graph type
     # @params [String] duration_type(mandatory) - duration type
     #
@@ -37,7 +36,7 @@ module DashboardManagement
 
       handle_errors_and_exceptions do
 
-        r = validate
+        r = validate_and_sanitize
         return r unless r.success?
 
         r = fetch_token
@@ -48,6 +47,35 @@ module DashboardManagement
 
         success_with_data(@response_data)
       end
+
+    end
+
+    # Validate and Sanitize
+    #
+    # * Author: Ankit
+    # * Date: 20/06/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    #
+    def validate_and_sanitize
+      r = validate
+      return r unless r.success?
+
+      return validation_error(
+        'a_s_dm_ggd_3',
+        'invalid_api_params',
+        ['invalid_graph_type'],
+        GlobalConstant::ErrorAction.default
+      ) unless GlobalConstant::GraphConstants.all_graph_types.include? @graph_type
+
+      return validation_error(
+        'a_s_dm_ggd_4',
+        'invalid_api_params',
+        ['invalid_duration_type'],
+        GlobalConstant::ErrorAction.default
+      ) unless GlobalConstant::GraphConstants.all_duration_types.include? @duration_type
 
     end
 
