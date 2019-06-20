@@ -42,7 +42,6 @@ class ChainAddresses < DbConnection::KitSaasSubenv
     GlobalConstant::ChainAddresses.origin_default_bt_org_contract_admin_kind => 39,
     GlobalConstant::ChainAddresses.origin_default_bt_org_contract_worker_kind => 40,
     GlobalConstant::ChainAddresses.inter_chain_facilitator_kind => 41,
-    GlobalConstant::ChainAddresses.aux_price_oracle_contract_kind => 42,
     GlobalConstant::ChainAddresses.aux_price_oracle_contract_worker_kind => 43
   }
 
