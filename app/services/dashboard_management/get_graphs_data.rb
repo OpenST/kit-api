@@ -77,6 +77,8 @@ module DashboardManagement
         GlobalConstant::ErrorAction.default
       ) unless GlobalConstant::GraphConstants.all_duration_types.include? @duration_type
 
+      success
+
     end
 
     # Find & validate client

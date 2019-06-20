@@ -301,18 +301,6 @@ module DashboardManagement
       )
     end
 
-    # Check if request is to mainnet ENV
-    #
-    # * Author: Dhananjay
-    # * Date: 19/06/2019
-    # * Reviewed By:
-    #
-    # @return [Boolean]
-    #
-    def is_main_sub_env?
-      GlobalConstant::Base.main_sub_environment?
-    end
-
   end
 
 end
