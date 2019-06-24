@@ -340,6 +340,12 @@
   :mandatory:
     - :client_id
     - :manager
+    - :base_url
+'DashboardManagement::GetGraphsData':
+  :mandatory:
+    - :client_id
+    - :graph_type
+    - :duration_type
 'AdminManagement::Whitelist::Domain':
  :mandatory:
    - :d

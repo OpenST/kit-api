@@ -7,6 +7,7 @@ class DashboardController < AuthenticationController
   # * Reviewed By: Kedar
   #
   def get
+    params[:base_url] = request.base_url
     service_response = DashboardManagement::Get.new(params).perform
 
     # set last used env cookie
@@ -16,6 +17,23 @@ class DashboardController < AuthenticationController
       GlobalConstant::Cookie.last_used_env_cookie_expiry
     )
     return render_api_response(service_response)
+  end
+
+  # Whitelisting
+  #
+  # * Author: Dhananjay
+  # * Date: 19/06/2019
+  # * Reviewed By: Kedar
+  #
+  def get_graphs_data
+    service_response = DashboardManagement::GetGraphsData.new(params).perform
+
+    if service_response.success?
+      render :json => service_response.data
+    elsif
+      service_response.http_code = 404
+      render_api_response(service_response)
+    end
   end
 
 end
