@@ -340,6 +340,7 @@
   :mandatory:
     - :client_id
     - :manager
+  :optional:
     - :base_url
 'DashboardManagement::GetGraphsData':
   :mandatory:
