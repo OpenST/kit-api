@@ -118,6 +118,8 @@ task :usage_report => :environment do
 
     lifetime_data_by_email[row.email] = {
       client_id: 0,
+      first_name: '',
+      last_name: '',
       is_verified_email: 0,
       registered_at: nil,
       stake_and_mint_done: 0,
@@ -141,6 +143,8 @@ task :usage_report => :environment do
     end
 
     lifetime_data_by_email[row.email][:client_id] = client_id
+    lifetime_data_by_email[row.email][:first_name] = row.first_name
+    lifetime_data_by_email[row.email][:last_name] = row.last_name
     lifetime_data_by_email[row.email][:registered_at] = row.created_at
 
     if row.send("#{GlobalConstant::Manager.has_verified_email_property}?")
@@ -162,6 +166,10 @@ task :usage_report => :environment do
       if dashboard_service_response.data[:token]
         lifetime_data_by_email[row.email][:token_deployment_status] = dashboard_service_response.data[:token][:status]
         lifetime_data_by_email[row.email][:token_symbol] = dashboard_service_response.data[:token][:symbol]
+        lifetime_data_by_email[row.email][:token_name] = dashboard_service_response.data[:token][:name]
+        lifetime_data_by_email[row.email][:base_token] = dashboard_service_response.data[:token][:base_token]
+        lifetime_data_by_email[row.email][:managed_by] = (dashboard_service_response.data[:token][:properties].
+            include?(GlobalConstant::ClientToken.has_ost_managed_owner) ? "Managed": "Metamask")
         if lifetime_data_by_email[row.email][:token_deployment_status] == 'deploymentCompleted'
           lifetime_summary_report[:token_setup] += 1
           if registered_today
@@ -190,9 +198,20 @@ task :usage_report => :environment do
   end
 
 
-  all_failed_workflows = Workflow.where(kind: [GlobalConstant::Workflow.token_deploy, GlobalConstant::Workflow.bt_stake_and_mint])
-                           .where(client_id: client_ids)
-                           .where(status: [GlobalConstant::Workflow.failed, GlobalConstant::Workflow.completely_failed]).all
+  all_workflows = Workflow.where(kind: [GlobalConstant::Workflow.token_deploy, GlobalConstant::Workflow.bt_stake_and_mint])
+                      .where(client_id: client_ids).all
+  all_failed_workflows = []
+  client_workflow_dates = {}
+  all_workflows.each do |wf|
+    all_failed_workflows << wf if [GlobalConstant::Workflow.failed, GlobalConstant::Workflow.completely_failed].include?(wf.status)
+    client_workflow_dates[wf.client_id] ||= {token_deploy: nil, stake_mint: nil}
+    if wf.kind == GlobalConstant::Workflow.token_deploy
+      client_workflow_dates[wf.client_id][:token_deploy] = wf.created_at
+    end
+    if wf.kind == GlobalConstant::Workflow.bt_stake_and_mint
+      client_workflow_dates[wf.client_id][:stake_mint] = wf.created_at
+    end
+  end
 
   clientwise_lifetime_errors = {}
   clientwise_daily_errors = {}
@@ -262,29 +281,34 @@ task :usage_report => :environment do
   lifetime_summary_report[:resolved_snm_errors] = total_lifetime_resolved_errors[:snm]
 
 
-  def generate_and_upload_csv(data_by_email, clientwise_errors, clientwise_resolved_errors, report_type, clientwise_details)
+  def generate_and_upload_csv(data_by_email, clientwise_errors, clientwise_resolved_errors, report_type, clientwise_details, client_workflow_dates)
     csv_data = []
 
     # prepare CSV Data
 
     # append headers
     csv_data.push([
-                    'First super admin email',
-                    'Registered at',
-                    'Double opt in done',
-                    'Token deploy status',
-                    'Token symbol',
-                    'Stake and mint done',
                     'Company Name',
                     'Enterprise',
                     'Has mobile app',
+                    'First super admin email',
+                    'First super admin first name',
+                    'First super admin last name',
+                    'Registered at',
+                    'Double opt in done',
+                    'Token deploy status',
+                    'Token name',
+                    'Token symbol',
+                    'What was staked?',
+                    'Stake and mint done',
                     'Error in step',
                     'Error solved',
-                    'Performed transactions',
-                    'Registered super admins',
+                    'Performed First transaction',
+                    'Metamask or Managed?',
                     'Invited super admins',
-                    'Registered admins',
-                    'Invited admins'
+                    'Registered super admins',
+                    'Invited admins',
+                    'Registered admins'
                   ])
 
     data_by_email.each do |email, data|
@@ -308,22 +332,27 @@ task :usage_report => :environment do
 
       buffer = []
 
-      buffer.push(email)
-      buffer.push(data[:registered_at])
-      buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
-      buffer.push(data[:token_deployment_status])
-      buffer.push(data[:token_symbol])
-      buffer.push(data[:stake_and_mint_done] == 1 ? 'YES' : 'NO')
       buffer.push(clientwise_details[client_id][:company_name])
       buffer.push(clientwise_details[client_id][:enterprise])
       buffer.push(clientwise_details[client_id][:mobile_app])
+      buffer.push(email)
+      buffer.push(data[:first_name])
+      buffer.push(data[:last_name])
+      buffer.push(data[:registered_at])
+      buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
+      buffer.push(client_workflow_dates[client_id][:token_deploy].present? ? client_workflow_dates[client_id][:token_deploy] : '')
+      buffer.push(data[:token_name])
+      buffer.push(data[:token_symbol])
+      buffer.push(data[:base_token])
+      buffer.push((data[:stake_and_mint_done] == 1 && client_workflow_dates[client_id][:stake_mint].present?) ? client_workflow_dates[client_id][:stake_mint] : '')
       buffer.push(error_in_step)
       buffer.push(error_solved)
       buffer.push(data[:made_transactions] == 1 ? 'YES' : 'NO')
-      buffer.push(clientwise_details[client_id][:registered_super_admins])
+      buffer.push(data[:managed_by])
       buffer.push(clientwise_details[client_id][:invited_super_admins])
-      buffer.push(clientwise_details[client_id][:registered_admins])
+      buffer.push(clientwise_details[client_id][:registered_super_admins])
       buffer.push(clientwise_details[client_id][:invited_admins])
+      buffer.push(clientwise_details[client_id][:registered_admins])
 
       csv_data.push(buffer)
     end
@@ -399,7 +428,9 @@ task :usage_report => :environment do
 
   end
 
-  lifetime_upload_response = generate_and_upload_csv(lifetime_data_by_email, clientwise_lifetime_errors, clientwise_lifetime_resolved_errors, 'lifetime', client_details)
+  lifetime_upload_response = generate_and_upload_csv(lifetime_data_by_email, clientwise_lifetime_errors,
+                                                     clientwise_lifetime_resolved_errors, 'lifetime',
+                                                     client_details, client_workflow_dates)
   return lifetime_upload_response unless lifetime_upload_response.success?
 
   daily_data_by_email = {}
@@ -407,7 +438,9 @@ task :usage_report => :environment do
     daily_data_by_email[email] = lifetime_data_by_email[email]
   end
 
-  daily_upload_response = generate_and_upload_csv(daily_data_by_email, clientwise_lifetime_errors, clientwise_lifetime_resolved_errors, 'daily', client_details)
+  daily_upload_response = generate_and_upload_csv(daily_data_by_email, clientwise_lifetime_errors,
+                                                  clientwise_lifetime_resolved_errors, 'daily',
+                                                  client_details, client_workflow_dates)
   return daily_upload_response unless daily_upload_response.success?
 
   puts("Lifetime secured URL : #{lifetime_upload_response.data[:presigned_url]}")
@@ -421,6 +454,59 @@ task :usage_report => :environment do
   # delete local file
   File.delete(lifetime_upload_response.data[:file_name]) if File.exist?(lifetime_upload_response.data[:file_name])
   File.delete(daily_upload_response.data[:file_name]) if File.exist?(daily_upload_response.data[:file_name])
+
+  r = DemoMappyServerApi.new.send_request_of_type(
+      'get',
+      'token-stats',
+      {
+          api_endpoint: GlobalConstant::SaasApi.api_endpoint_for_current_version,
+          stats_post_ts: day_start_ts
+      }
+  )
+
+  token_stats = {
+      new_popcorn_account_activations: 0,
+      lifetime_popcorn_account_activations: 0,
+      new_popcorn_first_transactions: 0,
+      lifetime_popcorn_first_transactions: 0,
+      new_platform_account_activations: 0,
+      lifetime_platform_account_activations: 0,
+      new_platform_first_transactions: 0,
+      lifetime_platform_first_transactions: 0
+  }
+  popcorn_economy = 1129
+  if r.success?
+    stats_from_mappy = r.data
+    stats_from_mappy[:lifetime_user_activated_records].each do |tid, count|
+      if tid.to_i == popcorn_economy
+        token_stats[:lifetime_popcorn_account_activations] = count
+      else
+        token_stats[:lifetime_platform_account_activations] += count
+      end
+    end
+    stats_from_mappy[:user_activated_records_post_ts].each do |tid, count|
+      if tid.to_i == popcorn_economy
+        token_stats[:new_popcorn_account_activations] = count
+      else
+        token_stats[:new_platform_account_activations] += count
+      end
+    end
+    stats_from_mappy[:lifetime_trx_records].each do |tid, count|
+      if tid.to_i == popcorn_economy
+        token_stats[:lifetime_popcorn_first_transactions] = count
+      else
+        token_stats[:lifetime_platform_first_transactions] += count
+      end
+    end
+    stats_from_mappy[:trx_records_post_ts].each do |tid, count|
+      if tid.to_i == popcorn_economy
+        token_stats[:new_popcorn_first_transactions] = count
+      else
+        token_stats[:new_platform_first_transactions] += count
+      end
+    end
+  end
+
 
   template_name = GlobalConstant::PepoCampaigns.platform_usage_report_template
   template_vars = {
@@ -445,6 +531,8 @@ task :usage_report => :environment do
     daily_report_link: CGI.escape(daily_upload_response.data[:presigned_url]),
     lifetime_report_link: CGI.escape(lifetime_upload_response.data[:presigned_url])
   }
+
+  template_vars.merge!(token_stats)
 
   recipient_emails = GlobalConstant::UsageReportRecipient.email_ids
 
