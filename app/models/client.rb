@@ -23,7 +23,8 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.sandbox_whitelisted_status => 1,
         GlobalConstant::Client.sandbox_whitelist_requested_status => 2,
         GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status => 4,
-        GlobalConstant::Client.sandbox_registered_in_mappy_server_status => 8
+        GlobalConstant::Client.sandbox_registered_in_mappy_server_status => 8,
+        GlobalConstant::Client.webhook_registered_in_mappy_server_status => 16
     }
   end
 
@@ -54,7 +55,8 @@ class Client < DbConnection::KitClient
         company_name: company_name.present? ? company_name : nil,
         properties: properties.present? ? Client.get_bits_set_for_properties(properties) : [],
         mainnet_statuses: mainnet_statuses.present? ? Client.get_bits_set_for_mainnet_statuses(mainnet_statuses) : [],
-        sandbox_statuses: sandbox_statuses.present? ? Client.get_bits_set_for_sandbox_statuses(sandbox_statuses) : []
+        sandbox_statuses: sandbox_statuses.present? ? Client.get_bits_set_for_sandbox_statuses(sandbox_statuses) : [],
+        created_at: created_at.to_i
     }
   end
 

@@ -40,13 +40,15 @@ class DemoMappyServerApi
         ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
 
+      parameterized_token = {token: get_jwt_token(params)}
+
       case request_type
         when 'get'
           response = HTTP.timeout(@timeouts)
-                         .get(request_path, params: params)
+                         .get(request_path, params: parameterized_token)
         when 'post'
           response = HTTP.timeout(@timeouts)
-                         .post(request_path, json: params)
+                         .post(request_path, json: parameterized_token)
         else
           return error_with_data(
               'l_dmsa_1',
@@ -83,6 +85,15 @@ class DemoMappyServerApi
           {message: e.message}
       )
     end
+  end
+
+  # Create encrypted Token for whitelisting parameter
+  #
+  def get_jwt_token(data)
+    payload = {data: data}
+    secret_key = GlobalConstant::DemoMappyServer.mappy_secret_key
+
+    JWT.encode(payload, secret_key, 'HS256')
   end
 
 end

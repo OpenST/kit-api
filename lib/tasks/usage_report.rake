@@ -21,7 +21,8 @@ task :usage_report => :environment do
     resolved_ts_errors: 0,
     resolved_snm_errors: 0,
     ts_errors: 0,
-    snm_errors: 0
+    snm_errors: 0,
+    wallet_setup: 0
   }
 
   daily_summary_report = {
@@ -33,7 +34,8 @@ task :usage_report => :environment do
     resolved_ts_errors: 0,
     resolved_snm_errors: 0,
     ts_errors: 0,
-    snm_errors: 0
+    snm_errors: 0,
+    wallet_setup: 0
   }
 
   all_manager_rows = []
@@ -70,7 +72,8 @@ task :usage_report => :environment do
           invited_admins: 0,
           company_name: '',
           enterprise: '',
-          mobile_app: ''
+          mobile_app: '',
+          webhook_setup: 'NO'
         }
 
         client_manager_entity = client_manager_row.formatted_cache_data
@@ -164,10 +167,11 @@ task :usage_report => :environment do
     
     if dashboard_service_response.success?
       if dashboard_service_response.data[:token]
+        lifetime_data_by_email[row.email][:token_id] = dashboard_service_response.data[:token][:id]
         lifetime_data_by_email[row.email][:token_deployment_status] = dashboard_service_response.data[:token][:status]
         lifetime_data_by_email[row.email][:token_symbol] = dashboard_service_response.data[:token][:symbol]
         lifetime_data_by_email[row.email][:token_name] = dashboard_service_response.data[:token][:name]
-        lifetime_data_by_email[row.email][:base_token] = dashboard_service_response.data[:token][:base_token]
+        lifetime_data_by_email[row.email][:base_token] = dashboard_service_response.data[:token][:stake_currency_symbol]
         lifetime_data_by_email[row.email][:managed_by] = (dashboard_service_response.data[:token][:properties].
             include?(GlobalConstant::ClientToken.has_ost_managed_owner) ? "Managed": "Metamask")
         if lifetime_data_by_email[row.email][:token_deployment_status] == 'deploymentCompleted'
@@ -196,7 +200,6 @@ task :usage_report => :environment do
     end
 
   end
-
 
   all_workflows = Workflow.where(kind: [GlobalConstant::Workflow.token_deploy, GlobalConstant::Workflow.bt_stake_and_mint])
                       .where(client_id: client_ids).all
@@ -287,29 +290,52 @@ task :usage_report => :environment do
     # prepare CSV Data
 
     # append headers
-    csv_data.push([
-                    'Company Name',
-                    'Enterprise',
-                    'Has mobile app',
-                    'First super admin email',
-                    'First super admin first name',
-                    'First super admin last name',
-                    'Registered at',
-                    'Double opt in done',
-                    'Token deploy status',
-                    'Token name',
-                    'Token symbol',
-                    'What was staked?',
-                    'Stake and mint done',
-                    'Error in step',
-                    'Error solved',
-                    'Performed First transaction',
-                    'Metamask or Managed?',
-                    'Invited super admins',
-                    'Registered super admins',
-                    'Invited admins',
-                    'Registered admins'
-                  ])
+    if GlobalConstant::Base.main_sub_environment?
+      csv_data.push([
+                        'Company Name',
+                        'First super admin email',
+                        'First super admin first name',
+                        'First super admin last name',
+                        'Token deploy status',
+                        'Token name',
+                        'Token symbol',
+                        'What was staked?',
+                        'Stake and mint done',
+                        'Error in step',
+                        'Error solved',
+                        'Performed First transaction',
+                        'Has setup Webhooks?'
+                    ])
+    else
+      csv_data.push([
+                        'Company Name',
+                        'Enterprise',
+                        'Has mobile app',
+                        'First super admin email',
+                        'First super admin first name',
+                        'First super admin last name',
+                        'Registered at',
+                        'Double opt in done',
+                        'Token deploy status',
+                        'Token name',
+                        'Token symbol',
+                        'What was staked?',
+                        'Stake and mint done',
+                        'Error in step',
+                        'Error solved',
+                        'Performed First transaction',
+                        'Metamask or Managed?',
+                        'Invited super admins',
+                        'Registered super admins',
+                        'Invited admins',
+                        'Registered admins',
+                        'Connected to OST Wallet app',
+                        'Sent Wallet invites?',
+                        'Has setup Webhooks?'
+                    ])
+    end
+
+    email_invites = TestEconomyInvite.all.index_by(&:token_id)
 
     data_by_email.each do |email, data|
       error_in_step = ''
@@ -333,26 +359,37 @@ task :usage_report => :environment do
       buffer = []
 
       buffer.push(clientwise_details[client_id][:company_name])
-      buffer.push(clientwise_details[client_id][:enterprise])
-      buffer.push(clientwise_details[client_id][:mobile_app])
+      if GlobalConstant::Base.sandbox_sub_environment?
+        buffer.push(clientwise_details[client_id][:enterprise])
+        buffer.push(clientwise_details[client_id][:mobile_app])
+      end
       buffer.push(email)
       buffer.push(data[:first_name])
       buffer.push(data[:last_name])
-      buffer.push(data[:registered_at])
-      buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
-      buffer.push(client_workflow_dates[client_id][:token_deploy].present? ? client_workflow_dates[client_id][:token_deploy] : '')
+      if GlobalConstant::Base.sandbox_sub_environment?
+        buffer.push(data[:registered_at])
+        buffer.push(data[:is_verified_email] == 1 ? 'YES' : 'NO')
+      end
+      buffer.push((client_workflow_dates[client_id].present? &&
+          client_workflow_dates[client_id][:token_deploy].present?) ? client_workflow_dates[client_id][:token_deploy] : '')
       buffer.push(data[:token_name])
       buffer.push(data[:token_symbol])
       buffer.push(data[:base_token])
-      buffer.push((data[:stake_and_mint_done] == 1 && client_workflow_dates[client_id][:stake_mint].present?) ? client_workflow_dates[client_id][:stake_mint] : '')
+      buffer.push((data[:stake_and_mint_done] == 1 && client_workflow_dates[client_id].present? &&
+          client_workflow_dates[client_id][:stake_mint].present?) ? client_workflow_dates[client_id][:stake_mint] : '')
       buffer.push(error_in_step)
       buffer.push(error_solved)
       buffer.push(data[:made_transactions] == 1 ? 'YES' : 'NO')
-      buffer.push(data[:managed_by])
-      buffer.push(clientwise_details[client_id][:invited_super_admins])
-      buffer.push(clientwise_details[client_id][:registered_super_admins])
-      buffer.push(clientwise_details[client_id][:invited_admins])
-      buffer.push(clientwise_details[client_id][:registered_admins])
+      if GlobalConstant::Base.sandbox_sub_environment?
+        buffer.push(data[:managed_by])
+        buffer.push(clientwise_details[client_id][:invited_super_admins])
+        buffer.push(clientwise_details[client_id][:registered_super_admins])
+        buffer.push(clientwise_details[client_id][:invited_admins])
+        buffer.push(clientwise_details[client_id][:registered_admins])
+        buffer.push(clientwise_details[client_id][:wallet_setup])
+        buffer.push(email_invites[data[:token_id]].present? ? 'YES' : 'NO')
+      end
+      buffer.push(clientwise_details[client_id][:webhook_setup])
 
       csv_data.push(buffer)
     end
@@ -407,6 +444,9 @@ task :usage_report => :environment do
   # Fetch client details.
   Client.where(id: client_ids).find_in_batches(batch_size: 100) do |client_batches|
 
+    # Fetch all webhooks of client
+    client_webhooks = WebhookSubscription.where(client_id: client_batches.map{|x|x.id}).index_by(&:client_id)
+
     client_batches.each do |row|
       client_entity = row.formatted_cache_data
 
@@ -422,7 +462,18 @@ task :usage_report => :environment do
         else
           client_details[client_entity[:id]][:mobile_app] = 'NO'
         end
-
+        if client_entity[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
+          client_details[client_entity[:id]][:wallet_setup] = 'YES'
+          lifetime_summary_report[:wallet_setup] += 1
+          if client_entity[:created_at] > day_start_ts
+            daily_summary_report[:wallet_setup] += 1
+          end
+        else
+          client_details[client_entity[:id]][:wallet_setup] = 'NO'
+        end
+        if client_webhooks[client_entity[:id]].present?
+          client_details[client_entity[:id]][:webhook_setup] = 'YES'
+        end
       end
     end
 
@@ -474,7 +525,7 @@ task :usage_report => :environment do
       new_platform_first_transactions: 0,
       lifetime_platform_first_transactions: 0
   }
-  popcorn_economy = 1129
+  popcorn_economy = ENV['OST_POPCORN_ECONOMY'].to_i
   if r.success?
     stats_from_mappy = r.data
     stats_from_mappy[:lifetime_user_activated_records].each do |tid, count|
@@ -515,12 +566,14 @@ task :usage_report => :environment do
     daily_token_setup: daily_summary_report[:token_setup],
     daily_client_stake_mint: daily_summary_report[:stake_and_mint],
     daily_client_atleast_one_transaction: daily_summary_report[:transactions],
+    daily_client_setup_wallet: daily_summary_report[:wallet_setup],
 
     lifetime_registrations: lifetime_summary_report[:registrations],
     lifetime_email_verifications: lifetime_summary_report[:double_opt_in],
     lifetime_token_setup: lifetime_summary_report[:token_setup],
     lifetime_client_stake_mint: lifetime_summary_report[:stake_and_mint],
     lifetime_client_atleast_one_transaction: lifetime_summary_report[:transactions],
+    lifetime_client_setup_wallet: lifetime_summary_report[:wallet_setup],
 
     unresolved_token_setup_errors: lifetime_summary_report[:ts_errors],
     unresolved_stake_mint_errors: lifetime_summary_report[:snm_errors],

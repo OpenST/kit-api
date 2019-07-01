@@ -120,6 +120,7 @@ export KA_OST_WEB_ROOT_URL='http://developmentost.com:8080'
 
 # Demo Mappy Server Details
 export KA_DEMO_MAPPY_SERVER_API_ENDPOINT='http://127.0.0.1:3000/demo'
+export KA_DEMO_MAPPY_SERVER_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 
 # Demo App URL's
 export KA_DEMO_IOS_APP_URL='https://s3.amazonaws.com/sdk.stagingost.com/iOS/Download.html'
@@ -143,3 +144,6 @@ export KA_OST_ENTERPRISE_PD_STAGE_ID="7"
 export KA_OST_BUSINESS_PD_STAGE_ID="8"
 export KA_PD_DEAL_ENTERPRISE_CUSTOM_FIELD='4c4a5c203f18967271754c0cf8d0ad79f8ca2c32'
 export KA_PD_DEAL_MOBILE_APP_CUSTOM_FIELD='7b052508c4d2918872c156ae8c8f124c210ab4f3'
+
+# Popcorn economy
+export OST_POPCORN_ECONOMY=1129

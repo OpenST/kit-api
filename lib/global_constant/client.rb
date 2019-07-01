@@ -23,6 +23,10 @@ module GlobalConstant
         'sandbox_registered_in_mappy_server_status'
       end
 
+      def webhook_registered_in_mappy_server_status
+        'webhook_registered_in_mappy_server_status'
+      end
+
       def mainnet_whitelisted_status
         'mainnet_whitelisted_status'
       end

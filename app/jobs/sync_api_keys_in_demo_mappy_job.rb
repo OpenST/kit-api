@@ -54,6 +54,7 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
     @email_already_sent_flag = params[:email_already_sent_flag].to_i
     @token_id = nil
     @last_expiring_api_credentials = nil
+    @data_to_sync = nil
   end
 
   # Fetch Client
@@ -115,8 +116,24 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
         GlobalConstant::ErrorAction.default
     ) if @last_expiring_api_credentials.blank?
 
+    @data_to_sync = {
+        ost_token_id: @token_id,
+        api_endpoint: GlobalConstant::SaasApi.api_endpoint_for_current_version,
+        api_key: @last_expiring_api_credentials[:key],
+        api_secret: @last_expiring_api_credentials[:secret]
+    }
+
     success
 
+  end
+
+  # Fetch webhook secret to sync to demo
+  #
+  def fetch_webhook_secret
+    client_entity = @client.formatted_cache_data
+    if client_entity[:sandbox_statuses].include?(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
+      @data_to_sync[:webhook_secret] = KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).fetch[@client_id]
+    end
   end
 
   # Sync credentials in Demo Mappy Server
@@ -128,15 +145,7 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   def sync_in_demo_mappy
 
     DemoMappyServerApi.new.send_request_of_type(
-    'post',
-    'setup/update-token',
-    {
-        ost_token_id: @token_id,
-        api_endpoint: GlobalConstant::SaasApi.api_endpoint_for_current_version,
-        api_key: @last_expiring_api_credentials[:key],
-        api_secret: @last_expiring_api_credentials[:secret]
-      }
-    )
+    'post', 'setup/update-token', @data_to_sync)
 
   end
 

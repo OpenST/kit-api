@@ -7,6 +7,10 @@ module GlobalConstant
       GlobalConstant::Base.demo_mappy_server[:endpoint]
     end
 
+    def self.mappy_secret_key
+      @mappy_secret_key ||= ENV['KA_DEMO_MAPPY_SERVER_SECRET_KEY']
+    end
+
   end
 
 end
