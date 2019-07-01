@@ -226,8 +226,8 @@ module TestEconomyManagement
       email_template_vars = {
         company_web_domain: GlobalConstant::CompanyWeb.domain,
         qr_code_url: qr_code_s3_url,
-        ios_app_download_link: GlobalConstant::DemoApp.ios_url,
-        android_app_download_link: GlobalConstant::DemoApp.android_url,
+        ios_app_download_link: CGI.escape(GlobalConstant::DemoApp.ios_url),
+        android_app_download_link: CGI.escape(GlobalConstant::DemoApp.android_url),
         deep_link_demo_app_launch_url: "#{GlobalConstant::CompanyOtherProductUrls.ost_web_root_url}/ost-wallet/launch/?ld=#{CGI.escape(app_launch_data.to_json)}",
         token_name: @token[:name],
         inviter_name: @client[:company_name] || "#{@manager[:first_name]} #{@manager[:last_name]}"
