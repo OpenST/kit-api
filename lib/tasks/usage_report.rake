@@ -38,6 +38,21 @@ task :usage_report => :environment do
     wallet_setup: 0
   }
 
+  popcorn_economy = ENV['OST_POPCORN_ECONOMY'].to_i
+
+  token_stats = {
+      new_popcorn_account_activations: 0,
+      lifetime_popcorn_account_activations: 0,
+      new_popcorn_first_transactions: 0,
+      lifetime_popcorn_first_transactions: 0,
+      new_platform_account_activations: 0,
+      lifetime_platform_account_activations: 0,
+      new_platform_first_transactions: 0,
+      lifetime_platform_first_transactions: 0,
+      lifetime_total_transfers: 0,
+      lifetime_popcorn_total_transfers: 0
+  }
+
   all_manager_rows = []
   first_active_superadmin_manager_map = {}
   first_active_superadmin_details = []
@@ -179,6 +194,11 @@ task :usage_report => :environment do
           if registered_today
             daily_summary_report[:token_setup] += 1
           end
+        end
+        if dashboard_service_response.data[:token][:id].to_i == popcorn_economy
+          token_stats[:lifetime_popcorn_total_transfers] = dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
+        else
+          token_stats[:lifetime_total_transfers] += dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
         end
       end
 
@@ -515,17 +535,6 @@ task :usage_report => :environment do
       }
   )
 
-  token_stats = {
-      new_popcorn_account_activations: 0,
-      lifetime_popcorn_account_activations: 0,
-      new_popcorn_first_transactions: 0,
-      lifetime_popcorn_first_transactions: 0,
-      new_platform_account_activations: 0,
-      lifetime_platform_account_activations: 0,
-      new_platform_first_transactions: 0,
-      lifetime_platform_first_transactions: 0
-  }
-  popcorn_economy = ENV['OST_POPCORN_ECONOMY'].to_i
   if r.success?
     stats_from_mappy = r.data
     stats_from_mappy[:lifetime_user_activated_records].each do |tid, count|

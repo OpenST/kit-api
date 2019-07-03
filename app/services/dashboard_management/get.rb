@@ -160,6 +160,7 @@ module DashboardManagement
       @total_volume = r.data['totalVolume']
       @total_volume_dollar = r.data['totalVolumeDollar']
       @economy_users = r.data['economyUsers']
+      @total_token_transfers = r.data['totalTokenTransfers']
 
       success
     end
@@ -292,7 +293,8 @@ module DashboardManagement
             circulating_supply_dollar: @circulating_supply_dollar,
             total_volume: @total_volume,
             total_volume_dollar: @total_volume_dollar,
-            economy_users: @economy_users
+            economy_users: @economy_users,
+            total_transfers: @total_token_transfers
           },
           manager: @manager,
           graph_urls: @graph_urls,
