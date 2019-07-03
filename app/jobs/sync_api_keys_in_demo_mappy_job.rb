@@ -32,6 +32,9 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
     r = fetch_api_credentials
     return notify_devs(r) unless r.success?
 
+    # Webhook secret would be added if
+    fetch_webhook_secret
+
     r = sync_in_demo_mappy
     return notify_devs(r) unless r.success?
 
@@ -130,9 +133,8 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   # Fetch webhook secret to sync to demo
   #
   def fetch_webhook_secret
-    client_entity = @client.formatted_cache_data
-    if client_entity[:sandbox_statuses].include?(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
-      @data_to_sync[:webhook_secret] = KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).fetch[@client_id]
+    if @client[:sandbox_statuses].include?(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
+      @data_to_sync.merge!(KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).fetch[@client_id] || {})
     end
   end
 
