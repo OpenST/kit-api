@@ -47,6 +47,16 @@ module ClientManagement
             r = fetch_webhook_secret
             return r unless r.success?
 
+            # Webhook secret also needs to be synced to mappy
+            BackgroundJob.enqueue(
+                SyncApiKeysInDemoMappyJob,
+                {
+                    client_id: @client_id,
+                    show_keys_enable_flag: @show_keys_enable_flag,
+                    email_already_sent_flag: @email_already_sent_flag
+                }
+            )
+
           else
 
             return error_with_data(
