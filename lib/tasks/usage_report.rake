@@ -53,6 +53,18 @@ task :usage_report => :environment do
       lifetime_popcorn_total_transfers: 0
   }
 
+  if popcorn_economy > 0
+    popcorn_client = ENV['OST_POPCORN_ECONOMY_CLIENT'].to_i
+    params_for_saas_api = {
+        token_id: popcorn_economy,
+        client_id: popcorn_client,
+    }
+
+    r = SaasApi::Dashboard::Get.new.perform(params_for_saas_api)
+    return r unless r.success?
+    token_stats[:lifetime_popcorn_total_transfers] = r.data['totalTokenTransfers']
+  end
+
   all_manager_rows = []
   first_active_superadmin_manager_map = {}
   first_active_superadmin_details = []
@@ -195,9 +207,7 @@ task :usage_report => :environment do
             daily_summary_report[:token_setup] += 1
           end
         end
-        if dashboard_service_response.data[:token][:id].to_i == popcorn_economy
-          token_stats[:lifetime_popcorn_total_transfers] = dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
-        else
+        if dashboard_service_response.data[:token][:id].to_i != popcorn_economy
           token_stats[:lifetime_total_transfers] += dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
         end
       end
