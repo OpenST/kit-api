@@ -100,6 +100,7 @@ task :usage_report => :environment do
           company_name: '',
           enterprise: '',
           mobile_app: '',
+          wallet_setup: '',
           webhook_setup: 'NO'
         }
 
@@ -492,18 +493,18 @@ task :usage_report => :environment do
         else
           client_details[client_entity[:id]][:mobile_app] = 'NO'
         end
-        if client_entity[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
-          client_details[client_entity[:id]][:wallet_setup] = 'YES'
-          lifetime_summary_report[:wallet_setup] += 1
-          if client_entity[:created_at] > day_start_ts
-            daily_summary_report[:wallet_setup] += 1
-          end
-        else
-          client_details[client_entity[:id]][:wallet_setup] = 'NO'
+      end
+      if client_entity[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
+        client_details[client_entity[:id]][:wallet_setup] = 'YES'
+        lifetime_summary_report[:wallet_setup] += 1
+        if client_entity[:created_at] > day_start_ts
+          daily_summary_report[:wallet_setup] += 1
         end
-        if client_webhooks[client_entity[:id]].present?
-          client_details[client_entity[:id]][:webhook_setup] = 'YES'
-        end
+      else
+        client_details[client_entity[:id]][:wallet_setup] = 'NO'
+      end
+      if client_webhooks[client_entity[:id]].present?
+        client_details[client_entity[:id]][:webhook_setup] = 'YES'
       end
     end
 
