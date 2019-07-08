@@ -5,7 +5,8 @@ class EmailServiceApiCallHook < DbConnection::KitSaasBigSubenv
     GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind => 2,
     GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind => 3,
     GlobalConstant::EmailServiceApiCallHook.whitelisting_requester_kind => 4,
-    GlobalConstant::EmailServiceApiCallHook.test_economy_invite_receiver_entity_kind => 5
+    GlobalConstant::EmailServiceApiCallHook.test_economy_invite_receiver_entity_kind => 5,
+    GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind => 6
   }
   
   enum event_type: {

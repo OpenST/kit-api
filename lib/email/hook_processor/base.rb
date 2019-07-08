@@ -127,6 +127,8 @@ module Email
           @email = ManagerWhitelisting.where(id: @hook.receiver_entity_id).first.identifier
         elsif @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.test_economy_invite_receiver_entity_kind
           @email = ::TestEconomyInvite.where(id: @hook.receiver_entity_id).first.email
+        elsif @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind
+          @email = @hook.params["receiver_email"]
         else
           r = set_manager_id
           return r unless r.success?

@@ -24,6 +24,7 @@ module Email
         @receiver_entity_kind = params[:receiver_entity_kind]
         @custom_description = params[:custom_description]
         @custom_attributes = params[:custom_attributes] || {}
+        @receiver_email = params[:receiver_email]
       end
 
       # Perform
@@ -143,6 +144,7 @@ module Email
       # @param [Hash] params
       #
       def create_hook(params = {})
+        params.merge!(receiver_email: @receiver_email) if @receiver_email.present?
         EmailServiceApiCallHook.create!(
             receiver_entity_id: @receiver_entity_id,
             receiver_entity_kind: @receiver_entity_kind,

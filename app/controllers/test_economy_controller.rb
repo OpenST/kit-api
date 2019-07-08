@@ -1,5 +1,9 @@
 class TestEconomyController < AuthenticationController
 
+  skip_before_action :set_authentication_params_to_nil, only: [:self_invite]
+  skip_before_action :authenticate_by_mfa_cookie, only: [:self_invite]
+  skip_before_action :authenticate_sub_env_access, only: [:self_invite]
+
   # Get Demo Details
   #
   # * Author: Puneet
@@ -30,6 +34,17 @@ class TestEconomyController < AuthenticationController
   #
   def invite
     service_response = TestEconomyManagement::Invite.new(params).perform
+    return render_api_response(service_response)
+  end
+
+  # Invite yourself for economy
+  #
+  # * Author: Pankaj
+  # * Date: 08/07/2019
+  # * Reviewed By:
+  #
+  def self_invite
+    service_response = TestEconomyManagement::SelfInvite.new(params).perform
     return render_api_response(service_response)
   end
 

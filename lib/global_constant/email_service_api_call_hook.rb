@@ -26,6 +26,10 @@ module GlobalConstant
       def test_economy_invite_receiver_entity_kind
         'test_economy_invite'
       end
+
+      def specific_email_receiver_entity_kind
+        'specific_email'
+      end
   
       ########## receiver_entity_kinds #############
 

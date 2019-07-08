@@ -378,6 +378,11 @@
    - :email_addresses
  :optional:
    - :auth_token
+'TestEconomyManagement::SelfInvite':
+ :mandatory:
+   - :client_id
+   - :email_address
+ :optional:
 'ManagerManagement::SendDeviceVerificationLink':
  :mandatory:
    - :manager_id
