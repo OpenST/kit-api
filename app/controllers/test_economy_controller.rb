@@ -44,6 +44,8 @@ class TestEconomyController < AuthenticationController
   # * Reviewed By:
   #
   def self_invite
+    # For now this is for popcorn economy, so hardcoding client from here
+    params.merge!({client_id: ENV['OST_POPCORN_ECONOMY_CLIENT'].to_i})
     service_response = TestEconomyManagement::SelfInvite.new(params).perform
     return render_api_response(service_response)
   end

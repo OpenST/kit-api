@@ -101,8 +101,8 @@ module TestEconomyManagement
         receiver_entity_id: 0,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind,
         receiver_email: @email,
-        template_name: GlobalConstant::PepoCampaigns.platform_test_economy_invite_template,
-        template_vars: {}).perform
+        template_name: GlobalConstant::PepoCampaigns.recovery_request_submission_template,
+        template_vars: {company_web_domain: GlobalConstant::CompanyWeb.domain, manager_email_id: @email}).perform
 
     end
 
