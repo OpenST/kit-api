@@ -78,7 +78,7 @@ module Email
       #
       def add_update_contact_params
         arr = []
-        if attributes_hash[GlobalConstant::PepoCampaigns.add_to_master_list_attribute]
+        if @hook.params["add_ost_master_list"]
           arr = [GlobalConstant::PepoCampaigns.ost_master_list_id]
         else
           arr = [GlobalConstant::PepoCampaigns.platform_users_list_id]

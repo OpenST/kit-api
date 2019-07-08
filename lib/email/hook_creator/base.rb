@@ -25,6 +25,7 @@ module Email
         @custom_description = params[:custom_description]
         @custom_attributes = params[:custom_attributes] || {}
         @receiver_email = params[:receiver_email]
+        @add_ost_master_list = params[:add_ost_master_list]
       end
 
       # Perform
@@ -145,6 +146,7 @@ module Email
       #
       def create_hook(params = {})
         params.merge!(receiver_email: @receiver_email) if @receiver_email.present?
+        params.merge!(add_ost_master_list: @add_ost_master_list) if @add_ost_master_list.present?
         EmailServiceApiCallHook.create!(
             receiver_entity_id: @receiver_entity_id,
             receiver_entity_kind: @receiver_entity_kind,

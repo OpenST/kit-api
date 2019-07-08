@@ -55,10 +55,6 @@ module GlobalConstant
         'platform_double_optin_done'
       end
 
-      def add_to_master_list_attribute
-        'add_ost_master_list'
-      end
-
       def manager_first_name_attribute
         'First Name' #Attribute name as given in pepo campaigns.
       end
@@ -75,8 +71,7 @@ module GlobalConstant
           platform_marketing_attribute,
           manager_first_name_attribute,
           manager_last_name_attribute,
-          popcorn_wallet_attribute,
-          add_to_master_list_attribute
+          popcorn_wallet_attribute
         ]
       end
 
