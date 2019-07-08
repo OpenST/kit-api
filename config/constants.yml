@@ -63,7 +63,8 @@ constants:
       base_url: <%= ENV['KA_CAMPAIGN_BASE_URL']%>
       version: 'v2'
     list_ids:
-      master_list: <%= ENV['KA_CAMPAIGN_MASTER_LIST']%>
+      platform_user_list: <%= ENV['KA_CAMPAIGN_MASTER_LIST']%>
+      ost_master_list: <%= ENV['KA_CAMPAIGN_OST_MASTER_LIST']%>
 
   saas_api:
     endpoint: <%= ENV['KA_SAAS_API_ENDPOINT'] %>

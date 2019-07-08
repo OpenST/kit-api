@@ -19,6 +19,8 @@ module TestEconomyManagement
 
       @client_id = @params[:client_id]
       @email = @params[:email_address]
+      @popcorn_wallet = @params[:popcorn_wallet] || 0
+      @platform_marketing = @params[:platform_marketing] || 0
     end
 
     # Perform
@@ -36,11 +38,15 @@ module TestEconomyManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        r = send_invite_email
-        return r unless r.success?
+        if @popcorn_wallet
+          r = send_invite_email
+          return r unless r.success?
+        end
 
-        r = add_email_for_future_communications
-        return r unless r.success?
+        if @platform_marketing
+          r = add_email_for_future_communications
+          return r unless r.success?
+        end
 
         success
 
@@ -86,7 +92,12 @@ module TestEconomyManagement
       ::Email::HookCreator::AddContact.new(
           receiver_entity_id: 0,
           receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind,
-          receiver_email: @email
+          receiver_email: @email,
+          custom_attributes: {
+              add_ost_master_list: true,
+              GlobalConstant::PepoCampaigns.popcorn_wallet_attribute => @popcorn_wallet,
+              GlobalConstant::PepoCampaigns.platform_marketing_attribute => @platform_marketing
+          }
       ).perform
 
     end
@@ -101,8 +112,8 @@ module TestEconomyManagement
         receiver_entity_id: 0,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind,
         receiver_email: @email,
-        template_name: GlobalConstant::PepoCampaigns.recovery_request_submission_template,
-        template_vars: {company_web_domain: GlobalConstant::CompanyWeb.domain, manager_email_id: @email}).perform
+        template_name: GlobalConstant::PepoCampaigns.platform_popcorn_wallet_invitation_template,
+        template_vars: {company_web_domain: GlobalConstant::CompanyWeb.domain}).perform
 
     end
 

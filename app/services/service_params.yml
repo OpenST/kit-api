@@ -383,6 +383,8 @@
    - :client_id
    - :email_address
  :optional:
+    - :popcorn_wallet
+    - :platform_marketing
 'ManagerManagement::SendDeviceVerificationLink':
  :mandatory:
    - :manager_id

@@ -29,8 +29,12 @@ module GlobalConstant
 
       ########### List Ids ############
 
-      def master_list_id
-        config[:list_ids][:master_list]
+      def platform_users_list_id
+        config[:list_ids][:platform_user_list]
+      end
+
+      def ost_master_list_id
+        config[:list_ids][:ost_master_list]
       end
 
       ########### User Custom Attributes #########
@@ -41,6 +45,10 @@ module GlobalConstant
 
       def platform_signup_attribute
         'platform_signup'
+      end
+
+      def popcorn_wallet_attribute
+        'popcorn_wallet'
       end
 
       def platform_double_optin_done_attribute
@@ -200,6 +208,11 @@ module GlobalConstant
       # Platform token setup status failes
       def platform_stake_and_mint_status_failed_template
         'platform_stake_and_mint_status_failed'
+      end
+
+      # Platform popcorn wallet invitations
+      def platform_popcorn_wallet_invitation_template
+        'platform_popcorn_wallet_invitations'
       end
 
       # All possible templates integrated with email service

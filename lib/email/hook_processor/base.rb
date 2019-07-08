@@ -77,12 +77,16 @@ module Email
       # @return [Array]
       #
       def add_update_contact_params
-        [
-          GlobalConstant::PepoCampaigns.master_list_id,
-          @email,
-          attributes_hash,
-          user_settings_hash
-        ]
+        arr = []
+        if attributes_hash["add_ost_master_list"]
+          arr = [GlobalConstant::PepoCampaigns.ost_master_list_id]
+        else
+          arr = [GlobalConstant::PepoCampaigns.platform_users_list_id]
+        end
+        arr << @email
+        arr << attributes_hash
+        arr << user_settings_hash
+        arr
       end
 
       # Build attributes for email service
