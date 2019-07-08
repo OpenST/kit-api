@@ -55,6 +55,10 @@ module GlobalConstant
         'platform_double_optin_done'
       end
 
+      def add_to_master_list_attribute
+        'add_ost_master_list'
+      end
+
       def manager_first_name_attribute
         'First Name' #Attribute name as given in pepo campaigns.
       end
@@ -70,7 +74,9 @@ module GlobalConstant
           platform_double_optin_done_attribute,
           platform_marketing_attribute,
           manager_first_name_attribute,
-          manager_last_name_attribute
+          manager_last_name_attribute,
+          popcorn_wallet_attribute,
+          add_to_master_list_attribute
         ]
       end
 
@@ -237,7 +243,8 @@ module GlobalConstant
           platform_token_setup_status_success_template,
           platform_token_setup_status_failed_template,
           platform_stake_and_mint_status_success_template,
-          platform_stake_and_mint_status_failed_template
+          platform_stake_and_mint_status_failed_template,
+          platform_popcorn_wallet_invitation_template
         ]
       end
 

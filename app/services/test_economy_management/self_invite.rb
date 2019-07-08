@@ -94,7 +94,7 @@ module TestEconomyManagement
           receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind,
           receiver_email: @email,
           custom_attributes: {
-              add_ost_master_list: true,
+              GlobalConstant::PepoCampaigns.add_to_master_list_attribute => true,
               GlobalConstant::PepoCampaigns.popcorn_wallet_attribute => @popcorn_wallet,
               GlobalConstant::PepoCampaigns.platform_marketing_attribute => @platform_marketing
           }
