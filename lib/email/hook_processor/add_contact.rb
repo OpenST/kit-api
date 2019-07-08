@@ -94,10 +94,17 @@ module Email
       # @return [Hash]
       #
       def user_settings_hash
-        {
-            GlobalConstant::PepoCampaigns.double_opt_in_status_user_setting => GlobalConstant::PepoCampaigns.verified_value,
-            GlobalConstant::PepoCampaigns.subscribe_status_user_setting => GlobalConstant::PepoCampaigns.subscribed_value
-        }
+        if @hook.params["add_ost_master_list"]
+          {
+              GlobalConstant::PepoCampaigns.subscribe_status_user_setting => GlobalConstant::PepoCampaigns.subscribed_value
+          }
+        else
+          {
+              GlobalConstant::PepoCampaigns.double_opt_in_status_user_setting => GlobalConstant::PepoCampaigns.verified_value,
+              GlobalConstant::PepoCampaigns.subscribe_status_user_setting => GlobalConstant::PepoCampaigns.subscribed_value
+          }
+        end
+
       end
 
     end
