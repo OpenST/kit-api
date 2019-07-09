@@ -38,15 +38,11 @@ module TestEconomyManagement
         r = validate_and_sanitize
         return r unless r.success?
 
-        if @popcorn_wallet
-          r = send_invite_email
-          return r unless r.success?
-        end
+        r = send_invite_email
+        return r unless r.success?
 
-        if @platform_marketing
-          r = add_email_for_future_communications
-          return r unless r.success?
-        end
+        r = add_email_for_future_communications
+        return r unless r.success?
 
         success
 
