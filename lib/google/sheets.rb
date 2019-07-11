@@ -43,7 +43,17 @@ module Google
     end
 
     def authorize
-      authorization = Google::Auth.get_application_default(@scope)
+      authorization = nil
+      begin
+        authorization = Google::Auth.get_application_default(@scope)
+      rescue => e
+        puts "===Error fetching authorization google sheets", e
+        return error_with_data(
+            'gs_2',
+            'something_went_wrong',
+            GlobalConstant::ErrorAction.default
+        )
+      end
       authorization
     end
 
