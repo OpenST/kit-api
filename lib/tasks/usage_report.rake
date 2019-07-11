@@ -478,7 +478,8 @@ task :usage_report => :environment do
   def upload_to_sheets(sheet_name, csv_data)
     puts("Uploading " + sheet_name + " usage report to google sheets")
     g = Google::Sheets.new
-    g.upload sheet_name, csv_data
+    r = g.upload sheet_name, csv_data
+    puts r.inspect
   end
 
   # Fetch client details.

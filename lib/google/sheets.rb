@@ -26,6 +26,7 @@ module Google
                                                    value_range_object, value_input_option: 'RAW')
         success_with_data(response: result.inspect)
       rescue => e
+        puts "===Error uploading to google sheets", e
         return error_with_data(
             'gs_1',
             'something_went_wrong',
