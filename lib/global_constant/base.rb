@@ -119,6 +119,10 @@ module GlobalConstant
       @pipedrive ||= fetch_config.fetch('pipedrive', {}).with_indifferent_access
     end
 
+    def self.google
+      @google ||= fetch_config.fetch('google', {}).with_indifferent_access
+    end
+
     private
 
     def self.fetch_config

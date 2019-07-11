@@ -469,7 +469,15 @@ task :usage_report => :environment do
 
     result.data[:file_name] = file_name
 
+    sheet_name = "#{report_type}"
+    upload_to_sheets(sheet_name, csv_data)
+
     return result
+  end
+
+  def upload_to_sheets(sheet_name, csv_data)
+    g = Google::Sheets.new
+    g.upload sheet_name, csv_data
   end
 
   # Fetch client details.

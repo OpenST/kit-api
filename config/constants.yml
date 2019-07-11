@@ -103,3 +103,6 @@ constants:
   company_other_product_urls:
     view_root_url: <%= ENV['KA_VIEW_ROOT_URL'] %>
     ost_web_root_url: <%= ENV['KA_OST_WEB_ROOT_URL'] %>
+
+  google:
+    usage_report_spreadsheet_id: <%= ENV['USAGE_REPORT_SPREADSHEET_ID'] %>
