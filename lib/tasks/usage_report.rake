@@ -474,7 +474,7 @@ task :usage_report => :environment do
 
     result.data[:file_name] = file_name
 
-    sheet_name = "#{report_type}"
+    sheet_name = "#{report_type} #{GlobalConstant::Environment.url_prefix}"
     upload_to_sheets(sheet_name, csv_data)
 
     return result
