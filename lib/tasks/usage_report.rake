@@ -622,7 +622,7 @@ task :usage_report => :environment do
 
   template_vars.merge!(token_stats)
 
-  recipient_emails = recipient_emails = JSON.parse(GlobalConstant::UsageReportRecipient.email_ids.to_json)
+  recipient_emails = JSON.parse(GlobalConstant::UsageReportRecipient.email_ids.to_json)
 
   recipient_emails.each do |email|
     puts("Sending email to: " + email)
