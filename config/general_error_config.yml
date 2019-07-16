@@ -182,3 +182,18 @@ graph_data_not_found:
   http_code: 404
   code: "NOT_FOUND"
   message: "Data not available."
+
+invalid_google_credentials:
+  http_code: 401
+  code: "UNAUTHORIZED"
+  message: "Invalid google authorization credentials"
+
+empty_data:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Data is empty."
+
+invalid_columns:
+  http_code: 422
+  code: "UNPROCESSABLE_ENTITY"
+  message: "Invalid number of columns in the data"
