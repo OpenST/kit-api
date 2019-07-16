@@ -39,6 +39,7 @@ task :usage_report => :environment do
   }
 
   popcorn_economy = ENV['OST_POPCORN_ECONOMY'].to_i
+  popcorn_client = ENV['OST_POPCORN_ECONOMY_CLIENT'].to_i
 
   token_stats = {
       new_popcorn_account_activations: 0,
@@ -54,7 +55,6 @@ task :usage_report => :environment do
   }
 
   if popcorn_economy > 0
-    popcorn_client = ENV['OST_POPCORN_ECONOMY_CLIENT'].to_i
     params_for_saas_api = {
         token_id: popcorn_economy,
         client_id: popcorn_client,
@@ -78,7 +78,7 @@ task :usage_report => :environment do
 
       split_email = row.email.to_s.split('@')
 
-      if split_email[1] === 'ost.com'
+      if row.current_client_id != popcorn_client.to_i && split_email[1] === 'ost.com'
         next
       end
 
@@ -156,7 +156,8 @@ task :usage_report => :environment do
       stake_and_mint_done: 0,
       made_transactions: 0,
       token_deployment_status: GlobalConstant::ClientToken.not_deployed,
-      token_symbol: ''
+      token_symbol: '',
+      total_transactions: 0
     }
 
     client_id = row.current_client_id
@@ -208,6 +209,7 @@ task :usage_report => :environment do
             daily_summary_report[:token_setup] += 1
           end
         end
+        lifetime_data_by_email[row.email][:total_transactions] = dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
         if dashboard_service_response.data[:token][:id].to_i != popcorn_economy
           token_stats[:lifetime_total_transfers] += dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
         end
@@ -221,7 +223,7 @@ task :usage_report => :environment do
         end
       end
 
-      if dashboard_service_response.data[:dashboard_details][:circulating_supply].to_f > 0
+      if lifetime_data_by_email[row.email][:total_transactions].to_f > 0
         lifetime_data_by_email[row.email][:made_transactions] = 1
         lifetime_summary_report[:transactions] += 1
         if registered_today
@@ -335,7 +337,8 @@ task :usage_report => :environment do
                         'Error in step',
                         'Error solved',
                         'Performed First transaction',
-                        'Has setup Webhooks?'
+                        'Has setup Webhooks?',
+                        'Transactions per client'
                     ])
     else
       csv_data.push([
@@ -362,7 +365,8 @@ task :usage_report => :environment do
                         'Registered admins',
                         'Connected to OST Wallet app',
                         'Sent Wallet invites?',
-                        'Has setup Webhooks?'
+                        'Has setup Webhooks?',
+                        'Transactions per client'
                     ])
     end
 
@@ -421,6 +425,7 @@ task :usage_report => :environment do
         buffer.push(email_invites[data[:token_id]].present? ? 'YES' : 'NO')
       end
       buffer.push(clientwise_details[client_id][:webhook_setup])
+      buffer.push(data[:total_transactions])
 
       csv_data.push(buffer)
     end
@@ -469,7 +474,17 @@ task :usage_report => :environment do
 
     result.data[:file_name] = file_name
 
+    sheet_name = "#{report_type} #{GlobalConstant::Environment.url_prefix}"
+    upload_to_sheets(sheet_name, csv_data)
+
     return result
+  end
+
+  def upload_to_sheets(sheet_name, csv_data)
+    puts("Uploading " + sheet_name + " usage report to google sheets")
+    g = Google::Sheet.new
+    r = g.upload sheet_name, csv_data
+    puts r.inspect
   end
 
   # Fetch client details.
@@ -607,7 +622,7 @@ task :usage_report => :environment do
 
   template_vars.merge!(token_stats)
 
-  recipient_emails = GlobalConstant::UsageReportRecipient.email_ids
+  recipient_emails = recipient_emails = JSON.parse(GlobalConstant::UsageReportRecipient.email_ids.to_json)
 
   recipient_emails.each do |email|
     puts("Sending email to: " + email)

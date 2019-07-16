@@ -103,3 +103,9 @@ constants:
   company_other_product_urls:
     view_root_url: <%= ENV['KA_VIEW_ROOT_URL'] %>
     ost_web_root_url: <%= ENV['KA_OST_WEB_ROOT_URL'] %>
+
+  google:
+    usage_report_spreadsheet_id: <%= ENV['KA_USAGE_REPORT_SPREADSHEET_ID'] %>
+    private_key: <%= ENV['KA_GOOGLE_PRIVATE_KEY'] %>
+    client_email: <%= ENV['KA_GOOGLE_CLIENT_EMAIL'] %>
+    project_id: <%= ENV['KA_GOOGLE_PROJECT_ID'] %>

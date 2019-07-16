@@ -32,6 +32,8 @@ gem 'rqrcode', '0.10.1'
 
 # gem 'ost-sdk-ruby', '1.1.0'
 
+gem 'google-api-client', '0.30.5'
+
 group :development, :test do
   # Use Puma as the app server
   gem 'puma', '~> 3.7'
