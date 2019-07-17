@@ -209,10 +209,6 @@ task :usage_report => :environment do
             daily_summary_report[:token_setup] += 1
           end
         end
-        lifetime_data_by_email[row.email][:total_transactions] = dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
-        if dashboard_service_response.data[:token][:id].to_i != popcorn_economy
-          token_stats[:lifetime_total_transfers] += dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
-        end
       end
 
       if dashboard_service_response.data[:dashboard_details][:total_supply].to_f > 0
@@ -223,11 +219,17 @@ task :usage_report => :environment do
         end
       end
 
+      # Transactions has been done and how many transactions have been performed, should only be calculated
+      # if circulating supply has increased.
       if dashboard_service_response.data[:dashboard_details][:circulating_supply].to_f > 0
         lifetime_data_by_email[row.email][:made_transactions] = 1
         lifetime_summary_report[:transactions] += 1
         if registered_today
           daily_summary_report[:transactions] += 1
+        end
+        lifetime_data_by_email[row.email][:total_transactions] = dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
+        if dashboard_service_response.data[:token][:id].to_i != popcorn_economy
+          token_stats[:lifetime_total_transfers] += dashboard_service_response.data[:dashboard_details][:total_transfers].to_i
         end
       end
     end
