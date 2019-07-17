@@ -637,7 +637,6 @@ task :usage_report => :environment do
 
     if send_mail_response['error'].present?
       puts("Error in sending email:" + send_mail_response['error'])
-      return
     end
   end
 end
