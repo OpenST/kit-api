@@ -223,7 +223,7 @@ task :usage_report => :environment do
         end
       end
 
-      if lifetime_data_by_email[row.email][:total_transactions].to_f > 0
+      if dashboard_service_response.data[:dashboard_details][:circulating_supply].to_f > 0
         lifetime_data_by_email[row.email][:made_transactions] = 1
         lifetime_summary_report[:transactions] += 1
         if registered_today
