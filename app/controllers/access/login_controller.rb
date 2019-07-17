@@ -52,7 +52,14 @@ class Access::LoginController < AuthenticationController
       service_response = ManagerManagement::SignUp::ByInvite.new(params).perform
     else
       # Verify recaptcha only if invite token is not passed.
-      verify_recaptcha
+      verify_captcha_response = Google::Recaptcha.new({
+                                                 'response' => params['g-recaptcha-response'].to_s,
+                                                 'remoteip' => ip_address
+                                               }).perform
+      unless verify_captcha_response.success?
+        Rails.logger.error("---- Recaptcha::Verify Error: #{verify_captcha_response.to_hash}")
+        return render_api_response(verify_captcha_response)
+      end
 
       service_response = ManagerManagement::SignUp::WithoutInvite.new(params).perform
     end
