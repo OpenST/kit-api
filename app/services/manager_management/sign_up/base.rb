@@ -385,10 +385,11 @@ module ManagerManagement
         end
 
         set_mile_stones.each do |mile_stone|
-          @attributes_hash[mile_stone] = GlobalConstant::PepoCampaigns.attribute_set
+          pc_attribute = mile_stone.split("#{GlobalConstant::Environment.sandbox_sub_environment}_")[1]  # Removing the env prefix
+          @attributes_hash[pc_attribute] = GlobalConstant::PepoCampaigns.attribute_set
         end
 
-        success_with_data({set_mile_stones: set_mile_stones })
+        success_with_data({ set_mile_stones: set_mile_stones })
       end
 
     end

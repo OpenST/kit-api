@@ -282,10 +282,12 @@ module ManagerManagement
                                          attributes: { GlobalConstant::PepoCampaigns.super_admin =>  GlobalConstant::PepoCampaigns.attribute_set },
                                          settings: {}
                                      })
+
           update_mile_stone_attributes
         else
           @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
+
           update_mile_stone_attributes
         end
 
