@@ -186,11 +186,6 @@ module GlobalConstant
         'recovery_request_submission'
       end
 
-      # Platform usage report to get an idea of the funnel
-      def platform_usage_report_template
-        'platform_usage_report'
-      end
-
       # Platform token setup status successful
       def platform_token_setup_status_success_template
         'platform_token_setup_status_success'

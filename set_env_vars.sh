@@ -127,9 +127,6 @@ export KA_DEMO_MAPPY_SERVER_SECRET_KEY='1somethingsarebetterkeptinenvironemntvar
 export KA_DEMO_IOS_APP_URL='https://s3.amazonaws.com/sdk.stagingost.com/iOS/Download.html'
 export KA_DEMO_ANDROID_APP_URL='http://sdk.stagingost.com.s3.amazonaws.com/Android/release/demoapp-release.apk'
 
-# Usage report recipient's email ids
-export KA_USAGE_REPORT_RECIPIENTS_EMAIL_IDS="[\"backend@ost.com\"]"
-
 # Jira Details
 export KA_JIRA_USERNAME=''
 export KA_JIRA_PASSWORD=''

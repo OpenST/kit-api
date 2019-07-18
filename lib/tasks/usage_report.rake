@@ -594,49 +594,4 @@ task :usage_report => :environment do
       end
     end
   end
-
-
-  template_name = GlobalConstant::PepoCampaigns.platform_usage_report_template
-  template_vars = {
-    daily_registrations: daily_summary_report[:registrations],
-    daily_email_verifications: daily_summary_report[:double_opt_in],
-    daily_token_setup: daily_summary_report[:token_setup],
-    daily_client_stake_mint: daily_summary_report[:stake_and_mint],
-    daily_client_atleast_one_transaction: daily_summary_report[:transactions],
-    daily_client_setup_wallet: daily_summary_report[:wallet_setup],
-
-    lifetime_registrations: lifetime_summary_report[:registrations],
-    lifetime_email_verifications: lifetime_summary_report[:double_opt_in],
-    lifetime_token_setup: lifetime_summary_report[:token_setup],
-    lifetime_client_stake_mint: lifetime_summary_report[:stake_and_mint],
-    lifetime_client_atleast_one_transaction: lifetime_summary_report[:transactions],
-    lifetime_client_setup_wallet: lifetime_summary_report[:wallet_setup],
-
-    unresolved_token_setup_errors: lifetime_summary_report[:ts_errors],
-    unresolved_stake_mint_errors: lifetime_summary_report[:snm_errors],
-    resolved_token_setup_errors: lifetime_summary_report[:resolved_ts_errors],
-    resolved_stake_mint_errors: lifetime_summary_report[:resolved_snm_errors],
-    date: Time.now.strftime("%Y-%m-%d"),
-
-    daily_report_link: CGI.escape(daily_upload_response.data[:presigned_url]),
-    lifetime_report_link: CGI.escape(lifetime_upload_response.data[:presigned_url])
-  }
-
-  template_vars.merge!(token_stats)
-
-  recipient_emails = GlobalConstant::UsageReportRecipient.email_ids.split(',')
-
-  recipient_emails.each do |email|
-    puts("Sending email to: " + email)
-
-    send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(
-      email,
-      template_name,
-      template_vars
-    )
-
-    if send_mail_response['error'].present?
-      puts("Error in sending email:" + send_mail_response['error'])
-    end
-  end
 end
