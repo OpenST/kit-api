@@ -11,7 +11,8 @@ module Email
       # * Reviewed By:
       #
       # @params [Hash] user_settings (optional) - user settings which has to be updated for this email
-      # @params [Hash] mile_stone (mandatory) - mile stone
+      # @params [String] mile_stone (mandatory) - mile stone
+      # @params [String] sub_env (mandatory) - sub env
       #
       # @return [Email::HookCreator::ClientMileStone] returns an object of Email::HookCreator::ClientMileStone class
       #
@@ -19,6 +20,7 @@ module Email
         super
         @user_settings = params[:user_settings] || {}
         @mile_stone = params[:mile_stone]
+        @sub_env = params[:sub_env]
       end
 
       # Perform
@@ -74,7 +76,8 @@ module Email
         create_hook(
             custom_attributes: @custom_attributes,
             user_settings: @user_settings,
-            mile_stone: @mile_stone
+            mile_stone: @mile_stone,
+            sub_env: @sub_env
         )
 
         success
