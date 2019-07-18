@@ -180,6 +180,7 @@ module TokenManagement
     # @return [Result::Base]
     def update_contacts
       client = Client.where(id: @client_id).first
+      client = client.formatted_cache_data
 
       return success if client[:properties].present? && client[:properties].include?(GlobalConstant::PepoCampaigns.first_api_call)
 

@@ -388,7 +388,7 @@ module ManagerManagement
         }
 
         client = Client.where(id: @client_id).first
-
+        client = client.formatted_cache_data
 
         mile_stones = []
 
