@@ -346,7 +346,7 @@ module ManagerManagement
         r = fetch_client_mile_stones
         return r unless r.success?
 
-        client_mile_stones = r.data
+        client_mile_stones = r.data[:set_mile_stones]
 
         return success if client_mile_stones.length == 0
 
@@ -388,7 +388,7 @@ module ManagerManagement
           @attributes_hash[mile_stone] = GlobalConstant::PepoCampaigns.attribute_set
         end
 
-        success_with_data(set_mile_stones)
+        success_with_data({set_mile_stones: set_mile_stones })
       end
 
     end
