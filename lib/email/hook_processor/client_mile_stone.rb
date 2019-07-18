@@ -64,7 +64,7 @@ module Email
         r = fetch_client
         return r unless r.success?
 
-        return success if @client["#{sub_env}_statuses"].include?("#{sub_env}_#{mile_stone}")
+        return success if @client["#{sub_env}_statuses"].present? && @client["#{sub_env}_statuses"].include?("#{sub_env}_#{mile_stone}")
 
         r = set_client_properties
         return r unless r.success?
