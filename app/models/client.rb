@@ -5,7 +5,12 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.has_enforced_mfa_property => 1,
         GlobalConstant::Client.has_mobile_app_property => 2,
         GlobalConstant::Client.has_one_million_users_property => 4,
-        GlobalConstant::Client.has_company_info_property => 8
+        GlobalConstant::Client.has_company_info_property => 8,
+        GlobalConstant::Client.token_setup_property => 16,
+        GlobalConstant::Client.stake_and_mint_property => 32,
+        GlobalConstant::Client.ost_wallet_setup_property => 64,
+        GlobalConstant::Client.ost_wallet_invited_users_property => 128,
+        GlobalConstant::Client.first_api_call_property => 256
     }
   end
 

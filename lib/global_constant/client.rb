@@ -63,6 +63,26 @@ module GlobalConstant
         'has_company_info'
       end
 
+      def token_setup_property
+        'token_setup'
+      end
+
+      def stake_and_mint_property
+        'stake_and_mint'
+      end
+
+      def ost_wallet_setup_property
+        'ost_wallet_setup'
+      end
+
+      def ost_wallet_invited_users_property
+        'ost_wallet_invited_users'
+      end
+
+      def first_api_call_property
+        'first_api_call'
+      end
+
       ### Properties End ###
 
     end

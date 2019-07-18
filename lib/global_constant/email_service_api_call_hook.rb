@@ -47,6 +47,10 @@ module GlobalConstant
         'send_transactional_mail'
       end
 
+      def client_mile_stone_event_type
+        'client_mile_stone'
+      end
+
       ########## entity_types #############
       
       

@@ -55,6 +55,9 @@ module TestEconomyManagement
         r = create_email_hook
         return r unless r.success?
 
+        r = update_contacts
+        return r unless r.success?
+
         prepare_response
 
       end
@@ -263,6 +266,24 @@ module TestEconomyManagement
     #
     def prepare_response
       success
+    end
+
+    # Update attributes in pepo campaigns
+    #
+    # * Author: Santhosh
+    # * Date: 17/07/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def update_contacts
+      update_campaign_attributes({
+                                     entity_id: @token[:client_id],
+                                     entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
+                                     attributes: { GlobalConstant::PepoCampaigns.ost_wallet_invited_users =>  GlobalConstant::PepoCampaigns.attribute_set },
+                                     settings: {},
+                                     mile_stone: GlobalConstant::PepoCampaigns.ost_wallet_invited_users
+                                 })
     end
 
   end

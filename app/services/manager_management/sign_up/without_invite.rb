@@ -286,6 +286,15 @@ module ManagerManagement
 
         @client_manager_obj.save!
 
+        update_campaign_attributes({
+                                       entity_id: @manager_obj.id,
+                                       entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+                                       attributes: { GlobalConstant::PepoCampaigns.super_admin =>  GlobalConstant::PepoCampaigns.super_admin_value },
+                                       settings: {}
+                                   })
+
+        update_mile_stone_attributes
+
         success
 
       end

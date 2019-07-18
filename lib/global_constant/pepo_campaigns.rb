@@ -63,6 +63,30 @@ module GlobalConstant
         'Last Name' #Attribute name as given in pepo campaigns.
       end
 
+      def super_admin
+        'super_admin' #Attribute name as given in pepo campaigns.
+      end
+
+      def token_setup
+        'token_setup' #Attribute name as given in pepo campaigns. Managed in Saas
+      end
+
+      def stake_and_mint
+        'stake_and_mint' #Attribute name as given in pepo campaigns. Managed in Saas
+      end
+
+      def ost_wallet_setup
+        'ost_wallet_setup' #Attribute name as given in pepo campaigns.
+      end
+
+      def ost_wallet_invited_users
+        'ost_wallet_invited_users' #Attribute name as given in pepo campaigns.
+      end
+
+      def first_api_call
+        'first_api_call' #Attribute name as given in pepo campaigns.
+      end
+
 
       def allowed_custom_attributes
         [
@@ -71,7 +95,13 @@ module GlobalConstant
           platform_marketing_attribute,
           manager_first_name_attribute,
           manager_last_name_attribute,
-          popcorn_wallet_attribute
+          popcorn_wallet_attribute,
+          super_admin,
+          token_setup,
+          stake_and_mint,
+          ost_wallet_setup,
+          ost_wallet_invited_users,
+          first_api_call
         ]
       end
 
@@ -123,6 +153,14 @@ module GlobalConstant
 
       ################ Custom Attribute Values ################
 
+      def attribute_set
+        1
+      end
+
+      def attribute_unset
+        0
+      end
+
       def platform_signup_value
         1
       end
@@ -136,6 +174,14 @@ module GlobalConstant
       end
 
       def platform_marketing_value_false
+        0
+      end
+
+      def super_admin_value
+        1
+      end
+
+      def regular_admin_value
         0
       end
 

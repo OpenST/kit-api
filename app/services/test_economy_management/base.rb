@@ -274,6 +274,31 @@ module TestEconomyManagement
       GlobalConstant::S3.public_asset_s3_url(qr_code_s3_file_path)
     end
 
+    # Update attributes in pepo campaigns
+    #
+    # * Author: Santhosh
+    # * Date: 16/07/2019
+    # * Reviewed By:
+    #
+    # @params [Integer] entity_id (mandatory) -  receiver entity id
+    # @params [Integer] entity_kind (mandatory) - receiver entity kind
+    # @params [Hash] attributes (mandatory) - attributes to update
+    # @params [Hash] settings (mandatory) - settings to update
+    #
+    # @return [Result::Base]
+    #
+    def update_campaign_attributes(params)
+      Email::HookCreator::ClientMileStone.new(
+          receiver_entity_id: params[:entity_id],
+          receiver_entity_kind: params[:entity_kind],
+          custom_attributes: params[:attributes],
+          user_settings: params[:settings],
+          mile_stone: params[:mile_stone]
+      ).perform
+
+      success
+    end
+
   end
 
 end

@@ -271,12 +271,22 @@ module ManagerManagement
         ).first
 
         # Decide invite privilege depending on the is_super_admin set in the manager validation hash.
+
         if @is_super_admin == GlobalConstant::ClientManager.is_super_admin_privilege
           @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+
+          update_campaign_attributes({
+                                         entity_id: @manager_obj.id,
+                                         entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+                                         attributes: { GlobalConstant::PepoCampaigns.super_admin =>  GlobalConstant::PepoCampaigns.super_admin_value },
+                                         settings: {}
+                                     })
+          update_mile_stone_attributes
         else
           @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          update_mile_stone_attributes
         end
 
         @client_manager_obj.save!

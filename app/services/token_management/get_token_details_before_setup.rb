@@ -53,6 +53,9 @@ module TokenManagement
         r = fetch_stake_currency_details
         return r unless r.success?
 
+        r = update_contacts
+        return r unless r.success?
+
         @sign_message = {
           wallet_association: GlobalConstant::MessageToSign.wallet_association
         }
@@ -166,6 +169,27 @@ module TokenManagement
 
       success
 
+    end
+
+    # Update contact in pepo campaigns
+    #
+    # * Author: Santhosh
+    # * Date: 17/04/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    def update_contacts
+      client = Client.where(id: @client_id).first
+
+      return success if client[:properties].present? && client[:properties].include?(GlobalConstant::PepoCampaigns.first_api_call)
+
+      Email::HookCreator::ClientMileStone.new(
+          receiver_entity_id: @client_id,
+          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
+          custom_attributes: { GlobalConstant::PepoCampaigns.first_api_call =>  GlobalConstant::PepoCampaigns.attribute_set },
+          user_settings: {},
+          mile_stone: GlobalConstant::PepoCampaigns.first_api_call
+      ).perform
     end
 
   end

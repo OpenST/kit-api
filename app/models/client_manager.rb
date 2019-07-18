@@ -8,6 +8,12 @@ class ClientManager < DbConnection::KitClient
         GlobalConstant::ClientManager.has_rejected_invite_privilege => 8,
         GlobalConstant::ClientManager.has_been_deleted_privilege => 16,
         GlobalConstant::ClientManager.is_super_admin_invited_privilege => 32,
+        # Use the constants from client for admin level replications
+        GlobalConstant::Client.token_setup_property => 64,
+        GlobalConstant::Client.stake_and_mint_property => 128,
+        GlobalConstant::Client.ost_wallet_setup_property => 256,
+        GlobalConstant::Client.ost_wallet_invited_users_property => 512,
+        GlobalConstant::Client.first_api_call_property => 1024
     }
   end
 
@@ -27,6 +33,15 @@ class ClientManager < DbConnection::KitClient
         'client_id = ? AND privileges | ? > 0',
         client_id,
         ClientManager.privileges_config[GlobalConstant::ClientManager.is_super_admin_privilege]
+    )
+  }
+
+  scope :admins, ->(client_id) {
+    where(
+        'client_id = ? AND (privileges | ? > 0 OR privileges | ? > 0)',
+        client_id,
+        ClientManager.privileges_config[GlobalConstant::ClientManager.is_super_admin_privilege],
+        ClientManager.privileges_config[GlobalConstant::ClientManager.is_admin_privilege]
     )
   }
 

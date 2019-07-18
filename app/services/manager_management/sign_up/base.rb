@@ -307,6 +307,98 @@ module ManagerManagement
         success
       end
 
+      # Update attributes in pepo campaigns
+      #
+      # * Author: Santhosh
+      # * Date: 16/07/2019
+      # * Reviewed By:
+      #
+      # @params [Integer] entity_id (mandatory) -  receiver entity id
+      # @params [Integer] entity_kind (mandatory) - receiver entity kind
+      # @params [Hash] attributes (mandatory) - attributes to update
+      # @params [Hash] settings (mandatory) - settings to update
+      #
+      # @return [Result::Base]
+      #
+      def update_campaign_attributes(params)
+
+        Email::HookCreator::UpdateContact.new(
+            receiver_entity_id: params[:entity_id],
+            receiver_entity_kind: params[:entity_kind],
+            custom_attributes: params[:attributes],
+            user_settings: params[:settings]
+        ).perform
+
+        success
+      end
+
+      # Update attributes in pepo campaigns
+      #
+      # * Author: Santhosh
+      # * Date: 16/07/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def update_mile_stone_attributes
+
+        r = fetch_client_mile_stones
+        return r unless r.success?
+
+        client_mile_stones = r.data
+
+        return success if client_mile_stones.length == 0
+
+        ClientManager.admins(@client_id).all.each do |client_manager|
+
+          client_mile_stones.each do |mile_stone|
+            client_manager.send("set_#{mile_stone}")
+            attributes_hash[mile_stone] = GlobalConstant::PepoCampaigns.attribute_set
+          end
+
+          client_manager.save!
+
+          Email::HookCreator::UpdateContact.new(
+              receiver_entity_id: client_manager[:manager_id],
+              receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+              custom_attributes: attributes_hash,
+              user_settings: {}
+          ).perform
+        end
+
+        success
+      end
+
+      # Fetch client mile stones reached
+      #
+      # * Author: Santhosh
+      # * Date: 16/07/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_client_mile_stones
+
+        client_mile_stones = {
+            GlobalConstant::Client.token_setup_property => 16,
+            GlobalConstant::Client.stake_and_mint_property => 32,
+            GlobalConstant::Client.ost_wallet_setup_property => 64,
+            GlobalConstant::Client.ost_wallet_invited_users_property => 128,
+            GlobalConstant::Client.first_api_call_property => 256
+        }
+
+        client = Client.where(id: @client_id).first
+
+
+        mile_stones = []
+
+        client_mile_stones.each do |mile_stone|
+          mile_stones << mile_stone if client[:properties].present? && client[:properties].include?(mile_stone)
+        end
+
+        success_with_data(mile_stones)
+      end
+
     end
 
   end
