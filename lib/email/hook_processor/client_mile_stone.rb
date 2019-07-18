@@ -64,7 +64,7 @@ module Email
         r = fetch_client
         return r unless r.success?
 
-        return success if @client["#{sub_env}_statuses"].present? && @client["#{sub_env}_statuses"].include?("#{sub_env}_#{mile_stone}")
+        return success if @client_hash["#{sub_env}_statuses"].present? && @client_hash["#{sub_env}_statuses"].include?("#{sub_env}_#{mile_stone}")
 
         r = set_client_properties
         return r unless r.success?
@@ -86,6 +86,8 @@ module Email
         @client_id = @hook[:receiver_entity_id]
 
         @client = Client.where(id: @client_id).first
+
+        @client_hash = @client.formatted_cache_data
 
         success
       end
