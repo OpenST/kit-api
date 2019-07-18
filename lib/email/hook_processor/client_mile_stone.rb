@@ -72,6 +72,7 @@ module Email
         r = update_super_admins_and_admins
         return r unless r.success?
 
+        success
       end
 
       # Fetch client
