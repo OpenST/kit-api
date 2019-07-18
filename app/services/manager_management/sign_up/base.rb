@@ -380,7 +380,7 @@ module ManagerManagement
 
         set_mile_stones = []
 
-        client_mile_stones.each do |mile_stone|
+        client_mile_stones.each do |mile_stone, val|
           set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
         end
 
