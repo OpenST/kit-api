@@ -240,11 +240,11 @@ module ManagerManagement
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
           @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
-          super_admin_property = GlobalConstant::PepoCampaigns.super_admin_value
+          super_admin_property = GlobalConstant::PepoCampaigns.attribute_set
         else
           @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
-          super_admin_property = GlobalConstant::PepoCampaigns.regular_admin_value
+          super_admin_property = GlobalConstant::PepoCampaigns.attribute_unset
         end
 
         @to_update_client_manager.save!
@@ -310,24 +310,22 @@ module ManagerManagement
     #
     def fetch_client_mile_stones
 
-      client_mile_stones = {
-          GlobalConstant::Client.token_setup_property => 16,
-          GlobalConstant::Client.stake_and_mint_property => 32,
-          GlobalConstant::Client.ost_wallet_setup_property => 64,
-          GlobalConstant::Client.ost_wallet_invited_users_property => 128,
-          GlobalConstant::Client.first_api_call_property => 256
-      }
+      client_mile_stones = Client.sandbox_client_mile_stones
 
       client = Client.where(id: @client_id).first
       client = client.formatted_cache_data
 
-      mile_stones = []
+      set_mile_stones = []
 
       client_mile_stones.each do |mile_stone|
-        mile_stones << mile_stone if client[:properties].present? && client[:properties].include?(mile_stone)
+        set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
       end
 
-      success_with_data(mile_stones)
+      set_mile_stones.each do |mile_stone|
+        @attributes_hash[mile_stone] = GlobalConstant::PepoCampaigns.attribute_set
+      end
+
+      success_with_data(set_mile_stones)
     end
 
     # Update attributes in pepo campaigns
@@ -349,17 +347,10 @@ module ManagerManagement
 
       ClientManager.admins(@client_id).all.each do |client_manager|
 
-        client_mile_stones.each do |mile_stone|
-          client_manager.send("set_#{mile_stone}")
-          attributes_hash[mile_stone] = GlobalConstant::PepoCampaigns.attribute_set
-        end
-
-        client_manager.save!
-
         Email::HookCreator::UpdateContact.new(
             receiver_entity_id: client_manager[:manager_id],
             receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-            custom_attributes: attributes_hash,
+            custom_attributes: @attributes_hash,
             user_settings: {}
         ).perform
       end

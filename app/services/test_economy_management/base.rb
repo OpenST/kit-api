@@ -293,7 +293,8 @@ module TestEconomyManagement
           receiver_entity_kind: params[:entity_kind],
           custom_attributes: params[:attributes],
           user_settings: params[:settings],
-          mile_stone: params[:mile_stone]
+          mile_stone: params[:mile_stone],
+          sub_env: GlobalConstant.Base.sub_environment_name
       ).perform
 
       success

@@ -177,14 +177,6 @@ module GlobalConstant
         0
       end
 
-      def super_admin_value
-        1
-      end
-
-      def regular_admin_value
-        0
-      end
-
       ############# Custom Attribute Values ################
 
       # double optin email - sent when user is adding email for the first time

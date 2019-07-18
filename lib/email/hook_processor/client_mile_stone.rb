@@ -61,12 +61,33 @@ module Email
       #
       def process_hook
 
+        r = fetch_client
+        return r unless r.success?
+
+        return success if @client["#{sub_env}_statuses"].include?("#{sub_env}_#{mile_stone}")
+
         r = set_client_properties
         return r unless r.success?
 
-        r = update_super_admins
+        r = update_super_admins_and_admins
         return r unless r.success?
 
+      end
+
+      # Fetch client
+      #
+      # * Author: Santhosh
+      # * Date: 17/07/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def fetch_client
+        @client_id = @hook[:receiver_entity_id]
+
+        @client = Client.where(id: @client_id).first
+
+        success
       end
 
       # Set client properties
@@ -78,16 +99,14 @@ module Email
       # @return [Result::Base]
       #
       def set_client_properties
-        @client_id = @hook[:receiver_entity_id]
 
-        client = Client.where(id: @client_id).first
-        client.send("set_#{mile_stone}")
-        client.save!
+        @client.send("set_#{sub_env}_#{mile_stone}")
+        @client.save!
 
         success
       end
 
-      # Update properties on super admins
+      # Update properties on super admins and admins
       #
       # * Author: Santhosh
       # * Date: 17/07/2019
@@ -95,10 +114,10 @@ module Email
       #
       # @return [Result::Base]
       #
-      def update_super_admins
+      def update_super_admins_and_admins
+        return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment
+
         ClientManager.admins(@client_id).all.each do |client_manager|
-          client_manager.send("set_#{mile_stone}")
-          client_manager.save!
 
           Email::HookCreator::UpdateContact.new(
               receiver_entity_id: client_manager[:manager_id],
@@ -141,10 +160,22 @@ module Email
       # * Date: 17/07/2019
       # * Reviewed By:
       #
-      # @return [Hash]
+      # @return [string]
       #
       def mile_stone
         @hook.params["mile_stone"]
+      end
+
+      # sub env in which hook was created
+      #
+      # * Author: Santhosh
+      # * Date: 17/07/2019
+      # * Reviewed By:
+      #
+      # @return [string]
+      #
+      def sub_env
+        @hook.params["sub_env"]
       end
 
     end

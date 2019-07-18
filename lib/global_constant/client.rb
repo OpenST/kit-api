@@ -27,6 +27,26 @@ module GlobalConstant
         'webhook_registered_in_mappy_server_status'
       end
 
+      def sandbox_token_setup_property
+        'sandbox_token_setup'
+      end
+
+      def sandbox_stake_and_mint_property
+        'sandbox_stake_and_mint'
+      end
+
+      def sandbox_ost_wallet_setup_property
+        'sandbox_ost_wallet_setup'
+      end
+
+      def sandbox_ost_wallet_invited_users_property
+        'sandbox_ost_wallet_invited_users'
+      end
+
+      def sandbox_first_api_call_property
+        'sandbox_first_api_call'
+      end
+
       def mainnet_whitelisted_status
         'mainnet_whitelisted_status'
       end
@@ -41,6 +61,26 @@ module GlobalConstant
 
       def mainnet_registered_in_mappy_server_status
         'mainnet_registered_in_mappy_server_status'
+      end
+
+      def mainnet_token_setup_property
+        'mainnet_token_setup'
+      end
+
+      def mainnet_stake_and_mint_property
+        'mainnet_stake_and_mint'
+      end
+
+      def mainnet_ost_wallet_setup_property
+        'mainnet_ost_wallet_setup'
+      end
+
+      def mainnet_ost_wallet_invited_users_property
+        'mainnet_ost_wallet_invited_users'
+      end
+
+      def mainnet_first_api_call_property
+        'mainnet_first_api_call'
       end
 
       ### Status End ###
@@ -61,26 +101,6 @@ module GlobalConstant
 
       def has_company_info_property
         'has_company_info'
-      end
-
-      def token_setup_property
-        'token_setup'
-      end
-
-      def stake_and_mint_property
-        'stake_and_mint'
-      end
-
-      def ost_wallet_setup_property
-        'ost_wallet_setup'
-      end
-
-      def ost_wallet_invited_users_property
-        'ost_wallet_invited_users'
-      end
-
-      def first_api_call_property
-        'first_api_call'
       end
 
       ### Properties End ###

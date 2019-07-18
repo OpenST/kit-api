@@ -36,6 +36,7 @@ module ManagerManagement
         @cookie_value = nil
         @invite_token = nil
         @decrypted_invite_token = nil
+        @attributes_hash = {}
 
       end
 
@@ -351,17 +352,10 @@ module ManagerManagement
 
         ClientManager.admins(@client_id).all.each do |client_manager|
 
-          client_mile_stones.each do |mile_stone|
-            client_manager.send("set_#{mile_stone}")
-            attributes_hash[mile_stone] = GlobalConstant::PepoCampaigns.attribute_set
-          end
-
-          client_manager.save!
-
           Email::HookCreator::UpdateContact.new(
               receiver_entity_id: client_manager[:manager_id],
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-              custom_attributes: attributes_hash,
+              custom_attributes: @attributes_hash,
               user_settings: {}
           ).perform
         end
@@ -379,24 +373,22 @@ module ManagerManagement
       #
       def fetch_client_mile_stones
 
-        client_mile_stones = {
-            GlobalConstant::Client.token_setup_property => 16,
-            GlobalConstant::Client.stake_and_mint_property => 32,
-            GlobalConstant::Client.ost_wallet_setup_property => 64,
-            GlobalConstant::Client.ost_wallet_invited_users_property => 128,
-            GlobalConstant::Client.first_api_call_property => 256
-        }
+        client_mile_stones = Client.sandbox_client_mile_stones
 
         client = Client.where(id: @client_id).first
         client = client.formatted_cache_data
 
-        mile_stones = []
+        set_mile_stones = []
 
         client_mile_stones.each do |mile_stone|
-          mile_stones << mile_stone if client[:properties].present? && client[:properties].include?(mile_stone)
+          set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
         end
 
-        success_with_data(mile_stones)
+        set_mile_stones.each do |mile_stone|
+          @attributes_hash[mile_stone] = GlobalConstant::PepoCampaigns.attribute_set
+        end
+
+        success_with_data(set_mile_stones)
       end
 
     end

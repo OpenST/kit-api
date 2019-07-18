@@ -182,14 +182,15 @@ module TokenManagement
       client = Client.where(id: @client_id).first
       client = client.formatted_cache_data
 
-      return success if client[:properties].present? && client[:properties].include?(GlobalConstant::PepoCampaigns.first_api_call)
+      return success if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(GlobalConstant::PepoCampaigns.first_api_call)
 
       Email::HookCreator::ClientMileStone.new(
           receiver_entity_id: @client_id,
           receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
           custom_attributes: { GlobalConstant::PepoCampaigns.first_api_call =>  GlobalConstant::PepoCampaigns.attribute_set },
           user_settings: {},
-          mile_stone: GlobalConstant::PepoCampaigns.first_api_call
+          mile_stone: GlobalConstant::PepoCampaigns.first_api_call,
+          sub_env: GlobalConstant::Base.sub_environment_name
       ).perform
     end
 
