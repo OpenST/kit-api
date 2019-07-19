@@ -269,10 +269,14 @@ module TestEconomyManagement
         return r
       end
 
+      mile_stone = nil
+
       if is_main_sub_env?
         @client_obj.send("set_#{GlobalConstant::Client.mainnet_registered_in_mappy_server_status}")
+        mile_stone = GlobalConstant::Client.mainnet_registered_in_mappy_server_status
       else
         @client_obj.send("set_#{GlobalConstant::Client.sandbox_registered_in_mappy_server_status}")
+        mile_stone = GlobalConstant::Client.sandbox_registered_in_mappy_server_status
       end
 
       update_campaign_attributes({
@@ -280,7 +284,7 @@ module TestEconomyManagement
                                      entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
                                      attributes: { GlobalConstant::PepoCampaigns.ost_wallet_setup =>  GlobalConstant::PepoCampaigns.attribute_set },
                                      settings: {},
-                                     mile_stone: GlobalConstant::PepoCampaigns.ost_wallet_setup
+                                     mile_stone: mile_stone
                                  })
 
       success

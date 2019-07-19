@@ -64,7 +64,10 @@ module Email
         r = fetch_client
         return r unless r.success?
 
-        return success if @client_hash["#{sub_env}_statuses"].present? && @client_hash["#{sub_env}_statuses"].include?("#{sub_env}_#{mile_stone}")
+        r = set_mile_stone
+        return r unless r.success?
+
+        return success if @client_hash["#{sub_env}_statuses"].present? && @client_hash["#{sub_env}_statuses"].include?(@mile_stone)
 
         r = set_client_properties
         return r unless r.success?
@@ -93,6 +96,22 @@ module Email
         success
       end
 
+      # Set mile stone
+      #
+      # * Author: Santhosh
+      # * Date: 17/07/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def set_mile_stone
+        if mile_stone.end_with?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status[-15,15]) # using last 15 chars
+          @mile_stone = mile_stone
+        else
+          @mile_stone = "#{sub_env}_#{mile_stone}"
+        end
+      end
+
       # Set client properties
       #
       # * Author: Santhosh
@@ -103,7 +122,7 @@ module Email
       #
       def set_client_properties
 
-        @client.send("set_#{sub_env}_#{mile_stone}")
+        @client.send("set_#{@mile_stone}")
         @client.save!
 
         success
