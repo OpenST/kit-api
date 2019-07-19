@@ -66,7 +66,8 @@ module Email
 
         set_mile_stone
 
-        return success if @client_hash["#{sub_env}_statuses"].present? && @client_hash["#{sub_env}_statuses"].include?(@mile_stone)
+        statuses_column_sym = "#{sub_env}_statuses".to_sym
+        return success if @client_hash[statuses_column_sym].present? && @client_hash[statuses_column_sym].include?(@mile_stone)
 
         r = set_client_properties
         return r unless r.success?
