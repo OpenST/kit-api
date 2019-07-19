@@ -16,11 +16,11 @@ namespace :one_timers do
       sub_env = GlobalConstant::Base.sub_environment_name
       attribute_hash = {}
 
-      Rails.logger.info "**** Started processing for client id #{client_id} in #{sub_env} environment *****"
+      puts "**** Started processing for client id #{client_id} in #{sub_env} environment *****"
 
       @token = Token.where(client_id: client_id, status: GlobalConstant::ClientToken.deployment_completed).first
 
-      Rails.logger.info "==== Deployed token present status for #{client_id} - #{@token.present?} ===="
+      puts "==== Deployed token present status for #{client_id} - #{@token.present?} ===="
 
       if @token.present?
         client.send("set_#{sub_env}_#{GlobalConstant::PepoCampaigns.token_setup}")
@@ -36,7 +36,7 @@ namespace :one_timers do
                        kind: GlobalConstant::Workflow.bt_stake_and_mint,
                        status: GlobalConstant::Workflow.completed).first
 
-        Rails.logger.info "==== Stake and mint done status for #{client_id} - #{stake_and_mint.present?} ===="
+        puts "==== Stake and mint done status for #{client_id} - #{stake_and_mint.present?} ===="
 
         if stake_and_mint.present?
           client.send("set_#{sub_env}_#{GlobalConstant::PepoCampaigns.stake_and_mint}")
@@ -45,7 +45,7 @@ namespace :one_timers do
 
         invitee = TestEconomyInvite.where(token_id: @token[:id]).pluck
 
-        Rails.logger.info "==== Wallet users invited status for token id #{@token[:id]} - #{invitee.present?} ===="
+        puts "==== Wallet users invited status for token id #{@token[:id]} - #{invitee.present?} ===="
 
         if invitee.present?
           client.send("set_#{sub_env}_#{GlobalConstant::PepoCampaigns.ost_wallet_invited_users}")
@@ -54,13 +54,13 @@ namespace :one_timers do
       end
 
       if GlobalConstant::Base.sandbox_sub_environment?
-        Rails.logger.info "===== Sandbox statuses #{client_hash["sandbox_statuses"]}"
+        puts "===== Sandbox statuses #{client_hash["sandbox_statuses"]}"
 
         break if client_hash["sandbox_statuses"].blank?
 
         wallet_setup_done = client_hash["sandbox_statuses"].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
 
-        Rails.logger.info "==== Wallet setup done status for client_id #{client_id} - #{wallet_setup_done} ===="
+        puts "==== Wallet setup done status for client_id #{client_id} - #{wallet_setup_done} ===="
 
         if wallet_setup_done
           attribute_hash[GlobalConstant::PepoCampaigns.ost_wallet_setup] = GlobalConstant::PepoCampaigns.attribute_set
@@ -81,7 +81,7 @@ namespace :one_timers do
     # @return [Result::Base]
     #
     def create_hooks_for_admins(client_id, attributes_hash)
-      Rails.logger.info "==== Creating hooks on admins for client_id #{client_id} for attributes #{attributes_hash}"
+      puts "==== Creating hooks on admins for client_id #{client_id} for attributes #{attributes_hash}"
 
       ClientManager.admins(client_id).each do |client_manager|
         update_contact(client_manager[:manager_id], attributes_hash)
@@ -106,7 +106,7 @@ namespace :one_timers do
           user_settings: {}
       ).perform
 
-      Rails.logger.info "==== Hook creation response #{r.inspect}"
+      puts "==== Hook creation response #{r.inspect}"
 
       success
     end
