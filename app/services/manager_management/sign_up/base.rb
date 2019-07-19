@@ -386,6 +386,12 @@ module ManagerManagement
 
         set_mile_stones.each do |mile_stone|
           pc_attribute = mile_stone.split("#{GlobalConstant::Environment.sandbox_sub_environment}_")[1]  # Removing the env prefix
+
+          # Since there are different attribute names compared to pepo campaign
+          if mile_stone == GlobalConstant::Client.sandbox_registered_in_mappy_server_status
+            pc_attribute = GlobalConstant::PepoCampaigns.ost_wallet_setup
+          end
+
           @attributes_hash[pc_attribute] = GlobalConstant::PepoCampaigns.attribute_set
         end
 
