@@ -64,8 +64,7 @@ module Email
         r = fetch_client
         return r unless r.success?
 
-        r = set_mile_stone
-        return r unless r.success?
+        set_mile_stone
 
         return success if @client_hash["#{sub_env}_statuses"].present? && @client_hash["#{sub_env}_statuses"].include?(@mile_stone)
 
