@@ -10,7 +10,7 @@ namespace :one_timers do
 
   task :populate_client_mile_stones => :environment do
 
-    Client.limit(2).each do |client|
+    Client.all.each do |client|
       client_id = client[:id]
       client_hash = client.formatted_cache_data
       sub_env = GlobalConstant::Base.sub_environment_name
@@ -54,11 +54,11 @@ namespace :one_timers do
       end
 
       if GlobalConstant::Base.sandbox_sub_environment?
-        puts "===== Sandbox statuses #{client_hash["sandbox_statuses"]}"
+        puts "===== Sandbox statuses #{client_hash[:sandbox_statuses]}"
 
-        break if client_hash["sandbox_statuses"].blank?
+        break if client_hash[:sandbox_statuses].blank?
 
-        wallet_setup_done = client_hash["sandbox_statuses"].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
+        wallet_setup_done = client_hash[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
 
         puts "==== Wallet setup done status for client_id #{client_id} - #{wallet_setup_done} ===="
 
@@ -72,45 +72,41 @@ namespace :one_timers do
       client.save!
     end
 
-    # Perform
-    #
-    # * Author: Santhosh
-    # * Date: 19/07/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def create_hooks_for_admins(client_id, attributes_hash)
-      puts "==== Creating hooks on admins for client_id #{client_id} for attributes #{attributes_hash}"
+  end
 
-      ClientManager.admins(client_id).each do |client_manager|
-        update_contact(client_manager[:manager_id], attributes_hash)
-      end
+  # Perform
+  #
+  # * Author: Santhosh
+  # * Date: 19/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def create_hooks_for_admins(client_id, attributes_hash)
+    puts "==== Creating hooks on admins for client_id #{client_id} for attributes #{attributes_hash}"
 
-      success
+    ClientManager.admins(client_id).each do |client_manager|
+      update_contact(client_manager[:manager_id], attributes_hash)
     end
+  end
 
-    # Perform
-    #
-    # * Author: Santhosh
-    # * Date: 19/07/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def update_contact(manager_id, attributes_hash)
-      r = Email::HookCreator::UpdateContact.new(
-          receiver_entity_id: manager_id,
-          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-          custom_attributes: attributes_hash,
-          user_settings: {}
-      ).perform
+  # Perform
+  #
+  # * Author: Santhosh
+  # * Date: 19/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def update_contact(manager_id, attributes_hash)
+    r = Email::HookCreator::UpdateContact.new(
+        receiver_entity_id: manager_id,
+        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+        custom_attributes: attributes_hash,
+        user_settings: {}
+    ).perform
 
-      puts "==== Hook creation response #{r.inspect}"
-
-      success
-    end
-
+    puts "==== Hook creation response #{r.inspect}" unless r.success?
   end
 
 end
