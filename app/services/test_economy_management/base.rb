@@ -294,7 +294,7 @@ module TestEconomyManagement
           custom_attributes: params[:attributes],
           user_settings: params[:settings],
           mile_stone: params[:mile_stone],
-          sub_env: GlobalConstant.Base.sub_environment_name
+          sub_env: GlobalConstant::Base.sub_environment_name
       ).perform
 
       success
