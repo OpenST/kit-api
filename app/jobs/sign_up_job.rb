@@ -37,6 +37,7 @@ class SignUpJob < ApplicationJob
     @manager_first_name = params[:manager_first_name]
     @manager_last_name = params[:manager_last_name]
     @super_admin = params[:super_admin]
+    @client_id = params[:client_id]
 
     @failed_logs = {}
   end
@@ -60,6 +61,10 @@ class SignUpJob < ApplicationJob
             GlobalConstant::PepoCampaigns.super_admin => @super_admin
         }
     ).perform
+
+    client_mile_stone = ClientMileStone.new(client_id: @client_id, manager_id: @manager_id)
+
+    client_mile_stone.update_mile_stones_for_current_admin
 
   end
 

@@ -259,7 +259,8 @@ module ManagerManagement
                 platform_marketing: @marketing_communication_flag,
                 manager_first_name: @first_name,
                 manager_last_name: @last_name,
-                super_admin: @super_admin
+                super_admin: @super_admin,
+                client_id: @client_id
             }
         )
 
