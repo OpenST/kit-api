@@ -197,6 +197,7 @@ module TokenManagement
       ).perform
 
       @failed_logs[@client_id] = r.to_hash unless r.success?
+      success
     end
 
     # Send notification mail
