@@ -2,6 +2,8 @@ module ManagerManagement
 
   module Team
 
+    include ClientMileStone
+
     class UpdateSuperAdminRole < ServicesBase
 
       # Initialize
@@ -29,8 +31,6 @@ module ManagerManagement
 
         @manager_to_be_updated_obj = nil
         @to_update_client_manager = nil
-        @attributes_hash = {}
-        @failed_logs = {}
       end
 
       # Perform
@@ -59,8 +59,6 @@ module ManagerManagement
 
           r = update_client_manager
           return r unless r.success?
-
-          notify_devs
 
           success_with_data({
               result_type: result_type,
@@ -253,14 +251,17 @@ module ManagerManagement
 
         @to_update_client_manager.save!
 
-        update_campaign_attributes({
-                                       entity_id: @manager_id,
-                                       entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-                                       attributes: { GlobalConstant::PepoCampaigns.super_admin =>  super_admin_property },
-                                       settings: {}
-                                   })
+        client_mile_stone = ClientMileStone.new(client_id: @client_id, manager_id: @manager_id)
 
-        update_mile_stone_attributes
+        Email::HookCreator::UpdateContact.new(
+            receiver_entity_id: @manager_id,
+            receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+            custom_attributes: { GlobalConstant::PepoCampaigns.super_admin =>  super_admin_property },
+            user_settings: {}
+        ).perform
+
+
+        client_mile_stone.update_mile_stones_for_current_admin
 
         success
 
@@ -276,106 +277,6 @@ module ManagerManagement
       #
       def result_type
         :client_managers
-      end
-
-      # Update attributes in pepo campaigns
-      #
-      # * Author: Santhosh
-      # * Date: 16/07/2019
-      # * Reviewed By:
-      #
-      # @params [Integer] entity_id (mandatory) -  receiver entity id
-      # @params [Integer] entity_kind (mandatory) - receiver entity kind
-      # @params [Hash] attributes (mandatory) - attributes to update
-      # @params [Hash] settings (mandatory) - settings to update
-      #
-      # @return [Result::Base]
-      #
-      def update_campaign_attributes(params)
-        r = Email::HookCreator::UpdateContact.new(
-            receiver_entity_id: params[:entity_id],
-            receiver_entity_kind: params[:entity_kind],
-            custom_attributes: params[:attributes],
-            user_settings: params[:settings]
-        ).perform
-
-        @failed_logs[params[:entity_id]] = r.to_hash unless r.success?
-        success
-      end
-
-      # Fetch client mile stones reached
-      #
-      # * Author: Santhosh
-      # * Date: 16/07/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_client_mile_stones
-
-        client_mile_stones = Client.sandbox_client_mile_stones
-
-        client = Client.where(id: @client_id).first
-        client = client.formatted_cache_data
-
-        set_mile_stones = []
-
-        client_mile_stones.each do |mile_stone, val|
-          set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
-        end
-
-        set_mile_stones.each do |mile_stone|
-          pc_attribute = mile_stone.split("#{GlobalConstant::Environment.sandbox_sub_environment}_")[1]  # Removing the env prefix
-          @attributes_hash[pc_attribute] = GlobalConstant::PepoCampaigns.attribute_set
-        end
-
-        success_with_data({ set_mile_stones: set_mile_stones })
-      end
-
-      # Update attributes in pepo campaigns
-      #
-      # * Author: Santhosh
-      # * Date: 16/07/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def update_mile_stone_attributes
-
-        r = fetch_client_mile_stones
-        return r unless r.success?
-
-        client_mile_stones = r.data[:set_mile_stones]
-
-        return success if client_mile_stones.length == 0
-
-        ClientManager.admins(@client_id).all.each do |client_manager|
-
-          r = Email::HookCreator::UpdateContact.new(
-              receiver_entity_id: client_manager[:manager_id],
-              receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-              custom_attributes: @attributes_hash,
-              user_settings: {}
-          ).perform
-
-          @failed_logs[client_manager[:manager_id]] = r.to_hash unless r.success?
-        end
-
-        success
-      end
-
-      # Send notification mail
-      #
-      # * Author: Santhosh
-      # * Date: 22/07/2019
-      # * Reviewed By:
-      #
-      def notify_devs
-        ApplicationMailer.notify(
-            data: @failed_logs,
-            body: {},
-            subject: 'Exception in client mile stone hook creation'
-        ).deliver if @failed_logs.present?
       end
 
     end

@@ -84,9 +84,6 @@ module ManagerManagement
           r = create_update_contact_email_service_hook
           return r unless r.success?
 
-          # TODO - move to sign-up job
-          notify_devs
-
           r = create_authorized_device
           return r unless r.success?
 
@@ -279,20 +276,11 @@ module ManagerManagement
           @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
 
-          # TODO - move to signup job
-          update_campaign_attributes({
-                                         entity_id: @manager_obj.id,
-                                         entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-                                         attributes: { GlobalConstant::PepoCampaigns.super_admin =>  GlobalConstant::PepoCampaigns.attribute_set },
-                                         settings: {}
-                                     })
-
-          update_mile_stone_attributes
+          @super_admin = GlobalConstant::PepoCampaigns.attribute_set
         else
           @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
-
-          update_mile_stone_attributes
+          @super_admin = GlobalConstant::PepoCampaigns.attribute_unset
         end
 
         @client_manager_obj.save!

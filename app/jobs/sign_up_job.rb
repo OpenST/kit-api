@@ -36,6 +36,8 @@ class SignUpJob < ApplicationJob
     @platform_marketing = params[:platform_marketing]
     @manager_first_name = params[:manager_first_name]
     @manager_last_name = params[:manager_last_name]
+    @super_admin = params[:super_admin]
+
     @failed_logs = {}
   end
 
@@ -54,7 +56,8 @@ class SignUpJob < ApplicationJob
             GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value,
             GlobalConstant::PepoCampaigns.platform_marketing_attribute => @platform_marketing,
             GlobalConstant::PepoCampaigns.manager_first_name_attribute => @manager_first_name,
-            GlobalConstant::PepoCampaigns.manager_last_name_attribute => @manager_last_name
+            GlobalConstant::PepoCampaigns.manager_last_name_attribute => @manager_last_name,
+            GlobalConstant::PepoCampaigns.super_admin => @super_admin
         }
     ).perform
 

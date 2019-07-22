@@ -27,7 +27,6 @@ module TestEconomyManagement
       @token = nil
       @token_id = nil
       @aux_chain_id = nil
-      @failed_logs = {}
 
     end
 
@@ -289,7 +288,7 @@ module TestEconomyManagement
     # @return [Result::Base]
     #
     def update_campaign_attributes(params)
-      r = Email::HookCreator::ClientMileStone.new(
+      Email::HookCreator::ClientMileStone.new(
           receiver_entity_id: params[:entity_id],
           receiver_entity_kind: params[:entity_kind],
           custom_attributes: params[:attributes],
@@ -298,23 +297,7 @@ module TestEconomyManagement
           sub_env: GlobalConstant::Base.sub_environment_name
       ).perform
 
-      @failed_logs[params[:entity_id]] = r.to_hash unless r.success?
-
       success
-    end
-
-    # Send notification mail
-    #
-    # * Author: Santhosh
-    # * Date: 22/07/2019
-    # * Reviewed By:
-    #
-    def notify_devs
-      ApplicationMailer.notify(
-          data: @failed_logs,
-          body: {},
-          subject: 'Exception in client mile stone hook creation'
-      ).deliver if @failed_logs.present?
     end
 
   end

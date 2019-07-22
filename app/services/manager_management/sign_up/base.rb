@@ -27,17 +27,16 @@ module ManagerManagement
         @browser_user_agent = @params[:browser_user_agent]
         @fingerprint = @params[:fingerprint]
         @fingerprint_type = ManagerDevice.fingerprint_types[@params[:fingerprint_type]]
-        @failed_logs = {}
 
         @client_id = nil
         @manager_id = nil
         @manager_obj = nil
+        @super_admin = nil
         @client = nil
         @client_manager_obj = nil
         @cookie_value = nil
         @invite_token = nil
         @decrypted_invite_token = nil
-        @attributes_hash = {}
 
       end
 
@@ -252,7 +251,6 @@ module ManagerManagement
       #
       # @return [Result::Base]
       #
-      # TODO - add the ssuper admin attr here.
       def enqueue_job
         BackgroundJob.enqueue(
             SignUpJob,
@@ -260,7 +258,8 @@ module ManagerManagement
                 manager_id: @manager_obj.id,
                 platform_marketing: @marketing_communication_flag,
                 manager_first_name: @first_name,
-                manager_last_name: @last_name
+                manager_last_name: @last_name,
+                super_admin: @super_admin
             }
         )
 
@@ -308,117 +307,6 @@ module ManagerManagement
         end
 
         success
-      end
-
-      # Update attributes in pepo campaigns
-      #
-      # * Author: Santhosh
-      # * Date: 16/07/2019
-      # * Reviewed By:
-      #
-      # @params [Integer] entity_id (mandatory) -  receiver entity id
-      # @params [Integer] entity_kind (mandatory) - receiver entity kind
-      # @params [Hash] attributes (mandatory) - attributes to update
-      # @params [Hash] settings (mandatory) - settings to update
-      #
-      # @return [Result::Base]
-      #
-      def update_campaign_attributes(params)
-
-        r = Email::HookCreator::UpdateContact.new(
-            receiver_entity_id: params[:entity_id],
-            receiver_entity_kind: params[:entity_kind],
-            custom_attributes: params[:attributes],
-            user_settings: params[:settings]
-        ).perform
-
-        @failed_logs[params[:entity_id]] = r.to_hash unless r.success?
-
-        success
-      end
-
-      # Update attributes in pepo campaigns
-      #
-      # * Author: Santhosh
-      # * Date: 16/07/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def update_mile_stone_attributes
-
-        r = fetch_client_mile_stones
-        return r unless r.success?
-
-        client_mile_stones = r.data[:set_mile_stones]
-
-        return success if client_mile_stones.length == 0
-
-        # TODO: only current user needs to be updated and that too from signup job
-        ClientManager.admins(@client_id).all.each do |client_manager|
-
-          r = Email::HookCreator::UpdateContact.new(
-              receiver_entity_id: client_manager[:manager_id],
-              receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-              custom_attributes: @attributes_hash,
-              user_settings: {}
-          ).perform
-
-          @failed_logs[client_manager[:manager_id]] = r.to_hash unless r.success?
-        end
-
-        success
-      end
-
-      # Fetch client mile stones reached
-      #
-      # * Author: Santhosh
-      # * Date: 16/07/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_client_mile_stones
-
-        client_mile_stones = Client.sandbox_client_mile_stones
-
-        client = Client.where(id: @client_id).first
-        client = client.formatted_cache_data
-
-        set_mile_stones = []
-
-        # move this code to a lib
-        client_mile_stones.each do |mile_stone, val|
-          set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
-        end
-
-        set_mile_stones.each do |mile_stone|
-          pc_attribute = mile_stone.split("#{GlobalConstant::Environment.sandbox_sub_environment}_")[1]  # Removing the env prefix
-
-          # Since there are different attribute names compared to pepo campaign
-          if mile_stone == GlobalConstant::Client.sandbox_registered_in_mappy_server_status
-            pc_attribute = GlobalConstant::PepoCampaigns.ost_wallet_setup
-          end
-
-          @attributes_hash[pc_attribute] = GlobalConstant::PepoCampaigns.attribute_set
-        end
-
-        success_with_data({ set_mile_stones: set_mile_stones })
-      end
-
-      # Send notification mail
-      #
-      # * Author: Santhosh
-      # * Date: 22/07/2019
-      # * Reviewed By:
-      #
-      # TODO - change name to notify_devs_if_needed
-      def notify_devs
-        ApplicationMailer.notify(
-            data: @failed_logs,
-            body: {},
-            subject: 'Exception in client mile stone hook creation'
-        ).deliver if @failed_logs.present?
       end
 
     end
