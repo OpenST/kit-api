@@ -2,8 +2,6 @@ module ManagerManagement
 
   module Team
 
-    include ClientMileStone
-
     class UpdateSuperAdminRole < ServicesBase
 
       # Initialize
