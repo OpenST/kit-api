@@ -1,5 +1,7 @@
 class ClientMileStone
 
+  include Util::ResultHelper
+
   # Initialize
   #
   # @params [Number] client_id (mandatory) - client id
