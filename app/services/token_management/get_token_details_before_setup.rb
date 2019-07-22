@@ -56,8 +56,6 @@ module TokenManagement
         r = update_contacts
         return r unless r.success?
 
-        notify_devs
-
         @sign_message = {
           wallet_association: GlobalConstant::MessageToSign.wallet_association
         }
