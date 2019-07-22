@@ -38,11 +38,11 @@ class Client < DbConnection::KitClient
 
   def self.sandbox_client_mile_stones
     @c_s_m_stones ||= {
-        GlobalConstant::Client.sandbox_registered_in_mappy_server_status => 8,
-        GlobalConstant::Client.sandbox_token_setup_property => 32,
-        GlobalConstant::Client.sandbox_stake_and_mint_property => 64,
-        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 256,
-        GlobalConstant::Client.sandbox_first_api_call_property => 512
+        GlobalConstant::Client.sandbox_registered_in_mappy_server_status => 1,
+        GlobalConstant::Client.sandbox_token_setup_property => 1,
+        GlobalConstant::Client.sandbox_stake_and_mint_property => 1,
+        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 1,
+        GlobalConstant::Client.sandbox_first_api_call_property => 1
     }
   end
 

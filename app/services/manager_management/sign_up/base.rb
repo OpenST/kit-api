@@ -252,6 +252,7 @@ module ManagerManagement
       #
       # @return [Result::Base]
       #
+      # TODO - add the ssuper admin attr here.
       def enqueue_job
         BackgroundJob.enqueue(
             SignUpJob,
@@ -353,6 +354,7 @@ module ManagerManagement
 
         return success if client_mile_stones.length == 0
 
+        # TODO: only current user needs to be updated and that too from signup job
         ClientManager.admins(@client_id).all.each do |client_manager|
 
           r = Email::HookCreator::UpdateContact.new(
@@ -385,6 +387,7 @@ module ManagerManagement
 
         set_mile_stones = []
 
+        # move this code to a lib
         client_mile_stones.each do |mile_stone, val|
           set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
         end
@@ -409,6 +412,7 @@ module ManagerManagement
       # * Date: 22/07/2019
       # * Reviewed By:
       #
+      # TODO - change name to notify_devs_if_needed
       def notify_devs
         ApplicationMailer.notify(
             data: @failed_logs,

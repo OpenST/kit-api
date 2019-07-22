@@ -286,6 +286,7 @@ module ManagerManagement
 
         @client_manager_obj.save!
 
+        # TODO - move to sign-up job
         update_campaign_attributes({
                                        entity_id: @manager_obj.id,
                                        entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
