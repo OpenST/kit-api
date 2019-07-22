@@ -58,6 +58,8 @@ module TestEconomyManagement
         r = update_contacts
         return r unless r.success?
 
+        notify_devs
+
         prepare_response
 
       end

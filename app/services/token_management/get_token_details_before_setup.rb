@@ -20,6 +20,7 @@ module TokenManagement
 
       @client_manager = @params[:client_manager]
       @manager = @params[:manager]
+      @failed_logs = {}
 
     end
 
@@ -55,6 +56,8 @@ module TokenManagement
 
         r = update_contacts
         return r unless r.success?
+
+        notify_devs
 
         @sign_message = {
           wallet_association: GlobalConstant::MessageToSign.wallet_association
@@ -184,7 +187,7 @@ module TokenManagement
 
       return success if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(GlobalConstant::PepoCampaigns.first_api_call)
 
-      Email::HookCreator::ClientMileStone.new(
+      r = Email::HookCreator::ClientMileStone.new(
           receiver_entity_id: @client_id,
           receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
           custom_attributes: { GlobalConstant::PepoCampaigns.first_api_call =>  GlobalConstant::PepoCampaigns.attribute_set },
@@ -192,6 +195,22 @@ module TokenManagement
           mile_stone: GlobalConstant::PepoCampaigns.first_api_call,
           sub_env: GlobalConstant::Base.sub_environment_name
       ).perform
+
+      @failed_logs[@client_id] = r.to_hash unless r.success?
+    end
+
+    # Send notification mail
+    #
+    # * Author: Santhosh
+    # * Date: 22/07/2019
+    # * Reviewed By:
+    #
+    def notify_devs
+      ApplicationMailer.notify(
+          data: @failed_logs,
+          body: {},
+          subject: 'Exception in client mile stone hook creation'
+      ).deliver if @failed_logs.present?
     end
 
   end

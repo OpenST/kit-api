@@ -84,6 +84,8 @@ module ManagerManagement
           r = create_update_contact_email_service_hook
           return r unless r.success?
 
+          notify_devs
+
           r = create_authorized_device
           return r unless r.success?
 

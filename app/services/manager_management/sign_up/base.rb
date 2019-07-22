@@ -27,6 +27,7 @@ module ManagerManagement
         @browser_user_agent = @params[:browser_user_agent]
         @fingerprint = @params[:fingerprint]
         @fingerprint_type = ManagerDevice.fingerprint_types[@params[:fingerprint_type]]
+        @failed_logs = {}
 
         @client_id = nil
         @manager_id = nil
@@ -323,12 +324,14 @@ module ManagerManagement
       #
       def update_campaign_attributes(params)
 
-        Email::HookCreator::UpdateContact.new(
+        r = Email::HookCreator::UpdateContact.new(
             receiver_entity_id: params[:entity_id],
             receiver_entity_kind: params[:entity_kind],
             custom_attributes: params[:attributes],
             user_settings: params[:settings]
         ).perform
+
+        @failed_logs[params[:entity_id]] = r.to_hash unless r.success?
 
         success
       end
@@ -352,12 +355,14 @@ module ManagerManagement
 
         ClientManager.admins(@client_id).all.each do |client_manager|
 
-          Email::HookCreator::UpdateContact.new(
+          r = Email::HookCreator::UpdateContact.new(
               receiver_entity_id: client_manager[:manager_id],
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
               custom_attributes: @attributes_hash,
               user_settings: {}
           ).perform
+
+          @failed_logs[client_manager[:manager_id]] = r.to_hash unless r.success?
         end
 
         success
@@ -396,6 +401,20 @@ module ManagerManagement
         end
 
         success_with_data({ set_mile_stones: set_mile_stones })
+      end
+
+      # Send notification mail
+      #
+      # * Author: Santhosh
+      # * Date: 22/07/2019
+      # * Reviewed By:
+      #
+      def notify_devs
+        ApplicationMailer.notify(
+            data: @failed_logs,
+            body: {},
+            subject: 'Exception in client mile stone hook creation'
+        ).deliver if @failed_logs.present?
       end
 
     end

@@ -30,6 +30,7 @@ module ManagerManagement
         @manager_to_be_updated_obj = nil
         @to_update_client_manager = nil
         @attributes_hash = {}
+        @failed_logs = {}
       end
 
       # Perform
@@ -58,6 +59,8 @@ module ManagerManagement
 
           r = update_client_manager
           return r unless r.success?
+
+          notify_devs
 
           success_with_data({
               result_type: result_type,
@@ -289,13 +292,14 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def update_campaign_attributes(params)
-        Email::HookCreator::UpdateContact.new(
+        r = Email::HookCreator::UpdateContact.new(
             receiver_entity_id: params[:entity_id],
             receiver_entity_kind: params[:entity_kind],
             custom_attributes: params[:attributes],
             user_settings: params[:settings]
         ).perform
 
+        @failed_logs[params[:entity_id]] = r.to_hash unless r.success?
         success
       end
 
@@ -347,15 +351,31 @@ module ManagerManagement
 
         ClientManager.admins(@client_id).all.each do |client_manager|
 
-          Email::HookCreator::UpdateContact.new(
+          r = Email::HookCreator::UpdateContact.new(
               receiver_entity_id: client_manager[:manager_id],
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
               custom_attributes: @attributes_hash,
               user_settings: {}
           ).perform
+
+          @failed_logs[client_manager[:manager_id]] = r.to_hash unless r.success?
         end
 
         success
+      end
+
+      # Send notification mail
+      #
+      # * Author: Santhosh
+      # * Date: 22/07/2019
+      # * Reviewed By:
+      #
+      def notify_devs
+        ApplicationMailer.notify(
+            data: @failed_logs,
+            body: {},
+            subject: 'Exception in client mile stone hook creation'
+        ).deliver if @failed_logs.present?
       end
 
     end

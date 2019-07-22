@@ -55,6 +55,8 @@ module TestEconomyManagement
         r = perform_activation
         return r unless r.success?
 
+        notify_devs
+
         r = enqueue_job
         return r unless r.success?
 

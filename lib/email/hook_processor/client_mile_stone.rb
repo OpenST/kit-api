@@ -15,6 +15,8 @@ module Email
       #
       def initialize(params)
         super
+
+        @failed_logs = {}
       end
 
       # Perform
@@ -74,6 +76,8 @@ module Email
 
         r = update_super_admins_and_admins
         return r unless r.success?
+
+        notify_devs
 
         success
       end
@@ -141,12 +145,14 @@ module Email
 
         ClientManager.admins(@client_id).all.each do |client_manager|
 
-          Email::HookCreator::UpdateContact.new(
+          r = Email::HookCreator::UpdateContact.new(
               receiver_entity_id: client_manager[:manager_id],
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
               custom_attributes: attributes_hash,
               user_settings: {}
           ).perform
+
+          @failed_logs[client_manager[:manager_id]] = r.to_hash unless r.success?
         end
 
         success
@@ -198,6 +204,20 @@ module Email
       #
       def sub_env
         @hook.params["sub_env"]
+      end
+
+      # Send notification mail
+      #
+      # * Author: Santhosh
+      # * Date: 22/07/2019
+      # * Reviewed By:
+      #
+      def notify_devs
+        ApplicationMailer.notify(
+            data: @failed_logs,
+            body: {},
+            subject: 'Exception in client mile stone hook creation'
+        ).deliver if @failed_logs.present?
       end
 
     end
