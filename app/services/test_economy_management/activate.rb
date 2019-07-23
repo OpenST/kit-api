@@ -272,10 +272,8 @@ module TestEconomyManagement
       mile_stone = nil
 
       if is_main_sub_env?
-        @client_obj.send("set_#{GlobalConstant::Client.mainnet_registered_in_mappy_server_status}")
         mile_stone = GlobalConstant::Client.mainnet_registered_in_mappy_server_status
       else
-        @client_obj.send("set_#{GlobalConstant::Client.sandbox_registered_in_mappy_server_status}")
         mile_stone = GlobalConstant::Client.sandbox_registered_in_mappy_server_status
       end
 
