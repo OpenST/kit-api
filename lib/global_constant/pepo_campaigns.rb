@@ -95,6 +95,14 @@ module GlobalConstant
         'testnet_view_link' #Attribute name as given in pepo campaigns.
       end
 
+      def platform_dashboard_url
+        'platform_dashboard_url' #Attribute name as given in pepo campaigns.
+      end
+
+      def view_link
+        'view_link' #Attribute name as given in pepo campaigns.
+      end
+
 
       def allowed_custom_attributes
         [
@@ -111,7 +119,9 @@ module GlobalConstant
           ost_wallet_invited_users,
           first_api_call,
           token_name,
-          testnet_view_link
+          testnet_view_link,
+          platform_dashboard_url,
+          view_link
         ]
       end
 
