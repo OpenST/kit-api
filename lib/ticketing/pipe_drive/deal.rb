@@ -57,9 +57,11 @@ module Ticketing
 
         is_enterprise = one_m_users_flag_str  == 'Enterprise'
         
-        stage_id = is_enterprise ?
-                     GlobalConstant::PipeDrive.ost_platform_enterprise_stage_id :
-                     GlobalConstant::PipeDrive.ost_platform_business_stage_id
+        # stage_id = is_enterprise ?
+        #              GlobalConstant::PipeDrive.ost_platform_enterprise_stage_id :
+        #              GlobalConstant::PipeDrive.ost_platform_business_stage_id
+
+        stage_id = GlobalConstant::PipeDrive.ost_platform_business_stage_id
 
         user_id = is_enterprise ?
                     GlobalConstant::PipeDrive.ost_pipedrive_enterprise_user_id :
