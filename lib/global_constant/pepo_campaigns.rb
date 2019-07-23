@@ -95,14 +95,6 @@ module GlobalConstant
         'testnet_view_link' #Attribute name as given in pepo campaigns.
       end
 
-      def platform_dashboard_url
-        'platform_dashboard_url' #Attribute name as given in pepo campaigns.
-      end
-
-      def view_link
-        'view_link' #Attribute name as given in pepo campaigns.
-      end
-
 
       def allowed_custom_attributes
         [
@@ -119,9 +111,7 @@ module GlobalConstant
           ost_wallet_invited_users,
           first_api_call,
           token_name,
-          testnet_view_link,
-          platform_dashboard_url,
-          view_link
+          testnet_view_link
         ]
       end
 
@@ -378,6 +368,18 @@ module GlobalConstant
       #
       def is_test_economy_invite_template?(template_name)
         GlobalConstant::PepoCampaigns.platform_test_economy_invite_template == template_name
+      end
+
+      # Email subject prefix
+      #
+      # * Author: Santhosh
+      # * Date: 23/07/2019
+      # * Reviewed By:
+      #
+      # @return [String]
+      #
+      def subject_prefix
+        GlobalConstant::Base.sandbox_sub_environment? ? 'OST Platform Sandbox' : 'OST Platform'
       end
 
       private
