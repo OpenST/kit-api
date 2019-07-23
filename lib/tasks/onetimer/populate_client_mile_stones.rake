@@ -13,7 +13,7 @@ namespace :one_timers do
     Client.all.each do |client|
       client_id = client[:id]
       client_hash = client.formatted_cache_data
-      sub_env = GlobalConstant::Base.sub_environment_name
+      sub_env = GlobalConstant::Base.main_sub_environment? ? 'mainnet' : 'sandbox'
       attribute_hash = {}
 
       puts "**** Started processing for client id #{client_id} in #{sub_env} environment *****"
