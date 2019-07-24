@@ -20,7 +20,6 @@ module Email
         @hook = hook
         @manager_id = nil
         @email = nil
-        @mile_stone = nil
       end
 
       # Perform

@@ -276,6 +276,7 @@ module TestEconomyManagement
     #
     # @return [Result::Base]
     #
+    # TODO - only when property set for first time.
     def update_contacts
       update_campaign_attributes({
                                      entity_id: @token[:client_id],

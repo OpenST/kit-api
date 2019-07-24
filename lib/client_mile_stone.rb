@@ -74,6 +74,7 @@ class ClientMileStone
   end
 
   private
+
   # Fetch client mile stones reached
   #
   # * Author: Santhosh
@@ -86,15 +87,18 @@ class ClientMileStone
 
     client_mile_stones = Client.sandbox_client_mile_stones
 
+    # TODO - Santhosh - why query?
     client = Client.where(id: @client_id).first
     client = client.formatted_cache_data
 
     set_mile_stones = []
 
     # move this code to a lib
-    client_mile_stones.each do |mile_stone, val|
+    client_mile_stones.each do |mile_stone, _|
       set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
     end
+
+    # TODO - Santhosh - remove the coupling
 
     set_mile_stones.each do |mile_stone|
       pc_attribute = mile_stone.split("#{GlobalConstant::Environment.sandbox_sub_environment}_")[1]  # Removing the env prefix

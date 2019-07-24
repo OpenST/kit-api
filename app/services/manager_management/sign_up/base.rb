@@ -255,6 +255,7 @@ module ManagerManagement
         BackgroundJob.enqueue(
             SignUpJob,
             {
+                # TODO - Santhosh - don't send super_admin and other properties in the job params.
                 manager_id: @manager_obj.id,
                 platform_marketing: @marketing_communication_flag,
                 manager_first_name: @first_name,

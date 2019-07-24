@@ -16,6 +16,7 @@ module Email
       def initialize(params)
         super
 
+        @mile_stone = nil
         @failed_logs = {}
       end
 
@@ -109,6 +110,7 @@ module Email
       # @return [Result::Base]
       #
       def set_mile_stone
+        # TODO - Santhosh - use if else instead of meta
         if mile_stone.end_with?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status[-15,15]) # using last 15 chars
           @mile_stone = mile_stone
         else
@@ -125,7 +127,7 @@ module Email
       # @return [Result::Base]
       #
       def set_client_properties
-
+        # TODO - Santhosh - use if else instead of meta
         @client.send("set_#{@mile_stone}")
         @client.save!
 
@@ -141,6 +143,8 @@ module Email
       # @return [Result::Base]
       #
       def update_super_admins_and_admins
+        # TODO - change name of the method to in_pepo_campaign
+        # and add comments
         return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment
 
         ClientManager.admins(@client_id).all.each do |client_manager|

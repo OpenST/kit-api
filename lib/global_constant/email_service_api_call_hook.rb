@@ -52,8 +52,6 @@ module GlobalConstant
       end
 
       ########## entity_types #############
-      
-      
 
     end
 
