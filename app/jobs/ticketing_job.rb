@@ -85,7 +85,7 @@ class TicketingJob < ApplicationJob
   # * Reviewed By:
   #
   def create_deal_in_pipedrive
-    return success if @email_address.to_s.include?("ost.com")
+    return success if @email_address.to_s.downcase.include?("ost.com")
 
     create_organization_resp = Ticketing::PipeDrive::Organization.new.create(@company_name)
 
