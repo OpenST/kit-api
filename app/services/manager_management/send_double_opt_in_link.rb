@@ -134,7 +134,7 @@ module ManagerManagement
           template_name: GlobalConstant::PepoCampaigns.platform_double_optin_template,
           template_vars: {
               double_opt_in_token: CGI.escape(@double_optin_token),
-              company_web_domain: GlobalConstant::CompanyWeb.domain
+              company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain)
           }
       ).perform
 

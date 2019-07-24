@@ -129,7 +129,7 @@ module ManagerManagement
           template_name: GlobalConstant::PepoCampaigns.platform_device_verification_template,
           template_vars: {
               device_verification_token: CGI.escape(@device_verification_token),
-              company_web_domain: GlobalConstant::CompanyWeb.domain
+              company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain)
           }
       ).perform
 

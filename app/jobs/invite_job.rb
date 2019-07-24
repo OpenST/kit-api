@@ -68,7 +68,7 @@ class InviteJob < ApplicationJob
         template_name: GlobalConstant::PepoCampaigns.platform_invite_manager_template,
         template_vars: {
             invite_token: CGI.escape(@invite_token),
-            company_web_domain: GlobalConstant::CompanyWeb.domain,
+            company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
             subject_prefix: GlobalConstant::PepoCampaigns.subject_prefix
         }
     ).perform

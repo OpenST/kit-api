@@ -150,7 +150,7 @@ module DeveloperManagement
         template_name: GlobalConstant::PepoCampaigns.platform_secure_data_access_template,
         template_vars: {
           secure_data_access_token: CGI.escape(@secure_data_access_token),
-          company_web_domain: GlobalConstant::CompanyWeb.domain,
+          company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
           sub_environment: GlobalConstant::Base.sub_environment_name
         }
       ).perform

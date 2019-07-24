@@ -112,7 +112,7 @@ module AdminManagement
           identifier: @email
         )
 
-        template_vars = {company_web_domain: GlobalConstant::CompanyWeb.domain}
+        template_vars = { company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain) }
 
         r = ::Email::HookCreator::SendTransactionalMail.new(
           receiver_entity_id: create_response.id,

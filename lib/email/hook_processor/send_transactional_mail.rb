@@ -57,7 +57,7 @@ module Email
         send_mail_params = @hook.params
 
         unless send_mail_params["template_vars"]["company_web_domain"].present?
-          send_mail_params["template_vars"]["company_web_domain"] = GlobalConstant::CompanyWeb.domain
+          send_mail_params["template_vars"]["company_web_domain"] = CGI.escape(GlobalConstant::CompanyWeb.domain)
         end
 
         send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(

@@ -227,7 +227,7 @@ module TestEconomyManagement
       )
 
       email_template_vars = {
-        company_web_domain: GlobalConstant::CompanyWeb.domain,
+        company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
         qr_code_url: qr_code_s3_url,
         ios_app_download_link: CGI.escape(GlobalConstant::DemoApp.ios_url),
         android_app_download_link: CGI.escape(GlobalConstant::DemoApp.android_url),

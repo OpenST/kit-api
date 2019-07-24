@@ -174,7 +174,7 @@ module ManagerManagement
           template_name: GlobalConstant::PepoCampaigns.platform_forgot_password_template,
           template_vars: {
               reset_password_token: CGI.escape(@reset_password_token),
-              company_web_domain: GlobalConstant::CompanyWeb.domain
+              company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain)
           }
       ).perform
 
