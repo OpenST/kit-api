@@ -90,7 +90,25 @@ class ClientMileStone
       return success_with_data({})
     end
 
+    token_id = token_details[:id]
+
     extra_attributes[:token_name] = token_details[:name]
+
+    extra_attributes[:testnet_view_link] = fetch_view_link(token_id, GlobalConstant::Environment.testnet_url_prefix)
+
+    success_with_data(extra_attributes)
+  end
+
+
+  # Add view link - view_link
+  #
+  # * Author: Santhosh
+  # * Date: 25/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def fetch_view_link(token_id, url_prefix)
 
     addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
 
@@ -100,9 +118,7 @@ class ClientMileStone
 
     deployed_chain_id = ubt_data[:deployed_chain_id]
 
-    extra_attributes[:testnet_view_link] =  "#{GlobalConstant::CompanyOtherProductUrls.view_root_url}/#{GlobalConstant::Environment.url_prefix}/token/ec-#{deployed_chain_id}-#{ubt_contract_address}"
-
-    success_with_data(extra_attributes)
+    "#{GlobalConstant::CompanyOtherProductUrls.view_root_url}/#{url_prefix}/token/ec-#{deployed_chain_id}-#{ubt_contract_address}"
   end
 
   private
