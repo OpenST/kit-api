@@ -182,7 +182,7 @@ module Email
 
         managers = CacheManagement::Manager.new(manager_ids).fetch
 
-        # Only active managers should have the mile stones updated in pepo campaigns
+        # Only active managers should have the mile stone updated in pepo campaigns
         managers.each do |manager_id, manager|
           next if manager.status != GlobalConstant::Manager.active_status
 

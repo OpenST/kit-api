@@ -96,15 +96,15 @@ class ClientMileStone
 
     token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
 
-    if token_details.blank? || (token_details.present? && token_details[:status] != GlobalConstant::ClientToken.not_deployed)
+    if token_details.blank? || (token_details.present? && token_details[:status] != GlobalConstant::ClientToken.deployment_completed)
       return success_with_data({})
     end
 
     token_id = token_details[:id]
 
-    extra_attributes[:token_name] = token_details[:name]
+    extra_attributes[GlobalConstant::PepoCampaigns.token_name] = token_details[:name]
 
-    extra_attributes[:testnet_view_link] = fetch_view_link(token_id, GlobalConstant::Environment.testnet_url_prefix)
+    extra_attributes[GlobalConstant::PepoCampaigns.testnet_view_link] = fetch_view_link(token_id, GlobalConstant::Environment.testnet_url_prefix)
 
     success_with_data(extra_attributes)
   end
@@ -149,10 +149,12 @@ class ClientMileStone
 
     set_mile_stones = []
 
-    # move this code to a lib
     client_mile_stones.each do |mile_stone, _|
       set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
     end
+
+    # Extra attributes not to be set on mainnet
+    return success_with_data({ set_mile_stones: [] }) if set_mile_stones.length == 0
 
     fetch_attributes_to_set(set_mile_stones)
 
