@@ -14,6 +14,8 @@ class SignUpJob < ApplicationJob
 
     init_params(params)
 
+    fetch_super_admin_privilege
+
     add_contact_in_email_service
 
     send_double_optin_link if @manager[:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
@@ -36,10 +38,32 @@ class SignUpJob < ApplicationJob
     @platform_marketing = params[:platform_marketing]
     @manager_first_name = params[:manager_first_name]
     @manager_last_name = params[:manager_last_name]
-    @super_admin = params[:super_admin]
     @client_id = params[:client_id]
+    @super_admin = nil
 
     @failed_logs = {}
+  end
+
+  # Fetch super admin privilege
+  #
+  # * Author: Santhosh
+  # * Date: 24/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def fetch_super_admin_privilege
+
+    client_manager = CacheManagement::ClientManager.new([@manager_id],
+                                                         { client_id: @client_id }).fetch[@manager_id]
+
+    if client_manager[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
+      @super_admin = GlobalConstant::PepoCampaigns.attribute_set
+    else
+      @super_admin = GlobalConstant::PepoCampaigns.attribute_unset
+    end
+
+    success
   end
 
   # Add contact in Pepo Campaigns

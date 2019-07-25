@@ -55,7 +55,7 @@ module TestEconomyManagement
         r = create_email_hook
         return r unless r.success?
 
-        r = update_contacts
+        r = update_contacts_if_required
         return r unless r.success?
 
         prepare_response
@@ -268,7 +268,7 @@ module TestEconomyManagement
       success
     end
 
-    # Update attributes in pepo campaigns
+    # Update attributes in pepo campaigns if required
     #
     # * Author: Santhosh
     # * Date: 17/07/2019
@@ -276,10 +276,18 @@ module TestEconomyManagement
     #
     # @return [Result::Base]
     #
-    # TODO - only when property set for first time.
-    def update_contacts
+    def update_contacts_if_required
+
+      return success unless GlobalConstant::Base.sandbox_sub_environment?   # Attribute to be set only in testnet
+
+      client_id = @token[:client_id]
+
+      client = CacheManagement::Client.new([client_id]).fetch[client_id]
+
+      return success if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_ost_wallet_invited_users_property)
+
       update_campaign_attributes({
-                                     entity_id: @token[:client_id],
+                                     entity_id: client_id,
                                      entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
                                      attributes: { GlobalConstant::PepoCampaigns.ost_wallet_invited_users =>  GlobalConstant::PepoCampaigns.attribute_set },
                                      settings: {},

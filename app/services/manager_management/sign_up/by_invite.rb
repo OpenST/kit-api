@@ -275,13 +275,9 @@ module ManagerManagement
         if @is_super_admin == GlobalConstant::ClientManager.is_super_admin_privilege
           @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
-
-          @super_admin = GlobalConstant::PepoCampaigns.attribute_set
         else
           @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
           @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
-
-          @super_admin = GlobalConstant::PepoCampaigns.attribute_unset
         end
 
         @client_manager_obj.save!

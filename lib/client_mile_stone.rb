@@ -73,6 +73,38 @@ class ClientMileStone
     success
   end
 
+  # Add extra attributes - token_name, testnet_view_link
+  #
+  # * Author: Santhosh
+  # * Date: 25/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def add_extra_attributes
+    extra_attributes = {}
+
+    token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
+
+    if token_details.present? && token_details[:status] != GlobalConstant::ClientToken.not_deployed
+      return success_with_data({})
+    end
+
+    extra_attributes[:token_name] = token_details[:name]
+
+    addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
+
+    ubt_data = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract]
+
+    ubt_contract_address = ubt_data[:address]
+
+    deployed_chain_id = ubt_data[:deployed_chain_id]
+
+    extra_attributes[:testnet_view_link] =  "#{GlobalConstant::CompanyOtherProductUrls.view_root_url}/#{GlobalConstant::Environment.url_prefix}/token/ec-#{deployed_chain_id}-#{ubt_contract_address}"
+
+    success_with_data(extra_attributes)
+  end
+
   private
 
   # Fetch client mile stones reached
@@ -87,9 +119,7 @@ class ClientMileStone
 
     client_mile_stones = Client.sandbox_client_mile_stones
 
-    # TODO - Santhosh - why query?
-    client = Client.where(id: @client_id).first
-    client = client.formatted_cache_data
+    client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
 
     set_mile_stones = []
 
@@ -98,19 +128,45 @@ class ClientMileStone
       set_mile_stones << mile_stone if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(mile_stone)
     end
 
-    # TODO - Santhosh - remove the coupling
+    fetch_attributes_to_set(set_mile_stones)
 
-    set_mile_stones.each do |mile_stone|
-      pc_attribute = mile_stone.split("#{GlobalConstant::Environment.sandbox_sub_environment}_")[1]  # Removing the env prefix
+    r = add_extra_attributes
+    return r unless r.success?
 
-      # Since there are different attribute names compared to pepo campaign
-      if mile_stone == GlobalConstant::Client.sandbox_registered_in_mappy_server_status
-        pc_attribute = GlobalConstant::PepoCampaigns.ost_wallet_setup
-      end
-
-      @attributes_hash[pc_attribute] = GlobalConstant::PepoCampaigns.attribute_set
-    end
+    @attributes_hash.merge!(r.data)
 
     success_with_data({ set_mile_stones: set_mile_stones })
+  end
+
+
+  # Fetch attributes to be set
+  #
+  # * Author: Santhosh
+  # * Date: 24/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def fetch_attributes_to_set(set_mile_stones)
+    @attributes_hash = {}
+
+    set_mile_stones.each do |mile_stone_property|
+      case mile_stone_property
+      when GlobalConstant::Client.sandbox_registered_in_mappy_server_status
+        @attributes_hash[GlobalConstant::PepoCampaigns.ost_wallet_setup] = GlobalConstant::PepoCampaigns.attribute_set
+      when GlobalConstant::Client.sandbox_token_setup_property
+        @attributes_hash[GlobalConstant::PepoCampaigns.token_setup] = GlobalConstant::PepoCampaigns.attribute_set
+      when GlobalConstant::Client.sandbox_stake_and_mint_property
+        @attributes_hash[GlobalConstant::PepoCampaigns.stake_and_mint] = GlobalConstant::PepoCampaigns.attribute_set
+      when GlobalConstant::Client.sandbox_ost_wallet_invited_users_property
+        @attributes_hash[GlobalConstant::PepoCampaigns.ost_wallet_invited_users] = GlobalConstant::PepoCampaigns.attribute_set
+      when GlobalConstant::Client.sandbox_first_api_call_property
+        @attributes_hash[GlobalConstant::PepoCampaigns.first_api_call] = GlobalConstant::PepoCampaigns.attribute_set
+      else
+        fail "Invalid mile stone property : #{mile_stone_property}"
+      end
+    end
+
+    success
   end
 end

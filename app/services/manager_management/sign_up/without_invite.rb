@@ -286,8 +286,6 @@ module ManagerManagement
 
         @client_manager_obj.save!
 
-        @super_admin = GlobalConstant::PepoCampaigns.attribute_set
-
         success
 
       end

@@ -31,7 +31,6 @@ module ManagerManagement
         @client_id = nil
         @manager_id = nil
         @manager_obj = nil
-        @super_admin = nil
         @client = nil
         @client_manager_obj = nil
         @cookie_value = nil
@@ -255,12 +254,10 @@ module ManagerManagement
         BackgroundJob.enqueue(
             SignUpJob,
             {
-                # TODO - Santhosh - don't send super_admin and other properties in the job params.
                 manager_id: @manager_obj.id,
                 platform_marketing: @marketing_communication_flag,
                 manager_first_name: @first_name,
                 manager_last_name: @last_name,
-                super_admin: @super_admin,
                 client_id: @client_id
             }
         )

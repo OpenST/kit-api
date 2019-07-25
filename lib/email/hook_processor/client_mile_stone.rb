@@ -16,7 +16,7 @@ module Email
       def initialize(params)
         super
 
-        @mile_stone = nil
+        @property_to_set = nil
         @failed_logs = {}
       end
 
@@ -67,15 +67,18 @@ module Email
         r = fetch_client
         return r unless r.success?
 
-        set_mile_stone
+        fetch_property_to_set
 
         statuses_column_sym = "#{sub_env}_statuses".to_sym
-        return success if @client_hash[statuses_column_sym].present? && @client_hash[statuses_column_sym].include?(@mile_stone)
+        return success if @client_hash[statuses_column_sym].present? && @client_hash[statuses_column_sym].include?(@property_to_set)
 
         r = set_client_properties
         return r unless r.success?
 
-        r = update_super_admins_and_admins
+        r = add_extra_attributes
+        return r unless r.success?
+
+        r = update_super_admins_and_admins_in_pepo_campaign
         return r unless r.success?
 
         notify_devs
@@ -101,7 +104,7 @@ module Email
         success
       end
 
-      # Set mile stone
+      # Fetch property to set
       #
       # * Author: Santhosh
       # * Date: 17/07/2019
@@ -109,13 +112,23 @@ module Email
       #
       # @return [Result::Base]
       #
-      def set_mile_stone
-        # TODO - Santhosh - use if else instead of meta
-        if mile_stone.end_with?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status[-15,15]) # using last 15 chars
-          @mile_stone = mile_stone
+      def fetch_property_to_set
+
+        case mile_stone
+        when GlobalConstant::PepoCampaigns.ost_wallet_setup
+          @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_registered_in_mappy_server_status : GlobalConstant::Client.mainnet_registered_in_mappy_server_status
+        when GlobalConstant::PepoCampaigns.token_setup
+          @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_token_setup_property : GlobalConstant::Client.mainnet_token_setup_property
+        when GlobalConstant::PepoCampaigns.stake_and_mint
+          @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_stake_and_mint_property : GlobalConstant::Client.mainnet_stake_and_mint_property
+        when GlobalConstant::PepoCampaigns.ost_wallet_invited_users
+          @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_ost_wallet_invited_users_property : GlobalConstant::Client.mainnet_ost_wallet_invited_users_property
+        when GlobalConstant::PepoCampaigns.first_api_call
+          @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_first_api_call_property : GlobalConstant::Client.mainnet_first_api_call_property
         else
-          @mile_stone = "#{sub_env}_#{mile_stone}"
+          fail "Invalid mile stone : #{mile_stone}"
         end
+
       end
 
       # Set client properties
@@ -127,9 +140,27 @@ module Email
       # @return [Result::Base]
       #
       def set_client_properties
-        # TODO - Santhosh - use if else instead of meta
-        @client.send("set_#{@mile_stone}")
+        @client.send("set_#{@property_to_set}")
         @client.save!
+
+        success
+      end
+
+      # Add extra attributes - token_name, testnet_view_link
+      #
+      # * Author: Santhosh
+      # * Date: 25/07/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def add_extra_attributes
+        client_mile_stone = ClientMileStone.new(client_id: @client_id)
+
+        r = client_mile_stone.add_extra_attributes
+        return r unless r.success?
+
+        attributes_hash.merge!(r.data)
 
         success
       end
@@ -142,10 +173,8 @@ module Email
       #
       # @return [Result::Base]
       #
-      def update_super_admins_and_admins
-        # TODO - change name of the method to in_pepo_campaign
-        # and add comments
-        return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment
+      def update_super_admins_and_admins_in_pepo_campaign
+        return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment # Update only for testnet
 
         ClientManager.admins(@client_id).all.each do |client_manager|
 
@@ -208,6 +237,18 @@ module Email
       #
       def sub_env
         @hook.params["sub_env"]
+      end
+
+      # Token id - in case of token setup mile stone
+      #
+      # * Author: Santhosh
+      # * Date: 25/07/2019
+      # * Reviewed By:
+      #
+      # @return [Number]
+      #
+      def token_id
+        @hook.params["token_id"]
       end
 
       # Send notification mail
