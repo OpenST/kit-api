@@ -96,7 +96,7 @@ module Email
 
         token_id = send_mail_params["template_vars"]["token_id"]
 
-        client_mile_stone = ClientMileStone.new({})
+        client_mile_stone = ::ClientMileStone.new({})
 
         client_mile_stone.fetch_view_link(token_id, GlobalConstant::Environment.url_prefix)
       end
