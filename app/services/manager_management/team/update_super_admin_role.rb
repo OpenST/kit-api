@@ -249,10 +249,12 @@ module ManagerManagement
 
         @to_update_client_manager.save!
 
-        client_mile_stone = ClientMileStone.new(client_id: @client_id, manager_id: @manager_id)
+        @to_update_manager_id = @to_update_client_manager[:manager_id]
+
+        client_mile_stone = ClientMileStone.new(client_id: @client_id, manager_id: @to_update_manager_id)
 
         Email::HookCreator::UpdateContact.new(
-            receiver_entity_id: @manager_id,
+            receiver_entity_id: @to_update_manager_id,
             receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
             custom_attributes: { GlobalConstant::PepoCampaigns.super_admin =>  super_admin_property },
             user_settings: {}
