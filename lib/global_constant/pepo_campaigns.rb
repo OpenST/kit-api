@@ -83,10 +83,6 @@ module GlobalConstant
         'ost_wallet_invited_users' #Attribute name as given in pepo campaigns.
       end
 
-      def first_api_call
-        'first_api_call' #Attribute name as given in pepo campaigns.
-      end
-
       def token_name
         'token_name' #Attribute name as given in pepo campaigns.
       end
@@ -109,7 +105,6 @@ module GlobalConstant
           stake_and_mint,
           ost_wallet_setup,
           ost_wallet_invited_users,
-          first_api_call,
           token_name,
           testnet_view_link
         ]

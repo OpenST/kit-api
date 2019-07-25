@@ -43,10 +43,6 @@ module GlobalConstant
         'sandbox_ost_wallet_invited_users'
       end
 
-      def sandbox_first_api_call_property
-        'sandbox_first_api_call'
-      end
-
       def mainnet_whitelisted_status
         'mainnet_whitelisted_status'
       end
@@ -77,10 +73,6 @@ module GlobalConstant
 
       def mainnet_ost_wallet_invited_users_property
         'mainnet_ost_wallet_invited_users'
-      end
-
-      def mainnet_first_api_call_property
-        'mainnet_first_api_call'
       end
 
       ### Status End ###

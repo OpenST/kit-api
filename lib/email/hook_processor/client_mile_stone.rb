@@ -123,8 +123,6 @@ module Email
           @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_stake_and_mint_property : GlobalConstant::Client.mainnet_stake_and_mint_property
         when GlobalConstant::PepoCampaigns.ost_wallet_invited_users
           @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_ost_wallet_invited_users_property : GlobalConstant::Client.mainnet_ost_wallet_invited_users_property
-        when GlobalConstant::PepoCampaigns.first_api_call
-          @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_first_api_call_property : GlobalConstant::Client.mainnet_first_api_call_property
         else
           fail "Invalid mile stone : #{mile_stone}"
         end

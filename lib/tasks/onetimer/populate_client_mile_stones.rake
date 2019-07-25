@@ -26,12 +26,6 @@ namespace :one_timers do
         client.send("set_#{sub_env}_#{GlobalConstant::PepoCampaigns.token_setup}")
         attribute_hash[GlobalConstant::PepoCampaigns.token_setup] = GlobalConstant::PepoCampaigns.attribute_set if GlobalConstant::Base.sandbox_sub_environment?
 
-
-        # Assuming if the token is setup user made token get api call
-        client.send("set_#{sub_env}_#{GlobalConstant::PepoCampaigns.first_api_call}")
-        attribute_hash[GlobalConstant::PepoCampaigns.first_api_call] = GlobalConstant::PepoCampaigns.attribute_set if GlobalConstant::Base.sandbox_sub_environment?
-
-
         stake_and_mint = Workflow.where(client_id: client_id,
                        kind: GlobalConstant::Workflow.bt_stake_and_mint,
                        status: GlobalConstant::Workflow.completed).first

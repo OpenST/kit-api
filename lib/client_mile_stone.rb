@@ -176,8 +176,6 @@ class ClientMileStone
         @attributes_hash[GlobalConstant::PepoCampaigns.stake_and_mint] = GlobalConstant::PepoCampaigns.attribute_set
       when GlobalConstant::Client.sandbox_ost_wallet_invited_users_property
         @attributes_hash[GlobalConstant::PepoCampaigns.ost_wallet_invited_users] = GlobalConstant::PepoCampaigns.attribute_set
-      when GlobalConstant::Client.sandbox_first_api_call_property
-        @attributes_hash[GlobalConstant::PepoCampaigns.first_api_call] = GlobalConstant::PepoCampaigns.attribute_set
       else
         fail "Invalid mile stone property : #{mile_stone_property}"
       end

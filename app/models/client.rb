@@ -17,8 +17,7 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.mainnet_registered_in_mappy_server_status => 8,
         GlobalConstant::Client.mainnet_token_setup_property => 16,
         GlobalConstant::Client.mainnet_stake_and_mint_property => 32,
-        GlobalConstant::Client.mainnet_ost_wallet_invited_users_property => 64,
-        GlobalConstant::Client.mainnet_first_api_call_property => 128
+        GlobalConstant::Client.mainnet_ost_wallet_invited_users_property => 64
     }
   end
 
@@ -31,8 +30,7 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.webhook_registered_in_mappy_server_status => 16,
         GlobalConstant::Client.sandbox_token_setup_property => 32,
         GlobalConstant::Client.sandbox_stake_and_mint_property => 64,
-        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 128,
-        GlobalConstant::Client.sandbox_first_api_call_property => 256
+        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 128
     }
   end
 
@@ -41,8 +39,7 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.sandbox_registered_in_mappy_server_status => 1,
         GlobalConstant::Client.sandbox_token_setup_property => 1,
         GlobalConstant::Client.sandbox_stake_and_mint_property => 1,
-        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 1,
-        GlobalConstant::Client.sandbox_first_api_call_property => 1
+        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 1
     }
   end
 
