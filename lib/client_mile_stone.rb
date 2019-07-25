@@ -86,7 +86,7 @@ class ClientMileStone
 
     token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
 
-    if token_details.present? && token_details[:status] != GlobalConstant::ClientToken.not_deployed
+    if token_details.blank? || (token_details.present? && token_details[:status] != GlobalConstant::ClientToken.not_deployed)
       return success_with_data({})
     end
 
