@@ -79,8 +79,18 @@ namespace :one_timers do
   def create_hooks_for_admins(client_id, attributes_hash)
     puts "==== Creating hooks on admins for client_id #{client_id} for attributes #{attributes_hash}"
 
-    ClientManager.admins(client_id).each do |client_manager|
-      update_contact(client_manager[:manager_id], attributes_hash)
+    manager_ids = []
+
+    ClientManager.admins(client_id).all.each do |client_manager|
+      manager_ids << client_manager[:manager_id]
+    end
+
+    managers = CacheManagement::Manager.new(manager_ids).fetch
+
+    # Only active managers should have the mile stones updated in pepo campaigns
+    managers.each do |manager_id, manager|
+      next if manager.status != GlobalConstant::Manager.active_status
+      update_contact(manager_id, attributes_hash)
     end
   end
 

@@ -174,16 +174,26 @@ module Email
       def update_super_admins_and_admins_in_pepo_campaign
         return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment # Update only for testnet
 
+        manager_ids = []
+
         ClientManager.admins(@client_id).all.each do |client_manager|
+          manager_ids << client_manager[:manager_id]
+        end
+
+        managers = CacheManagement::Manager.new(manager_ids).fetch
+
+        # Only active managers should have the mile stones updated in pepo campaigns
+        managers.each do |manager_id, manager|
+          next if manager.status != GlobalConstant::Manager.active_status
 
           r = Email::HookCreator::UpdateContact.new(
-              receiver_entity_id: client_manager[:manager_id],
+              receiver_entity_id: manager_id,
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
               custom_attributes: attributes_hash,
               user_settings: {}
           ).perform
 
-          @failed_logs[client_manager[:manager_id]] = r.to_hash unless r.success?
+          @failed_logs[manager_id] = r.to_hash unless r.success?
         end
 
         success
