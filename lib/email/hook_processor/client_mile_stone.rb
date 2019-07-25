@@ -155,7 +155,7 @@ module Email
       # @return [Result::Base]
       #
       def add_extra_attributes
-        client_mile_stone = ClientMileStone.new(client_id: @client_id)
+        client_mile_stone = ::ClientMileStone.new(client_id: @client_id)
 
         r = client_mile_stone.add_extra_attributes
         return r unless r.success?
