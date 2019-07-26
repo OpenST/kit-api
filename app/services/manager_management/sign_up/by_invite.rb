@@ -96,6 +96,9 @@ module ManagerManagement
           r = create_utm_info
           return r unless r.success?
 
+          r = notify_testnet_post_signup
+          return r unless r.success?
+
           success_with_data(
           {cookie_value: @cookie_value},
             fetch_go_to
@@ -304,6 +307,23 @@ module ManagerManagement
 
         end
 
+      end
+
+      # Notify testnet about new sign up in mainnet
+      #
+      # * Author: Pankaj
+      # * Date: 26/07/2019
+      # * Reviewed By:
+      #
+      def notify_testnet_post_signup
+        if GlobalConstant::Base.main_sub_environment?
+          return SubenvCommunicationApi.new.send_request_to(
+              GlobalConstant::Environment.sandbox_sub_environment, 'post',
+              'other-subenv/notify-post-signup',
+              {client_id: @client_id, manager_id: @manager_id})
+        end
+
+        success
       end
 
     end

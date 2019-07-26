@@ -119,6 +119,10 @@ Rails.application.routes.draw do
         request.params[:auth_token] == GlobalConstant::Base.activate_test_economy_auth_token }
   end
 
+  scope "#{GlobalConstant::Environment.url_prefix}/api/other-subenv", controller: 'subenv_notification', :format => false do
+    match 'notify-post-signup' => :notify_post_signup, via: :POST
+  end
+
   # Handle any other routes
   match '*permalink', to: 'application#not_found', via: :all
 
