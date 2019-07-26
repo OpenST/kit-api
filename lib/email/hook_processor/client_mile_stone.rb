@@ -69,9 +69,6 @@ module Email
 
         fetch_property_to_set
 
-        statuses_column_sym = "#{sub_env}_statuses".to_sym
-        return success if @client_hash[statuses_column_sym].present? && @client_hash[statuses_column_sym].include?(@property_to_set)
-
         r = set_client_properties
         return r unless r.success?
 

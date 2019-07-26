@@ -269,6 +269,12 @@ module TestEconomyManagement
         return r
       end
 
+      if is_main_sub_env?
+        @client_obj.send("set_#{GlobalConstant::Client.mainnet_registered_in_mappy_server_status}")
+      else
+        @client_obj.send("set_#{GlobalConstant::Client.sandbox_registered_in_mappy_server_status}")
+      end
+
       update_campaign_attributes({
                                      entity_id: @client_id,
                                      entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
