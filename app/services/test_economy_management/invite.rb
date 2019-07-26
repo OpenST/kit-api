@@ -278,6 +278,8 @@ module TestEconomyManagement
     #
     def update_contacts_if_required
 
+      return success if @email_arr.length == 1 && @manager[:email] == @email_arr[0] # Not to be done on self invite
+
       return success unless GlobalConstant::Base.sandbox_sub_environment?   # Attribute to be set only in testnet
 
       client_id = @token[:client_id]
