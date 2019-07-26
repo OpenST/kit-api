@@ -92,7 +92,7 @@ module Email
       # @return [Result::Base] returns an object of Result::Base class
       #
       def fetch_view_link(send_mail_params)
-        return success unless send_mail_params["template_vars"]["token_id"].present?
+        return nil unless send_mail_params["template_vars"]["token_id"].present?
 
         token_id = send_mail_params["template_vars"]["token_id"].to_i # Cache expects this to be an integer
 
