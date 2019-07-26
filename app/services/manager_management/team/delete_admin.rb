@@ -61,6 +61,12 @@ module ManagerManagement
           r = update_manager
           return r unless r.success?
 
+          r = reset_custom_attributes
+          return r unless r.success?
+
+          r = remove_user_from_campaign
+          return r unless r.success?
+
           success_with_data({
             result_type: result_type,
             result_type => [
@@ -240,6 +246,49 @@ module ManagerManagement
 
         success
 
+      end
+
+      # Remove user from platform users campaign
+      #
+      # * Author: Santhosh
+      # * Date: 26/07/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def reset_custom_attributes
+        attributes_hash = {}
+
+        GlobalConstant::PepoCampaigns.delete_admin_attributes.each do |attribute|
+          attributes_hash[attribute] = nil
+        end
+
+        Email::HookCreator::UpdateContact.new(
+            receiver_entity_id: @manager_to_be_deleted_obj[:id],
+            receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+            custom_attributes: attributes_hash
+        ).perform
+
+        success
+      end
+
+      # Remove user from platform users campaign
+      #
+      # * Author: Santhosh
+      # * Date: 26/07/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def remove_user_from_campaign
+        Email::HookCreator::RemoveContact.new(
+            receiver_entity_id: 0,
+            receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind,
+            receiver_email: @manager_to_be_deleted_obj[:email],
+            list_id: GlobalConstant::PepoCampaigns.platform_users_list_id
+        ).perform
+
+        success
       end
 
       # Result type

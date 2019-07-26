@@ -43,6 +43,10 @@ module GlobalConstant
         'update_contact'
       end
 
+      def remove_contact_event_type
+        'remove_contact'
+      end
+
       def send_transactional_mail_event_type
         'send_transactional_mail'
       end

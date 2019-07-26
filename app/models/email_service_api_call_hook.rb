@@ -13,7 +13,8 @@ class EmailServiceApiCallHook < DbConnection::KitSaasBigSubenv
       GlobalConstant::EmailServiceApiCallHook.add_contact_event_type => 1,
       GlobalConstant::EmailServiceApiCallHook.update_contact_event_type => 2,
       GlobalConstant::EmailServiceApiCallHook.send_transactional_mail_event_type => 3,
-      GlobalConstant::EmailServiceApiCallHook.client_mile_stone_event_type => 4
+      GlobalConstant::EmailServiceApiCallHook.client_mile_stone_event_type => 4,
+      GlobalConstant::EmailServiceApiCallHook.remove_contact_event_type => 5
   }
 
   serialize :params, JSON
