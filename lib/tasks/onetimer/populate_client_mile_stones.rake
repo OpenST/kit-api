@@ -89,7 +89,7 @@ namespace :one_timers do
 
     # Only active managers should have the mile stones updated in pepo campaigns
     managers.each do |manager_id, manager|
-      next if manager.status != GlobalConstant::Manager.active_status
+      next if manager[:status] != GlobalConstant::Manager.active_status
       update_contact(manager_id, attributes_hash)
     end
   end

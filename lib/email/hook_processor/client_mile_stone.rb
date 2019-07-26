@@ -184,7 +184,7 @@ module Email
 
         # Only active managers should have the mile stone updated in pepo campaigns
         managers.each do |manager_id, manager|
-          next if manager.status != GlobalConstant::Manager.active_status
+          next if manager[:status] != GlobalConstant::Manager.active_status
 
           r = Email::HookCreator::UpdateContact.new(
               receiver_entity_id: manager_id,
