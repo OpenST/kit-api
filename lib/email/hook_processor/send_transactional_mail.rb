@@ -62,7 +62,7 @@ module Email
 
         link = fetch_view_link(send_mail_params)
 
-        send_mail_params["template_vars"]["view_link"] = link if link.present?
+        send_mail_params["template_vars"]["view_link"] = CGI.escape(link) if link.present?
 
         send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(
           @email,
