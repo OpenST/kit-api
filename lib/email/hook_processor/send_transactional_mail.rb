@@ -94,7 +94,7 @@ module Email
       def fetch_view_link(send_mail_params)
         return success unless send_mail_params["template_vars"]["token_id"].present?
 
-        token_id = send_mail_params["template_vars"]["token_id"]
+        token_id = send_mail_params["template_vars"]["token_id"].to_i # Cache expects this to be an integer
 
         client_mile_stone = ::ClientMileStone.new({})
 
