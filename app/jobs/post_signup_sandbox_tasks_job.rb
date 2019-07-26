@@ -15,7 +15,9 @@ class PostSignupSandboxTasksJob < ApplicationJob
 
     init_params(params)
 
-    @attributes_hash = fetch_attributes
+    r = fetch_attributes
+
+    @attributes_hash = r.data
 
     update_contact_in_email_service
 
