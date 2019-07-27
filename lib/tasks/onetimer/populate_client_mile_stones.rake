@@ -96,7 +96,7 @@ namespace :one_timers do
     ClientManager.admins(client_id).all.each do |client_manager|
       formatted_cm = client_manager.formatted_cache_data
       manager_ids << client_manager[:manager_id]
-      super_admins[client_manager[:manager_id]] = 1 if formatted_cm[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_invited_privilege)
+      super_admins[client_manager[:manager_id]] = 1 if formatted_cm[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
     end
 
     managers = CacheManagement::Manager.new(manager_ids).fetch
