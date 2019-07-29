@@ -15,9 +15,7 @@ class PostSignupSandboxTasksJob < ApplicationJob
 
     init_params(params)
 
-    r = fetch_attributes
-
-    @attributes_hash = r.data
+    fetch_campaign_automation_attributes
 
     update_contact_in_email_service
 
@@ -44,7 +42,7 @@ class PostSignupSandboxTasksJob < ApplicationJob
     @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
   end
 
-  # fetch attributes - token name, testnet view link
+  # Fetch campaign automation attributes
   #
   # * Author: Santhosh
   # * Date: 26/07/2019
@@ -52,9 +50,13 @@ class PostSignupSandboxTasksJob < ApplicationJob
   #
   # @returns [Hash]
   #
-  def fetch_attributes
-    client_mile_stone = ClientMileStone.new({ client_id: @client_id })
-    client_mile_stone.add_extra_attributes
+  def fetch_campaign_automation_attributes
+    campaign_attribute_manager = CampaignAttributeManager.new({ client_id: @client_id, manager_id: @manager_id })
+
+    r = campaign_attribute_manager.fetch_automation_campaign_attributes
+    return r unless r.success?
+
+    @attributes_hash = r.data
   end
 
   # Update contact in Pepo Campaigns

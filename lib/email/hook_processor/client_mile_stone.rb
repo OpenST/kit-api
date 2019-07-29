@@ -72,10 +72,7 @@ module Email
         r = set_client_properties
         return r unless r.success?
 
-        r = add_extra_attributes
-        return r unless r.success?
-
-        r = update_super_admins_and_admins_in_pepo_campaign
+        r = update_mile_stone_attributes_for_admins
         return r unless r.success?
 
         notify_devs
@@ -141,52 +138,46 @@ module Email
         success
       end
 
-      # Add extra attributes - token_name, testnet_view_link
+
+      # Update client mile stone attributes for all admins in pepo campaigns
       #
       # * Author: Santhosh
-      # * Date: 25/07/2019
+      # * Date: 16/07/2019
       # * Reviewed By:
       #
       # @return [Result::Base]
       #
-      def add_extra_attributes
-        client_mile_stone = ::ClientMileStone.new(client_id: @client_id)
+      def update_mile_stone_attributes_for_admins
 
-        r = client_mile_stone.add_extra_attributes
+        campaign_attribute_manager = CampaignAttributeManager.new(client_id: @client_id)
+
+        r = campaign_attribute_manager.fetch_automation_campaign_attributes
         return r unless r.success?
 
-        attributes_hash.merge!(r.data)
-
-        success
-      end
-
-      # Update properties on super admins and admins
-      #
-      # * Author: Santhosh
-      # * Date: 17/07/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def update_super_admins_and_admins_in_pepo_campaign
-        return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment # Update only for testnet
+        @attributes_hash = r.data
 
         manager_ids = []
+        super_admins = {}
 
         ClientManager.admins(@client_id).all.each do |client_manager|
+          formatted_cm = client_manager.formatted_cache_data
           manager_ids << client_manager[:manager_id]
+          super_admins[client_manager[:manager_id]] = 1 if formatted_cm[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
         end
 
         managers = CacheManagement::Manager.new(manager_ids).fetch
 
-        # Only active managers should have the mile stone updated in pepo campaigns
+        # Only active managers should have the mile stones updated in pepo campaigns
         managers.each do |manager_id, manager|
           next if manager[:status] != GlobalConstant::Manager.active_status
+
+          @attributes_hash[:super_admin] = 0
+          @attributes_hash[:super_admin] = 1 if super_admins[manager_id].present?
 
           r = Email::HookCreator::UpdateContact.new(
               receiver_entity_id: manager_id,
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-              custom_attributes: attributes_hash,
+              custom_attributes: @attributes_hash,
               user_settings: {}
           ).perform
 
@@ -205,7 +196,7 @@ module Email
       # @return [Hash]
       #
       def attributes_hash
-        @hook.params["custom_attributes"] || {}
+        {}
       end
 
       # Build user settings for email service
@@ -217,7 +208,7 @@ module Email
       # @return [Hash]
       #
       def user_settings_hash
-        @hook.params["user_settings"] || {}
+        {}
       end
 
       # attribute name to be updated
