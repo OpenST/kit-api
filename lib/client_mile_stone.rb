@@ -122,6 +122,8 @@ class ClientMileStone
 
     addresses_data = KitSaasSharedCacheManagement::TokenAddresses.new([token_id]).fetch
 
+    return nil unless addresses_data[token_id].present? && addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract].present?
+
     ubt_data = addresses_data[token_id][GlobalConstant::TokenAddresses.utility_branded_token_contract]
 
     ubt_contract_address = ubt_data[:address]

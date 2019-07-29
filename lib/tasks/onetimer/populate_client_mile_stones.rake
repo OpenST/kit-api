@@ -45,12 +45,22 @@ namespace :one_timers do
           client.send("set_#{sub_env}_#{GlobalConstant::PepoCampaigns.ost_wallet_invited_users}")
           attribute_hash[GlobalConstant::PepoCampaigns.ost_wallet_invited_users] = GlobalConstant::PepoCampaigns.attribute_set
         end
+
+        if @token[:name].present?
+          attribute_hash[GlobalConstant::PepoCampaigns.token_name] = @token[:name] if GlobalConstant::Base.sandbox_sub_environment?
+        end
+
+        if GlobalConstant::Base.sandbox_sub_environment?
+          client_mile_stone = ClientMileStone.new({})
+          view_link = client_mile_stone.fetch_view_link(@token[:id], GlobalConstant::Environment.url_prefix)
+          attribute_hash[GlobalConstant::PepoCampaigns.testnet_view_link] = CGI.escape(view_link) if view_link.present?
+        end
       end
 
       if GlobalConstant::Base.sandbox_sub_environment?
         puts "===== Sandbox statuses #{client_hash[:sandbox_statuses]}"
 
-        break if client_hash[:sandbox_statuses].blank?
+        next if client_hash[:sandbox_statuses].blank?
 
         wallet_setup_done = client_hash[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
 
@@ -81,15 +91,22 @@ namespace :one_timers do
 
     manager_ids = []
 
+    super_admins = {}
+
     ClientManager.admins(client_id).all.each do |client_manager|
+      formatted_cm = client_manager.formatted_cache_data
       manager_ids << client_manager[:manager_id]
+      super_admins[client_manager[:manager_id]] = 1 if formatted_cm[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
     end
 
     managers = CacheManagement::Manager.new(manager_ids).fetch
 
     # Only active managers should have the mile stones updated in pepo campaigns
     managers.each do |manager_id, manager|
+      attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = nil
       next if manager[:status] != GlobalConstant::Manager.active_status
+
+      attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = 1 if super_admins[manager_id].present?
       update_contact(manager_id, attributes_hash)
     end
   end
