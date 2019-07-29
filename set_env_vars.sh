@@ -45,6 +45,7 @@ export KA_CONFIG_SUBENV_MYSQL_PASSWORD=root
 export KA_SUB_ENV='sandbox'
 export ENV_IDENTIFIER='internal'
 export KA_COOKIE_DOMAIN='kit.developmentost.com'
+export KA_SUBENV_COMMUNICATION_SERVER_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 
 # Admin basic auth
 export KA_ADMIN_BASIC_AUTH_USERNAME='ostAdmin'

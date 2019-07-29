@@ -32,7 +32,7 @@ module GlobalConstant
     end
 
     def self.subenv_communication_secret
-      @subenv_secret_key ||= ENV['KA_DEMO_MAPPY_SERVER_SECRET_KEY']
+      @subenv_secret_key ||= ENV['KA_SUBENV_COMMUNICATION_SERVER_SECRET_KEY']
     end
 
   end
