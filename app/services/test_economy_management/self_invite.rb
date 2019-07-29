@@ -109,7 +109,7 @@ module TestEconomyManagement
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.specific_email_receiver_entity_kind,
         receiver_email: @email,
         template_name: GlobalConstant::PepoCampaigns.platform_popcorn_wallet_invitation_template,
-        template_vars: {company_web_domain: GlobalConstant::CompanyWeb.domain}).perform
+        template_vars: { company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain) }).perform
 
     end
 

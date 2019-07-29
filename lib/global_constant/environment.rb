@@ -31,6 +31,10 @@ module GlobalConstant
       Rails.env.development?
     end
 
+    def self.subenv_communication_secret
+      @subenv_secret_key ||= ENV['KA_DEMO_MAPPY_SERVER_SECRET_KEY']
+    end
+
   end
 
 end

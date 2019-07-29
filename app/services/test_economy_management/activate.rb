@@ -275,6 +275,14 @@ module TestEconomyManagement
         @client_obj.send("set_#{GlobalConstant::Client.sandbox_registered_in_mappy_server_status}")
       end
 
+      update_campaign_attributes({
+                                     entity_id: @client_id,
+                                     entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
+                                     attributes: { GlobalConstant::PepoCampaigns.ost_wallet_setup =>  GlobalConstant::PepoCampaigns.attribute_set },
+                                     settings: {},
+                                     mile_stone: GlobalConstant::PepoCampaigns.ost_wallet_setup
+                                 })
+
       success
 
     end

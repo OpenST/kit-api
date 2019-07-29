@@ -113,7 +113,7 @@ export KA_SAAS_API_ENDPOINT='http://developmentost.com:7001'
 export KA_SAAS_API_SECRET_KEY='1somethingsarebetterkeptinenvironemntvariables'
 
 # Company Web Details
-export KA_CW_DOMAIN='developmentost.com'
+export KA_CW_DOMAIN='http://developmentost.com'
 
 # Company Other Product URL
 export KA_VIEW_ROOT_URL='http://view.developmentost.com:8080'

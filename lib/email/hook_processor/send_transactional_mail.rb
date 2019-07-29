@@ -57,8 +57,12 @@ module Email
         send_mail_params = @hook.params
 
         unless send_mail_params["template_vars"]["company_web_domain"].present?
-          send_mail_params["template_vars"]["company_web_domain"] = GlobalConstant::CompanyWeb.domain
+          send_mail_params["template_vars"]["company_web_domain"] = CGI.escape(GlobalConstant::CompanyWeb.domain)
         end
+
+        link = fetch_view_link(send_mail_params)
+
+        send_mail_params["template_vars"]["view_link"] = CGI.escape(link) if link.present?
 
         send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(
           @email,
@@ -77,6 +81,24 @@ module Email
           success_with_data(send_mail_response)
         end
 
+      end
+
+      # Add extra template vars
+      #
+      # * Author: Puneet
+      # * Date: 12/01/2018
+      # * Reviewed By:
+      #
+      # @return [Result::Base] returns an object of Result::Base class
+      #
+      def fetch_view_link(send_mail_params)
+        return nil unless send_mail_params["template_vars"]["token_id"].present?
+
+        token_id = send_mail_params["template_vars"]["token_id"].to_i # Cache expects this to be an integer
+
+        client_mile_stone = ::ClientMileStone.new({})
+
+        client_mile_stone.fetch_view_link(token_id, GlobalConstant::Environment.url_prefix)
       end
 
     end

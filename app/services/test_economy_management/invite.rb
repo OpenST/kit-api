@@ -55,6 +55,9 @@ module TestEconomyManagement
         r = create_email_hook
         return r unless r.success?
 
+        r = update_contacts_if_required
+        return r unless r.success?
+
         prepare_response
 
       end
@@ -224,7 +227,7 @@ module TestEconomyManagement
       )
 
       email_template_vars = {
-        company_web_domain: GlobalConstant::CompanyWeb.domain,
+        company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
         qr_code_url: qr_code_s3_url,
         ios_app_download_link: CGI.escape(GlobalConstant::DemoApp.ios_url),
         android_app_download_link: CGI.escape(GlobalConstant::DemoApp.android_url),
@@ -263,6 +266,35 @@ module TestEconomyManagement
     #
     def prepare_response
       success
+    end
+
+    # Update attributes in pepo campaigns if required
+    #
+    # * Author: Santhosh
+    # * Date: 17/07/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def update_contacts_if_required
+
+      return success if @email_arr.length == 1 && @manager[:email] == @email_arr[0] # Not to be done on self invite
+
+      return success unless GlobalConstant::Base.sandbox_sub_environment?   # Attribute to be set only in testnet
+
+      client_id = @token[:client_id]
+
+      client = CacheManagement::Client.new([client_id]).fetch[client_id]
+
+      return success if client[:sandbox_statuses].present? && client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_ost_wallet_invited_users_property)
+
+      update_campaign_attributes({
+                                     entity_id: client_id,
+                                     entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
+                                     attributes: { GlobalConstant::PepoCampaigns.ost_wallet_invited_users =>  GlobalConstant::PepoCampaigns.attribute_set },
+                                     settings: {},
+                                     mile_stone: GlobalConstant::PepoCampaigns.ost_wallet_invited_users
+                                 })
     end
 
   end

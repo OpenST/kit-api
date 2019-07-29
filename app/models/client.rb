@@ -14,7 +14,10 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.mainnet_whitelisted_status => 1,
         GlobalConstant::Client.mainnet_whitelist_requested_status => 2,
         GlobalConstant::Client.mainnet_test_economy_qr_code_uploaded_status => 4,
-        GlobalConstant::Client.mainnet_registered_in_mappy_server_status => 8
+        GlobalConstant::Client.mainnet_registered_in_mappy_server_status => 8,
+        GlobalConstant::Client.mainnet_token_setup_property => 16,
+        GlobalConstant::Client.mainnet_stake_and_mint_property => 32,
+        GlobalConstant::Client.mainnet_ost_wallet_invited_users_property => 64
     }
   end
 
@@ -24,7 +27,19 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.sandbox_whitelist_requested_status => 2,
         GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status => 4,
         GlobalConstant::Client.sandbox_registered_in_mappy_server_status => 8,
-        GlobalConstant::Client.webhook_registered_in_mappy_server_status => 16
+        GlobalConstant::Client.webhook_registered_in_mappy_server_status => 16,
+        GlobalConstant::Client.sandbox_token_setup_property => 32,
+        GlobalConstant::Client.sandbox_stake_and_mint_property => 64,
+        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 128
+    }
+  end
+
+  def self.sandbox_client_mile_stones
+    @c_s_m_stones ||= {
+        GlobalConstant::Client.sandbox_registered_in_mappy_server_status => 1,
+        GlobalConstant::Client.sandbox_token_setup_property => 1,
+        GlobalConstant::Client.sandbox_stake_and_mint_property => 1,
+        GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 1
     }
   end
 

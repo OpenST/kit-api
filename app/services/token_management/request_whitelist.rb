@@ -150,7 +150,7 @@ module TokenManagement
       template_vars =  {
         client_id: @client_id, # Email, Sandbox Token Name, Sandbox Symbol
         manager_email_id: manager_email_id,
-        company_web_domain: GlobalConstant::CompanyWeb.domain
+        company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain)
       }
 
       if @sandbox_token_name.present?

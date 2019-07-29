@@ -27,6 +27,22 @@ module GlobalConstant
         'webhook_registered_in_mappy_server_status'
       end
 
+      def sandbox_token_setup_property
+        'sandbox_token_setup'
+      end
+
+      def sandbox_stake_and_mint_property
+        'sandbox_stake_and_mint'
+      end
+
+      def sandbox_ost_wallet_setup_property
+        'sandbox_ost_wallet_setup'
+      end
+
+      def sandbox_ost_wallet_invited_users_property
+        'sandbox_ost_wallet_invited_users'
+      end
+
       def mainnet_whitelisted_status
         'mainnet_whitelisted_status'
       end
@@ -41,6 +57,22 @@ module GlobalConstant
 
       def mainnet_registered_in_mappy_server_status
         'mainnet_registered_in_mappy_server_status'
+      end
+
+      def mainnet_token_setup_property
+        'mainnet_token_setup'
+      end
+
+      def mainnet_stake_and_mint_property
+        'mainnet_stake_and_mint'
+      end
+
+      def mainnet_ost_wallet_setup_property
+        'mainnet_ost_wallet_setup'
+      end
+
+      def mainnet_ost_wallet_invited_users_property
+        'mainnet_ost_wallet_invited_users'
       end
 
       ### Status End ###

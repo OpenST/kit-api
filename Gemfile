@@ -8,6 +8,8 @@ gem 'rake', '12.3.1'
 
 gem 'dalli', '2.7.9'
 
+gem 'rb-readline', '0.5.3'
+
 gem 'sanitize', '5.0.0'
 gem 'exception_notification', '4.3.0'
 

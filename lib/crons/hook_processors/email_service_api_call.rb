@@ -91,6 +91,8 @@ module Crons
               klass = Email::HookProcessor::UpdateContact
             when GlobalConstant::EmailServiceApiCallHook.send_transactional_mail_event_type
               klass = Email::HookProcessor::SendTransactionalMail
+            when GlobalConstant::EmailServiceApiCallHook.client_mile_stone_event_type
+              klass = Email::HookProcessor::ClientMileStone
             else
               raise "unhandled event_type: #{@hook.event_type}"
           end
