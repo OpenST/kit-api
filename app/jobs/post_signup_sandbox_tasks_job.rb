@@ -38,6 +38,7 @@ class PostSignupSandboxTasksJob < ApplicationJob
     @token_name = nil
     @testnet_view_link = nil
     @failed_logs = {}
+    @attributes_hash = {}
 
     @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
   end

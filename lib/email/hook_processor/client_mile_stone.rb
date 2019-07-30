@@ -18,6 +18,7 @@ module Email
 
         @property_to_set = nil
         @failed_logs = {}
+        @attributes_hash = {}
       end
 
       # Perform
@@ -142,7 +143,7 @@ module Email
       # Update client mile stone attributes for all admins in pepo campaigns
       #
       # * Author: Santhosh
-      # * Date: 16/07/2019
+      # * Date: 30/07/2019
       # * Reviewed By:
       #
       # @return [Result::Base]

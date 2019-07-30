@@ -235,16 +235,12 @@ module ManagerManagement
       #
       def update_client_manager
 
-        super_admin_property = nil
-
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
           @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
-          super_admin_property = GlobalConstant::PepoCampaigns.attribute_set
         else
           @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
-          super_admin_property = GlobalConstant::PepoCampaigns.attribute_unset
         end
 
         @to_update_client_manager.save!
