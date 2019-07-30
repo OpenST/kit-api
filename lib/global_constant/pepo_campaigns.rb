@@ -110,6 +110,7 @@ module GlobalConstant
         ]
       end
 
+      # Attributes to be deleted in pepo campaigns when delete admin is done
       def delete_admin_attributes
         [
             platform_signup_attribute,
