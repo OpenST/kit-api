@@ -106,9 +106,9 @@ class CampaignAttributeManager
                                                         { client_id: @client_id }).fetch[@manager_id]
 
     if client_manager[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
-      @attributes_hash[:super_admin] = GlobalConstant::PepoCampaigns.attribute_set
+      @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_set
     else
-      @attributes_hash[:super_admin] = GlobalConstant::PepoCampaigns.attribute_unset
+      @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_unset
     end
 
     success
@@ -124,7 +124,6 @@ class CampaignAttributeManager
   # @return [Result::Base]
   #
   def fetch_attributes_to_set(set_mile_stones)
-    @attributes_hash = {}
 
     set_mile_stones.each do |mile_stone_property|
       case mile_stone_property

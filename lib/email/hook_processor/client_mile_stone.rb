@@ -171,8 +171,8 @@ module Email
         managers.each do |manager_id, manager|
           next if manager[:status] != GlobalConstant::Manager.active_status
 
-          @attributes_hash[:super_admin] = 0
-          @attributes_hash[:super_admin] = 1 if super_admins[manager_id].present?
+          @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = 0
+          @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = 1 if super_admins[manager_id].present?
 
           r = Email::HookCreator::UpdateContact.new(
               receiver_entity_id: manager_id,
