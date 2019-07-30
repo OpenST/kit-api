@@ -32,10 +32,11 @@ class ClientManager < DbConnection::KitClient
 
   scope :admins, ->(client_id) {
     where(
-        'client_id = ? AND (privileges | ? > 0 OR privileges | ? > 0)',
+        'client_id = ? AND (privileges | ? > 0 OR privileges | ? > 0) AND (privileges | ? = 0)',
         client_id,
         ClientManager.privileges_config[GlobalConstant::ClientManager.is_super_admin_privilege],
-        ClientManager.privileges_config[GlobalConstant::ClientManager.is_admin_privilege]
+        ClientManager.privileges_config[GlobalConstant::ClientManager.is_admin_privilege],
+        ClientManager.privileges_config[GlobalConstant::ClientManager.has_been_deleted_privilege]
     )
   }
 
