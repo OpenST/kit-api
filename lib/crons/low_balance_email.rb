@@ -127,7 +127,14 @@ module Crons
 
       company_web_domain = CGI.escape(GlobalConstant::CompanyWeb.domain)
       url_prefix = GlobalConstant::Environment.url_prefix
-      template_vars = [ params[:token_name], company_web_domain, url_prefix]
+
+      template_vars = {
+        token_name: params[:token_name],
+        company_web_domain: company_web_domain,
+        url_prefix: url_prefix
+      }
+
+      Rails.logger.info("template_vars #{template_vars}")
 
       Email::HookCreator::SendTransactionalMail.new(
         receiver_entity_id: params[:client_id],
@@ -140,13 +147,16 @@ module Crons
       Rails.logger.info(" property #{property}")
 
       case property
-      when GlobalConstant::Client.sandbox_very_low_balance_email_property, GlobalConstant::Client.mainnet_very_low_balance_email_property
+      when GlobalConstant::Client.sandbox_very_low_balance_email_property,
+        GlobalConstant::Client.mainnet_very_low_balance_email_property
         Rails.logger.info(" Inside GlobalConstant::Client.sandbox_very_low_balance_email_property")
         return GlobalConstant::PepoCampaigns.platform_low_token_balance_5
-      when GlobalConstant::Client.sandbox_low_balance_email_property, GlobalConstant::Client.mainnet_low_balance_email_property
+      when GlobalConstant::Client.sandbox_low_balance_email_property,
+        GlobalConstant::Client.mainnet_low_balance_email_property
         Rails.logger.info(" Inside GlobalConstant::Client.sandbox_very_low_balance_email_property")
         return GlobalConstant::PepoCampaigns.platform_low_token_balance_10
-      when GlobalConstant::Client.sandbox_zero_balance_email_property, GlobalConstant::Client.mainnet_zero_balance_email_property
+      when GlobalConstant::Client.sandbox_zero_balance_email_property,
+        GlobalConstant::Client.mainnet_zero_balance_email_property
         Rails.logger.info(" Inside GlobalConstant::Client.sandbox_very_low_balance_email_property")
         return GlobalConstant::PepoCampaigns.platform_low_token_balance_0
       else
