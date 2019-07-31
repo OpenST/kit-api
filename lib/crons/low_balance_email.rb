@@ -25,6 +25,9 @@ module Crons
       Token.find_in_batches(batch_size: 20) do |token_batches|
 
         token_batches.each do |row|
+
+          #row = Token.where({client_id:10433})
+          #row = row[0]
           Rails.logger.info(row.id)
 
           dashboard_service_response = send_request_of_type(
@@ -59,7 +62,7 @@ module Crons
               mainnet_property: GlobalConstant::Client.mainnet_zero_balance_email_property,
               token_name: row.name})
 
-          elsif (token_holders_balance) > (total_supply * 0.05) # Change > => <
+          elsif (token_holders_balance) < (total_supply * 0.05) # Change > => <
             check_client_details({
               client_id: row.client_id,
               sandbox_property: GlobalConstant::Client.sandbox_very_low_balance_email_property,
