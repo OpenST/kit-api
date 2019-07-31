@@ -45,6 +45,13 @@ module Crons
           token_holders_balance = dashboard_service_response_data["tokenHoldersBalance"].to_f
           total_supply = dashboard_service_response_data["totalSupply"].to_f
 
+          Rails.logger.info(" token_holders_balance, #{token_holders_balance}")
+          Rails.logger.info(" total_supply, #{total_supply}")
+          Rails.logger.info(" row.client_id, #{row.client_id}")
+          Rails.logger.info(" GlobalConstant::Client.sandbox_zero_balance_email_property, #{GlobalConstant::Client.sandbox_zero_balance_email_property}")
+          Rails.logger.info(" GlobalConstant::Client.mainnet_zero_balance_email_property, #{GlobalConstant::Client.mainnet_zero_balance_email_property}")
+          Rails.logger.info(" row.row.name, #{row.name}")
+
           if token_holders_balance == 0
             check_client_details({
               client_id: row.client_id,
@@ -52,9 +59,9 @@ module Crons
               mainnet_property: GlobalConstant::Client.mainnet_zero_balance_email_property,
               token_name: row.name})
 
-          elsif (token_holders_balance) < (total_supply * 0.05)
+          elsif (token_holders_balance) > (total_supply * 0.05) # Change > => <
             check_client_details({
-              client_id:row.client_id,
+              client_id: row.client_id,
               sandbox_property: GlobalConstant::Client.sandbox_very_low_balance_email_property,
               mainnet_property: GlobalConstant::Client.mainnet_very_low_balance_email_property,
               token_name: row.name})
@@ -76,39 +83,37 @@ module Crons
       end
     end
 
-
-    #
-    #
-    #
-    #
-    #
     def check_client_details(params)
 
-      client = CacheManagement::Client.new([params.client_id]).fetch[params.client_id]
-      Rails.logger.info(" client, #{params.client_id}")
+      Rails.logger.info("params, #{params}")
+
+      client = CacheManagement::Client.new([params[:client_id]]).fetch[params[:client_id]]
+      Rails.logger.info(" client, #{params[:client_id]}")
 
 
       if GlobalConstant::Base.sandbox_sub_environment? &&
         client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_stake_and_mint_property) &&
-        !client[:sandbox_statuses].include?(params.sandbox_property)
+        !client[:sandbox_statuses].include?(params[:sandbox_property])
 
         email_hook_response = create_email_hook({
-            token_name: params.token_name,
-            client_id: params.client_id,
-            property: params.sandbox_property})
+            token_name: params[:token_name],
+            client_id: params[:client_id],
+            property: params[:sandbox_property]})
+
+        Rails.logger.info(" email_hook_response, #{email_hook_response.inspect}")
 
         return email_hook_response unless email_hook_response.success?
 
       elsif GlobalConstant::Base.main_sub_environment? &&
         client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_stake_and_mint_property) &&
-        !client[:mainnet_statuses].include?(params.mainnet_property)
+        !client[:mainnet_statuses].include?(params[:mainnet_property])
         # Insert into email hook
         # Set client property
 
         email_hook_response = create_email_hook({
-                                                  token_name: params.token_name,
-                                                  client_id: params.client_id,
-                                                  property: params.mainnet_property})
+                                                  token_name: params[:token_name],
+                                                  client_id: params[:client_id],
+                                                  property: params[:mainnet_property]})
 
         return email_hook_response unless email_hook_response.success?
 
@@ -118,12 +123,12 @@ module Crons
     def create_email_hook(params)
       company_web_domain = CGI.escape(GlobalConstant::CompanyWeb.domain)
       url_prefix = GlobalConstant::Environment.url_prefix
-      template_vars = [params.token_name, company_web_domain, url_prefix]
+      template_vars = [ params[:token_name], company_web_domain, url_prefix]
 
       Email::HookCreator::SendTransactionalMail.new(
-        receiver_entity_id: params.client_id,
+        receiver_entity_id: params[:client_id],
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
-        template_name: get_template_name(params.property),
+        template_name: get_template_name(params[:property]),
         template_vars: template_vars).perform
     end
 
