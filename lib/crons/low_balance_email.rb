@@ -121,6 +121,10 @@ module Crons
     end
 
     def create_email_hook(params)
+      Rails.logger.info(" create_email_hook params #{params.inspect}")
+
+      Rails.logger.info("get_template_name(params[:property] #{get_template_name(params[:property])}")
+
       company_web_domain = CGI.escape(GlobalConstant::CompanyWeb.domain)
       url_prefix = GlobalConstant::Environment.url_prefix
       template_vars = [ params[:token_name], company_web_domain, url_prefix]
@@ -133,15 +137,17 @@ module Crons
     end
 
     def get_template_name(property)
+      Rails.logger.info(" property #{property}")
+
       case property
-      when GlobalConstant::Client.sandbox_very_low_balance_email_property
-      when GlobalConstant::Client.mainnet_very_low_balance_email_property
+      when GlobalConstant::Client.sandbox_very_low_balance_email_property, GlobalConstant::Client.mainnet_very_low_balance_email_property
+        Rails.logger.info(" Inside GlobalConstant::Client.sandbox_very_low_balance_email_property")
         return GlobalConstant::PepoCampaigns.platform_low_token_balance_5
-      when GlobalConstant::Client.sandbox_low_balance_email_property
-      when GlobalConstant::Client.mainnet_low_balance_email_property
-              return GlobalConstant::PepoCampaigns.platform_low_token_balance_10
-      when GlobalConstant::Client.sandbox_zero_balance_email_property
-      when GlobalConstant::Client.mainnet_zero_balance_email_property
+      when GlobalConstant::Client.sandbox_low_balance_email_property, GlobalConstant::Client.mainnet_low_balance_email_property
+        Rails.logger.info(" Inside GlobalConstant::Client.sandbox_very_low_balance_email_property")
+        return GlobalConstant::PepoCampaigns.platform_low_token_balance_10
+      when GlobalConstant::Client.sandbox_zero_balance_email_property, GlobalConstant::Client.mainnet_zero_balance_email_property
+        Rails.logger.info(" Inside GlobalConstant::Client.sandbox_very_low_balance_email_property")
         return GlobalConstant::PepoCampaigns.platform_low_token_balance_0
       else
         fail "no expiry found for : #{self.kind}"
