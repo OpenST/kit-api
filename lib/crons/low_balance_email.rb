@@ -33,8 +33,8 @@ module Crons
           dashboard_service_response = send_request_of_type(
             'get',
             GlobalConstant::SaasApi.get_dashboard,
-            {client_id:10433, # row.client_id
-            token_id:1283} # row.id
+            {client_id: row.client_id,  #10433
+            token_id: row.id} # 1283
           )
 
           return dashboard_service_response unless dashboard_service_response.success?
