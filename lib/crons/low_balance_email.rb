@@ -48,13 +48,6 @@ module Crons
           token_holders_balance = dashboard_service_response_data["tokenHoldersBalance"].to_f
           total_supply = dashboard_service_response_data["totalSupply"].to_f
 
-          Rails.logger.info(" token_holders_balance, #{token_holders_balance}")
-          Rails.logger.info(" total_supply, #{total_supply}")
-          Rails.logger.info(" row.client_id, #{row.client_id}")
-          Rails.logger.info(" GlobalConstant::Client.sandbox_zero_balance_email_property, #{GlobalConstant::Client.sandbox_zero_balance_email_property}")
-          Rails.logger.info(" GlobalConstant::Client.mainnet_zero_balance_email_property, #{GlobalConstant::Client.mainnet_zero_balance_email_property}")
-          Rails.logger.info(" row.row.name, #{row.name}")
-
           if token_holders_balance == 0
             check_client_details({
               client_id: row.client_id,
@@ -79,7 +72,6 @@ module Crons
               token_name: row.name})
           end
 
-        return
         end
         Rails.logger.info("Batch complete")
 
