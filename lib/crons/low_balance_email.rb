@@ -22,13 +22,18 @@ module Crons
     end
 
     def fetch_token
+      errors = []
+
       Token.find_in_batches(batch_size: 20) do |token_batches|
 
         token_batches.each do |row|
 
           #row = Token.where({client_id:10433})
           #row = row[0]
-          Rails.logger.info(row.id)
+          Rails.logger.info("row.client_id, #{row.client_id}")
+
+          # When token is dissociated, client_id is null.
+          next if row.client_id.nil?
 
           dashboard_service_response = send_request_of_type(
             'get',
@@ -37,7 +42,8 @@ module Crons
             token_id: row.id} # 1283
           )
 
-          return dashboard_service_response unless dashboard_service_response.success?
+          #Handle errors here.
+          errors.push(dashboard_service_response) unless dashboard_service_response.success?
 
           Rails.logger.info(" response, #{dashboard_service_response}")
 
@@ -83,8 +89,8 @@ module Crons
       Rails.logger.info("params, #{params}")
 
       client = CacheManagement::Client.new([params[:client_id]]).fetch[params[:client_id]]
-      Rails.logger.info(" client, #{params[:client_id]}")
 
+      Rails.logger.info(" client, #{params[:client_id]}")
 
       if GlobalConstant::Base.sandbox_sub_environment? &&
         client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_stake_and_mint_property) &&
