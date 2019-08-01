@@ -154,7 +154,8 @@ module Crons
       template_vars = {
         token_name: @token[:name],
         company_web_domain: company_web_domain,
-        url_prefix: url_prefix
+        url_prefix: url_prefix,
+        subject_prefix: GlobalConstant::PepoCampaigns.subject_prefix
       }
       puts "template_vars #{template_vars}"
 
