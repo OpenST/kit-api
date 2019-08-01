@@ -163,6 +163,7 @@ class CampaignAttributeManager
     token_id = token_details[:id]
 
     extra_attributes[GlobalConstant::PepoCampaigns.token_name] = token_details[:name]
+    extra_attributes[GlobalConstant::PepoCampaigns.token_symbol] = token_details[:symbol]
 
     extra_attributes[GlobalConstant::PepoCampaigns.testnet_view_link] = fetch_view_link(token_id, GlobalConstant::Environment.testnet_url_prefix)
 
