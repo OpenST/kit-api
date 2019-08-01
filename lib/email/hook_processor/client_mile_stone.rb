@@ -69,7 +69,7 @@ module Email
 
         fetch_property_to_set
 
-        r = set_client_properties
+        r = set_unset_client_properties
         return r unless r.success?
 
         r = add_extra_attributes
@@ -135,7 +135,18 @@ module Email
       #
       # @return [Result::Base]
       #
-      def set_client_properties
+      def set_unset_client_properties
+
+        if @property_to_set == GlobalConstant::Client.sandbox_stake_and_mint_property
+          @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_property}")
+          @client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_property}")
+          @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_property}")
+        elsif @property_to_set == GlobalConstant::Client.mainnet_stake_and_mint_property
+          @client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_property}")
+          @client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_property}")
+          @client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_property}")
+        end
+
         @client.send("set_#{@property_to_set}")
         @client.save!
 
