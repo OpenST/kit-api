@@ -52,7 +52,7 @@ namespace :cron_task do
 
         register_signal_handlers
 
-        Token.find_in_batches(batch_size: 2) do |token_batches|
+        Token.find_in_batches(batch_size: 15) do |token_batches|
 
           token_batches.each do |row|
 

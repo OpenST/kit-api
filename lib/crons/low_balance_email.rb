@@ -19,12 +19,14 @@ module Crons
     #
     def perform
 
+      puts "In perform of low balance email"
       begin
+        puts "In begin"
 
         r = get_dashboard_response
         return r unless r.success?
 
-        Rails.logger.info(" dashboard_service_response, #{r}")
+        puts " dashboard_service_response, #{r}"
 
         r = check_token_holders_balance
         return r unless r.success?
@@ -45,7 +47,7 @@ module Crons
       #row = Token.where({client_id:10433})
       #row = row[0]
 
-      Rails.logger.info("row.@token[:client_id], #{@token[:client_id]}")
+      puts "row.@token[:client_id], #{@token[:client_id].inspect}"
 
       # When token is dissociated, client_id is null.
       return success if @token[:client_id].nil?
@@ -56,6 +58,7 @@ module Crons
         {client_id: @token[:client_id],  #10433
         token_id: @token[:id]} #   1283
       )
+      puts "dashboard_service_response, #{dashboard_service_response.inspect}"
 
       return dashboard_service_response unless dashboard_service_response.success?
 
@@ -74,7 +77,7 @@ module Crons
 
       return success if @dashboard.nil?
 
-      Rails.logger.info(" dashboard_service_response_data, #{@dashboard}")
+      puts " dashboard_service_response_data, #{@dashboard.inspect}"
       token_holders_balance = @dashboard["tokenHoldersBalance"].to_f
       total_supply = @dashboard["totalSupply"].to_f
 
@@ -82,11 +85,11 @@ module Crons
         @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                            GlobalConstant::Client.sandbox_zero_balance_email_property :
                            GlobalConstant::Client.mainnet_zero_balance_email_property
-      elsif (token_holders_balance) < (total_supply * 0.05)
+      elsif (token_holders_balance) < (total_supply * 0.9) # Change this to 0.05
         @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                            GlobalConstant::Client.sandbox_very_low_balance_email_property :
                            GlobalConstant::Client.mainnet_very_low_balance_email_property
-      elsif (token_holders_balance) < (total_supply * 0.1)
+      elsif (token_holders_balance) < (total_supply * 0.99) # Change this to 0.1
         @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                            GlobalConstant::Client.sandbox_low_balance_email_property :
                            GlobalConstant::Client.mainnet_low_balance_email_property
@@ -104,7 +107,7 @@ module Crons
     def check_client_details
       return success if @status_to_set.nil?
 
-      Rails.logger.info("params, #{params}")
+      Rails.logger.info("params, #{params.inspect}")
 
       client = CacheManagement::Client.new([@token[:client_id]]).fetch[@token[:client_id]]
 
@@ -132,7 +135,7 @@ module Crons
     # * Reviewed By:
     #
     def create_email_hook
-      Rails.logger.info("get_template_name(params[:property] #{get_template_name}")
+      Rails.logger.info("get_template_name(params[:property] #{get_template_name.inspect}")
 
       company_web_domain = CGI.escape(GlobalConstant::CompanyWeb.domain)
       url_prefix = GlobalConstant::Environment.url_prefix

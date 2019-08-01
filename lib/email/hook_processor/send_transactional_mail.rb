@@ -79,55 +79,9 @@ module Email
           )
         else
 
-          response = unset_client_statuses
-          return response unless unset_client_statuses.success?
-
           success_with_data(send_mail_response)
         end
 
-      end
-
-      # Unset client statuses if stake and mint is done.
-      #
-      # * Author: Anagha
-      # * Date: 01/08/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base] returns an object of Result::Base class
-      #
-      def unset_client_statuses
-
-        send_mail_params = @hook.params
-        receiver_entity_id = @hook.receiver_entity_id
-
-        if send_mail_params["template_name"] == GlobalConstant::PepoCampaigns.platform_stake_and_mint_status_success_template
-          client = Client.where(id: receiver_entity_id).first
-
-          sanbox_statuses = client[:sandbox_statuses].present? ? Client.get_bits_set_for_sandbox_statuses(client[:sandbox_statuses]) : []
-          mainnet_statuses = client[:mainnet_statuses].present? ? Client.get_bits_set_for_mainnet_statuses(client[:mainnet_statuses]) : []
-
-          if GlobalConstant::Base.sandbox_sub_environment?
-            if sanbox_statuses.include?(GlobalConstant::Client.sandbox_low_balance_email_property)
-              client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_property}")
-            elsif sanbox_statuses.include?(GlobalConstant::Client.sandbox_very_low_balance_email_property)
-              client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_property}")
-            elsif sanbox_statuses.include?(GlobalConstant::Client.sandbox_zero_balance_email_property)
-              client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_property}")
-            end
-          elsif GlobalConstant::Base.main_sub_environment?
-            if mainnet_statuses.include?(GlobalConstant::Client.mainnet_low_balance_email_property)
-              client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_property}")
-            elsif mainnet_statuses.include?(GlobalConstant::Client.mainnet_very_low_balance_email_property)
-              client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_property}")
-            elsif mainnet_statuses.include?(GlobalConstant::Client.mainnet_zero_balance_email_property)
-              client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_property}")
-            end
-          end
-
-          client.save!
-        end
-
-        success
       end
 
       # Add extra template vars

@@ -18,6 +18,7 @@ module Email
 
         @property_to_set = nil
         @failed_logs = {}
+        @first_stake_and_mint = nil
       end
 
       # Perform
@@ -67,9 +68,12 @@ module Email
         r = fetch_client
         return r unless r.success?
 
+        r = check_first_time_stake_and_mint
+        return r unless r.success?
+
         fetch_property_to_set
 
-        r = set_client_properties
+        r = set_unset_client_properties
         return r unless r.success?
 
         r = add_extra_attributes
@@ -97,6 +101,27 @@ module Email
         @client = Client.where(id: @client_id).first
 
         @client_hash = @client.formatted_cache_data
+
+        success
+      end
+
+      # Check first time stake and mint.
+      #
+      # * Author: Anagha
+      # * Date: 01/08/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def check_first_time_stake_and_mint
+
+        if (GlobalConstant::Base.sandbox_sub_environment? &&
+          @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_stake_and_mint_property)) ||
+          (GlobalConstant::Base.main_sub_environment? &&
+            @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_stake_and_mint_property))
+          @first_stake_and_mint = true
+
+        end
 
         success
       end
@@ -134,7 +159,25 @@ module Email
       #
       # @return [Result::Base]
       #
-      def set_client_properties
+      def set_unset_client_properties
+
+        if GlobalConstant::Base.sandbox_sub_environment?
+          if @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_low_balance_email_property)
+            client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_property}")
+          elsif @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_very_low_balance_email_property)
+            client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_property}")
+          elsif @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_zero_balance_email_property)
+            client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_property}")
+          end
+        elsif GlobalConstant::Base.main_sub_environment?
+          if @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_low_balance_email_property)
+            client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_property}")
+          elsif @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_very_low_balance_email_property)
+            client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_property}")
+          elsif @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_zero_balance_email_property)
+            client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_property}")
+          end
+        end
 
         @client.send("set_#{@property_to_set}")
         @client.save!
@@ -171,6 +214,8 @@ module Email
       #
       def update_super_admins_and_admins_in_pepo_campaign
         return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment # Update only for testnet
+
+        return success if @first_stake_and_mint
 
         manager_ids = []
 
