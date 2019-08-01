@@ -6,20 +6,20 @@ module Crons
 
     def initialize
       super
-
-      @dashboard = nil
-      @status_to_set = nil
     end
 
     # public method to process hooks
     #
     # * Author: Anagha
-    # * Date: 11/11/2017
+    # * Date: 01/08/2019
     # * Reviewed By:
     #
     def perform(params)
 
       @token = params[:token_row]
+      @dashboard = nil
+      @status_to_set = nil
+
       puts "Initialize ============ #{params[:token_row].inspect}"
       puts "In perform of low balance email"
       begin
@@ -42,11 +42,12 @@ module Crons
     # public method to process hooks
     #
     # * Author: Anagha
-    # * Date: 11/11/2017
+    # * Date: 01/08/2019
     # * Reviewed By:
     #
     def get_dashboard_response
-      #row = Token.where({client_id:10433})
+      #@token = Token.where(client_id:10433)
+
       #row = row[0]
 
       puts "row.@token[:client_id], #{@token[:client_id].inspect}"
@@ -73,7 +74,7 @@ module Crons
     # Check token holders balance and set status if required.
     #
     # * Author: Anagha
-    # * Date: 11/11/2017
+    # * Date: 01/08/2019
     # * Reviewed By:
     #
     def check_token_holders_balance
@@ -81,18 +82,23 @@ module Crons
       return success if @dashboard.nil?
 
       puts " dashboard_service_response_data, #{@dashboard.inspect}"
+
       token_holders_balance = @dashboard["tokenHoldersBalance"].to_f
       total_supply = @dashboard["totalSupply"].to_f
+
+      puts " token_holders_balance, #{token_holders_balance.inspect}"
+      puts " total_supply, #{total_supply.inspect}"
 
       if token_holders_balance == 0
         @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                            GlobalConstant::Client.sandbox_zero_balance_email_property :
                            GlobalConstant::Client.mainnet_zero_balance_email_property
-      elsif (token_holders_balance) < (total_supply * 0.9) # Change this to 0.05
+      elsif (token_holders_balance) > (total_supply * 0.9) # Change this to 0.05
         @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                            GlobalConstant::Client.sandbox_very_low_balance_email_property :
                            GlobalConstant::Client.mainnet_very_low_balance_email_property
       elsif (token_holders_balance) < (total_supply * 0.99) # Change this to 0.1
+        puts " Here here here #{total_supply.inspect}"
         @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                            GlobalConstant::Client.sandbox_low_balance_email_property :
                            GlobalConstant::Client.mainnet_low_balance_email_property
@@ -104,13 +110,15 @@ module Crons
     # Set status according to sub-environment.
     #
     # * Author: Anagha
-    # * Date: 11/11/2017
+    # * Date: 01/08/2019
     # * Reviewed By:
     #
     def check_client_details
+      puts "Inside check_client_details"
+
       return success if @status_to_set.nil?
 
-      Rails.logger.info("params, #{params.inspect}")
+      puts "Inside check_client_details ==========="
 
       client = CacheManagement::Client.new([@token[:client_id]]).fetch[@token[:client_id]]
 
@@ -122,10 +130,10 @@ module Crons
         !client[:mainnet_statuses].include?(params[:mainnet_property]))
 
         email_hook_response = create_email_hook
-        return email_hook_response unless email_hook_response
+        return email_hook_response unless email_hook_response.success?
 
         client_response = set_property_for_client
-        return client_response unless client_response
+        return client_response unless client_response.success?
       end
 
       success
@@ -138,7 +146,7 @@ module Crons
     # * Reviewed By:
     #
     def create_email_hook
-      Rails.logger.info("get_template_name(params[:property] #{get_template_name.inspect}")
+      puts "get_template_name(params[:property] #{get_template_name.inspect}"
 
       company_web_domain = CGI.escape(GlobalConstant::CompanyWeb.domain)
       url_prefix = GlobalConstant::Environment.url_prefix
@@ -148,14 +156,22 @@ module Crons
         company_web_domain: company_web_domain,
         url_prefix: url_prefix
       }
+      puts "template_vars #{template_vars}"
 
-      Rails.logger.info("template_vars #{template_vars}")
+      super_admin_manager_ids = ClientManager.super_admins(@token[:client_id]).pluck(:manager_id)
 
-      Email::HookCreator::SendTransactionalMail.new(
-        receiver_entity_id: @token[:client_id],
-        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
-        template_name: get_template_name,
-        template_vars: template_vars).perform
+      puts "super_admin_manager_ids #{super_admin_manager_ids}"
+      super_admin_manager_ids.each do |manager_id|
+
+        resp = Email::HookCreator::SendTransactionalMail.new(
+          receiver_entity_id: manager_id,
+          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+          template_name: get_template_name,
+          template_vars: template_vars).perform
+
+        puts "resp #{resp}"
+      end
+      success
     end
 
     # Set status for client.
@@ -165,10 +181,14 @@ module Crons
     # * Reviewed By:
     #
     def set_property_for_client
-      client = Client.where(id: @token[:client_id]).first
-      Rails.logger.info(" client #{client.inspect}")
-      client.send("set_#{@property_to_set}")
-      client.save!
+
+      puts "@token[:client_id] #{@token[:client_id]}"
+
+      puts "@@status_to_set #{@status_to_set}"
+
+      client_obj = ::Client.where(id: @token[:client_id]).first
+      client_obj.send("set_#{@status_to_set}")
+      client_obj.save!
 
       success
     end
@@ -180,7 +200,7 @@ module Crons
     # * Reviewed By:
     #
     def get_template_name
-      Rails.logger.info(" property #{property}")
+      puts " @status_to_set #{@status_to_set}"
 
       case @status_to_set
       when GlobalConstant::Client.sandbox_very_low_balance_email_property,
