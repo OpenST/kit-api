@@ -14,7 +14,6 @@ module Crons
 
       begin
 
-        # acquire lock and fetch the locked hooks
         fetch_token
 
       end
@@ -26,10 +25,10 @@ module Crons
 
       Token.find_in_batches(batch_size: 20) do |token_batches|
 
-        token_batches.each do |row|
+        #token_batches.each do |row|
 
-          #row = Token.where({client_id:10433})
-          #row = row[0]
+          row = Token.where({client_id:10433})
+          row = row[0]
           Rails.logger.info("row.client_id, #{row.client_id}")
 
           # When token is dissociated, client_id is null.
@@ -38,8 +37,8 @@ module Crons
           dashboard_service_response = send_request_of_type(
             'get',
             GlobalConstant::SaasApi.get_dashboard,
-            {client_id: row.client_id,  #10433
-            token_id: row.id} # 1283
+            {client_id: 10433,  # row.client_id
+            token_id: 1283} #  row.id
           )
 
           #Handle errors here.
@@ -69,7 +68,7 @@ module Crons
               token_name: row.name})
 
 
-          elsif (token_holders_balance) < (total_supply * 0.1)
+          elsif (token_holders_balance) > (total_supply * 0.1)
 
             check_client_details({
               client_id:row.client_id,
@@ -78,10 +77,11 @@ module Crons
               token_name: row.name})
           end
 
+          return
         end
         Rails.logger.info("Batch complete")
 
-      end
+      #end
     end
 
     def check_client_details(params)
@@ -89,8 +89,6 @@ module Crons
       Rails.logger.info("params, #{params}")
 
       client = CacheManagement::Client.new([params[:client_id]]).fetch[params[:client_id]]
-
-      Rails.logger.info(" client, #{params[:client_id]}")
 
       if GlobalConstant::Base.sandbox_sub_environment? &&
         client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_stake_and_mint_property) &&
@@ -100,10 +98,10 @@ module Crons
             token_name: params[:token_name],
             client_id: params[:client_id],
             property: params[:sandbox_property]})
-
         Rails.logger.info(" email_hook_response, #{email_hook_response.inspect}")
-
         return email_hook_response unless email_hook_response.success?
+
+        set_property_for_client({client_id: params[:client_id], property:params[:sandbox_property]})
 
       elsif GlobalConstant::Base.main_sub_environment? &&
         client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_stake_and_mint_property) &&
@@ -118,6 +116,7 @@ module Crons
 
         return email_hook_response unless email_hook_response.success?
 
+        set_property_for_client({client_id: params[:client_id], property: params[:sandbox_property]})
       end
     end
 
@@ -165,7 +164,15 @@ module Crons
       end
     end
 
+    def set_property_for_client(params)
+      Rails.logger.info(" params #{params}")
 
+      client = Client.where(id: params[:client_id]).first
+      Rails.logger.info(" client #{client.inspect}")
+
+      client.send("set_#{params[:property]}")
+      client.save!
+    end
 
   end
 
