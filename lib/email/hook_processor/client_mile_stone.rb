@@ -64,14 +64,12 @@ module Email
       #
       def process_hook
 
-        Rails.logger.info("In client mile stone =============")
-
         r = fetch_client
         return r unless r.success?
 
         fetch_property_to_set
 
-        r = set_unset_client_properties
+        r = set_client_properties
         return r unless r.success?
 
         r = add_extra_attributes
@@ -120,7 +118,6 @@ module Email
           @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_token_setup_property : GlobalConstant::Client.mainnet_token_setup_property
         when GlobalConstant::PepoCampaigns.stake_and_mint
           @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_stake_and_mint_property : GlobalConstant::Client.mainnet_stake_and_mint_property
-          # Reset client properties
         when GlobalConstant::PepoCampaigns.ost_wallet_invited_users
           @property_to_set = GlobalConstant::Base.sandbox_sub_environment? ? GlobalConstant::Client.sandbox_ost_wallet_invited_users_property : GlobalConstant::Client.mainnet_ost_wallet_invited_users_property
         else
@@ -137,20 +134,7 @@ module Email
       #
       # @return [Result::Base]
       #
-      def set_unset_client_properties
-
-        if @property_to_set == GlobalConstant::Client.sandbox_stake_and_mint_property
-          Rails.logger.info("@property_to_set =======", @property_to_set)
-          @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_property}")
-          @client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_property}")
-          @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_property}")
-        elsif @property_to_set == GlobalConstant::Client.mainnet_stake_and_mint_property
-          @client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_property}")
-          @client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_property}")
-          @client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_property}")
-        end
-
-        Rails.logger.info("@client =======", @client)
+      def set_client_properties
 
         @client.send("set_#{@property_to_set}")
         @client.save!
