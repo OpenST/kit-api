@@ -15,8 +15,6 @@ class PostSignupSandboxTasksJob < ApplicationJob
 
     init_params(params)
 
-    fetch_campaign_automation_attributes
-
     update_contact_in_email_service
 
     notify_devs
@@ -38,27 +36,11 @@ class PostSignupSandboxTasksJob < ApplicationJob
     @token_name = nil
     @testnet_view_link = nil
     @failed_logs = {}
-    @attributes_hash = {}
 
     @manager = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
   end
 
-  # Fetch campaign automation attributes
-  #
-  # * Author: Santhosh
-  # * Date: 26/07/2019
-  # * Reviewed By:
-  #
-  # @returns [Hash]
-  #
-  def fetch_campaign_automation_attributes
-    campaign_attribute_manager = CampaignAttributeManager.new({ client_id: @client_id, manager_id: @manager_id })
 
-    r = campaign_attribute_manager.fetch_automation_campaign_attributes
-    return r unless r.success?
-
-    @attributes_hash = r.data
-  end
 
   # Update contact in Pepo Campaigns
   #
@@ -71,7 +53,9 @@ class PostSignupSandboxTasksJob < ApplicationJob
     r = Email::HookCreator::UpdateContact.new(
         receiver_entity_id: @manager_id,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-        custom_attributes: @attributes_hash
+        custom_attributes: {},
+        client_id: @client_id,
+        manager_id: @manager_id
     ).perform
 
     @failed_logs[@manager_id] = r.to_hash unless r.success?

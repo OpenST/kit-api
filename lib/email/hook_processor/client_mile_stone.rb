@@ -150,13 +150,6 @@ module Email
       #
       def update_mile_stone_attributes_for_admins
 
-        campaign_attribute_manager = CampaignAttributeManager.new(client_id: @client_id)
-
-        r = campaign_attribute_manager.fetch_automation_campaign_attributes
-        return r unless r.success?
-
-        @attributes_hash = r.data
-
         manager_ids = []
         super_admins = {}
 
@@ -172,14 +165,13 @@ module Email
         managers.each do |manager_id, manager|
           next if manager[:status] != GlobalConstant::Manager.active_status
 
-          @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = 0
-          @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = 1 if super_admins[manager_id].present?
-
           r = Email::HookCreator::UpdateContact.new(
               receiver_entity_id: manager_id,
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-              custom_attributes: @attributes_hash,
-              user_settings: {}
+              custom_attributes: {},
+              user_settings: {},
+              client_id: @client_id,
+              manager_id: manager_id
           ).perform
 
           @failed_logs[manager_id] = r.to_hash unless r.success?

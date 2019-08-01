@@ -247,18 +247,14 @@ module ManagerManagement
 
         @to_update_manager_id = @to_update_client_manager[:manager_id]
 
-        campaign_attribute_manager = CampaignAttributeManager.new(client_id: @client_id, manager_id: @to_update_manager_id)
-
-        r = campaign_attribute_manager.fetch_automation_campaign_attributes
-        return r unless r.success?
-
-        attributes_hash = r.data
 
         Email::HookCreator::UpdateContact.new(
             receiver_entity_id: @to_update_manager_id,
             receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-            custom_attributes: attributes_hash,
-            user_settings: {}
+            custom_attributes: {},
+            user_settings: {},
+            client_id: @client_id,
+            manager_id: @manager_id
         ).perform
 
 
