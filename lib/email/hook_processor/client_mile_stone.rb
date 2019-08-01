@@ -138,6 +138,7 @@ module Email
       def set_unset_client_properties
 
         if @property_to_set == GlobalConstant::Client.sandbox_stake_and_mint_property
+          Rails.logger.info("@property_to_set =======", @property_to_set)
           @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_property}")
           @client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_property}")
           @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_property}")
@@ -146,6 +147,8 @@ module Email
           @client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_property}")
           @client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_property}")
         end
+
+        Rails.logger.info("@client =======", @client)
 
         @client.send("set_#{@property_to_set}")
         @client.save!
