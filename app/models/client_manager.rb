@@ -33,7 +33,8 @@ class ClientManager < DbConnection::KitClient
   # 4 represents the number of bits to the right of deleted user privilege
   scope :admins, ->(client_id) {
     where(
-        'client_id = ? AND (privileges | ? > 0 OR privileges | ? > 0) AND (privileges >> 4 & 1 = 0)',
+        # TODO - Santhosh test it
+        'client_id = ? AND (privileges | ? > 0 OR privileges | ? > 0) AND (privileges & 16 = 0)',
         client_id,
         ClientManager.privileges_config[GlobalConstant::ClientManager.is_super_admin_privilege],
         ClientManager.privileges_config[GlobalConstant::ClientManager.is_admin_privilege]
