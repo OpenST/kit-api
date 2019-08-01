@@ -64,6 +64,8 @@ module Email
       #
       def process_hook
 
+        Rails.logger.info("In client mile stone =============")
+
         r = fetch_client
         return r unless r.success?
 
