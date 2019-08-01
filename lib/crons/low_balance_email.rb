@@ -4,9 +4,9 @@ module Crons
 
     include Util::ResultHelper
 
-    def initialize(params)
-      puts "Initialize ============ #{params[:token_row].inspect}"
-      @token = params[:token_row]
+    def initialize
+      super
+
       @dashboard = nil
       @status_to_set = nil
     end
@@ -17,8 +17,10 @@ module Crons
     # * Date: 11/11/2017
     # * Reviewed By:
     #
-    def perform
+    def perform(params)
 
+      @token = params[:token_row]
+      puts "Initialize ============ #{params[:token_row].inspect}"
       puts "In perform of low balance email"
       begin
         puts "In begin"
@@ -58,6 +60,7 @@ module Crons
         {client_id: @token[:client_id],  #10433
         token_id: @token[:id]} #   1283
       )
+
       puts "dashboard_service_response, #{dashboard_service_response.inspect}"
 
       return dashboard_service_response unless dashboard_service_response.success?

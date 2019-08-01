@@ -51,6 +51,7 @@ namespace :cron_task do
         @sleep_interval ||= 2 # In Seconds
 
         register_signal_handlers
+        performer_klass = @performer_klass.constantize.new
 
         Token.find_in_batches(batch_size: 15) do |token_batches|
 
@@ -61,8 +62,7 @@ namespace :cron_task do
 
           log_line " #{row} with pakbwebc cwehwoe cwejcnowe"
 
-          performer_klass = @performer_klass.constantize.new({token_row: row})
-          performer_klass.perform
+          performer_klass.perform({token_row: row})
 
           end
 
