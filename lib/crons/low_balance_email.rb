@@ -1,11 +1,13 @@
 module Crons
 
-  class LowBalanceEmail < SaasApi::Base
+  class LowBalanceEmail
 
     include Util::ResultHelper
 
-    def initialize
-      super
+    def initialize(params)
+      @token = params[:token_row]
+      @dashboard = nil
+      @status_to_set = nil
     end
 
     # public method to process hooks
@@ -14,13 +16,8 @@ module Crons
     # * Date: 01/08/2019
     # * Reviewed By:
     #
-    def perform(params)
+    def perform
 
-      @token = params[:token_row]
-      @dashboard = nil
-      @status_to_set = nil
-
-      puts "Initialize ============ #{params[:token_row].inspect}"
       puts "In perform of low balance email"
       begin
         puts "In begin"
@@ -46,21 +43,13 @@ module Crons
     # * Reviewed By:
     #
     def get_dashboard_response
-      #@token = Token.where(client_id:10433)
-
-      #row = row[0]
-
       puts "row.@token[:client_id], #{@token[:client_id].inspect}"
 
       # When token is dissociated, client_id is null.
       return success if @token[:client_id].nil?
 
-      dashboard_service_response = send_request_of_type(
-        'get',
-        GlobalConstant::SaasApi.get_dashboard,
-        {client_id: @token[:client_id],  #10433
-        token_id: @token[:id]} #   1283
-      )
+      dashboard_service_response = SaasApi::Dashboard::Get.new.perform({client_id: @token[:client_id],
+        token_id: @token[:id]})
 
       puts "dashboard_service_response, #{dashboard_service_response.inspect}"
 
