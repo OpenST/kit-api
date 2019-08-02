@@ -86,11 +86,11 @@ class LowBalanceEmail
       @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                          GlobalConstant::Client.sandbox_zero_balance_email_status :
                          GlobalConstant::Client.mainnet_zero_balance_email_status
-    elsif (token_holders_balance) < (total_supply * 0.05)
+    elsif (token_holders_balance) <= (total_supply * 0.05)
       @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                          GlobalConstant::Client.sandbox_very_low_balance_email_status :
                          GlobalConstant::Client.mainnet_very_low_balance_email_status
-    elsif (token_holders_balance) < (total_supply * 0.1)
+    elsif (token_holders_balance) <= (total_supply * 0.1)
       @status_to_set = GlobalConstant::Base.sandbox_sub_environment? ?
                          GlobalConstant::Client.sandbox_low_balance_email_status :
                          GlobalConstant::Client.mainnet_low_balance_email_status
