@@ -52,7 +52,7 @@ namespace :one_timers do
     managers.each do |manager_id, manager|
       next if manager[:status] != GlobalConstant::Manager.active_status
 
-      update_contact(manager_id, attributes_hash)
+      update_contact(client_id, manager_id, attributes_hash)
     end
   end
 
@@ -64,12 +64,14 @@ namespace :one_timers do
   #
   # @return [Result::Base]
   #
-  def update_contact(manager_id, attributes_hash)
+  def update_contact(client_id, manager_id, attributes_hash)
     r = Email::HookCreator::UpdateContact.new(
         receiver_entity_id: manager_id,
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         custom_attributes: attributes_hash,
-        user_settings: {}
+        user_settings: {},
+        client_id: client_id,
+        manager_id: manager_id
     ).perform
 
     puts "==== Hook creation response #{r.inspect}" unless r.success?
