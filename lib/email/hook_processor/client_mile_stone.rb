@@ -164,6 +164,7 @@ module Email
       #
       def set_unset_client_properties
 
+        # TODO - if milestone is stake and mint only then set unset the following.
         if GlobalConstant::Base.sandbox_sub_environment?
           if @sandbox_statuses.include?(GlobalConstant::Client.sandbox_low_balance_email_status)
             @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_status}")
@@ -218,6 +219,7 @@ module Email
       def update_super_admins_and_admins_in_pepo_campaign
         return success if sub_env != GlobalConstant::Environment.sandbox_sub_environment # Update only for testnet
 
+        # TODO - if milestone is stake and mint
         return success if @first_stake_and_mint
 
         manager_ids = []

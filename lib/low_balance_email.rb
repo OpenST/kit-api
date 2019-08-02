@@ -3,6 +3,7 @@ class LowBalanceEmail
   include Util::ResultHelper
 
   def initialize(params)
+    # TODO - pass specific params
     @token = params[:token_row]
     @dashboard = nil
     @status_to_set = nil
