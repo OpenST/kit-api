@@ -18,9 +18,9 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.mainnet_token_setup_property => 16,
         GlobalConstant::Client.mainnet_stake_and_mint_property => 32,
         GlobalConstant::Client.mainnet_ost_wallet_invited_users_property => 64,
-        GlobalConstant::Client.mainnet_low_balance_email_property => 128,
-        GlobalConstant::Client.mainnet_very_low_balance_email_property => 256,
-        GlobalConstant::Client.mainnet_zero_balance_email_property => 512
+        GlobalConstant::Client.mainnet_low_balance_email_status => 128,
+        GlobalConstant::Client.mainnet_very_low_balance_email_status => 256,
+        GlobalConstant::Client.mainnet_zero_balance_email_status => 512
     }
   end
 
@@ -34,9 +34,9 @@ class Client < DbConnection::KitClient
         GlobalConstant::Client.sandbox_token_setup_property => 32,
         GlobalConstant::Client.sandbox_stake_and_mint_property => 64,
         GlobalConstant::Client.sandbox_ost_wallet_invited_users_property => 128,
-        GlobalConstant::Client.sandbox_low_balance_email_property => 256,
-        GlobalConstant::Client.sandbox_very_low_balance_email_property => 512,
-        GlobalConstant::Client.sandbox_zero_balance_email_property => 1024
+        GlobalConstant::Client.sandbox_low_balance_email_status => 256,
+        GlobalConstant::Client.sandbox_very_low_balance_email_status => 512,
+        GlobalConstant::Client.sandbox_zero_balance_email_status => 1024
     }
   end
 
