@@ -3,8 +3,10 @@ class LowBalanceEmail
   include Util::ResultHelper
 
   def initialize(params)
-    # TODO - pass specific params
-    @token = params[:token_row]
+
+    @client_id = params[:client_id]
+    @token_id = params[:token_id]
+    @token_name = params[:token_name]
     @dashboard = nil
     @status_to_set = nil
     @is_hook_creation_required = nil
@@ -49,13 +51,13 @@ class LowBalanceEmail
   # * Reviewed By:
   #
   def get_dashboard_response
-    puts "@token[:client_id] ===== #{@token[:client_id].inspect}"
+    puts "client_id ===== #{@client_id}"
 
     # When token is dissociated, client_id is null.
-    return success if @token[:client_id].nil?
+    return success if @client_id.nil?
 
-    dashboard_service_response = SaasApi::Dashboard::Get.new.perform({client_id: @token[:client_id],
-      token_id: @token[:id]})
+    dashboard_service_response = SaasApi::Dashboard::Get.new.perform({client_id: @client_id,
+      token_id: @token_id})
 
     puts "dashboard_service_response, #{dashboard_service_response.inspect}"
 
@@ -107,7 +109,7 @@ class LowBalanceEmail
 
     return success if @status_to_set.nil?
 
-    client = CacheManagement::Client.new([@token[:client_id]]).fetch[@token[:client_id]]
+    client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
 
     # Create email hook only if client has done stake and mint at least once.
     if (GlobalConstant::Base.sandbox_sub_environment? &&
@@ -136,13 +138,13 @@ class LowBalanceEmail
     return success if @is_hook_creation_required.nil?
 
     template_vars = {
-      token_name: @token[:name],
+      token_name: @token_name,
       company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
       url_prefix: GlobalConstant::Environment.url_prefix,
       subject_prefix: GlobalConstant::PepoCampaigns.subject_prefix
     }
 
-    super_admin_manager_ids = ClientManager.super_admins(@token[:client_id]).pluck(:manager_id)
+    super_admin_manager_ids = ClientManager.super_admins(@client_id).pluck(:manager_id)
 
     puts "template_vars #{template_vars}"
     puts "super_admin_manager_ids #{super_admin_manager_ids}"
@@ -170,9 +172,9 @@ class LowBalanceEmail
 
     return success if @is_hook_creation_required.nil?
 
-    puts "@token[:client_id] #{@token[:client_id]}"
+    puts "@client_id #{@client_id}"
     puts "@status_to_set #{@status_to_set}"
-    client_obj = Client.where(id: @token[:client_id]).first
+    client_obj = Client.where(id: @client_id).first
     client_obj.send("set_#{@status_to_set}")
     client_obj.save!
 

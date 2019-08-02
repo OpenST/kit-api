@@ -46,7 +46,9 @@ namespace :cron_task do
           current_time = Time.now
           log_line "Starting iteration #{@iteration_count} at #{current_time}"
 
-          performer_klass = @performer_klass.constantize.new({token_row: row})
+          performer_klass = @performer_klass.constantize.new({client_id: row.client_id,
+                                                             token_id: row.id,
+                                                             token_name: row.name})
           performer_klass.perform
 
           end

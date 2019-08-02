@@ -162,8 +162,8 @@ module Email
       #
       def set_unset_client_properties
 
-        # TODO - if milestone is stake and mint only then set unset the following.
-        if GlobalConstant::Base.sandbox_sub_environment?
+        if GlobalConstant::Base.sandbox_sub_environment? &&
+          mile_stone == GlobalConstant::Client.sandbox_stake_and_mint_property
           if @sandbox_statuses.include?(GlobalConstant::Client.sandbox_low_balance_email_status)
             @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_status}")
           elsif @sandbox_statuses.include?(GlobalConstant::Client.sandbox_very_low_balance_email_status)
@@ -171,7 +171,8 @@ module Email
           elsif @sandbox_statuses.include?(GlobalConstant::Client.sandbox_zero_balance_email_status)
             @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_status}")
           end
-        elsif GlobalConstant::Base.main_sub_environment?
+        elsif GlobalConstant::Base.main_sub_environment? &&
+          mile_stone == GlobalConstant::Client.mainnet_stake_and_mint_property
           if @mainnet_statuses.include?(GlobalConstant::Client.mainnet_low_balance_email_status)
             @client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_status}")
           elsif @mainnet_statuses.include?(GlobalConstant::Client.mainnet_very_low_balance_email_status)
@@ -198,8 +199,12 @@ module Email
       #
       def update_mile_stone_attributes_for_admins
 
-        # TODO - if milestone is stake and mint
-        return success if @first_stake_and_mint
+        if @first_stake_and_mint
+          if mile_stone == GlobalConstant::Client.mainnet_stake_and_mint_property ||
+            mile_stone == GlobalConstant::Client.sandbox_stake_and_mint_property
+            return success
+          end
+        end
 
         manager_ids = []
         super_admins = {}
