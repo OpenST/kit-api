@@ -114,14 +114,14 @@ module Email
       # @return [Result::Base]
       #
       def check_first_time_stake_and_mint
-        sanbox_statuses = @client[:sandbox_statuses].present? ? Client.get_bits_set_for_sandbox_statuses(@client[:sandbox_statuses]) : []
-        mainnet_statuses = @client[:mainnet_statuses].present? ? Client.get_bits_set_for_mainnet_statuses(@client[:mainnet_statuses]) : []
+        @sandbox_statuses = @client[:sandbox_statuses].present? ? Client.get_bits_set_for_sandbox_statuses(@client[:sandbox_statuses]) : []
+        @mainnet_statuses = @client[:mainnet_statuses].present? ? Client.get_bits_set_for_mainnet_statuses(@client[:mainnet_statuses]) : []
 
 
         if (GlobalConstant::Base.sandbox_sub_environment? &&
-          sanbox_statuses.include?(GlobalConstant::Client.sandbox_stake_and_mint_property)) ||
+          @sandbox_statuses.include?(GlobalConstant::Client.sandbox_stake_and_mint_property)) ||
           (GlobalConstant::Base.main_sub_environment? &&
-            mainnet_statuses.include?(GlobalConstant::Client.mainnet_stake_and_mint_property))
+            @mainnet_statuses.include?(GlobalConstant::Client.mainnet_stake_and_mint_property))
           @first_stake_and_mint = true
 
         end
@@ -165,19 +165,19 @@ module Email
       def set_unset_client_properties
 
         if GlobalConstant::Base.sandbox_sub_environment?
-          if @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_low_balance_email_property)
+          if @sandbox_statuses.include?(GlobalConstant::Client.sandbox_low_balance_email_property)
             client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_property}")
-          elsif @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_very_low_balance_email_property)
+          elsif @sandbox_statuses.include?(GlobalConstant::Client.sandbox_very_low_balance_email_property)
             client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_property}")
-          elsif @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_zero_balance_email_property)
+          elsif @sandbox_statuses.include?(GlobalConstant::Client.sandbox_zero_balance_email_property)
             client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_property}")
           end
         elsif GlobalConstant::Base.main_sub_environment?
-          if @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_low_balance_email_property)
+          if @mainnet_statuses.include?(GlobalConstant::Client.mainnet_low_balance_email_property)
             client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_property}")
-          elsif @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_very_low_balance_email_property)
+          elsif @mainnet_statuses.include?(GlobalConstant::Client.mainnet_very_low_balance_email_property)
             client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_property}")
-          elsif @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_zero_balance_email_property)
+          elsif @mainnet_statuses.include?(GlobalConstant::Client.mainnet_zero_balance_email_property)
             client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_property}")
           end
         end
