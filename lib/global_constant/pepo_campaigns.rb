@@ -110,6 +110,20 @@ module GlobalConstant
         ]
       end
 
+      # Attributes to be deleted in pepo campaigns when delete admin is done
+      def delete_admin_attributes
+        [
+            platform_signup_attribute,
+            super_admin,
+            token_setup,
+            stake_and_mint,
+            ost_wallet_setup,
+            ost_wallet_invited_users,
+            token_name,
+            testnet_view_link
+        ]
+      end
+
       ########### User Setting : Keys ############
 
       def double_opt_in_status_user_setting

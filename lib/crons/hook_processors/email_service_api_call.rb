@@ -89,6 +89,8 @@ module Crons
               klass = Email::HookProcessor::AddContact
             when GlobalConstant::EmailServiceApiCallHook.update_contact_event_type
               klass = Email::HookProcessor::UpdateContact
+            when GlobalConstant::EmailServiceApiCallHook.remove_contact_event_type
+              klass = Email::HookProcessor::RemoveContact
             when GlobalConstant::EmailServiceApiCallHook.send_transactional_mail_event_type
               klass = Email::HookProcessor::SendTransactionalMail
           when GlobalConstant::EmailServiceApiCallHook.client_mile_stone_event_type
