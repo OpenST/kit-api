@@ -17,6 +17,8 @@ module Email
       def initialize(params)
         super
         @user_settings = params[:user_settings] || {}
+        @client_id = params[:client_id]
+        @manager_id = params[:manager_id]
       end
 
       # Perform
@@ -71,7 +73,9 @@ module Email
 
         create_hook(
           custom_attributes: @custom_attributes,
-          user_settings: @user_settings
+          user_settings: @user_settings,
+          client_id: @client_id,
+          manager_id: @manager_id
         )
 
         success

@@ -14,11 +14,12 @@ class SignUpJob < ApplicationJob
 
     init_params(params)
 
-    fetch_super_admin_privilege
-
     add_contact_in_email_service
 
     send_double_optin_link if @manager[:properties].exclude?(GlobalConstant::Manager.has_verified_email_property)
+
+    r = notify_testnet_post_signup
+    @failed_logs[:notify_sandbox_error] = r.to_hash unless r.success?
 
     notify_devs
 
@@ -39,31 +40,8 @@ class SignUpJob < ApplicationJob
     @manager_first_name = params[:manager_first_name]
     @manager_last_name = params[:manager_last_name]
     @client_id = params[:client_id]
-    @super_admin = nil
 
     @failed_logs = {}
-  end
-
-  # Fetch super admin privilege
-  #
-  # * Author: Santhosh
-  # * Date: 24/07/2019
-  # * Reviewed By:
-  #
-  # @return [Result::Base]
-  #
-  def fetch_super_admin_privilege
-
-    client_manager = CacheManagement::ClientManager.new([@manager_id],
-                                                         { client_id: @client_id }).fetch[@manager_id]
-
-    if client_manager[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
-      @super_admin = GlobalConstant::PepoCampaigns.attribute_set
-    else
-      @super_admin = GlobalConstant::PepoCampaigns.attribute_unset
-    end
-
-    success
   end
 
   # Add contact in Pepo Campaigns
@@ -81,14 +59,9 @@ class SignUpJob < ApplicationJob
             GlobalConstant::PepoCampaigns.platform_signup_attribute => GlobalConstant::PepoCampaigns.platform_signup_value,
             GlobalConstant::PepoCampaigns.platform_marketing_attribute => @platform_marketing,
             GlobalConstant::PepoCampaigns.manager_first_name_attribute => @manager_first_name,
-            GlobalConstant::PepoCampaigns.manager_last_name_attribute => @manager_last_name,
-            GlobalConstant::PepoCampaigns.super_admin => @super_admin
+            GlobalConstant::PepoCampaigns.manager_last_name_attribute => @manager_last_name
         }
     ).perform
-
-    client_mile_stone = ClientMileStone.new(client_id: @client_id, manager_id: @manager_id)
-
-    client_mile_stone.update_mile_stones_for_current_admin
 
   end
 
@@ -115,6 +88,23 @@ class SignUpJob < ApplicationJob
         body: {manager_id: @manager_id},
         subject: 'Exception in SignUpJob'
     ).deliver if @failed_logs.present?
+  end
+
+  # Notify testnet about new sign up in mainnet
+  #
+  # * Author: Pankaj
+  # * Date: 26/07/2019
+  # * Reviewed By:
+  #
+  def notify_testnet_post_signup
+    if GlobalConstant::Base.main_sub_environment?
+      return SubenvCommunicationApi.new.send_request_to(
+          GlobalConstant::Environment.sandbox_sub_environment, 'post',
+          'other-subenv/notify-post-signup',
+          { client_id: @client_id, manager_id: @manager_id })
+    end
+
+    success
   end
 
 end

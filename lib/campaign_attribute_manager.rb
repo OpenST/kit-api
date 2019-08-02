@@ -1,4 +1,4 @@
-class ClientMileStone
+class CampaignAttributeManager
 
   include Util::ResultHelper
 
@@ -16,97 +16,22 @@ class ClientMileStone
     @attributes_hash = {}
   end
 
-  # Update client mile stone attributes for all admins in pepo campaigns
+  # Fetch automation campaign attributes
   #
   # * Author: Santhosh
-  # * Date: 16/07/2019
+  # * Date: 29/07/2019
   # * Reviewed By:
   #
   # @return [Result::Base]
   #
-  def update_mile_stone_attributes_for_admins
+  def fetch_automation_campaign_attributes
+
+    throw 'Running in wrong sub-environment!' unless GlobalConstant::Base.sandbox_sub_environment?
 
     r = fetch_client_mile_stones
     return r unless r.success?
 
-    client_mile_stones = r.data[:set_mile_stones]
-
-    return success if client_mile_stones.length == 0
-
-    manager_ids = []
-
-    ClientManager.admins(@client_id).all.each do |client_manager|
-      manager_ids << client_manager[:manager_id]
-    end
-
-    managers = CacheManagement::Manager.new(manager_ids).fetch
-
-    # Only active managers should have the mile stones updated in pepo campaigns
-    managers.each do |manager_id, manager|
-      next if manager[:status] != GlobalConstant::Manager.active_status
-
-      r = Email::HookCreator::UpdateContact.new(
-          receiver_entity_id: manager_id,
-          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-          custom_attributes: @attributes_hash,
-          user_settings: {}
-      ).perform
-    end
-
-    success
-  end
-
-  # Update client mile stone attributes for current admin in pepo campaigns
-  #
-  # * Author: Santhosh
-  # * Date: 16/07/2019
-  # * Reviewed By:
-  #
-  # @return [Result::Base]
-  #
-  def update_mile_stones_for_current_admin
-
-    r = fetch_client_mile_stones
-    return r unless r.success?
-
-    client_mile_stones = r.data[:set_mile_stones]
-
-    return success if client_mile_stones.length == 0
-
-    Email::HookCreator::UpdateContact.new(
-        receiver_entity_id: @manager_id,
-        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-        custom_attributes: @attributes_hash,
-        user_settings: {}
-    ).perform
-
-    success
-  end
-
-  # Add extra attributes - token_name, testnet_view_link
-  #
-  # * Author: Santhosh
-  # * Date: 25/07/2019
-  # * Reviewed By:
-  #
-  # @return [Result::Base]
-  #
-  def add_extra_attributes
-    extra_attributes = {}
-
-    token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
-
-    if token_details.blank? || (token_details.present? && token_details[:status] != GlobalConstant::ClientToken.deployment_completed)
-      return success_with_data({})
-    end
-
-    token_id = token_details[:id]
-
-    extra_attributes[GlobalConstant::PepoCampaigns.token_name] = token_details[:name]
-
-    extra_attributes[GlobalConstant::PepoCampaigns.testnet_view_link] = fetch_view_link(token_id, GlobalConstant::Environment.testnet_url_prefix)
-
-    success_with_data(extra_attributes)
+    success_with_data(@attributes_hash)
   end
 
 
@@ -145,6 +70,8 @@ class ClientMileStone
   #
   def fetch_client_mile_stones
 
+    fetch_super_admin_attribute if @client_id.present? && @manager_id.present?
+
     client_mile_stones = Client.sandbox_client_mile_stones
 
     client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
@@ -168,6 +95,28 @@ class ClientMileStone
     success_with_data({ set_mile_stones: set_mile_stones })
   end
 
+  # Fetch super admin privilege
+  #
+  # * Author: Santhosh
+  # * Date: 24/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def fetch_super_admin_attribute
+
+    client_manager = CacheManagement::ClientManager.new([@manager_id],
+                                                        { client_id: @client_id }).fetch[@manager_id]
+
+    if client_manager[:privileges].include?(GlobalConstant::ClientManager.is_super_admin_privilege)
+      @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_set
+    else
+      @attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_unset
+    end
+
+    success
+  end
+
 
   # Fetch attributes to be set
   #
@@ -178,7 +127,6 @@ class ClientMileStone
   # @return [Result::Base]
   #
   def fetch_attributes_to_set(set_mile_stones)
-    @attributes_hash = {}
 
     set_mile_stones.each do |mile_stone_property|
       case mile_stone_property
@@ -196,5 +144,32 @@ class ClientMileStone
     end
 
     success
+  end
+
+  # Add extra attributes - token_name, testnet_view_link
+  #
+  # * Author: Santhosh
+  # * Date: 25/07/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def add_extra_attributes
+    extra_attributes = {}
+
+    token_details = KitSaasSharedCacheManagement::TokenDetails.new([@client_id]).fetch[@client_id]
+
+    if token_details.blank? || (token_details.present? && token_details[:status] != GlobalConstant::ClientToken.deployment_completed)
+      return success_with_data({})
+    end
+
+    token_id = token_details[:id]
+
+    extra_attributes[GlobalConstant::PepoCampaigns.token_name] = token_details[:name]
+    extra_attributes[GlobalConstant::PepoCampaigns.token_symbol] = token_details[:symbol]
+
+    extra_attributes[GlobalConstant::PepoCampaigns.testnet_view_link] = fetch_view_link(token_id, GlobalConstant::Environment.testnet_url_prefix)
+
+    success_with_data(extra_attributes)
   end
 end
