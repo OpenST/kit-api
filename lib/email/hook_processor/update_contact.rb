@@ -55,6 +55,7 @@ module Email
       # @return [Result::Base] returns an object of Result::Base class
       #
       def process_hook
+        # TODO - throw if client_id or manager_id are not present
 
         fetch_campaign_automation_attributes if client_id.present? && manager_id.present?
 

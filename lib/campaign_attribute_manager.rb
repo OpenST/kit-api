@@ -25,6 +25,7 @@ class CampaignAttributeManager
   # @return [Result::Base]
   #
   def fetch_automation_campaign_attributes
+    # TODO - throw if subenv is main
     r = fetch_client_mile_stones
     return r unless r.success?
 
