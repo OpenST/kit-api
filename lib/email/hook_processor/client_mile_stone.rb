@@ -198,7 +198,7 @@ module Email
       #
       def update_mile_stone_attributes_for_admins
 
-        if !@first_stake_and_mint.nil? && mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
+        if !@first_stake_and_mint && mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
           return success
         end
 
