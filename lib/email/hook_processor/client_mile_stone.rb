@@ -162,6 +162,11 @@ module Email
       #
       def set_unset_client_properties
 
+        puts "Into set_unset_client_properties"
+        puts "mile_stone ====== #{mile_stone}"
+        puts "@sandbox_statuses ====== #{@sandbox_statuses}"
+        puts "@mainnet_statuses ====== #{@mainnet_statuses}"
+
         if GlobalConstant::Base.sandbox_sub_environment? &&
           mile_stone == GlobalConstant::Client.sandbox_stake_and_mint_property
           if @sandbox_statuses.include?(GlobalConstant::Client.sandbox_low_balance_email_status)
