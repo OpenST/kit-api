@@ -27,6 +27,7 @@ module Crons
       #
       def perform
         super
+        puts " perfrom  "
       end
 
       private
@@ -52,8 +53,9 @@ module Crons
       # @Sets @success_responses, @failed_hook_to_be_ignored & @failed_hook_to_be_retried
       #
       def process_hook
-
+        puts " process_hook  "
         klass = get_hook_processor_klass
+        puts " klass , #{klass}  "
         response = klass.new(@hook).perform
         if response.success?
           @success_responses[@hook.id] = response.data

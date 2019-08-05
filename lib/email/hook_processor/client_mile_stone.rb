@@ -32,6 +32,7 @@ module Email
       #
       def perform
         super
+        puts " perform of client mile stone.  "
       end
 
       private
@@ -66,6 +67,7 @@ module Email
       #
       def process_hook
 
+        puts "Here ========="
         r = fetch_client
         return r unless r.success?
 
@@ -117,9 +119,9 @@ module Email
 
 
         if (GlobalConstant::Base.sandbox_sub_environment? &&
-          @sandbox_statuses.include?(GlobalConstant::Client.sandbox_stake_and_mint_property)) ||
+          !@sandbox_statuses.include?(GlobalConstant::Client.sandbox_stake_and_mint_property)) ||
           (GlobalConstant::Base.main_sub_environment? &&
-            @mainnet_statuses.include?(GlobalConstant::Client.mainnet_stake_and_mint_property))
+            !@mainnet_statuses.include?(GlobalConstant::Client.mainnet_stake_and_mint_property))
           @first_stake_and_mint = true
 
         end
@@ -169,21 +171,13 @@ module Email
 
         if mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
           if GlobalConstant::Base.sandbox_sub_environment?
-            if @sandbox_statuses.include?(GlobalConstant::Client.sandbox_low_balance_email_status)
-              @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_status}")
-            elsif @sandbox_statuses.include?(GlobalConstant::Client.sandbox_very_low_balance_email_status)
-              @client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_status}")
-            elsif @sandbox_statuses.include?(GlobalConstant::Client.sandbox_zero_balance_email_status)
-              @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_status}")
-            end
+            @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_status}")
           elsif GlobalConstant::Base.main_sub_environment?
-            if @mainnet_statuses.include?(GlobalConstant::Client.mainnet_low_balance_email_status)
-              @client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_status}")
-            elsif @mainnet_statuses.include?(GlobalConstant::Client.mainnet_very_low_balance_email_status)
-              @client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_status}")
-            elsif @mainnet_statuses.include?(GlobalConstant::Client.mainnet_zero_balance_email_status)
-              @client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_status}")
-            end
+            @client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_status}")
           end
         end
 
@@ -204,7 +198,7 @@ module Email
       #
       def update_mile_stone_attributes_for_admins
 
-        if @first_stake_and_mint && mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
+        if !@first_stake_and_mint.nil? && mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
           return success
         end
 
