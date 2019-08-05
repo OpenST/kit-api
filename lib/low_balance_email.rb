@@ -107,6 +107,8 @@ class LowBalanceEmail
   #
   def check_client_status
 
+    puts "@status_to_set , #{@status_to_set}";
+
     return success if @status_to_set.nil?
 
     client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
@@ -134,6 +136,7 @@ class LowBalanceEmail
   #
   def create_email_hook
 
+    puts "@is_hook_creation_required ====== #{@is_hook_creation_required}"
     # Return if hook creation is not required.
     return success if @is_hook_creation_required.nil?
 
@@ -155,6 +158,8 @@ class LowBalanceEmail
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
         template_name: get_template_name,
         template_vars: template_vars).perform
+
+      puts "email_hook_creation_resp ====== #{email_hook_creation_resp}"
 
       return email_hook_creation_resp unless email_hook_creation_resp.success?
     end
