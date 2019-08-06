@@ -91,6 +91,10 @@ module GlobalConstant
         'testnet_view_link' #Attribute name as given in pepo campaigns.
       end
 
+      def token_symbol
+        'token_symbol' #Attribute name as given in pepo campaigns.
+      end
+
 
       def allowed_custom_attributes
         [
@@ -106,6 +110,7 @@ module GlobalConstant
           ost_wallet_setup,
           ost_wallet_invited_users,
           token_name,
+          token_symbol,
           testnet_view_link
         ]
       end
@@ -120,6 +125,7 @@ module GlobalConstant
             ost_wallet_setup,
             ost_wallet_invited_users,
             token_name,
+            token_symbol,
             testnet_view_link
         ]
       end
