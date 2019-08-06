@@ -32,7 +32,6 @@ module Email
       #
       def perform
         super
-        puts " perform of client mile stone.  "
       end
 
       private
@@ -198,9 +197,12 @@ module Email
       #
       def update_mile_stone_attributes_for_admins
 
+        puts " in update_mile_stone_attributes_for_admins"
         if !@first_stake_and_mint && mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
           return success
         end
+
+        puts " in update_mile_stone_attributes_for_admins after"
 
         manager_ids = []
         super_admins = {}
