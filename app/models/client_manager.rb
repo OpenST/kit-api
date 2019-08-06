@@ -24,7 +24,7 @@ class ClientManager < DbConnection::KitClient
 
   scope :super_admins, ->(client_id) {
     where(
-        'client_id = ? AND privileges | ? > 0',
+        'client_id = ? AND privileges & ? > 0',
         client_id,
         ClientManager.privileges_config[GlobalConstant::ClientManager.is_super_admin_privilege]
     )
