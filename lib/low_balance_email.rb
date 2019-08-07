@@ -107,11 +107,13 @@ class LowBalanceEmail
   #
   def check_client_status
 
-    puts "@status_to_set , #{@status_to_set}";
+    puts "@status_to_set , #{@status_to_set}"
 
     return success if @status_to_set.nil?
 
     client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
+
+    puts "client from cache ==== #{client}"
 
     # Create email hook only if client has done stake and mint at least once.
     if (GlobalConstant::Base.sandbox_sub_environment? &&
