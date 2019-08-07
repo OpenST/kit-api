@@ -181,6 +181,7 @@ class LowBalanceEmail
 
     puts "@client_id #{@client_id}"
     puts "@status_to_set #{@status_to_set}"
+    
     client_obj = Client.where(id: @client_id).first
     client_obj.send("set_#{@status_to_set}")
     client_obj.save!
