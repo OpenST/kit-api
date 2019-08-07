@@ -235,33 +235,28 @@ module ManagerManagement
       #
       def update_client_manager
 
-        super_admin_property = nil
-
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
           @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
-          super_admin_property = GlobalConstant::PepoCampaigns.attribute_set
         else
           @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
           @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
-          super_admin_property = GlobalConstant::PepoCampaigns.attribute_unset
         end
 
         @to_update_client_manager.save!
 
         @to_update_manager_id = @to_update_client_manager[:manager_id]
 
-        client_mile_stone = ClientMileStone.new(client_id: @client_id, manager_id: @to_update_manager_id)
 
         Email::HookCreator::UpdateContact.new(
             receiver_entity_id: @to_update_manager_id,
             receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-            custom_attributes: { GlobalConstant::PepoCampaigns.super_admin =>  super_admin_property },
-            user_settings: {}
+            custom_attributes: {},
+            user_settings: {},
+            client_id: @client_id,
+            manager_id: @manager_id
         ).perform
 
-
-        client_mile_stone.update_mile_stones_for_current_admin
 
         success
 

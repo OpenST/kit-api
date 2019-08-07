@@ -96,9 +96,9 @@ module Email
 
         token_id = send_mail_params["template_vars"]["token_id"].to_i # Cache expects this to be an integer
 
-        client_mile_stone = ::ClientMileStone.new({})
+        campaign_attribute_manager = CampaignAttributeManager.new({})
 
-        client_mile_stone.fetch_view_link(token_id, GlobalConstant::Environment.url_prefix)
+        campaign_attribute_manager.fetch_view_link(token_id, GlobalConstant::Environment.url_prefix)
       end
 
     end

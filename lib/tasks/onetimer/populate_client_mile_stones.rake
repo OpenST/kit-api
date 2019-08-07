@@ -51,8 +51,8 @@ namespace :one_timers do
         end
 
         if GlobalConstant::Base.sandbox_sub_environment?
-          client_mile_stone = ClientMileStone.new({})
-          view_link = client_mile_stone.fetch_view_link(@token[:id], GlobalConstant::Environment.url_prefix)
+          campaign_attribute_manager = CampaignAttributeManager.new({})
+          view_link = campaign_attribute_manager.fetch_view_link(@token[:id], GlobalConstant::Environment.url_prefix)
           attribute_hash[GlobalConstant::PepoCampaigns.testnet_view_link] = CGI.escape(view_link) if view_link.present?
         end
       end

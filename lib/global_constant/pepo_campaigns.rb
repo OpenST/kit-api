@@ -87,6 +87,10 @@ module GlobalConstant
         'token_name' #Attribute name as given in pepo campaigns.
       end
 
+      def token_symbol
+        'token_symbol' #Attribute name as given in pepo campaigns.
+      end
+
       def testnet_view_link
         'testnet_view_link' #Attribute name as given in pepo campaigns.
       end
