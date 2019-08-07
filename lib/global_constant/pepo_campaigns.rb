@@ -278,6 +278,18 @@ module GlobalConstant
         'platform_popcorn_wallet_invitations'
       end
 
+      def platform_low_token_balance_0
+        'platform_low_token_balance_0'
+      end
+
+      def platform_low_token_balance_5
+        'platform_low_token_balance_5'
+      end
+
+      def platform_low_token_balance_10
+        'platform_low_token_balance_10'
+      end
+
       # All possible templates integrated with email service
       #
       # * Author: Puneet
@@ -301,7 +313,10 @@ module GlobalConstant
           platform_token_setup_status_failed_template,
           platform_stake_and_mint_status_success_template,
           platform_stake_and_mint_status_failed_template,
-          platform_popcorn_wallet_invitation_template
+          platform_popcorn_wallet_invitation_template,
+          platform_low_token_balance_0,
+          platform_low_token_balance_5,
+          platform_low_token_balance_10
         ]
       end
 

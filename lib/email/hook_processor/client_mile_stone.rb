@@ -18,6 +18,7 @@ module Email
 
         @property_to_set = nil
         @failed_logs = {}
+        @first_stake_and_mint = nil
         @attributes_hash = {}
       end
 
@@ -65,12 +66,16 @@ module Email
       #
       def process_hook
 
+        puts "Here ========="
         r = fetch_client
+        return r unless r.success?
+
+        r = check_first_time_stake_and_mint
         return r unless r.success?
 
         fetch_property_to_set
 
-        r = set_client_properties
+        r = set_unset_client_properties
         return r unless r.success?
 
         r = update_mile_stone_attributes_for_admins
@@ -95,6 +100,30 @@ module Email
         @client = Client.where(id: @client_id).first
 
         @client_hash = @client.formatted_cache_data
+
+        success
+      end
+
+      # Check first time stake and mint.
+      #
+      # * Author: Anagha
+      # * Date: 01/08/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def check_first_time_stake_and_mint
+        @sandbox_statuses = @client[:sandbox_statuses].present? ? Client.get_bits_set_for_sandbox_statuses(@client[:sandbox_statuses]) : []
+        @mainnet_statuses = @client[:mainnet_statuses].present? ? Client.get_bits_set_for_mainnet_statuses(@client[:mainnet_statuses]) : []
+
+
+        if (GlobalConstant::Base.sandbox_sub_environment? &&
+          !@sandbox_statuses.include?(GlobalConstant::Client.sandbox_stake_and_mint_property)) ||
+          (GlobalConstant::Base.main_sub_environment? &&
+            !@mainnet_statuses.include?(GlobalConstant::Client.mainnet_stake_and_mint_property))
+          @first_stake_and_mint = true
+
+        end
 
         success
       end
@@ -132,7 +161,25 @@ module Email
       #
       # @return [Result::Base]
       #
-      def set_client_properties
+      def set_unset_client_properties
+
+        puts "Into set_unset_client_properties"
+        puts "mile_stone ====== #{mile_stone}"
+        puts "@sandbox_statuses ====== #{@sandbox_statuses}"
+        puts "@mainnet_statuses ====== #{@mainnet_statuses}"
+
+        if mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
+          if GlobalConstant::Base.sandbox_sub_environment?
+            @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_status}")
+          elsif GlobalConstant::Base.main_sub_environment?
+            @client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_status}")
+            @client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_status}")
+          end
+        end
+
         @client.send("set_#{@property_to_set}")
         @client.save!
 
@@ -149,6 +196,13 @@ module Email
       # @return [Result::Base]
       #
       def update_mile_stone_attributes_for_admins
+
+        puts " in update_mile_stone_attributes_for_admins"
+        if !@first_stake_and_mint && mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
+          return success
+        end
+
+        puts " in update_mile_stone_attributes_for_admins after"
 
         manager_ids = []
         super_admins = {}

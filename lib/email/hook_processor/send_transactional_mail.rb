@@ -78,6 +78,7 @@ module Email
             send_mail_response
           )
         else
+
           success_with_data(send_mail_response)
         end
 

@@ -121,6 +121,7 @@ class Access::LoginController < AuthenticationController
   #
   def reset_password
     service_response = ManagerManagement::ResetPassword.new(params).perform
+    puts "reset_password service_response , #{service_response}"
     return render_api_response(service_response)
   end
 
@@ -138,6 +139,8 @@ class Access::LoginController < AuthenticationController
                                                'response' => params['g-recaptcha-response'].to_s,
                                                'remoteip' => ip_address
                                              }).perform
+
+    puts "In verify_recaptcha service_response , #{service_response}"
 
     unless service_response.success?
       Rails.logger.error("---- Recaptcha::Verify Error: #{service_response.to_hash}")
