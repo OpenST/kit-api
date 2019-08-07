@@ -91,6 +91,10 @@ module GlobalConstant
         'testnet_view_link' #Attribute name as given in pepo campaigns.
       end
 
+      def token_symbol
+        'token_symbol' #Attribute name as given in pepo campaigns.
+      end
+
 
       def allowed_custom_attributes
         [
@@ -106,7 +110,23 @@ module GlobalConstant
           ost_wallet_setup,
           ost_wallet_invited_users,
           token_name,
+          token_symbol,
           testnet_view_link
+        ]
+      end
+
+      # Attributes to be deleted in pepo campaigns when delete admin is done
+      def delete_admin_attributes
+        [
+            platform_signup_attribute,
+            super_admin,
+            token_setup,
+            stake_and_mint,
+            ost_wallet_setup,
+            ost_wallet_invited_users,
+            token_name,
+            token_symbol,
+            testnet_view_link
         ]
       end
 
