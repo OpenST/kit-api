@@ -120,7 +120,7 @@ module ClientManagement
       clubbed_properties[column_name] = 0 unless clubbed_properties[column_name].present?
       clubbed_properties[column_name] |= value
 
-      update_strings = ["company_name = #{@company_name}"]
+      update_strings = ["company_name = '#{@company_name}'"]
       clubbed_properties.each do |column_name, value|
         update_strings.push("#{column_name} = #{column_name} | #{value}")
       end

@@ -238,18 +238,22 @@ module ManagerManagement
 
         unset_properties_map = {}
         set_properties_map = {}
+        attributes_hash = {}
 
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_set
+
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
           unset_properties_map[column_name] = value
 
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
           set_properties_map[column_name] = value
         else
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_unset
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
           unset_properties_map[column_name] = value
 
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
           set_properties_map[column_name] = value
         end
 
@@ -277,10 +281,8 @@ module ManagerManagement
         Email::HookCreator::UpdateContact.new(
             receiver_entity_id: @to_update_manager_id,
             receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
-            custom_attributes: {},
-            user_settings: {},
-            client_id: @client_id,
-            manager_id: @manager_id
+            custom_attributes: attributes_hash, # Has to be done from here since this flow runs on mainnet
+            user_settings: {}
         ).perform
 
 
