@@ -122,7 +122,7 @@ module ClientManagement
 
       update_strings = ["company_name = '#{@company_name}'"]
       clubbed_properties.each do |column_name, value|
-        update_strings.push("#{column_name} = #{column_name} | #{value}")
+        update_strings.push("#{column_name} = #{value}") # only 1 column is being updated which is 0 initially
       end
 
       update_string = update_strings.join(',')
