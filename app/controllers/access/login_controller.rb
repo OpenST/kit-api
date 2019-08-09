@@ -52,7 +52,9 @@ class Access::LoginController < AuthenticationController
       service_response = ManagerManagement::SignUp::ByInvite.new(params).perform
     else
       # Verify recaptcha only if invite token is not passed.
-      verify_captcha_response = Google::Recaptcha.new({
+      verify_captcha_response = GlobalConstant::Recaptcha.skip?(params) ?
+                                    success :
+                                    Google::Recaptcha.new({
                                                  'response' => params['g-recaptcha-response'].to_s,
                                                  'remoteip' => ip_address
                                                }).perform
@@ -134,6 +136,7 @@ class Access::LoginController < AuthenticationController
   # * Reviewed By: Sunil
   #
   def verify_recaptcha
+    return if GlobalConstant::Recaptcha.skip?(params)
 
     service_response = Google::Recaptcha.new({
                                                'response' => params['g-recaptcha-response'].to_s,

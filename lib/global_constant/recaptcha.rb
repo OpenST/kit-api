@@ -13,6 +13,11 @@ module GlobalConstant
         config[:secret_key]
       end
 
+      def skip?(params)
+        !GlobalConstant::Environment.is_production_env? &&
+            params['automation_test_token'] == 'lkashfiouqheinsdioqinsoidfhiondoi09239hnw903n903'
+      end
+
       private
 
       def config
