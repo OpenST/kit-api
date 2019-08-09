@@ -69,6 +69,10 @@ module ManagerManagement
         r = validate_double_opt_token
         return r unless r.success?
 
+        # If manager_obj includes platform marketing flag and its true, add contact.
+        r = create_add_contact_hook
+        return r unless r.success?
+
         r = update_user_validation_hashes_status
         return r unless r.success?
 
@@ -162,6 +166,28 @@ module ManagerManagement
     #
     def fetch_manager_validation_record
       @manager_validation_hash_obj = ManagerValidationHash.where(id: @manager_validation_hash_id).first
+      success
+    end
+
+    # Create add contact hook.
+    #
+    # * Author: Anagha
+    # * Date: 08/08/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def create_add_contact_hook
+      puts "In create_add_contact_hook  @manager_validation_hash_obj.extra_data #{@manager_validation_hash_obj.extra_data}"
+      return success unless @manager_validation_hash_obj.extra_data[:platform_marketing] == 1
+      puts "After After  create_add_contact_hook"
+
+      Email::HookCreator::AddContact.new(
+        receiver_entity_id: @manager_validation_hash_obj.manager_id,
+        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+        add_ost_master_list: true
+      ).perform
+
       success
     end
 
