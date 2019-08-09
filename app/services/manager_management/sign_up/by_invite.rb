@@ -198,10 +198,17 @@ module ManagerManagement
         @manager_obj.last_name = @last_name
         @manager_obj.password = Manager.get_encrypted_password(@password, @login_salt_d)
         @manager_obj.current_client_id = @client_id
-        @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
+
         @manager_obj.status = GlobalConstant::Manager.active_status
         @manager_obj.last_session_updated_at = current_timestamp
         @manager_obj.save
+
+        status_to_set = GlobalConstant::Manager.has_verified_email_property
+        column_name, value = Manager.send("get_bit_details_for_#{status_to_set}")
+
+        Manager.where(id: @manager_obj.id).update_all("? = ? | ?", column_name, column_name, value)
+
+        Manager.deliberate_cache_flush(@manager_obj.id)
 
         success
 
@@ -261,26 +268,46 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # Sets @client_manager_obj
       #
       def update_client_manager
 
-        @client_manager_obj = ClientManager.where(
-            client_id: @client_id,
-            manager_id: @manager_obj.id
-        ).first
-
         # Decide invite privilege depending on the is_super_admin set in the manager validation hash.
 
+        unset_properties_map = {}
+        set_properties_map = {}
+
         if @is_super_admin == GlobalConstant::ClientManager.is_super_admin_privilege
-          @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
-          @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
+          unset_properties_map[column_name] = value
+
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          set_properties_map[column_name] = value
         else
-          @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
-          @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
+          unset_properties_map[column_name] = value
+
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          set_properties_map[column_name] = value
         end
 
-        @client_manager_obj.save!
+        update_strings = []
+
+        set_properties_map.each do |column_name, value|
+          update_strings.push("#{column_name} = #{column_name} | #{value}")
+        end
+
+        unset_properties_map.each do |column_name, value|
+          update_strings.push("#{column_name} = #{column_name} ^ #{value}")
+        end
+
+        update_string = update_strings.join(',')
+
+        ClientManager.where(
+            client_id: @client_id,
+            manager_id: @manager_obj.id
+        ).update_all([update_string])
+
+        ClientManager.deliberate_cache_flush(@client_id, @manager_obj.id)
 
         success
       end

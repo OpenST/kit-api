@@ -181,10 +181,12 @@ class LowBalanceEmail
 
     puts "@client_id #{@client_id}"
     puts "@status_to_set #{@status_to_set}"
+
+    column_name, value = Client.send("get_bit_details_for_#{@status_to_set}")
     
-    client_obj = Client.where(id: @client_id).first
-    client_obj.send("set_#{@status_to_set}")
-    client_obj.save!
+    Client.where(id: @client_id).update_all(["? = ? | ?", column_name, column_name, value])
+
+    Client.deliberate_cache_flush(@client_id)
 
     success
   end

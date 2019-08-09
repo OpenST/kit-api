@@ -275,6 +275,12 @@ module ManagerManagement
       #
       def create_utm_info
         return success if @utm_params.blank? || @utm_params[:utm_source].blank?
+
+        @client_manager_obj = ClientManager.where(
+            client_id: @client_id,
+            manager_id: @manager_obj.id
+        ).first unless @client_manager_obj.present?
+
         UtmLogs.create(
           {
             client_manager_id: @client_manager_obj.id,

@@ -215,8 +215,14 @@ module ManagerManagement
           @to_update_client_manager.destroy!
           # We are completely deleting the entry from the database if the user is only invited.
         else
-          @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
-          @to_update_client_manager.save!
+          status_to_set = GlobalConstant::ClientManager.has_been_deleted_privilege
+
+          column_name, value = ClientManager.send("get_bit_details_for_#{status_to_set}")
+
+          ClientManager.where(id: @to_update_client_manager_id).update_all(["? = ? | ?", column_name, column_name, value])
+
+          ClientManager.deliberate_cache_flush(@to_update_client_manager[:client_id], @to_update_client_manager[:manager_id])
+
           # We are marking that the admin has been deleted.
         end
 

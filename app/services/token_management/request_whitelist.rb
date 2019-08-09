@@ -180,10 +180,13 @@ module TokenManagement
     # @return [Result::Base]
     #
     def set_whitelisting_requested_flag
-      client_obj = Client.where({id: @client_id}).first
 
-      client_obj.send("set_#{GlobalConstant::Client.mainnet_whitelist_requested_status}")
-      client_obj.save!
+      status_to_set = GlobalConstant::Client.mainnet_whitelist_requested_status
+      column_name, value = Client.send("get_bit_details_for_#{status_to_set}")
+
+      Client.where(id: @client_id).update_all(["? = ? | ?", column_name, column_name, value])
+
+      Client.deliberate_cache_flush(@client_id)
 
       success
     end

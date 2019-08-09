@@ -98,13 +98,38 @@ module ClientManagement
     #
     def update_client_info
 
-      client = Client.where(id: @client_id).first
+      # Set company name and relevant properties atomically
+      clubbed_properties = {}
 
-      client.company_name = @company_name
-      client.send("set_#{GlobalConstant::Client.has_mobile_app_property}") if(@mobile_app_flag.to_i == 1)
-      client.send("set_#{GlobalConstant::Client.has_one_million_users_property}") if(@one_m_users_flag.to_i == 1)
-      client.send("set_#{GlobalConstant::Client.has_company_info_property}")
-      client.save!
+      if(@mobile_app_flag.to_i == 1)
+        column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.has_mobile_app_property}")
+
+        clubbed_properties[column_name] = 0 unless clubbed_properties[column_name].present?
+        clubbed_properties[column_name] |= value
+      end
+
+      if(@one_m_users_flag.to_i == 1)
+        column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.has_one_million_users_property}")
+
+        clubbed_properties[column_name] = 0 unless clubbed_properties[column_name].present?
+        clubbed_properties[column_name] |= value
+      end
+
+      column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.has_company_info_property}")
+
+      clubbed_properties[column_name] = 0 unless clubbed_properties[column_name].present?
+      clubbed_properties[column_name] |= value
+
+      update_strings = ["company_name = #{@company_name}"]
+      clubbed_properties.each do |column_name, value|
+        update_strings.push("#{column_name} = #{column_name} | #{value}")
+      end
+
+      update_string = update_strings.join(',')
+
+      Client.where(id: @client_id).update_all([update_string])
+
+      Client.deliberate_cache_flush(@client_id)
 
       success
 

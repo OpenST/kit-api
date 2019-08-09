@@ -121,8 +121,16 @@ module ManagerManagement
 
           @manager_obj.failed_mfa_attempt_count = 0
           @manager_obj.last_session_updated_at = r.data[:verified_at_timestamp]
-          @manager_obj.send("set_#{GlobalConstant::Manager.has_setup_mfa_property}")
+
           @manager_obj.save!
+
+          # Set mfa property atomically
+          status_to_set = GlobalConstant::Manager.has_setup_mfa_property
+          column_name, value = Manager.send("get_bit_details_for_#{status_to_set}")
+
+          Manager.where(id: @manager_obj.id).update_all("? = ? | ?", column_name, column_name, value)
+
+          Manager.deliberate_cache_flush(@manager_obj.id)
 
           success
 

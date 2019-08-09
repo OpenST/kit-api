@@ -87,6 +87,17 @@ class Manager < DbConnection::KitClient
     CacheManagement::ManagerSecure.new([id]).clear
   end
 
+  # Flush caches
+  #
+  # * Author: Santhosh
+  # * Date: 08/08/2019
+  # * Reviewed By:
+  #
+  def self.deliberate_cache_flush(id)
+    CacheManagement::Manager.new([id]).clear
+    CacheManagement::ManagerSecure.new([id]).clear
+  end
+
   # Generate encrypted password
   #
   # * Author: Puneet

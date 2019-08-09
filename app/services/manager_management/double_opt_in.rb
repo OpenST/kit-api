@@ -224,8 +224,12 @@ module ManagerManagement
     # * Reviewed By:
     #
     def mark_manager_verified
-      @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
-      @manager_obj.save!
+      status_to_set = GlobalConstant::Manager.has_verified_email_property
+      column_name, value = Manager.send("get_bit_details_for_#{status_to_set}")
+
+      Manager.where(id: @manager_id).update_all("? = ? | ?", column_name, column_name, value)
+
+      Manager.deliberate_cache_flush(@manager_id)
 
       success
     end

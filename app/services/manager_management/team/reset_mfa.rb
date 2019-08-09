@@ -171,14 +171,21 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def reset_mfa
-
         @to_update_manager_obj.mfa_token = nil
-        @to_update_manager_obj.send("unset_#{GlobalConstant::Manager.has_setup_mfa_property}")
         @to_update_manager_obj.last_session_updated_at = current_timestamp
         @to_update_manager_obj.save!
 
-        success
+        manager_id = @to_update_manager_obj.id
 
+        # unset mfa property atomically
+        status_to_unset = GlobalConstant::Manager.has_setup_mfa_property
+        column_name, value = Manager.send("get_bit_details_for_#{status_to_unset}")
+
+        Manager.where(id: manager_id).update_all("? = ? ^ ?", column_name, column_name, value)
+
+        Manager.deliberate_cache_flush(manager_id)
+
+        success
       end
 
       # Result type

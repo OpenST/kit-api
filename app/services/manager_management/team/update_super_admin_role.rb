@@ -234,19 +234,43 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def update_client_manager
-
-        if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
-          @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_admin_privilege}")
-          @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
-        else
-          @to_update_client_manager.send("unset_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
-          @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
-        end
-
-        @to_update_client_manager.save!
-
         @to_update_manager_id = @to_update_client_manager[:manager_id]
 
+        unset_properties_map = {}
+        set_properties_map = {}
+
+        if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          unset_properties_map[column_name] = value
+
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          set_properties_map[column_name] = value
+        else
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          unset_properties_map[column_name] = value
+
+          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          set_properties_map[column_name] = value
+        end
+
+        update_strings = []
+
+        set_properties_map.each do |column_name, value|
+          update_strings.push("#{column_name} = #{column_name} | #{value}")
+        end
+
+        unset_properties_map.each do |column_name, value|
+          update_strings.push("#{column_name} = #{column_name} ^ #{value}")
+        end
+
+        update_string = update_strings.join(',')
+
+        ClientManager.where(
+            client_id: @client_id,
+            manager_id: @to_update_manager_id
+        ).update_all([update_string])
+
+        ClientManager.deliberate_cache_flush(@client_id, @to_update_manager_id)
 
         Email::HookCreator::UpdateContact.new(
             receiver_entity_id: @to_update_manager_id,

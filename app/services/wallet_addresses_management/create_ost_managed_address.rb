@@ -198,9 +198,13 @@ module WalletAddressesManagement
     # @return [Result::Base]
     def update_token_properties
 
-      @token.send("set_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
+      status_to_set = GlobalConstant::ClientToken.has_ost_managed_owner
 
-      @token.save!
+      column_name, value = Token.send("get_bit_details_for_#{status_to_set}")
+
+      Token.where(id: @token_id).update_all(["? = ? | ?", column_name, column_name, value])
+
+      Token.deliberate_cache_flush(@client_id)
     end
   end
 end

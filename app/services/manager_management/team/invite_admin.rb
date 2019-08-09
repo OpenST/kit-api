@@ -60,6 +60,9 @@ module ManagerManagement
           r = enqueue_job
           return r unless r.success?
 
+          # Fetch client manager info if not already present
+          @invitee_client_manager ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
+
           success_with_data({
                                 result_type: result_type,
                                 result_type => [
@@ -251,9 +254,8 @@ module ManagerManagement
           "#{@client_id}::#{@email}::#{current_timestamp}::invite::#{rand}"
         )
 
-        Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
-          invitee_admin_privilege = GlobalConstant::ClientManager.is_super_admin_privilege
-          : invitee_admin_privilege = GlobalConstant::ClientManager.is_admin_privilege
+        invitee_admin_privilege = Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
+          GlobalConstant::ClientManager.is_super_admin_privilege : GlobalConstant::ClientManager.is_admin_privilege
 
         db_row = ManagerValidationHash.create!(
           manager_id: @invitee_manager.id,
@@ -302,13 +304,18 @@ module ManagerManagement
           ) if privileges.any?
         end
 
-        @invitee_client_manager ||= ClientManager.new(client_id: @client_id, manager_id: @invitee_manager.id)
+        status_to_set = nil
+        if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
+          status_to_set = GlobalConstant::ClientManager.is_super_admin_invited_privilege
+        else
+          status_to_set = GlobalConstant::ClientManager.is_admin_invited_privilege
+        end
 
-        Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
-          @invitee_client_manager.send("set_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
-          : @invitee_client_manager.send("set_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
+        column_name, value = ClientManager.send("get_bit_details_for_#{status_to_set}")
 
-        @invitee_client_manager.save! if @invitee_client_manager.changed?
+        ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).update_all(["? = ? | ?", column_name, column_name, value])
+
+        ClientManager.deliberate_cache_flush(@client_id,  @invitee_manager.id)
 
         success
 
