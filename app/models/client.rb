@@ -91,4 +91,14 @@ class Client < DbConnection::KitClient
     CacheManagement::Client.new([id]).clear
   end
 
+  # Flush caches
+  #
+  # * Author: Santhosh
+  # * Date: 08/08/2019
+  # * Reviewed By:
+  #
+  def self.deliberate_cache_flush(id)
+    CacheManagement::Client.new([id]).clear
+  end
+
 end
