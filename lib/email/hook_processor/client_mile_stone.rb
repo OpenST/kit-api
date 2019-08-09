@@ -200,6 +200,7 @@ module Email
         update_strings = ["#{column_name} = #{column_name} | #{value}"]
 
         unset_properties_map.each do |column_name, value|
+          @client[column_name] ^= value
           update_strings.push("#{column_name} = #{column_name} ^ #{value}")
         end
 

@@ -224,6 +224,7 @@ module ManagerManagement
 
           ClientManager.deliberate_cache_flush(@to_update_client_manager[:client_id], @to_update_client_manager[:manager_id])
 
+          @to_update_client_manager[column_name] |= value
           # We are marking that the admin has been deleted.
         end
 

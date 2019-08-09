@@ -206,6 +206,8 @@ module WalletAddressesManagement
       Token.where(id: @token_id).update_all([update_string])
 
       Token.deliberate_cache_flush(@client_id)
+
+      @token[column_name] |= value
     end
   end
 end

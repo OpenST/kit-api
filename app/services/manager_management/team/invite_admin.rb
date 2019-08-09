@@ -318,6 +318,7 @@ module ManagerManagement
 
         ClientManager.deliberate_cache_flush(@client_id,  @invitee_manager.id)
 
+        @invitee_client_manager[column_name] |= value
         success
 
       end

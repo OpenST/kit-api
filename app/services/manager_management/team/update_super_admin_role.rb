@@ -256,10 +256,12 @@ module ManagerManagement
         update_strings = []
 
         set_properties_map.each do |column_name, value|
+          @to_update_client_manager[column_name] |= value
           update_strings.push("#{column_name} = #{column_name} | #{value}")
         end
 
         unset_properties_map.each do |column_name, value|
+          @to_update_client_manager[column_name] ^= value
           update_strings.push("#{column_name} = #{column_name} ^ #{value}")
         end
 

@@ -232,6 +232,8 @@ module ManagerManagement
 
       Manager.deliberate_cache_flush(@manager_id)
 
+      @manager_obj[column_name] |= value
+
       success
     end
 

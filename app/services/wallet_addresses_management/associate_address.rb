@@ -309,6 +309,8 @@ module WalletAddressesManagement
 
       Token.deliberate_cache_flush(@client_id)
 
+      @token[column_name] |= value
+
       success
     end
 
