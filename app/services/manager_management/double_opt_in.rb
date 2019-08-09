@@ -178,9 +178,7 @@ module ManagerManagement
     # @return [Result::Base]
     #
     def create_add_contact_hook
-      puts "In create_add_contact_hook  @manager_validation_hash_obj.extra_data #{@manager_validation_hash_obj.extra_data}"
-      return success unless @manager_validation_hash_obj.extra_data[:platform_marketing] == 1
-      puts "After After  create_add_contact_hook"
+      return success unless (@manager_validation_hash_obj.extra_data || {})[:platform_marketing] == 1
 
       Email::HookCreator::AddContact.new(
         receiver_entity_id: @manager_validation_hash_obj.manager_id,

@@ -175,11 +175,7 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def create_add_contact_hook
-        puts "In create_add_contact_hook of by invite flow"
-
         return success unless @marketing_communication_flag == 1
-
-        puts "In create_add_contact_hook of by invite flow after after after ========"
 
         Email::HookCreator::AddContact.new(
           receiver_entity_id: @manager_id,
