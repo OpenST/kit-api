@@ -184,7 +184,8 @@ module TokenManagement
       status_to_set = GlobalConstant::Client.mainnet_whitelist_requested_status
       column_name, value = Client.send("get_bit_details_for_#{status_to_set}")
 
-      Client.where(id: @client_id).update_all(["? = ? | ?", column_name, column_name, value])
+      update_string = "#{column_name} = #{column_name} | #{value}"
+      Client.where(id: @client_id).update_all([update_string])
 
       Client.deliberate_cache_flush(@client_id)
 

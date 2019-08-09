@@ -313,7 +313,8 @@ module ManagerManagement
 
         column_name, value = ClientManager.send("get_bit_details_for_#{status_to_set}")
 
-        ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).update_all(["? = ? | ?", column_name, column_name, value])
+        update_string = "#{column_name} = #{column_name} | #{value}"
+        ClientManager.where(client_id: @client_id, manager_id: @invitee_manager.id).update_all([update_string])
 
         ClientManager.deliberate_cache_flush(@client_id,  @invitee_manager.id)
 

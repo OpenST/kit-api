@@ -181,7 +181,8 @@ module ManagerManagement
         status_to_unset = GlobalConstant::Manager.has_setup_mfa_property
         column_name, value = Manager.send("get_bit_details_for_#{status_to_unset}")
 
-        Manager.where(id: manager_id).update_all(["? = ? ^ ?", column_name, column_name, value])
+        update_string = "#{column_name} = #{column_name} | #{value}"
+        Manager.where(id: manager_id).update_all([update_string])
 
         Manager.deliberate_cache_flush(manager_id)
 
