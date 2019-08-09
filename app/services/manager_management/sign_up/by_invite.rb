@@ -206,12 +206,12 @@ module ManagerManagement
         status_to_set = GlobalConstant::Manager.has_verified_email_property
         column_name, value = Manager.send("get_bit_details_for_#{status_to_set}")
 
-        update_string = "#{column_name} = #{column_name} | #{value}"
+        update_string = "#{column_name} = #{value}"
         Manager.where(id: @manager_obj.id).update_all([update_string])
 
         Manager.deliberate_cache_flush(@manager_obj.id)
 
-        @manager_obj[column_name] |= value
+        @manager_obj[column_name] = value
 
         success
 
@@ -280,16 +280,16 @@ module ManagerManagement
         set_properties_map = {}
 
         if @is_super_admin == GlobalConstant::ClientManager.is_super_admin_privilege
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
           unset_properties_map[column_name] = value
 
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
           set_properties_map[column_name] = value
         else
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
           unset_properties_map[column_name] = value
 
-          column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
           set_properties_map[column_name] = value
         end
 
