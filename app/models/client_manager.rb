@@ -65,7 +65,7 @@ class ClientManager < DbConnection::KitClient
   #
   # @return [Result::Base]
   #
-  def self.atomic_update_bitwise_columns(client_id, manager_id set_props_array, unset_props_array)
+  def self.atomic_update_bitwise_columns(client_id, manager_id, set_props_array, unset_props_array)
 
     return success if !set_props_array.present? && !unset_props_array.present?
 
