@@ -276,14 +276,11 @@ module ManagerManagement
       def create_utm_info
         return success if @utm_params.blank? || @utm_params[:utm_source].blank?
 
-        @client_manager_obj = ClientManager.where(
-            client_id: @client_id,
-            manager_id: @manager_obj.id
-        ).first unless @client_manager_obj.present?
+        client_manager = CacheManagement::ClientManager.new([@manager_obj.id], {client_id: @client_id}).fetch[@manager_obj.id]
 
         UtmLogs.create(
           {
-            client_manager_id: @client_manager_obj.id,
+            client_manager_id: client_manager.id,
             utm_source: @utm_params[:utm_source],
             utm_type: @utm_params[:utm_type],
             utm_medium: @utm_params[:utm_medium],
