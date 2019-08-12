@@ -304,7 +304,7 @@ module WalletAddressesManagement
 
       column_name, value = Token.send("get_bit_details_for_#{status_to_unset}")
 
-      update_string = "#{column_name} = #{column_name} | #{value}"
+      update_string = "#{column_name} = #{value}"
       Token.where(id: @token_id).update_all([update_string])
 
       Token.deliberate_cache_flush(@client_id)
