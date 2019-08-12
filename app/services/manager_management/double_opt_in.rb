@@ -224,16 +224,9 @@ module ManagerManagement
     # * Reviewed By:
     #
     def mark_manager_verified
-      status_to_set = GlobalConstant::Manager.has_verified_email_property
-      column_name, value = Manager.send("get_bit_details_for_#{status_to_set}")
+      set_props_arr = [GlobalConstant::Manager.has_verified_email_property]
 
-      update_string = "#{column_name} = #{value}"
-      Manager.where(id: @manager_id).update_all([update_string])
-
-      Manager.deliberate_cache_flush(@manager_id)
-
-      @manager_obj[column_name] = value
-
+      Manager.atomic_update_bitwise_columns(@manager_id, set_props_arr, [])
       success
     end
 
@@ -300,11 +293,13 @@ module ManagerManagement
     # @return [Hash]
     #
     def fetch_go_to
+      manager = CacheManagement::Manager.new([@manager_validation_hash_obj.manager_id])
+
       FetchGoTo.new({
                         is_password_auth_cookie_valid: @is_password_auth_cookie_valid,
                         is_multi_auth_cookie_valid: @is_multi_auth_cookie_valid,
                         client: @client,
-                        manager: @manager_obj.present? ? @manager_obj.formatted_cache_data : nil
+                        manager: manager
                     }).fetch_by_manager_state
     end
     

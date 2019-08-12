@@ -124,16 +124,11 @@ module ManagerManagement
 
           @manager_obj.save!
 
-          # Set mfa property atomically
-          status_to_set = GlobalConstant::Manager.has_setup_mfa_property
-          column_name, value = Manager.send("get_bit_details_for_#{status_to_set}")
+          set_props_arr = [
+              GlobalConstant::Manager.has_setup_mfa_property
+          ]
 
-          update_string = "#{column_name} = #{column_name} | #{value}"
-          Manager.where(id: @manager_obj.id).update_all([update_string])
-
-          Manager.deliberate_cache_flush(@manager_obj.id)
-
-          @manager_obj[column_name] |= value
+          Manager.atomic_update_bitwise_columns(@manager_obj.id, set_props_arr, [])
 
           success
 

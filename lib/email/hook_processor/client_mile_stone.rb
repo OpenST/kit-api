@@ -168,47 +168,21 @@ module Email
         puts "@sandbox_statuses ====== #{@sandbox_statuses}"
         puts "@mainnet_statuses ====== #{@mainnet_statuses}"
 
-        unset_properties_map = {}
+        unset_props_arr = []
+
         if mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
           if GlobalConstant::Base.sandbox_sub_environment?
-
-            column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.sandbox_low_balance_email_status}")
-            unset_properties_map[column_name] = value
-
-            column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.sandbox_very_low_balance_email_status}")
-            unset_properties_map[column_name] |= value
-
-            column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.sandbox_zero_balance_email_status}")
-            unset_properties_map[column_name] |= value
-
+            unset_props_arr.push(GlobalConstant::Client.sandbox_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.sandbox_very_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.sandbox_zero_balance_email_status)
           elsif GlobalConstant::Base.main_sub_environment?
-
-            column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.mainnet_low_balance_email_status}")
-            unset_properties_map[column_name] = value
-
-            column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.mainnet_very_low_balance_email_status}")
-            unset_properties_map[column_name] |= value
-
-            column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.mainnet_zero_balance_email_status}")
-            unset_properties_map[column_name] |= value
+            unset_props_arr.push(GlobalConstant::Client.mainnet_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.mainnet_very_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.mainnet_zero_balance_email_status)
           end
         end
 
-        # Get details of the property to set
-        column_name, value = Client.send("get_bit_details_for_#{@property_to_set}")
-
-        update_strings = ["#{column_name} = #{column_name} | #{value}"]
-
-        unset_properties_map.each do |column_name, value|
-          @client[column_name] ^= value
-          update_strings.push("#{column_name} = #{column_name} ^ #{value}")
-        end
-
-        update_string = update_strings.join(',')
-
-        Client.where(id: @client_id).update_all([update_string])
-
-        Client.deliberate_cache_flush(@client_id)
+        Client.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
 
         success
       end

@@ -196,23 +196,12 @@ module AdminManagement
       # @return [Result::Base]
       def enforce_mfa_and_mark_client_as_whitelisted_for_mainnet
 
-        column_name, value = ::Client.send("get_bit_details_for_#{GlobalConstant::Client.has_enforced_mfa_property}")
+        set_props_arr = [
+            GlobalConstant::Client.has_enforced_mfa_property,
+            GlobalConstant::Client.mainnet_whitelisted_status
+        ]
 
-        clubbed_properties = {}
-        clubbed_properties[column_name] = value
-
-        column_name, value = ::Client.send("get_bit_details_for_#{GlobalConstant::Client.mainnet_whitelisted_status}")
-        clubbed_properties[column_name] |= value
-
-        update_strings = []
-        clubbed_properties.each do |column_name, value|
-          update_strings.push("#{column_name} = #{column_name} | #{value}")
-        end
-
-        update_string = update_strings.join(',')
-        ::Client.where(id: @client_id).update_all([update_string])
-
-        ::Client.deliberate_cache_flush(@client_id)
+        ::Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
 
         success
       end

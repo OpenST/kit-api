@@ -300,16 +300,9 @@ module WalletAddressesManagement
     # @return [Result::Base]
     def update_token_properties
 
-      status_to_unset = GlobalConstant::ClientToken.has_ost_managed_owner
+      set_props_arr = [GlobalConstant::ClientToken.has_ost_managed_owner]
 
-      column_name, value = Token.send("get_bit_details_for_#{status_to_unset}")
-
-      update_string = "#{column_name} = #{value}"
-      Token.where(id: @token_id).update_all([update_string])
-
-      Token.deliberate_cache_flush(@client_id)
-
-      @token[column_name] |= value
+      Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
 
       success
     end

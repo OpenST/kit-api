@@ -53,10 +53,13 @@ module ManagerManagement
           r = reset_mfa
           return r unless r.success?
 
+
+          client_manager = CacheManagement::ClientManager.new([@to_update_client_manager_id], {client_id: @client_id}).fetch[@to_update_client_manager_id]
+
           success_with_data({
             result_type: result_type,
             result_type => [
-              @to_update_client_manager.formatted_cache_data
+                client_manager
             ],
             managers: {
                 @to_update_manager_obj.id => @to_update_manager_obj.formatted_cache_data
@@ -177,16 +180,9 @@ module ManagerManagement
 
         manager_id = @to_update_manager_obj.id
 
-        # unset mfa property atomically
-        status_to_unset = GlobalConstant::Manager.has_setup_mfa_property
-        column_name, value = Manager.send("get_bit_details_for_#{status_to_unset}")
+        unset_props_arr = [GlobalConstant::Manager.has_setup_mfa_property]
 
-        update_string = "#{column_name} = #{column_name} | #{value}"
-        Manager.where(id: manager_id).update_all([update_string])
-
-        Manager.deliberate_cache_flush(manager_id)
-
-        @to_update_manager_obj[column_name] |= value
+        Manager.atomic_update_bitwise_columns(manager_id, [], unset_props_arr)
 
         success
       end

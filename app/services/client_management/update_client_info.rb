@@ -98,38 +98,17 @@ module ClientManagement
     #
     def update_client_info
 
-      # Set company name and relevant properties atomically
-      clubbed_properties = {}
+      client = Client.where(id: @client_id).first
+      client.company_name = @company_name
+      client.save!
 
-      if(@mobile_app_flag.to_i == 1)
-        column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.has_mobile_app_property}")
+      set_props_arr = [
+          GlobalConstant::Client.has_company_info_property
+      ]
 
-        clubbed_properties[column_name] = 0 unless clubbed_properties[column_name].present?
-        clubbed_properties[column_name] |= value
-      end
-
-      if(@one_m_users_flag.to_i == 1)
-        column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.has_one_million_users_property}")
-
-        clubbed_properties[column_name] = 0 unless clubbed_properties[column_name].present?
-        clubbed_properties[column_name] |= value
-      end
-
-      column_name, value = Client.send("get_bit_details_for_#{GlobalConstant::Client.has_company_info_property}")
-
-      clubbed_properties[column_name] = 0 unless clubbed_properties[column_name].present?
-      clubbed_properties[column_name] |= value
-
-      update_strings = ["company_name = '#{@company_name}'"]
-      clubbed_properties.each do |column_name, value|
-        update_strings.push("#{column_name} = #{value}") # only 1 column is being updated which is 0 initially
-      end
-
-      update_string = update_strings.join(',')
-
-      Client.where(id: @client_id).update_all([update_string])
-
-      Client.deliberate_cache_flush(@client_id)
+      set_props_arr.push(GlobalConstant::Client.has_mobile_app_property) if@mobile_app_flag.to_i == 1
+      set_props_arr.push(GlobalConstant::Client.has_one_million_users_property) if @one_m_users_flag.to_i == 1
+      Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
 
       success
 

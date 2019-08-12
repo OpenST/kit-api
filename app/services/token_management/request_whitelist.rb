@@ -181,13 +181,9 @@ module TokenManagement
     #
     def set_whitelisting_requested_flag
 
-      status_to_set = GlobalConstant::Client.mainnet_whitelist_requested_status
-      column_name, value = Client.send("get_bit_details_for_#{status_to_set}")
+      set_props_arr = [GlobalConstant::Client.mainnet_whitelist_requested_status]
 
-      update_string = "#{column_name} = #{column_name} | #{value}"
-      Client.where(id: @client_id).update_all([update_string])
-
-      Client.deliberate_cache_flush(@client_id)
+      Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
 
       success
     end

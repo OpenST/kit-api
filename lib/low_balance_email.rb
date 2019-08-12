@@ -182,12 +182,9 @@ class LowBalanceEmail
     puts "@client_id #{@client_id}"
     puts "@status_to_set #{@status_to_set}"
 
-    column_name, value = Client.send("get_bit_details_for_#{@status_to_set}")
+    set_props_arr = [@status_to_set]
 
-    update_string = "#{column_name} = #{column_name} | #{value}"
-    Client.where(id: @client_id).update_all([update_string])
-
-    Client.deliberate_cache_flush(@client_id)
+    Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
 
     success
   end

@@ -20,8 +20,7 @@ module TestEconomyManagement
       super
 
       @error_responses = []
-
-      @clubbed_properties = {}
+      @set_props_arr = []
 
     end
 
@@ -184,16 +183,11 @@ module TestEconomyManagement
         return r
       end
 
-      status_to_set =  nil
       if is_main_sub_env?
-        status_to_set = GlobalConstant::Client.mainnet_test_economy_qr_code_uploaded_status
+        @set_props_arr.push(GlobalConstant::Client.mainnet_test_economy_qr_code_uploaded_status)
       else
-        status_to_set = GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status
+        @set_props_arr.push(GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status)
       end
-
-      column_name, value = Client.send("get_bit_details_for_#{status_to_set}")
-
-      @clubbed_properties[column_name] = value
 
       success
 
@@ -247,16 +241,11 @@ module TestEconomyManagement
         return r
       end
 
-      status_to_set = nil
       if is_main_sub_env?
-        status_to_set = GlobalConstant::Client.mainnet_registered_in_mappy_server_status
+        @set_props_arr.push(GlobalConstant::Client.mainnet_registered_in_mappy_server_status)
       else
-        status_to_set = GlobalConstant::Client.sandbox_registered_in_mappy_server_status
+        @set_props_arr.push(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
       end
-
-      column_name, value = Client.send("get_bit_details_for_#{status_to_set}")
-
-      @clubbed_properties[column_name] |= value
 
       update_campaign_attributes({
                                      entity_id: @client_id,
@@ -280,16 +269,7 @@ module TestEconomyManagement
     #
     def update_client_properties
 
-      update_strings = []
-      @clubbed_properties.each do |column_name, value|
-        update_strings.push("#{column_name} = #{column_name} | #{value}")
-      end
-
-      update_string = update_strings.join(',')
-      Client.where(id: @client_id).update_all([update_string])
-
-      Client.deliberate_cache_flush(@client_id)
-
+      Client.atomic_update_bitwise_columns(@client_id, @set_props_arr, [])
       success
     end
 

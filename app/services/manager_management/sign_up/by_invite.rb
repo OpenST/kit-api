@@ -203,15 +203,11 @@ module ManagerManagement
         @manager_obj.last_session_updated_at = current_timestamp
         @manager_obj.save
 
-        status_to_set = GlobalConstant::Manager.has_verified_email_property
-        column_name, value = Manager.send("get_bit_details_for_#{status_to_set}")
+        set_props_arr = [
+            GlobalConstant::Manager.has_verified_email_property
+        ]
 
-        update_string = "#{column_name} = #{value}"
-        Manager.where(id: @manager_obj.id).update_all([update_string])
-
-        Manager.deliberate_cache_flush(@manager_obj.id)
-
-        @manager_obj[column_name] = value
+        Manager.atomic_update_bitwise_columns(@manager_obj.id, set_props_arr, [])
 
         success
 
@@ -276,41 +272,18 @@ module ManagerManagement
 
         # Decide invite privilege depending on the is_super_admin set in the manager validation hash.
 
-        unset_properties_map = {}
-        set_properties_map = {}
+        unset_props_arr = []
+        set_props_arr = []
 
         if @is_super_admin == GlobalConstant::ClientManager.is_super_admin_privilege
-          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
-          unset_properties_map[column_name] = value
-
-          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
-          set_properties_map[column_name] = value
+          unset_props_arr.push(GlobalConstant::ClientManager.is_super_admin_invited_privilege)
+          set_props_arr.push(GlobalConstant::ClientManager.is_super_admin_privilege)
         else
-          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
-          unset_properties_map[column_name] = value
-
-          column_name, value = ClientManager.send("get_bit_details_for_#{GlobalConstant::ClientManager.is_admin_privilege}")
-          set_properties_map[column_name] = value
+          unset_props_arr.push(GlobalConstant::ClientManager.is_admin_invited_privilege)
+          set_props_arr.push(GlobalConstant::ClientManager.is_admin_privilege)
         end
 
-        update_strings = []
-
-        set_properties_map.each do |column_name, value|
-          update_strings.push("#{column_name} = #{column_name} | #{value}")
-        end
-
-        unset_properties_map.each do |column_name, value|
-          update_strings.push("#{column_name} = #{column_name} ^ #{value}")
-        end
-
-        update_string = update_strings.join(',')
-
-        ClientManager.where(
-            client_id: @client_id,
-            manager_id: @manager_obj.id
-        ).update_all([update_string])
-
-        ClientManager.deliberate_cache_flush(@client_id, @manager_obj.id)
+        ClientManager.atomic_update_bitwise_columns(@client_id, @manager_obj.id, set_props_arr, unset_props_arr)
 
         success
       end

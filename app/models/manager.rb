@@ -76,6 +76,57 @@ class Manager < DbConnection::KitClient
     ].include?(status)
   end
 
+
+  # Atomically update manager bitwise columns
+  #
+  # * Author: Santhosh
+  # * Date: 08/08/2019
+  # * Reviewed By:
+  #
+  def self.atomic_update_bitwise_columns(manager_id, set_props_array, unset_props_array)
+
+    clubbed_set_properties = {}
+    clubbed_unset_properties = {}
+
+    set_props_array.each do |property|
+      column_name, value = Manager.send("get_bit_details_for_#{property}")
+
+      if clubbed_set_properties[column_name].present?
+        clubbed_set_properties[column_name] |= value
+      else
+        clubbed_set_properties[column_name] = value
+      end
+    end
+
+    unset_props_array.each do |property|
+      column_name, value = Manager.send("get_bit_details_for_#{property}")
+
+      if clubbed_unset_properties[column_name].present?
+        clubbed_unset_properties[column_name] |= value
+      else
+        clubbed_unset_properties[column_name] = value
+      end
+    end
+
+    update_strings = []
+
+    # Set property update strings
+    clubbed_set_properties.each do |column_name, value|
+      update_strings.push("#{column_name} = #{column_name} | #{value}")
+    end
+
+    # Unset property update strings
+    clubbed_set_properties.each do |column_name, value|
+      update_strings.push("#{column_name} = #{column_name} ^ #{value}")
+    end
+
+    update_string = update_strings.join(',')
+
+    Manager.where(id: manager_id).update_all([update_string])
+
+    Manager.deliberate_cache_flush(manager_id)
+  end
+
   # Flush caches
   #
   # * Author: Puneet
