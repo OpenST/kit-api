@@ -283,13 +283,13 @@ module TestEconomyManagement
     #
     def prepare_response
 
-      client_obj = Client.where(id: @client_id).first
+      client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
 
           success_with_data(
         {
           token: @token,
           stake_currencies: @stake_currencies,
-          client: client_obj.formatted_cache_data,
+          client: client,
           manager: @manager,
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {

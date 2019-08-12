@@ -53,7 +53,11 @@ class Token < DbConnection::KitSaasSubenv
   # * Date: 08/08/2019
   # * Reviewed By:
   #
+  # @return [Result::Base]
+  #
   def self.atomic_update_bitwise_columns(client_id, set_props_array, unset_props_array)
+
+    return success if !set_props_array.present? && !unset_props_array.present?
 
     throw 'client id is not sent' unless client_id.present?
 
@@ -90,7 +94,7 @@ class Token < DbConnection::KitSaasSubenv
     end
 
     # Unset property update strings
-    clubbed_set_properties.each do |column_name, value|
+    clubbed_unset_properties.each do |column_name, value|
       reverse_value = ~value
       update_strings.push("#{column_name} = #{column_name} & #{reverse_value}")
     end
@@ -117,6 +121,8 @@ class Token < DbConnection::KitSaasSubenv
   # * Author: Santhosh
   # * Date: 08/08/2019
   # * Reviewed By:
+  #
+  # @return [Result::Base]
   #
   def self.deliberate_cache_flush(client_id)
     KitSaasSharedCacheManagement::TokenDetails.new([client_id]).clear

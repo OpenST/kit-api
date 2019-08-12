@@ -168,6 +168,7 @@ module Email
         puts "@sandbox_statuses ====== #{@sandbox_statuses}"
         puts "@mainnet_statuses ====== #{@mainnet_statuses}"
 
+        set_props_arr = [@property_to_set]
         unset_props_arr = []
 
         if mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
@@ -182,7 +183,7 @@ module Email
           end
         end
 
-        Client.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
+        Client.atomic_update_bitwise_columns(@client_id, set_props_arr, unset_props_arr)
 
         success
       end

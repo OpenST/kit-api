@@ -87,8 +87,11 @@ class Client < DbConnection::KitClient
   # * Date: 08/08/2019
   # * Reviewed By:
   #
+  # @return [Result::Base]
+  #
   def self.atomic_update_bitwise_columns(client_id, set_props_array, unset_props_array)
 
+    return success if !set_props_array.present? && !unset_props_array.present?
     throw 'client id not sent' unless client_id.present?
 
     throw 'common properties for set and unset.' if (set_props_array & unset_props_array).present?
@@ -151,6 +154,8 @@ class Client < DbConnection::KitClient
   # * Author: Santhosh
   # * Date: 08/08/2019
   # * Reviewed By:
+  #
+  # @return [Result::Base]
   #
   def self.deliberate_cache_flush(id)
     CacheManagement::Client.new([id]).clear

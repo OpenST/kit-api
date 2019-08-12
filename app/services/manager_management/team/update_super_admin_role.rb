@@ -234,7 +234,7 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def update_client_manager
-        @to_update_manager_id = @to_update_client_manager[:manager_id]
+        to_update_manager_id = @to_update_client_manager[:manager_id]
 
         set_props_arr = []
         unset_props_arr = []
@@ -243,19 +243,19 @@ module ManagerManagement
         if Util::CommonValidator.is_true_boolean_string?(@is_super_admin)
           attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_set
 
-          set_props_arr.push(GlobalConstant::ClientManager.is_super_admin_privilege)
           unset_props_arr.push(GlobalConstant::ClientManager.is_admin_privilege)
+          set_props_arr.push(GlobalConstant::ClientManager.is_super_admin_privilege)
         else
           attributes_hash[GlobalConstant::PepoCampaigns.super_admin] = GlobalConstant::PepoCampaigns.attribute_unset
 
-          set_props_arr.push(GlobalConstant::ClientManager.is_admin_privilege)
           unset_props_arr.push(GlobalConstant::ClientManager.is_super_admin_privilege)
+          set_props_arr.push(GlobalConstant::ClientManager.is_admin_privilege)
         end
 
-        ClientManager.atomic_update_bitwise_columns(@client_id, @to_update_manager_id, set_props_arr, unset_props_arr)
+        ClientManager.atomic_update_bitwise_columns(@client_id, to_update_manager_id, set_props_arr, unset_props_arr)
 
         Email::HookCreator::UpdateContact.new(
-            receiver_entity_id: @to_update_manager_id,
+            receiver_entity_id: to_update_manager_id,
             receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
             custom_attributes: attributes_hash, # Has to be done from here since this flow runs on mainnet
             user_settings: {}

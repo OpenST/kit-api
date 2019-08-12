@@ -2,10 +2,9 @@ class AddDefaultOnClientManagerPrivileges < DbMigrationConnection
   def up
     run_migration_for_db(DbConnection::KitClient) do
 
-      ClientManager.where(privileges: nil).each do |client_manager|
-        client_manager[:privileges] = 0
-        client_manager.save!
-      end
+      ClientManager.where(privileges: nil).update_all("privileges = 0")
+
+      Rails.cache.clear
 
       change_column :client_managers, :privileges, :tinyint, limit: 1, null: false, default: 0
     end
