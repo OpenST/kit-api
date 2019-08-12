@@ -55,6 +55,10 @@ class Token < DbConnection::KitSaasSubenv
   #
   def self.atomic_update_bitwise_columns(client_id, set_props_array, unset_props_array)
 
+    throw 'client id is not sent' unless client_id.present?
+
+    throw 'common properties for set and unset.' if (set_props_array & unset_props_array).present?
+
     clubbed_set_properties = {}
     clubbed_unset_properties = {}
 
@@ -87,7 +91,8 @@ class Token < DbConnection::KitSaasSubenv
 
     # Unset property update strings
     clubbed_set_properties.each do |column_name, value|
-      update_strings.push("#{column_name} = #{column_name} ^ #{value}")
+      reverse_value = ~value
+      update_strings.push("#{column_name} = #{column_name} & #{reverse_value}")
     end
 
     update_string = update_strings.join(',')

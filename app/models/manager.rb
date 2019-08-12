@@ -85,6 +85,10 @@ class Manager < DbConnection::KitClient
   #
   def self.atomic_update_bitwise_columns(manager_id, set_props_array, unset_props_array)
 
+    throw 'manager id is not sent' unless manager_id.present?
+
+    throw 'common properties for set and unset.' if (set_props_array & unset_props_array).present?
+
     clubbed_set_properties = {}
     clubbed_unset_properties = {}
 
@@ -117,7 +121,8 @@ class Manager < DbConnection::KitClient
 
     # Unset property update strings
     clubbed_set_properties.each do |column_name, value|
-      update_strings.push("#{column_name} = #{column_name} ^ #{value}")
+      reverse_value = ~value
+      update_strings.push("#{column_name} = #{column_name} & #{reverse_value}")
     end
 
     update_string = update_strings.join(',')
