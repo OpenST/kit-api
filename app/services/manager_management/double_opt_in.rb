@@ -293,7 +293,7 @@ module ManagerManagement
     # @return [Hash]
     #
     def fetch_go_to
-      manager = CacheManagement::Manager.new([@manager_validation_hash_obj.manager_id]).fetch[@manager_validation_hash_obj.manager_id]
+      manager = CacheManagement::Manager.new([@manager_obj.id]).fetch[@manager_obj.id] unless @manager_obj.blank?
 
       FetchGoTo.new({
                         is_password_auth_cookie_valid: @is_password_auth_cookie_valid,
