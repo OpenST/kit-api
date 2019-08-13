@@ -16,7 +16,7 @@ module ManagerManagement
       super
 
       @manager_id = @params[:manager_id]
-
+      @platform_marketing = @params[:platform_marketing]
       @manager = nil
       @manager_s = nil
       @double_optin_token = nil
@@ -99,7 +99,6 @@ module ManagerManagement
     # @return [Result::Base]
     #
     def create_double_opt_in_token
-
       double_opt_in_token = LocalCipher.get_sha_hashed_text(
           "#{@manager[:id]}::#{@manager_s[:password]}::#{current_timestamp}::double_optin::#{rand}"
       )
@@ -107,7 +106,8 @@ module ManagerManagement
           manager_id: @manager[:id],
           kind: GlobalConstant::ManagerValidationHash.double_optin_kind,
           validation_hash: double_opt_in_token,
-          status: GlobalConstant::ManagerValidationHash.active_status
+          status: GlobalConstant::ManagerValidationHash.active_status,
+          extra_data: { platform_marketing: @platform_marketing }
       )
 
       double_opt_in_token_str = "#{db_row.id.to_s}:#{double_opt_in_token}"
