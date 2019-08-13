@@ -300,9 +300,9 @@ module WalletAddressesManagement
     # @return [Result::Base]
     def update_token_properties
 
-      set_props_arr = [GlobalConstant::ClientToken.has_ost_managed_owner]
+      unset_props_arr = [GlobalConstant::ClientToken.has_ost_managed_owner]
 
-      Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
+      Token.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
 
       success
     end
