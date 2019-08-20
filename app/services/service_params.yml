@@ -401,3 +401,6 @@
     - :manager_device
     - :is_multi_auth_cookie_valid
     - :is_password_auth_cookie_valid
+'OstWebHomepageManagement::LatestTransaction':
+  :mandatory:
+  :optional:
