@@ -27,9 +27,13 @@ module KitSaasSharedCacheManagement
     # @return [Result::Base]
     #
     def fetch_from_db
-      rsp = LatestTransaction.select('*').order('created_ts DESC').limit(30).all.to_a
+      rows = LatestTransaction.select('*').order('created_ts DESC').limit(30).all.to_a
+      final_rsp = []
+      rows.each do |row|
+        final_rsp.push(row.formatted_cache_data)
+      end
       data_to_cache = {
-        transactions: rsp
+        transactions: final_rsp
       }
     end
 

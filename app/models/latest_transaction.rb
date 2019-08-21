@@ -17,7 +17,9 @@ class LatestTransaction < DbConnection::KitSaasSubenv
       token_id: token_id,
       tx_fees_in_wei: tx_fees_in_wei,
       token_amount_in_wei: token_amount_in_wei,
-      created_ts: created_ts
+      created_ts: created_ts,
+      created_at: created_at.to_i,
+      updated_at: updated_at.to_i
     }
   end
 

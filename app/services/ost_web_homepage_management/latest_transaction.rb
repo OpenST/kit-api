@@ -95,15 +95,12 @@ module OstWebHomepageManagement
     def fetch_token_and_chain_ids
 
       token_ids_hash = {}
-      chain_ids_hash = {}
 
       @latest_transactions_array.each do |latest_transaction|
-        token_ids_hash[latest_transaction['token_id']] = 1
-        chain_ids_hash[latest_transaction['chain_id']] = 1
+        token_ids_hash[latest_transaction[:token_id]] = 1
       end
 
       @tokens_ids_array = token_ids_hash.keys
-      @chain_ids_array = chain_ids_hash.keys
 
       success
     end
