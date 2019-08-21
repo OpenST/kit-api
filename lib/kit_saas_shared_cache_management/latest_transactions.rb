@@ -1,6 +1,22 @@
 module KitSaasSharedCacheManagement
 
-  class LatestTransactions < KitSaasSharedCacheManagement::Base
+  class LatestTransactions
+
+    include Util::ResultHelper
+
+    # Fetch from db
+    #
+    # * Author: Ankit
+    # * Date: 21/08/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def fetch
+      Memcache.get_set_memcached(get_kit_cache_key, get_cache_expiry) do
+        fetch_from_db
+      end
+    end
 
     # Fetch from db
     #
@@ -10,11 +26,11 @@ module KitSaasSharedCacheManagement
     #
     # @return [Result::Base]
     #
-    def fetch_from_db(id)
+    def fetch_from_db
       rsp = LatestTransaction.select('*').order('created_ts DESC').limit(30).all.to_a
-      data_to_cache = {}
-      data_to_cache[id[0]] = rsp
-      success_with_data(data_to_cache)
+      data_to_cache = {
+        transactions: rsp
+      }
     end
 
     #
@@ -36,8 +52,8 @@ module KitSaasSharedCacheManagement
     #
     # @return [String]
     #
-    def get_kit_cache_key(id)
-      generate_kit_cache_key @options.merge(id: id)
+    def get_kit_cache_key
+      memcache_key_object.key_template % GlobalConstant::Cache.key_prefixes_template_vars.merge({code_prefix: GlobalConstant::Cache.kit_key_prefix})
     end
 
     # Fetch saas cache key
@@ -48,8 +64,8 @@ module KitSaasSharedCacheManagement
     #
     # @return [String]
     #
-    def get_saas_cache_key(id)
-      generate_saas_cache_key @options.merge(id: id)
+    def get_saas_cache_key
+      memcache_key_object.key_template % GlobalConstant::Cache.key_prefixes_template_vars.merge({code_prefix: GlobalConstant::Cache.saas_key_prefix})
     end
 
     # Fetch cache expiry (in seconds)
@@ -62,6 +78,19 @@ module KitSaasSharedCacheManagement
     #
     def get_cache_expiry
       memcache_key_object.expiry
+    end
+
+    # Clear cache
+    #
+    # * Author: Ankit
+    # * Date: 21/08/2019
+    # * Reviewed By:
+    #
+    # @return [Result::Base]
+    #
+    def clear
+      Memcache.delete(get_kit_cache_key)
+      Memcache.delete_from_all_instances(get_saas_cache_key)
     end
 
   end

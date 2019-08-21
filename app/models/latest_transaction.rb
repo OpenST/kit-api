@@ -28,6 +28,6 @@ class LatestTransaction < DbConnection::KitSaasSubenv
   # * Reviewed By:
   #
   def flush_cache
-    KitSaasSharedCacheManagement::LatestTransactions.new([1]).clear
+    KitSaasSharedCacheManagement::LatestTransactions.new.clear
   end
 end

@@ -80,7 +80,7 @@ module OstWebHomepageManagement
     # @return [Result::Base]
     #
     def fetch_latest_transactions
-      @latest_transactions_array = KitSaasSharedCacheManagement::LatestTransactions.new([1]).fetch[1]
+      @latest_transactions_array = KitSaasSharedCacheManagement::LatestTransactions.new.fetch[:transactions]
       success
     end
 
