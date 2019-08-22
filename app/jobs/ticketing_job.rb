@@ -51,28 +51,22 @@ class TicketingJob < ApplicationJob
   #
   def create_issue_in_jira
 
-    if @one_m_users_flag.to_i == 1
+    format_company_info_fields
 
-      format_company_info_fields
+    issue_params = {
+      project_name:GlobalConstant::Jira.project_name,
+      issue_type: GlobalConstant::Jira.task_issue_type,
+      priority:GlobalConstant::Jira.medium_priority_issue,
+      assignee: GlobalConstant::Jira.assignee_name,
+      summary: get_issue_summary,
+      description: get_issue_description
+    }
 
-      issue_params = {
-        project_name:GlobalConstant::Jira.project_name,
-        issue_type: GlobalConstant::Jira.task_issue_type,
-        priority:GlobalConstant::Jira.medium_priority_issue,
-        assignee: GlobalConstant::Jira.assignee_name,
-        summary: get_issue_summary,
-        description: get_issue_description
-      }
+    r = Ticketing::Jira::Issue.new(issue_params).perform
 
-      r = Ticketing::Jira::Issue.new(issue_params).perform
-
-      @failed_logs = {
-        debug_params: issue_params.to_hash
-      }  unless r.success?
-
-      success
-
-    end
+    @failed_logs = {
+      debug_params: issue_params.to_hash
+    }  unless r.success?
 
     success
 
