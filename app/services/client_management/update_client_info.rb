@@ -99,12 +99,16 @@ module ClientManagement
     def update_client_info
 
       client = Client.where(id: @client_id).first
-
       client.company_name = @company_name
-      client.send("set_#{GlobalConstant::Client.has_mobile_app_property}") if(@mobile_app_flag.to_i == 1)
-      client.send("set_#{GlobalConstant::Client.has_one_million_users_property}") if(@one_m_users_flag.to_i == 1)
-      client.send("set_#{GlobalConstant::Client.has_company_info_property}")
       client.save!
+
+      set_props_arr = [
+          GlobalConstant::Client.has_company_info_property
+      ]
+
+      set_props_arr.push(GlobalConstant::Client.has_mobile_app_property) if@mobile_app_flag.to_i == 1
+      set_props_arr.push(GlobalConstant::Client.has_one_million_users_property) if @one_m_users_flag.to_i == 1
+      Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
 
       success
 

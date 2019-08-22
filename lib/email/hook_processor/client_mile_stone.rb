@@ -168,20 +168,22 @@ module Email
         puts "@sandbox_statuses ====== #{@sandbox_statuses}"
         puts "@mainnet_statuses ====== #{@mainnet_statuses}"
 
+        set_props_arr = [@property_to_set]
+        unset_props_arr = []
+
         if mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
           if GlobalConstant::Base.sandbox_sub_environment?
-            @client.send("unset_#{GlobalConstant::Client.sandbox_low_balance_email_status}")
-            @client.send("unset_#{GlobalConstant::Client.sandbox_very_low_balance_email_status}")
-            @client.send("unset_#{GlobalConstant::Client.sandbox_zero_balance_email_status}")
+            unset_props_arr.push(GlobalConstant::Client.sandbox_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.sandbox_very_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.sandbox_zero_balance_email_status)
           elsif GlobalConstant::Base.main_sub_environment?
-            @client.send("unset_#{GlobalConstant::Client.mainnet_low_balance_email_status}")
-            @client.send("unset_#{GlobalConstant::Client.mainnet_very_low_balance_email_status}")
-            @client.send("unset_#{GlobalConstant::Client.mainnet_zero_balance_email_status}")
+            unset_props_arr.push(GlobalConstant::Client.mainnet_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.mainnet_very_low_balance_email_status)
+            unset_props_arr.push(GlobalConstant::Client.mainnet_zero_balance_email_status)
           end
         end
 
-        @client.send("set_#{@property_to_set}")
-        @client.save!
+        Client.atomic_update_bitwise_columns(@client_id, set_props_arr, unset_props_arr)
 
         success
       end

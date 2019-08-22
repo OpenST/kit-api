@@ -251,9 +251,9 @@ module ManagerManagement
           "#{@client_id}::#{@email}::#{current_timestamp}::invite::#{rand}"
         )
 
-        Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
-          invitee_admin_privilege = GlobalConstant::ClientManager.is_super_admin_privilege
-          : invitee_admin_privilege = GlobalConstant::ClientManager.is_admin_privilege
+        invitee_admin_privilege = Util::CommonValidator.is_true_boolean_string?(@is_super_admin) ?
+                                      GlobalConstant::ClientManager.is_super_admin_privilege :
+                                      GlobalConstant::ClientManager.is_admin_privilege
 
         db_row = ManagerValidationHash.create!(
           manager_id: @invitee_manager.id,

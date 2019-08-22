@@ -198,9 +198,9 @@ module WalletAddressesManagement
     # @return [Result::Base]
     def update_token_properties
 
-      @token.send("set_#{GlobalConstant::ClientToken.has_ost_managed_owner}")
+      set_props_arr = [GlobalConstant::ClientToken.has_ost_managed_owner]
 
-      @token.save!
+      Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
     end
   end
 end

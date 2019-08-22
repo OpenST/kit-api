@@ -53,10 +53,13 @@ module ManagerManagement
           r = reset_mfa
           return r unless r.success?
 
+
+          client_manager = CacheManagement::ClientManager.new([@to_update_client_manager_id], {client_id: @client_id}).fetch[@to_update_client_manager_id]
+
           success_with_data({
             result_type: result_type,
             result_type => [
-              @to_update_client_manager.formatted_cache_data
+                client_manager
             ],
             managers: {
                 @to_update_manager_obj.id => @to_update_manager_obj.formatted_cache_data
@@ -171,14 +174,17 @@ module ManagerManagement
       # @return [Result::Base]
       #
       def reset_mfa
-
         @to_update_manager_obj.mfa_token = nil
-        @to_update_manager_obj.send("unset_#{GlobalConstant::Manager.has_setup_mfa_property}")
         @to_update_manager_obj.last_session_updated_at = current_timestamp
         @to_update_manager_obj.save!
 
-        success
+        manager_id = @to_update_manager_obj.id
 
+        unset_props_arr = [GlobalConstant::Manager.has_setup_mfa_property]
+
+        Manager.atomic_update_bitwise_columns(manager_id, [], unset_props_arr)
+
+        success
       end
 
       # Result type

@@ -19,9 +19,8 @@ module TestEconomyManagement
 
       super
 
-      @client_obj = nil
-
       @error_responses = []
+      @set_props_arr = []
 
     end
 
@@ -47,9 +46,6 @@ module TestEconomyManagement
         return r unless r.success?
 
         r = fetch_sub_env_payloads
-        return r unless r.success?
-
-        r = fetch_client_obj
         return r unless r.success?
 
         r = perform_activation
@@ -86,30 +82,6 @@ module TestEconomyManagement
 
     end
 
-    # Fetch client object
-    #
-    # * Author: Puneet
-    # * Date: 10/04/2019
-    # * Reviewed By: Sunil
-    #
-    # Sets @client_obj
-    #
-    # @return [Result::Base]
-    #
-    def fetch_client_obj
-
-      @client_obj = Client.where(id: @client_id).first
-
-      return error_with_data(
-          'tem_a_2',
-          'client_not_found',
-          GlobalConstant::ErrorAction.default
-      ) if @client_obj.blank?
-
-      success
-
-    end
-
     # perform activation
     # 1. Generate & Upload QR code
     # 2. Perform API Call to Demo Mappy Server to register this token
@@ -126,7 +98,7 @@ module TestEconomyManagement
 
       perform_registeration_in_mappy_task unless registered_in_mappy_server?
 
-      @client_obj.save! if @client_obj.changed?
+      update_client_properties
 
       return error_with_data(
           'tem_a_5',
@@ -212,9 +184,9 @@ module TestEconomyManagement
       end
 
       if is_main_sub_env?
-        @client_obj.send("set_#{GlobalConstant::Client.mainnet_test_economy_qr_code_uploaded_status}")
+        @set_props_arr.push(GlobalConstant::Client.mainnet_test_economy_qr_code_uploaded_status)
       else
-        @client_obj.send("set_#{GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status}")
+        @set_props_arr.push(GlobalConstant::Client.sandbox_test_economy_qr_code_uploaded_status)
       end
 
       success
@@ -270,9 +242,9 @@ module TestEconomyManagement
       end
 
       if is_main_sub_env?
-        @client_obj.send("set_#{GlobalConstant::Client.mainnet_registered_in_mappy_server_status}")
+        @set_props_arr.push(GlobalConstant::Client.mainnet_registered_in_mappy_server_status)
       else
-        @client_obj.send("set_#{GlobalConstant::Client.sandbox_registered_in_mappy_server_status}")
+        @set_props_arr.push(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
       end
 
       update_campaign_attributes({
@@ -287,6 +259,20 @@ module TestEconomyManagement
 
     end
 
+    # Update properties in client
+    #
+    # * Author: Santhosh
+    # * Date: 08/04/2019
+    # * Reviewed By: Sunil
+    #
+    # @return [Result::Base]
+    #
+    def update_client_properties
+
+      Client.atomic_update_bitwise_columns(@client_id, @set_props_arr, [])
+      success
+    end
+
     # prepare response
     #
     # * Author: Puneet
@@ -296,11 +282,14 @@ module TestEconomyManagement
     # @return [Result::Base]
     #
     def prepare_response
-      success_with_data(
+
+      client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
+
+          success_with_data(
         {
           token: @token,
           stake_currencies: @stake_currencies,
-          client: @client_obj.formatted_cache_data,
+          client: client,
           manager: @manager,
           sub_env_payloads: @sub_env_payloads,
           test_economy_details: {

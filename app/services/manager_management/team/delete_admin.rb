@@ -64,10 +64,13 @@ module ManagerManagement
           r = reset_custom_attributes
           return r unless r.success?
 
+
+          client_manager = CacheManagement::ClientManager.new([@to_update_client_manager_id], {client_id: @client_id}).fetch[@to_update_client_manager_id]
+
           success_with_data({
             result_type: result_type,
             result_type => [
-              @to_update_client_manager.formatted_cache_data
+                client_manager
             ],
             managers: {
               @manager_to_be_deleted_obj.id => @manager_to_be_deleted_obj.formatted_cache_data
@@ -215,8 +218,12 @@ module ManagerManagement
           @to_update_client_manager.destroy!
           # We are completely deleting the entry from the database if the user is only invited.
         else
-          @to_update_client_manager.send("set_#{GlobalConstant::ClientManager.has_been_deleted_privilege}")
-          @to_update_client_manager.save!
+          set_props_arr = [GlobalConstant::ClientManager.has_been_deleted_privilege]
+          client_id = @to_update_client_manager[:client_id]
+          manager_id = @to_update_client_manager[:manager_id]
+
+          ClientManager.atomic_update_bitwise_columns(client_id, manager_id, set_props_arr, [])
+
           # We are marking that the admin has been deleted.
         end
 
