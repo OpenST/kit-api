@@ -72,7 +72,7 @@ class SignUpJob < ApplicationJob
   # * Reviewed By: Kedar
   #
   def send_double_optin_link
-    r = ManagerManagement::SendDoubleOptInLink.new(manager_id: @manager_id).perform
+    r = ManagerManagement::SendDoubleOptInLink.new(manager_id: @manager_id, platform_marketing: @platform_marketing).perform
     @failed_logs[:send_double_opt_in_link] = r.to_hash unless r.success?
   end
 

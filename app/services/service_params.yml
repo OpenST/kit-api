@@ -68,6 +68,7 @@
 'ManagerManagement::SendDoubleOptInLink':
   :mandatory:
     - :manager_id
+    - :platform_marketing
   :optional:
 'ManagerManagement::DoubleOptIn':
   :mandatory:

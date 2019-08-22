@@ -60,6 +60,9 @@ module ManagerManagement
           r = validate_invite_token
           return r unless r.success?
 
+          r = create_add_contact_hook
+          return r unless r.success?
+
           r = fetch_and_validate_invited_manager
           return r unless r.success?
 
@@ -161,6 +164,26 @@ module ManagerManagement
 
         success
 
+      end
+
+      # Create add contact hook
+      #
+      # * Author: Anagha
+      # * Date: 09/08/2019
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def create_add_contact_hook
+        return success unless @marketing_communication_flag == 1
+
+        Email::HookCreator::AddContact.new(
+          receiver_entity_id: @manager_id,
+          receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+          add_ost_master_list: true
+        ).perform
+
+        success
       end
 
       # Decrypt login salt
