@@ -81,6 +81,10 @@ module BitWiseConcern
           where("#{column_name} & #{value} > 0")
         }
 
+        self.singleton_class.send(:define_method, 'get_bit_details_for_' + attribute) {
+          [column_name, value]
+        }
+
         define_method("#{attribute}?") {
           value & fetch_value_from_ar_object(column_name) == value
         }

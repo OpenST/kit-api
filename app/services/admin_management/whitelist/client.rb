@@ -196,10 +196,12 @@ module AdminManagement
       # @return [Result::Base]
       def enforce_mfa_and_mark_client_as_whitelisted_for_mainnet
 
-        client_obj = ::Client.where(id: @client_id).first
-        client_obj.send("set_#{GlobalConstant::Client.has_enforced_mfa_property}")
-        client_obj.send("set_#{GlobalConstant::Client.mainnet_whitelisted_status}")
-        client_obj.save!
+        set_props_arr = [
+            GlobalConstant::Client.has_enforced_mfa_property,
+            GlobalConstant::Client.mainnet_whitelisted_status
+        ]
+
+        ::Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
 
         success
       end

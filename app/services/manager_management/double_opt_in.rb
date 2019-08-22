@@ -248,9 +248,9 @@ module ManagerManagement
     # * Reviewed By:
     #
     def mark_manager_verified
-      @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
-      @manager_obj.save!
+      set_props_arr = [GlobalConstant::Manager.has_verified_email_property]
 
+      Manager.atomic_update_bitwise_columns(@manager_id, set_props_arr, [])
       success
     end
 
@@ -317,11 +317,13 @@ module ManagerManagement
     # @return [Hash]
     #
     def fetch_go_to
+      manager = CacheManagement::Manager.new([@manager_obj.id]).fetch[@manager_obj.id] unless @manager_obj.blank?
+
       FetchGoTo.new({
                         is_password_auth_cookie_valid: @is_password_auth_cookie_valid,
                         is_multi_auth_cookie_valid: @is_multi_auth_cookie_valid,
                         client: @client,
-                        manager: @manager_obj.present? ? @manager_obj.formatted_cache_data : nil
+                        manager: manager
                     }).fetch_by_manager_state
     end
     

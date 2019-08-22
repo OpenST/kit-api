@@ -221,10 +221,16 @@ module ManagerManagement
         @manager_obj.last_name = @last_name
         @manager_obj.password = Manager.get_encrypted_password(@password, @login_salt_d)
         @manager_obj.current_client_id = @client_id
-        @manager_obj.send("set_#{GlobalConstant::Manager.has_verified_email_property}")
+
         @manager_obj.status = GlobalConstant::Manager.active_status
         @manager_obj.last_session_updated_at = current_timestamp
         @manager_obj.save
+
+        set_props_arr = [
+            GlobalConstant::Manager.has_verified_email_property
+        ]
+
+        Manager.atomic_update_bitwise_columns(@manager_obj.id, set_props_arr, [])
 
         success
 
@@ -284,26 +290,23 @@ module ManagerManagement
       # * Date: 06/12/2018
       # * Reviewed By:
       #
-      # Sets @client_manager_obj
       #
       def update_client_manager
 
-        @client_manager_obj = ClientManager.where(
-            client_id: @client_id,
-            manager_id: @manager_obj.id
-        ).first
-
         # Decide invite privilege depending on the is_super_admin set in the manager validation hash.
 
+        unset_props_arr = []
+        set_props_arr = []
+
         if @is_super_admin == GlobalConstant::ClientManager.is_super_admin_privilege
-          @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_super_admin_invited_privilege}")
-          @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_super_admin_privilege}")
+          unset_props_arr.push(GlobalConstant::ClientManager.is_super_admin_invited_privilege)
+          set_props_arr.push(GlobalConstant::ClientManager.is_super_admin_privilege)
         else
-          @client_manager_obj.send("unset_#{GlobalConstant::ClientManager.is_admin_invited_privilege}")
-          @client_manager_obj.send("set_#{GlobalConstant::ClientManager.is_admin_privilege}")
+          unset_props_arr.push(GlobalConstant::ClientManager.is_admin_invited_privilege)
+          set_props_arr.push(GlobalConstant::ClientManager.is_admin_privilege)
         end
 
-        @client_manager_obj.save!
+        ClientManager.atomic_update_bitwise_columns(@client_id, @manager_obj.id, set_props_arr, unset_props_arr)
 
         success
       end

@@ -57,6 +57,65 @@ class ClientManager < DbConnection::KitClient
     }
   end
 
+  # Atomically update client manager properties
+  #
+  # * Author: Santhosh
+  # * Date: 08/08/2019
+  # * Reviewed By:
+  #
+  # @return [Result::Base]
+  #
+  def self.atomic_update_bitwise_columns(client_id, manager_id, set_props_array, unset_props_array)
+
+    return success if !set_props_array.present? && !unset_props_array.present?
+
+    throw 'client id or manager id is not sent' unless (client_id.present? && manager_id.present?)
+
+    throw 'common properties for set and unset.' if (set_props_array & unset_props_array).present?
+
+    clubbed_set_properties = {}
+    clubbed_unset_properties = {}
+
+    set_props_array.each do |property|
+      column_name, value = ClientManager.send("get_bit_details_for_#{property}")
+
+      if clubbed_set_properties[column_name].present?
+        clubbed_set_properties[column_name] |= value
+      else
+        clubbed_set_properties[column_name] = value
+      end
+    end
+
+    unset_props_array.each do |property|
+      column_name, value = ClientManager.send("get_bit_details_for_#{property}")
+
+      if clubbed_unset_properties[column_name].present?
+        clubbed_unset_properties[column_name] |= value
+      else
+        clubbed_unset_properties[column_name] = value
+      end
+    end
+
+    update_strings = []
+
+    # Set property update strings
+    clubbed_set_properties.each do |column_name, value|
+      update_strings.push("#{column_name} = #{column_name} | #{value}")
+    end
+
+    # Unset property update strings
+    clubbed_unset_properties.each do |column_name, value|
+      reverse_value = ~value
+      update_strings.push("#{column_name} = #{column_name} & #{reverse_value}")
+    end
+
+    update_string = update_strings.join(',')
+
+    ClientManager.where(client_id: client_id, manager_id: manager_id).update_all([update_string])
+
+    ClientManager.deliberate_cache_flush(client_id, manager_id)
+  end
+
   # Flush caches
   #
   # * Author: Puneet
@@ -64,6 +123,17 @@ class ClientManager < DbConnection::KitClient
   # * Reviewed By:
   #
   def flush_cache
+    CacheManagement::ClientManager.new([manager_id], {client_id: client_id}).clear
+  end
+
+  # Flush caches
+  #
+  # * Author: Santhosh
+  # * Date: 08/08/2019
+  # * Reviewed By:
+  # @return [Result::Base]
+  #
+  def self.deliberate_cache_flush(client_id, manager_id)
     CacheManagement::ClientManager.new([manager_id], {client_id: client_id}).clear
   end
 

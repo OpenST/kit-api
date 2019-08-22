@@ -121,8 +121,14 @@ module ManagerManagement
 
           @manager_obj.failed_mfa_attempt_count = 0
           @manager_obj.last_session_updated_at = r.data[:verified_at_timestamp]
-          @manager_obj.send("set_#{GlobalConstant::Manager.has_setup_mfa_property}")
+
           @manager_obj.save!
+
+          set_props_arr = [
+              GlobalConstant::Manager.has_setup_mfa_property
+          ]
+
+          Manager.atomic_update_bitwise_columns(@manager_obj.id, set_props_arr, [])
 
           success
 
