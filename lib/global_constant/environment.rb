@@ -31,6 +31,10 @@ module GlobalConstant
       Rails.env.development?
     end
 
+    def self.is_production_env?
+      Rails.env.production?
+    end
+
     def self.subenv_communication_secret
       @subenv_secret_key ||= ENV['KA_SUBENV_COMMUNICATION_SERVER_SECRET_KEY']
     end
