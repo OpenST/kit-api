@@ -114,6 +114,7 @@ class Token < DbConnection::KitSaasSubenv
   #
   def flush_cache
     KitSaasSharedCacheManagement::TokenDetails.new([client_id]).clear
+    KitSaasSharedCacheManagement::TokenByTokenId.new([id]).clear
   end
 
   # Flush caches
