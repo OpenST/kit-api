@@ -150,8 +150,6 @@ module Ticketing
 
         issue_response = issue.save(custom_params)
 
-        Rails.logger.info( "Jira ticket issue response #{issue_response}")
-
         Rails.logger.info("Fetch Issue #{pp issue}")
 
         return error_with_data(

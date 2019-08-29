@@ -294,9 +294,9 @@
   :optional:
 'TokenManagement::RequestWhitelist':
   :mandatory:
-    - :client_id
     - :manager
     - :client_manager
+    - :client
   :optional:
     - :sandbox_token_name
     - :sandbox_token_symbol

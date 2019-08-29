@@ -7,7 +7,7 @@ module TokenManagement
     # * Date: 30/01/2019
     # * Reviewed By: Sunil
     #
-    # @params [Integer] client_id (mandatory) - Client Id
+    # @params [Integer] client (mandatory) - Client
     # @params [Hash] client_manager (mandatory) - logged in client manager object
     # @params [Hash] manager (mandatory) - manager
     # @params [String] sandbox_token_name (optional) - Sandbox token name
@@ -18,7 +18,7 @@ module TokenManagement
     def initialize(params)
       super
 
-      @client_id = @params[:client_id]
+      @client = @params[:client]
       @client_manager = @params[:client_manager]
       @manager = @params[:manager]
       @sandbox_token_name = @params[:sandbox_token_name]
@@ -72,15 +72,7 @@ module TokenManagement
         's_tm_rw_1',
         'invalid_api_params',
         GlobalConstant::ErrorAction.default
-      ) if GlobalConstant::Base.sandbox_sub_environment?
-
-      @client = CacheManagement::Client.new([@client_id]).fetch[@client_id]
-
-      return error_with_data(
-        's_tm_rw_2',
-        'client_not_found',
-        GlobalConstant::ErrorAction.default
-      ) if @client.blank?
+      ) if GlobalConstant::Base.main_sub_environment?
 
       success
     end
@@ -129,6 +121,9 @@ module TokenManagement
 
         r = set_whitelisting_requested_flag
         return r unless r.success?
+
+        r = create_issue_in_jira
+        return r unless r.success?
       end
 
       success
@@ -148,7 +143,7 @@ module TokenManagement
       manager_id = @manager[:id]
 
       template_vars =  {
-        client_id: @client_id, # Email, Sandbox Token Name, Sandbox Symbol
+        client_id: @client[:id], # Email, Sandbox Token Name, Sandbox Symbol
         manager_email_id: manager_email_id,
         company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain)
       }
@@ -162,13 +157,79 @@ module TokenManagement
       end
 
       r = Email::HookCreator::SendTransactionalMail.new(
-        receiver_entity_id: manager_id,
+        receiver_entity_id: manager_id, #This receiver entity is overrided in hooks processor. Email is sent to support mail.
         receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind,
         template_name: GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template,
         template_vars: template_vars).perform
       return r unless r.success?
 
       success
+    end
+
+    # Create ticket in jira for enterprise company/organization
+    #
+    # * Author: Anagha
+    # * Date: 17/04/2019
+    # * Reviewed By:
+    #
+    def create_issue_in_jira
+
+      issue_params = {
+        project_name:GlobalConstant::Jira.cs_operation_project_name,
+        issue_type: GlobalConstant::Jira.task_issue_type,
+        priority:GlobalConstant::Jira.medium_priority_issue,
+        assignee: GlobalConstant::Jira.move_to_prod_assignee_name,
+        summary: "User requested whitelisting",
+        description: get_issue_description
+      }
+
+      r = Ticketing::Jira::Issue.new(issue_params).perform
+      return r unless r.success?
+
+      success
+
+    end
+
+    # Get description for jira ticket
+    #
+    # * Author: Anagha
+    # * Date: 17/04/2019
+    # * Reviewed By:
+    #
+    # @returns [String]
+    #
+    def get_issue_description
+      get_description_template % get_platform_registration
+    end
+
+    # Get platform registration fields
+    #
+    # * Author: Anagha
+    # * Date: 17/04/2019
+    # * Reviewed By:
+    #
+    # @returns [Hash]
+    #
+    def get_platform_registration
+      {
+        company_name: @client[:company_name],
+        full_name: @manager[:first_name] + " " + @manager[:last_name],
+        email_address: @manager[:email],
+      }
+    end
+
+    # Get description template for jira ticket
+    #
+    # * Author: Anagha
+    # * Date: 17/04/2019
+    # * Reviewed By:
+    #
+    # @returns [String]
+    #
+    def get_description_template
+      "Company name: %{company_name}
+       Full name: %{full_name}
+       Email Address: [%{email_address}|mailto:%{email_address}]"
     end
 
     # set whitelisting requested flag
@@ -183,7 +244,7 @@ module TokenManagement
 
       set_props_arr = [GlobalConstant::Client.mainnet_whitelist_requested_status]
 
-      Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
+      Client.atomic_update_bitwise_columns(@client[:id], set_props_arr, [])
 
       success
     end
@@ -197,7 +258,7 @@ module TokenManagement
     # @return [Result::Base]
     #
     def fetch_sub_env_response_data
-      r = SubEnvPayload.new({client_id:@client_id}).perform
+      r = SubEnvPayload.new({client_id:@client[:id]}).perform
       return r unless r.success?
 
       @sub_env_payload_data = r.data

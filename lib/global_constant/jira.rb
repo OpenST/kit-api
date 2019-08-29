@@ -64,8 +64,16 @@ module GlobalConstant
       config[:project_name]
     end
 
+    def self.cs_operation_project_name
+      config[:cs_operation_project_name]
+    end
+
     def self.assignee_name
       config[:assignee_name]
+    end
+
+    def self.move_to_prod_assignee_name
+      config[:move_to_prod_assignee_name]
     end
 
     # Returns jira config

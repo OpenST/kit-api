@@ -129,11 +129,14 @@ export KA_DEMO_IOS_APP_URL='https://s3.amazonaws.com/sdk.stagingost.com/iOS/Down
 export KA_DEMO_ANDROID_APP_URL='http://sdk.stagingost.com.s3.amazonaws.com/Android/release/demoapp-release.apk'
 
 # Jira Details
-export KA_JIRA_USERNAME=''
-export KA_JIRA_PASSWORD=''
+export KA_JIRA_USERNAME='jira@ost.com'
+export KA_JIRA_PASSWORD='01lXrng86meVCawa85N2009F'
 export KA_JIRA_PROJECT_NAME='TP'
 export KA_JIRA_AUTH_TYPE=':basic'
 export KA_JIRA_ASSIGNEE_NAME=''
+
+export KA_JIRA_CS_OPERATION_PROJECT_NAME='SEB'
+export KA_JIRA_MOVE_TO_PROD_ASSIGNEE_NAME='Ankit'
 
 # Pipedrive Details
 export KA_OST_PD_API_TOKEN="0c5740a0fa913e7e06683d12934fc8e71e3706ba"
