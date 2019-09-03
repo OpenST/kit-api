@@ -72,7 +72,7 @@ module TokenManagement
         's_tm_rw_1',
         'invalid_api_params',
         GlobalConstant::ErrorAction.default
-      ) if GlobalConstant::Base.main_sub_environment?
+      ) if GlobalConstant::Base.sandbox_sub_environment?
 
       success
     end
