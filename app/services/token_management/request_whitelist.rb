@@ -138,7 +138,7 @@ module TokenManagement
       issue_params = {
         project_name: GlobalConstant::Jira.cs_operation_project_name,
         issue_type: GlobalConstant::Jira.task_issue_type,
-        priority:GlobalConstant::Jira.medium_priority_issue,
+        priority: GlobalConstant::Jira.medium_priority_issue,
         assignee: GlobalConstant::Jira.move_to_prod_assignee_name,
         summary: "User requested whitelisting",
         description: get_issue_description
