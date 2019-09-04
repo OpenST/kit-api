@@ -116,8 +116,6 @@ module TokenManagement
 
       unless @client[:mainnet_statuses].include? GlobalConstant::Client.mainnet_whitelist_requested_status
         #request whitelisting
-        r = send_email
-        return r unless r.success?
 
         r = set_whitelisting_requested_flag
         return r unless r.success?
@@ -125,43 +123,6 @@ module TokenManagement
         r = create_issue_in_jira
         return r unless r.success?
       end
-
-      success
-    end
-
-    # Send email
-    #
-    # * Author: Ankit
-    # * Date: 30/01/2019
-    # * Reviewed By:
-    #
-    # @return [Result::Base]
-    #
-    def send_email
-
-      manager_email_id = @manager[:email]
-      manager_id = @manager[:id]
-
-      template_vars =  {
-        client_id: @client[:id], # Email, Sandbox Token Name, Sandbox Symbol
-        manager_email_id: manager_email_id,
-        company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain)
-      }
-
-      if @sandbox_token_name.present?
-        template_vars[:sandbox_token_name] = @sandbox_token_name
-      end
-
-      if @sandbox_token_symbol.present?
-        template_vars[:sandbox_token_symbol] = @sandbox_token_symbol
-      end
-
-      r = Email::HookCreator::SendTransactionalMail.new(
-        receiver_entity_id: manager_id, #This receiver entity is overrided in hooks processor. Email is sent to support mail.
-        receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind,
-        template_name: GlobalConstant::PepoCampaigns.platform_mainnet_access_request_template,
-        template_vars: template_vars).perform
-      return r unless r.success?
 
       success
     end
