@@ -80,7 +80,7 @@ constants:
     auth_type: <%= ENV['KA_JIRA_AUTH_TYPE'] %>
     project_name: <%= ENV['KA_JIRA_PROJECT_NAME'] %>
     assignee_name: <%= ENV['KA_JIRA_ASSIGNEE_NAME'] %>
-    cs_operation_project_name: <%= ENV['KA_JIRA_PROJECT_NAME'] %>
+    cs_operation_project_name: <%= ENV['KA_JIRA_CS_OPERATION_PROJECT_NAME'] %>
     move_to_prod_assignee_name: <%= ENV['KA_JIRA_MOVE_TO_PROD_ASSIGNEE_NAME'] %>
 
   pipedrive:
