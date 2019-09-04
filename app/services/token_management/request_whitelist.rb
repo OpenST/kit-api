@@ -136,7 +136,7 @@ module TokenManagement
     def create_issue_in_jira
 
       issue_params = {
-        project_name:GlobalConstant::Jira.cs_operation_project_name,
+        project_name: GlobalConstant::Jira.cs_operation_project_name,
         issue_type: GlobalConstant::Jira.task_issue_type,
         priority:GlobalConstant::Jira.medium_priority_issue,
         assignee: GlobalConstant::Jira.move_to_prod_assignee_name,
