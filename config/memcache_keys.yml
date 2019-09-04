@@ -77,6 +77,11 @@ keys:
       expiry_in_seconds: 86400
       <<: *kit_saas_subenv
 
+    by_token_id:
+      key_template: 'c_tkn_by_tid_%{token_id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
+
   token_address:
     details:
       key_template: 'ta_%{token_id}'
@@ -104,6 +109,13 @@ keys:
   ost_price_points:
     chain_specific:
       key_template: 'c_ost_pp_%{chain_id}'
+      expiry_in_seconds: 86400
+      <<: *kit_saas_subenv
+
+
+  latest_transactions:
+    details:
+      key_template: 'c_hp_lt_'
       expiry_in_seconds: 86400
       <<: *kit_saas_subenv
 
