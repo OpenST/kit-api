@@ -14,8 +14,6 @@ class FetchGoToByEconomyState < ServicesBase
 
     super
 
-    Rails.logger.info('========params==========', params)
-
     @token = @params[:token]
     @client_id = @params[:client_id]
     @from_page = @params[:from_page]
@@ -89,8 +87,6 @@ class FetchGoToByEconomyState < ServicesBase
       end
 
     end
-
-    Rails.logger.info('=========@go_to=======', @go_to)
 
     success
 

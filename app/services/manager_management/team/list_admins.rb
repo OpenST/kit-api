@@ -47,10 +47,6 @@ module ManagerManagement
           r = validate_and_sanitize
           return r unless r.success?
 
-          r = fetch_goto
-          Rails.logger.info('========r========', r)
-          return r unless r.success?
-
           r = fetch_workflows
           return r unless r.success?
 
@@ -100,24 +96,6 @@ module ManagerManagement
         @page_no = @page_no.to_i # Convert to integer if string is passed.
 
         success
-
-      end
-
-      # Fetch goto.
-      #
-      # * Author: Shlok
-      # * Date: 04/09/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_goto
-
-        FetchGoToByEconomyState.new({
-                                      token: nil,
-                                      client_id: @client_id,
-                                      from_page: GlobalConstant::GoTo.team
-                                    }).fetch_by_economy_state
 
       end
 
