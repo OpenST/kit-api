@@ -90,11 +90,13 @@ module ManagerManagement
       #
       def fetch_goto
 
-        FetchGoToByEconomyState.new({
-                                      token: nil,
-                                      client_id: @client_id,
-                                      from_page: GlobalConstant::GoTo.team
-                                    }).fetch_by_economy_state
+        if GlobalConstant::Base.sandbox_sub_environment?
+          FetchGoToByEconomyState.new({
+                                        token: nil,
+                                        client_id: @client_id,
+                                        from_page: GlobalConstant::GoTo.team
+                                      }).fetch_by_economy_state
+        end
 
       end
 
