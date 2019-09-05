@@ -73,31 +73,6 @@ module ManagerManagement
         r = validate
         return r unless r.success?
 
-        r = fetch_goto
-        return r unless r.success?
-
-        success
-
-      end
-
-      # Fetch goto.
-      #
-      # * Author: Shlok
-      # * Date: 04/09/2019
-      # * Reviewed By:
-      #
-      # @return [Result::Base]
-      #
-      def fetch_goto
-
-        if GlobalConstant::Base.sandbox_sub_environment?
-          FetchGoToByEconomyState.new({
-                                        token: nil,
-                                        client_id: @client_id,
-                                        from_page: GlobalConstant::GoTo.team
-                                      }).fetch_by_economy_state
-        end
-
         success
 
       end
