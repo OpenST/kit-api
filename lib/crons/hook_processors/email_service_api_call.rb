@@ -27,7 +27,6 @@ module Crons
       #
       def perform
         super
-        puts " perfrom  "
       end
 
       private

@@ -1,9 +1,9 @@
 module AdminManagement
-  
+
   module Whitelist
-  
+
     class Client < ServicesBase
-    
+
       # Initialize
       #
       # * Author: Shlok
@@ -25,7 +25,7 @@ module AdminManagement
         @config_group_id = @params[:config_group_id]
         @client_id = nil
       end
-    
+
       # Perform
       #
       # * Author: Shlok
@@ -56,11 +56,11 @@ module AdminManagement
           success
 
         end
-    
+
       end
-    
+
       private
-      
+
       # Validate and sanitize
       #
       # * Author: Shlok
@@ -148,13 +148,13 @@ module AdminManagement
       # @return [Result::Base]
       #
       def find_or_create_client_whitelisting
-  
+
         wd = ClientWhitelisting.where(client_id: @client_id).first
-        
+
         unless wd.present?
           ClientWhitelisting.create!(client_id: @client_id)
         end
-  
+
         success
 
       end
@@ -201,13 +201,17 @@ module AdminManagement
             GlobalConstant::Client.mainnet_whitelisted_status
         ]
 
-        ::Client.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
+        unset_props_arr = [
+          GlobalConstant::Client.mainnet_whitelist_requested_status
+        ]
+
+        ::Client.atomic_update_bitwise_columns(@client_id, set_props_arr, unset_props_arr)
 
         success
       end
 
     end
-    
+
   end
 
 end
