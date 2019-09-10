@@ -135,12 +135,14 @@ module TokenManagement
     #
     def create_issue_in_jira
 
+      company_name = @client[:company_name] || "N/A"
+
       issue_params = {
         project_name: GlobalConstant::Jira.cs_operation_project_name,
         issue_type: GlobalConstant::Jira.task_issue_type,
         priority: GlobalConstant::Jira.medium_priority_issue,
         assignee: GlobalConstant::Jira.move_to_prod_assignee_name,
-        summary: "Move to Production Request - " + @client[:company_name],
+        summary: "Move to Production Request - " + company_name,
         description: get_issue_description
       }
 
