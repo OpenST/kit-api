@@ -76,12 +76,12 @@ export KA_S3_PUBLIC_BUCKET="public.stagingost.com"
 export KA_S3_PUBLIC_TEST_ECONOMY_QR_CODE_FOLDER="test-economy/qr-code"
 
 # KMS Details
-export KA_USER_AWS_ACCESS_KEY="AKIAJUDRALNURKAVS5IQ"
-export KA_USER_AWS_SECRET_KEY="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"
-export KA_LOGIN_KMS_ARN='arn:aws:kms:us-east-1:604850698061:key'
-export KA_LOGIN_KMS_ID='eab8148d-fd9f-451d-9eb9-16c115645635'
-export KA_API_KEY_KMS_ARN='arn:aws:kms:us-east-1:604850698061:key'
-export KA_API_KEY_KMS_ID='eab8148d-fd9f-451d-9eb9-16c115645635'
+export KA_USER_AWS_ACCESS_KEY="AKIA2IE3EXDCJJUAJLC3"
+export KA_USER_AWS_SECRET_KEY="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"
+export KA_LOGIN_KMS_ARN='arn:aws:kms:us-east-1:704700004548:key'
+export KA_LOGIN_KMS_ID='3186534a-626e-4c25-9593-8f90184da716'
+export KA_API_KEY_KMS_ARN='arn:aws:kms:us-east-1:704700004548:key'
+export KA_API_KEY_KMS_ID='3186534a-626e-4c25-9593-8f90184da716'
 
 # Secret Encryptor Details
 export KA_COOKIE_SECRET_KEY='byfd#ss@#4nflkn%^!~wkk^^&71o{23dpi~@jwe$pi'
