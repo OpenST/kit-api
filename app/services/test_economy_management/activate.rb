@@ -136,7 +136,7 @@ module TestEconomyManagement
     end
 
     # Generate & Upload QR code
-    # 
+    #
     # * Author: Puneet
     # * Date: 10/04/2019
     # * Reviewed By: Sunil
@@ -194,7 +194,7 @@ module TestEconomyManagement
     end
 
     # Perform API Call to Demo Mappy Server to register this token
-    # 
+    #
     # * Author: Puneet
     # * Date: 10/04/2019
     # * Reviewed By: Sunil
@@ -245,6 +245,7 @@ module TestEconomyManagement
         @set_props_arr.push(GlobalConstant::Client.mainnet_registered_in_mappy_server_status)
       else
         @set_props_arr.push(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
+        @set_props_arr.push(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
       end
 
       update_campaign_attributes({
