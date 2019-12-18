@@ -23,6 +23,8 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
         @client[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_registered_in_mappy_server_status) :
         @client[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
 
+    Rails.logger.info "=======has_setup_demo_app===== #{has_setup_demo_app}"
+
     # return if token has not been registered in Mappy
     return success unless has_setup_demo_app
 
@@ -51,6 +53,7 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   # @param [Hash] params
   #
   def init_params(params)
+    Rails.logger.info "===params=======#{params}"
     @client_id = params[:client_id].to_i
     @client = nil
     @show_keys_enable_flag = params[:show_keys_enable_flag].to_i
@@ -126,6 +129,8 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
         api_secret: @last_expiring_api_credentials[:secret]
     }
 
+    Rails.logger.info "======@data_to_sync====333333333333===== #{@data_to_sync}"
+
     success
 
   end
@@ -133,6 +138,7 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   # Fetch webhook secret to sync to demo
   #
   def fetch_webhook_secret
+    Rails.logger.info "======@data_to_sync====111111111===== #{@data_to_sync}"
     if @client[:sandbox_statuses].include?(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
       @data_to_sync.merge!(KitSaasSharedCacheManagement::WebhookSecret.new([@client_id]).fetch[@client_id] || {})
     end
@@ -145,6 +151,8 @@ class SyncApiKeysInDemoMappyJob < ApplicationJob
   # * Reviewed By:
   #
   def sync_in_demo_mappy
+
+    Rails.logger.info "======@data_to_sync====22222222===== #{@data_to_sync}"
 
     DemoMappyServerApi.new.send_request_of_type(
     'post', 'setup/update-token', @data_to_sync)
