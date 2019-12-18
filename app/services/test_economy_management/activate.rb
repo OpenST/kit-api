@@ -104,8 +104,6 @@ module TestEconomyManagement
 
       perform_registeration_in_mappy_task unless registered_in_mappy_server?
 
-      update_client_properties
-
       return error_with_data(
           'tem_a_5',
           'something_went_wrong',
@@ -253,6 +251,9 @@ module TestEconomyManagement
         @set_props_arr.push(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
         @set_props_arr.push(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
       end
+
+      # We do this here because syncApiKeysInDemoMappyJob requires these properties to fetch webhook secret.
+      update_client_properties
 
       r = enqueue_job_to_update_in_mappy_server
       return r unless r.success?
