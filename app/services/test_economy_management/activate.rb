@@ -73,7 +73,13 @@ module TestEconomyManagement
     def check_activation_status
 
       return error_with_data(
-          'tem_a_1',
+        'tem_a_1',
+        'unauthorized_to_access_main_env',
+        GlobalConstant::ErrorAction.default
+      ) if is_main_sub_env?
+
+      return error_with_data(
+          'tem_a_2',
           'token_demo_already_setup',
           GlobalConstant::ErrorAction.default
       ) if registered_in_mappy_server? && test_economy_qr_code_uploaded?
@@ -248,6 +254,9 @@ module TestEconomyManagement
         @set_props_arr.push(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
       end
 
+      r = enqueue_job_to_update_in_mappy_server
+      return r unless r.success?
+
       update_campaign_attributes({
                                      entity_id: @client_id,
                                      entity_kind: GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind,
@@ -255,6 +264,29 @@ module TestEconomyManagement
                                      settings: {},
                                      mile_stone: GlobalConstant::PepoCampaigns.ost_wallet_setup
                                  })
+
+      success
+
+    end
+
+    # Enqueue Job to update the API keys in Mappy Server
+    #
+    # * Author: Dhananjay
+    # * Date: 17/12/2019
+    # * Reviewed By: Alpesh
+    #
+    # @return [Result::Base]
+    #
+    def enqueue_job_to_update_in_mappy_server
+
+      BackgroundJob.enqueue(
+        SyncApiKeysInDemoMappyJob,
+        {
+          client_id: @client_id,
+          show_keys_enable_flag: 1,
+          email_already_sent_flag: 1
+        }
+      )
 
       success
 
