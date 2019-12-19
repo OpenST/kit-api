@@ -73,7 +73,13 @@ module TestEconomyManagement
     def check_activation_status
 
       return error_with_data(
-          'tem_a_1',
+        'tem_a_1',
+        'unauthorized_to_access_main_env',
+        GlobalConstant::ErrorAction.default
+      ) if is_main_sub_env?
+
+      return error_with_data(
+          'tem_a_2',
           'token_demo_already_setup',
           GlobalConstant::ErrorAction.default
       ) if registered_in_mappy_server? && test_economy_qr_code_uploaded?
@@ -97,8 +103,6 @@ module TestEconomyManagement
       perform_qr_code_task unless test_economy_qr_code_uploaded?
 
       perform_registeration_in_mappy_task unless registered_in_mappy_server?
-
-      update_client_properties
 
       return error_with_data(
           'tem_a_5',
@@ -136,7 +140,7 @@ module TestEconomyManagement
     end
 
     # Generate & Upload QR code
-    # 
+    #
     # * Author: Puneet
     # * Date: 10/04/2019
     # * Reviewed By: Sunil
@@ -194,7 +198,7 @@ module TestEconomyManagement
     end
 
     # Perform API Call to Demo Mappy Server to register this token
-    # 
+    #
     # * Author: Puneet
     # * Date: 10/04/2019
     # * Reviewed By: Sunil
@@ -245,7 +249,14 @@ module TestEconomyManagement
         @set_props_arr.push(GlobalConstant::Client.mainnet_registered_in_mappy_server_status)
       else
         @set_props_arr.push(GlobalConstant::Client.sandbox_registered_in_mappy_server_status)
+        @set_props_arr.push(GlobalConstant::Client.webhook_registered_in_mappy_server_status)
       end
+
+      # We do this here because syncApiKeysInDemoMappyJob requires these properties to fetch webhook secret.
+      update_client_properties
+
+      r = enqueue_job_to_update_in_mappy_server
+      return r unless r.success?
 
       update_campaign_attributes({
                                      entity_id: @client_id,
@@ -254,6 +265,29 @@ module TestEconomyManagement
                                      settings: {},
                                      mile_stone: GlobalConstant::PepoCampaigns.ost_wallet_setup
                                  })
+
+      success
+
+    end
+
+    # Enqueue Job to update the API keys in Mappy Server
+    #
+    # * Author: Dhananjay
+    # * Date: 17/12/2019
+    # * Reviewed By: Alpesh
+    #
+    # @return [Result::Base]
+    #
+    def enqueue_job_to_update_in_mappy_server
+
+      BackgroundJob.enqueue(
+        SyncApiKeysInDemoMappyJob,
+        {
+          client_id: @client_id,
+          show_keys_enable_flag: 1,
+          email_already_sent_flag: 1
+        }
+      )
 
       success
 
