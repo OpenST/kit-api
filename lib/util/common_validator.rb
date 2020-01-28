@@ -169,7 +169,7 @@ module Util
     #
     def self.is_valid_password?(password)
       # Password should be 8 characters
-      password.to_s.length >= 8
+      password.to_s.length >= 8 && password.to_s.length <= 50
     end
 
     # Is alpha numeric string
