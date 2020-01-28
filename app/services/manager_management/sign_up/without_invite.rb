@@ -103,7 +103,8 @@ module ManagerManagement
 
         validation_errors = []
 
-        validation_errors.push('password_invalid') unless Util::CommonValidator.is_valid_password?(@password)
+        validation_errors.push('min_character_length_password_invalid') unless Util::CommonValidator.is_valid_min_length_of_password?(@password)
+        validation_errors.push('max_character_length_password_invalid') unless Util::CommonValidator.is_valid_max_length_of_password?(@password)
         validation_errors.push('invalid_agreed_terms_of_service') if @agreed_terms_of_service.to_s.downcase != 'on'
 
         @email = @email.to_s.downcase.strip

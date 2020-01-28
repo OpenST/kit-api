@@ -159,7 +159,7 @@ module Util
       token =~ REGEX_TOKEN
     end
 
-    # Does password contains allowed characters and size
+    # Does password contains allowed characters and minimum size
     #
     # * Author: Puneet
     # * Date: 14/02/2018
@@ -167,9 +167,22 @@ module Util
     #
     # @return [Boolean] returns a boolean
     #
-    def self.is_valid_password?(password)
+    def self.is_valid_min_length_of_password?(password)
       # Password should be 8 characters
-      password.to_s.length >= 8 && password.to_s.length <= 50
+      password.to_s.length >= 8
+    end
+
+    # Does password contains allowed characters and maximum size
+    #
+    # * Author: Dhananjay
+    # * Date: 28/01/2020
+    # * Reviewed By:
+    #
+    # @return [Boolean] returns a boolean
+    #
+    def self.is_valid_max_length_of_password?(password)
+      # Password should be less than 50 characters
+      password.to_s.length <= 50
     end
 
     # Is alpha numeric string

@@ -143,10 +143,15 @@ mfa_limit_reached:
   code: 'invalid'
   message: 'Maximum attempts for mfa has been reached. You will be logout in next attempt.'
 
-password_invalid:
+min_character_length_password_invalid:
   parameter: 'password'
   code: 'invalid'
-  message: 'Password should be minimum 8 characters and maximum 50 characters.'
+  message: 'Password should be minimum 8 characters.'
+
+max_character_length_password_invalid:
+  parameter: 'password'
+  code: 'invalid'
+  message: 'Please ensure password has at most 50 characters.'
 
 password_same:
   parameter: 'password'
