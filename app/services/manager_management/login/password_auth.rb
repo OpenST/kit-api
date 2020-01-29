@@ -98,6 +98,8 @@ module ManagerManagement
         validation_errors = []
 
         @email = @email.to_s.downcase.strip
+        validation_errors.push('min_character_length_password_invalid') unless Util::CommonValidator.is_valid_min_length_of_password?(@password)
+        validation_errors.push('max_character_length_password_invalid') unless Util::CommonValidator.is_valid_max_length_of_password?(@password)
         validation_errors.push('invalid_email') unless Util::CommonValidator.is_valid_email?(@email)
 
         validation_errors.push('invalid_fingerprint') unless @fingerprint.length == 32

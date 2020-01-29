@@ -125,7 +125,8 @@ module ManagerManagement
 
         validation_errors = []
 
-        validation_errors.push('password_invalid') unless Util::CommonValidator.is_valid_password?(@password)
+        validation_errors.push('min_character_length_password_invalid') unless Util::CommonValidator.is_valid_min_length_of_password?(@password)
+        validation_errors.push('max_character_length_password_invalid') unless Util::CommonValidator.is_valid_max_length_of_password?(@password)
         validation_errors.push('confirm_password_invalid') if @confirm_password != @password
 
         @first_name = @first_name.to_s.strip
