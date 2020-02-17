@@ -1,4 +1,4 @@
-class AddColumnInRedemptionProducts < DbMigrationConnection
+class AddColumnInstructionsInRedemptionProducts < DbMigrationConnection
   def up
     run_migration_for_db(DbConnection::SaasSubenv) do
       add_column :redemption_products, :instructions, :text, after: :description, null: false
