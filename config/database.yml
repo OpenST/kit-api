@@ -60,11 +60,11 @@ config_subenv_identifier: &config_subenv
   username: <%= ENV['KA_CONFIG_SUBENV_MYSQL_USER']%>
   password: <%= ENV['KA_CONFIG_SUBENV_MYSQL_PASSWORD']%>
 
-redemption_subenv_identifier: &redemption_subenv
+kit_saas_redemption_subenv_identifier: &kit_saas_redemption_subenv
   <<: *default
-  host: <%= ENV['KA_REDEMPTION_SUBENV_MYSQL_HOST']%>
-  username: <%= ENV['KA_REDEMPTION_SUBENV_MYSQL_USER']%>
-  password: <%= ENV['KA_REDEMPTION_SUBENV_MYSQL_PASSWORD']%>
+  host: <%= ENV['KA_KIT_SAAS_REDEMPTION_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_SAAS_REDEMPTION_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_SAAS_REDEMPTION_SUBENV_MYSQL_PASSWORD']%>
 
 ### ACTUAL DB configs start here ###
 <%= Rails.env%>:
@@ -103,6 +103,6 @@ config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_subenv
   database: config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
 
-redemption_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
-  <<: *redemption_subenv
-  database: redemption_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+kit_saas_redemption_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *kit_saas_redemption_subenv
+  database: kit_saas_redemption_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>

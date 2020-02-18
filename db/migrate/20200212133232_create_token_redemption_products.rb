@@ -1,6 +1,6 @@
 class CreateTokenRedemptionProducts < DbMigrationConnection
   def up
-    run_migration_for_db(DbConnection::RedemptionSubenv) do
+    run_migration_for_db(DbConnection::KitSaasRedemptionSubenv) do
       create_table :token_redemption_products do |t|
         t.column :token_id, :int, null: false
         t.column :redemption_product_id, :integer, limit: 8, null: false
@@ -15,7 +15,7 @@ class CreateTokenRedemptionProducts < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(DbConnection::RedemptionSubenv) do
+    run_migration_for_db(DbConnection::KitSaasRedemptionSubenv) do
       drop_table :token_redemption_products
     end
   end
