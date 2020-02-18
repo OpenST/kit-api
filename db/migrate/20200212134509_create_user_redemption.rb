@@ -1,6 +1,6 @@
 class CreateUserRedemption < DbMigrationConnection
   def up
-    run_migration_for_db(DbConnection::SaasBigSubenv) do
+    run_migration_for_db(DbConnection::RedemptionSubenv) do
       create_table :user_redemptions do |t|
         t.column :uuid, :string, limit: 40, null: false
         t.column :user_uuid, :string, limit: 40, null: false
@@ -16,7 +16,7 @@ class CreateUserRedemption < DbMigrationConnection
   end
 
   def down
-    run_migration_for_db(DbConnection::SaasBigSubenv) do
+    run_migration_for_db(DbConnection::RedemptionSubenv) do
       drop_table :user_redemptions
     end
   end

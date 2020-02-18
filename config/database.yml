@@ -60,6 +60,12 @@ config_subenv_identifier: &config_subenv
   username: <%= ENV['KA_CONFIG_SUBENV_MYSQL_USER']%>
   password: <%= ENV['KA_CONFIG_SUBENV_MYSQL_PASSWORD']%>
 
+redemption_subenv_identifier: &redemption_subenv
+  <<: *default
+  host: <%= ENV['KA_REDEMPTION_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_REDEMPTION_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_REDEMPTION_SUBENV_MYSQL_PASSWORD']%>
+
 ### ACTUAL DB configs start here ###
 <%= Rails.env%>:
   <<: *kit_subenv
@@ -96,3 +102,7 @@ kit_big_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
 config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
   <<: *config_subenv
   database: config_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
+
+redemption_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>:
+  <<: *redemption_subenv
+  database: redemption_<%= GlobalConstant::Base.sub_environment_name%>_<%= Rails.env%>
