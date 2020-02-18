@@ -1,7 +1,7 @@
 class CreateRedemptionProducts < DbMigrationConnection
   def up
     run_migration_for_db(DbConnection::RedemptionSubenv) do
-      create_table :products do |t|
+      create_table :redemption_products do |t|
         t.column :name, :string, limit: 255, null: false
         t.column :description, :string, limit: 1000, null: false
         t.column :image, :text, null: true
@@ -13,7 +13,7 @@ class CreateRedemptionProducts < DbMigrationConnection
 
   def down
     run_migration_for_db(DbConnection::RedemptionSubenv) do
-      drop_table :products
+      drop_table :redemption_products
     end
   end
 end
