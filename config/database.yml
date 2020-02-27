@@ -62,9 +62,9 @@ config_subenv_identifier: &config_subenv
 
 kit_saas_redemption_subenv_identifier: &kit_saas_redemption_subenv
   <<: *default
-  host: <%= ENV['KA_KIT_SAAS_MYSQL_HOST']%>
-  username: <%= ENV['KA_KIT_SAAS_MYSQL_USER']%>
-  password: <%= ENV['KA_KIT_SAAS_MYSQL_PASSWORD']%>
+  host: <%= ENV['KA_KIT_SAAS_SUBENV_MYSQL_HOST']%>
+  username: <%= ENV['KA_KIT_SAAS_SUBENV_MYSQL_USER']%>
+  password: <%= ENV['KA_KIT_SAAS_SUBENV_MYSQL_PASSWORD']%>
 
 ### ACTUAL DB configs start here ###
 <%= Rails.env%>:
