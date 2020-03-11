@@ -168,22 +168,18 @@ module Email
         puts "@sandbox_statuses ====== #{@sandbox_statuses}"
         puts "@mainnet_statuses ====== #{@mainnet_statuses}"
 
-        set_props_arr = [@property_to_set]
+        set_props_arr = [@property_to_set]  # This property is client property.
         unset_props_arr = []
+        Client.atomic_update_bitwise_columns(@client_id, set_props_arr, unset_props_arr)
 
         if mile_stone == GlobalConstant::PepoCampaigns.stake_and_mint
-          if GlobalConstant::Base.sandbox_sub_environment?
-            unset_props_arr.push(GlobalConstant::Client.sandbox_low_balance_email_status)
-            unset_props_arr.push(GlobalConstant::Client.sandbox_very_low_balance_email_status)
-            unset_props_arr.push(GlobalConstant::Client.sandbox_zero_balance_email_status)
-          elsif GlobalConstant::Base.main_sub_environment?
-            unset_props_arr.push(GlobalConstant::Client.mainnet_low_balance_email_status)
-            unset_props_arr.push(GlobalConstant::Client.mainnet_very_low_balance_email_status)
-            unset_props_arr.push(GlobalConstant::Client.mainnet_zero_balance_email_status)
-          end
-        end
+          # We need to set token properties for when stake and mint is successful.
+          unset_props_arr.push(GlobalConstant::ClientToken.low_balance_email)
+          unset_props_arr.push(GlobalConstant::ClientToken.very_low_balance_email)
+          unset_props_arr.push(GlobalConstant::ClientToken.zero_balance_email)
 
-        Client.atomic_update_bitwise_columns(@client_id, set_props_arr, unset_props_arr)
+          Token.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
+        end
 
         success
       end
