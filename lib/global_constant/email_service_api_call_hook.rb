@@ -4,19 +4,23 @@ module GlobalConstant
   class EmailServiceApiCallHook
 
     class << self
-  
+
       ########## receiver_entity_kinds #############
-  
+
       def client_receiver_entity_kind
         'client'
       end
-  
+
       def manager_receiver_entity_kind
         'manager'
       end
-  
+
       def support_receiver_entity_kind
         'support'
+      end
+
+      def client_all_super_admins_receiver_entity_kind
+        'client_all_super_admins_receiver_entity_kind'
       end
 
       def whitelisting_requester_kind
@@ -30,7 +34,7 @@ module GlobalConstant
       def specific_email_receiver_entity_kind
         'specific_email'
       end
-  
+
       ########## receiver_entity_kinds #############
 
       ########## event_types #############
