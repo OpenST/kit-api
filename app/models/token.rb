@@ -9,7 +9,10 @@ class Token < DbConnection::KitSaasSubenv
 
   def self.properties_config
     @t_props ||= {
-      GlobalConstant::ClientToken.has_ost_managed_owner => 1
+      GlobalConstant::ClientToken.has_ost_managed_owner => 1,
+      GlobalConstant::ClientToken.low_balance_email => 2,
+      GlobalConstant::ClientToken.very_low_balance_email => 4,
+      GlobalConstant::ClientToken.zero_balance_email => 8,
     }
   end
 

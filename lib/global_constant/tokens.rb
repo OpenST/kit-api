@@ -21,6 +21,18 @@ module GlobalConstant
         'deploymentFailed'
       end
 
+      def low_balance_email
+        'low_balance_email'
+      end
+
+      def very_low_balance_email
+        'very_low_balance_email'
+      end
+
+      def zero_balance_email
+        'zero_balance_email'
+      end
+
       def delayed_recovery_interval
         43200
       end
