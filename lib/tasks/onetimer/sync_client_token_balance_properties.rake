@@ -20,47 +20,35 @@ namespace :one_timers do
       @token = Token.where(client_id: client_id, status: GlobalConstant::ClientToken.deployment_completed).first
 
       if @token.present?
-
         if GlobalConstant::Base.sandbox_sub_environment?
           set_props_arr = []
-          unset_props_arr = []
           if client_hash[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_stake_and_mint_property)
             if client_hash[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_low_balance_email_status)
               set_props_arr.push(GlobalConstant::ClientToken.low_balance_email)
-              unset_props_arr.push(GlobalConstant::Client.sandbox_low_balance_email_status)
             end
             if client_hash[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_very_low_balance_email_status)
               set_props_arr.push(GlobalConstant::ClientToken.very_low_balance_email)
-              unset_props_arr.push(GlobalConstant::Client.sandbox_very_low_balance_email_status)
             end
             if client_hash[:sandbox_statuses].include?(GlobalConstant::Client.sandbox_zero_balance_email_status)
               set_props_arr.push(GlobalConstant::ClientToken.zero_balance_email)
-              unset_props_arr.push(GlobalConstant::Client.sandbox_zero_balance_email_status)
             end
           end
           Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
-          Client.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
-        end
 
-        if GlobalConstant::Base.main_sub_environment?
+        elsif GlobalConstant::Base.main_sub_environment?
           set_props_arr = []
-          unset_props_arr = []
           if client_hash[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_stake_and_mint_property)
             if client_hash[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_low_balance_email_status)
               set_props_arr.push(GlobalConstant::ClientToken.low_balance_email)
-              unset_props_arr.push(GlobalConstant::Client.mainnet_low_balance_email_status)
             end
             if client_hash[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_very_low_balance_email_status)
               set_props_arr.push(GlobalConstant::ClientToken.very_low_balance_email)
-              unset_props_arr.push(GlobalConstant::Client.mainnet_very_low_balance_email_status)
             end
             if client_hash[:mainnet_statuses].include?(GlobalConstant::Client.mainnet_zero_balance_email_status)
               set_props_arr.push(GlobalConstant::ClientToken.zero_balance_email)
-              unset_props_arr.push(GlobalConstant::Client.mainnet_zero_balance_email_status)
             end
           end
-          Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
-          Client.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
+            Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
         end
       end
     end
