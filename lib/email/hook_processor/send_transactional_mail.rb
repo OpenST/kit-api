@@ -79,8 +79,6 @@ module Email
 
         send_mail_params = @hook.params
 
-        puts "==send_mail_params=== #{send_mail_params}"
-
         if @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.client_all_super_admins_receiver_entity_kind
           @manager_ids.each do |manager_id|
             email_hook_creation_resp = Email::HookCreator::SendTransactionalMail.new(
@@ -93,8 +91,6 @@ module Email
               }
             ).perform
 
-            puts "email_hook_creation_resp ====== #{email_hook_creation_resp.inspect}"
-
             if email_hook_creation_resp['error'].present?
               error_with_data(
                 'e_hp_stm_1',
@@ -103,14 +99,10 @@ module Email
                 email_hook_creation_resp
               )
             else
-              puts "====This finished successfully...."
               success_with_data(email_hook_creation_resp)
             end
           end
-          success_with_data({})
         end
-
-        puts "==@email1111111111=== #{@email}"
 
         if @email.present?
           link = fetch_view_link(send_mail_params)
@@ -132,6 +124,8 @@ module Email
             success_with_data(send_mail_response)
           end
         end
+
+        success_with_data({})
 
       end
 
