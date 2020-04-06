@@ -98,8 +98,6 @@ module Email
                 GlobalConstant::ErrorAction.default,
                 email_hook_creation_resp
               )
-            else
-              success_with_data(email_hook_creation_resp)
             end
           end
           success_with_data({})
