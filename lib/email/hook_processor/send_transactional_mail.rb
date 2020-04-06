@@ -92,7 +92,7 @@ module Email
             ).perform
 
             if email_hook_creation_resp['error'].present?
-              error_with_data(
+              return error_with_data(
                 'e_hp_stm_1',
                 'something_went_wrong',
                 GlobalConstant::ErrorAction.default,
@@ -100,7 +100,7 @@ module Email
               )
             end
           end
-          success_with_data({})
+          return success_with_data({})
         end
 
         if @email.present?
@@ -113,19 +113,16 @@ module Email
           )
 
           if send_mail_response['error'].present?
-            error_with_data(
+            return error_with_data(
               'e_hp_stm_2',
               'something_went_wrong',
               GlobalConstant::ErrorAction.default,
               send_mail_response
             )
           else
-            success_with_data(send_mail_response)
+            return success_with_data(send_mail_response)
           end
         end
-
-        success_with_data({})
-
       end
 
       # Add extra template vars
