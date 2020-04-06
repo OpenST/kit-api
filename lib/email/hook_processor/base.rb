@@ -139,11 +139,7 @@ module Email
 
           manager_data = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
 
-          puts "===manager_data==== #{manager_data}"
-
           @email = manager_data[:email]
-
-          puts "===@email==== #{@email}"
         end
 
         success
