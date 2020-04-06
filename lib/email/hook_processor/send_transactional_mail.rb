@@ -160,16 +160,9 @@ module Email
       #
       def set_manager_ids
 
-        Rails.logger.info "====@hook[:receiver_entity_id]=== #{@hook[:receiver_entity_id]}"
-
         receiver_entity_id = @hook[:receiver_entity_id] # This is the client id.
-        Rails.logger.info "====receiver_entity_id=== #{receiver_entity_id}"
         #TODO: Can we cache this query ?
         @manager_ids = ClientManager.super_admins(receiver_entity_id).pluck(:manager_id)
-
-        Rails.logger.info "====@manager_ids=== #{@manager_ids}"
-
-
         success
 
       end
