@@ -102,6 +102,7 @@ module Email
               success_with_data(email_hook_creation_resp)
             end
           end
+          success_with_data({})
         end
 
         if @email.present?
