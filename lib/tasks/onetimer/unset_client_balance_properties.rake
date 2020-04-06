@@ -34,7 +34,7 @@ namespace :one_timers do
               unset_props_arr.push(GlobalConstant::Client.sandbox_zero_balance_email_status)
             end
           end
-          Client.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
+          Client.atomic_update_bitwise_columns(client_id, [], unset_props_arr)
         end
 
         if GlobalConstant::Base.main_sub_environment?
@@ -50,7 +50,7 @@ namespace :one_timers do
               unset_props_arr.push(GlobalConstant::Client.mainnet_zero_balance_email_status)
             end
           end
-          Client.atomic_update_bitwise_columns(@client_id, [], unset_props_arr)
+          Client.atomic_update_bitwise_columns(client_id, [], unset_props_arr)
         end
       end
     end

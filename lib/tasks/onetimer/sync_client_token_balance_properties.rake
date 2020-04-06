@@ -33,7 +33,7 @@ namespace :one_timers do
               set_props_arr.push(GlobalConstant::ClientToken.zero_balance_email)
             end
           end
-          Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
+          Token.atomic_update_bitwise_columns(client_id, set_props_arr, [])
 
         elsif GlobalConstant::Base.main_sub_environment?
           set_props_arr = []
@@ -48,7 +48,7 @@ namespace :one_timers do
               set_props_arr.push(GlobalConstant::ClientToken.zero_balance_email)
             end
           end
-            Token.atomic_update_bitwise_columns(@client_id, set_props_arr, [])
+            Token.atomic_update_bitwise_columns(client_id, set_props_arr, [])
         end
       end
     end
