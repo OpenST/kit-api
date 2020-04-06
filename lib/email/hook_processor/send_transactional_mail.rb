@@ -79,21 +79,21 @@ module Email
 
         send_mail_params = @hook.params
 
-        unless send_mail_params["template_vars"]["company_web_domain"].present?
-          send_mail_params["template_vars"]["company_web_domain"] = CGI.escape(GlobalConstant::CompanyWeb.domain)
-        end
+        puts "==send_mail_params=== #{send_mail_params}"
 
         if @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.client_all_super_admins_receiver_entity_kind
-          Rails.logger.info "===@manager_ids===1=1=11==2=222 #{@manager_ids}"
           @manager_ids.each do |manager_id|
             email_hook_creation_resp = Email::HookCreator::SendTransactionalMail.new(
               receiver_entity_id: manager_id,
               receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
               template_name: send_mail_params["template_name"],
-              template_vars: send_mail_params["template_vars"]
+              template_vars: { company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
+                               token_name: send_mail_params["template_vars"]["token_name"],
+                               subject_prefix: send_mail_params["template_vars"]["subject_prefix"]
+              }
             ).perform
 
-            puts "email_hook_creation_resp ====== #{email_hook_creation_resp}"
+            puts "email_hook_creation_resp ====== #{email_hook_creation_resp.inspect}"
 
             if email_hook_creation_resp['error'].present?
               error_with_data(
@@ -103,10 +103,14 @@ module Email
                 email_hook_creation_resp
               )
             else
+              puts "====This finished successfully...."
               success_with_data(email_hook_creation_resp)
             end
           end
+          success_with_data({})
         end
+
+        puts "==@email1111111111=== #{@email}"
 
         if @email.present?
           link = fetch_view_link(send_mail_params)
