@@ -87,7 +87,8 @@ module Email
               template_name: send_mail_params["template_name"],
               template_vars: { company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
                                token_name: send_mail_params["template_vars"]["token_name"],
-                               subject_prefix: send_mail_params["template_vars"]["subject_prefix"]
+                               subject_prefix: send_mail_params["template_vars"]["subject_prefix"],
+                               url_prefix: GlobalConstant::Environment.url_prefix
               }
             ).perform
 
