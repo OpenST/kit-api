@@ -124,7 +124,7 @@ module Email
       # @return [Result::Base]
       #
       def set_email
-        
+
         if @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.support_receiver_entity_kind
           @email = GlobalConstant::Base.support_email
         elsif @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.whitelisting_requester_kind
@@ -136,12 +136,12 @@ module Email
         else
           r = set_manager_id
           return r unless r.success?
-  
+
           manager_data = CacheManagement::Manager.new([@manager_id]).fetch[@manager_id]
-  
+
           @email = manager_data[:email]
         end
-        
+
         success
 
       end
@@ -157,10 +157,10 @@ module Email
       # @return [Result::Base]
       #
       def set_manager_id
-        
+
         receiver_entity_kind = @hook[:receiver_entity_kind]
         receiver_entity_id = @hook[:receiver_entity_id]
-        
+
         if receiver_entity_kind == GlobalConstant::EmailServiceApiCallHook.client_receiver_entity_kind
 
           #TODO: Can we cache this query ?

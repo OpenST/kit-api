@@ -16,6 +16,8 @@ module Email
       #
       def initialize(params)
         super
+
+        @manager_ids = []
       end
 
       # Perform
@@ -44,6 +46,27 @@ module Email
         success
       end
 
+      # Fetch email from managers table
+      #
+      # * Author: Shlok
+      # * Date: 11/03/20120
+      # * Reviewed By:
+      #
+      # @return [Result::Base]
+      #
+      def set_email
+
+        if @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.client_all_super_admins_receiver_entity_kind
+          r = set_manager_ids
+          return r unless r.success?
+        else
+          super
+        end
+
+        success
+
+      end
+
       # Start processing hook
       #
       # * Author: Puneet
@@ -56,32 +79,51 @@ module Email
 
         send_mail_params = @hook.params
 
-        unless send_mail_params["template_vars"]["company_web_domain"].present?
-          send_mail_params["template_vars"]["company_web_domain"] = CGI.escape(GlobalConstant::CompanyWeb.domain)
+        if @hook[:receiver_entity_kind] == GlobalConstant::EmailServiceApiCallHook.client_all_super_admins_receiver_entity_kind
+          @manager_ids.each do |manager_id|
+            email_hook_creation_resp = Email::HookCreator::SendTransactionalMail.new(
+              receiver_entity_id: manager_id,
+              receiver_entity_kind: GlobalConstant::EmailServiceApiCallHook.manager_receiver_entity_kind,
+              template_name: send_mail_params["template_name"],
+              template_vars: { company_web_domain: CGI.escape(GlobalConstant::CompanyWeb.domain),
+                               token_name: send_mail_params["template_vars"]["token_name"],
+                               subject_prefix: send_mail_params["template_vars"]["subject_prefix"],
+                               url_prefix: send_mail_params["template_vars"]["url_prefix"]
+              }
+            ).perform
+
+            if email_hook_creation_resp['error'].present?
+              return error_with_data(
+                'e_hp_stm_1',
+                'something_went_wrong',
+                GlobalConstant::ErrorAction.default,
+                email_hook_creation_resp
+              )
+            end
+          end
+          return success_with_data({})
         end
 
-        link = fetch_view_link(send_mail_params)
-
-        send_mail_params["template_vars"]["view_link"] = CGI.escape(link) if link.present?
-
-        send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(
-          @email,
-          send_mail_params["template_name"],
-          send_mail_params["template_vars"]
-        )
-
-        if send_mail_response['error'].present?
-          error_with_data(
-            'e_hp_stm_1',
-            'something_went_wrong',
-            GlobalConstant::ErrorAction.default,
-            send_mail_response
+        if @email.present?
+          link = fetch_view_link(send_mail_params)
+          send_mail_params["template_vars"]["view_link"] = CGI.escape(link) if link.present?
+          send_mail_response = Email::Services::PepoCampaigns.new.send_transactional_email(
+            @email,
+            send_mail_params["template_name"],
+            send_mail_params["template_vars"]
           )
-        else
 
-          success_with_data(send_mail_response)
+          if send_mail_response['error'].present?
+            return error_with_data(
+              'e_hp_stm_2',
+              'something_went_wrong',
+              GlobalConstant::ErrorAction.default,
+              send_mail_response
+            )
+          else
+            return success_with_data(send_mail_response)
+          end
         end
-
       end
 
       # Add extra template vars
@@ -100,6 +142,25 @@ module Email
         campaign_attribute_manager = CampaignAttributeManager.new({})
 
         campaign_attribute_manager.fetch_view_link(token_id, GlobalConstant::Environment.url_prefix)
+      end
+
+      # Select manager ids based on receiver entity kind
+      #
+      # * Author: Shlok
+      # * Date: 09/03/2020
+      # * Reviewed By:
+      #
+      # @Sets @manager_ids
+      #
+      # @return [Result::Base]
+      #
+      def set_manager_ids
+
+        receiver_entity_id = @hook[:receiver_entity_id] # This is the client id.
+        #TODO: Can we cache this query ?
+        @manager_ids = ClientManager.super_admins(receiver_entity_id).pluck(:manager_id)
+        success
+
       end
 
     end

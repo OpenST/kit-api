@@ -43,18 +43,6 @@ module GlobalConstant
         'sandbox_ost_wallet_invited_users'
       end
 
-      def sandbox_low_balance_email_status
-        'sandbox_low_balance_email_status'
-      end
-
-      def sandbox_very_low_balance_email_status
-        'sandbox_very_low_balance_email_status'
-      end
-
-      def sandbox_zero_balance_email_status
-        'sandbox_zero_balance_email_status'
-      end
-
       def mainnet_whitelisted_status
         'mainnet_whitelisted_status'
       end
@@ -85,18 +73,6 @@ module GlobalConstant
 
       def mainnet_ost_wallet_invited_users_property
         'mainnet_ost_wallet_invited_users'
-      end
-
-      def mainnet_low_balance_email_status
-        'mainnet_low_balance_email_status'
-      end
-
-      def mainnet_very_low_balance_email_status
-        'mainnet_very_low_balance_email_status'
-      end
-
-      def mainnet_zero_balance_email_status
-        'mainnet_zero_balance_email_status'
       end
 
 
